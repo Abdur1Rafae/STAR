@@ -4,17 +4,22 @@ import MCQPanel from '../components/MCQPanel';
 import Timer from '../components/Timer';
 import SubmitButton from '../components/SubmitButton';
 import QuizNavigation from '../components/QuizNavigation';
+import QuizImage from '../components/QuizImage'; 
+import TrueFalse from '../components/TrueFalsePanel';
+import TextAnswer from '../components/TextAnswerPanel';
+
 
 const QuizScreen = () => {
   // Sample questions, replace with your data fetching logic
   const questions = [
     {
       text: 'What is the capital of France?',
+      imageurl : 'https://shorturl.at/pxDS5',
       choices: ['A. Berlin', 'B. Madrid', 'C. Paris', 'D. Rome'],
       correctAnswer: 'C. Paris',
     },
-    // Add more demo questions as needed
-  ];
+    // Add more demo questions as needed 
+];
 
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
 
@@ -30,15 +35,36 @@ const QuizScreen = () => {
   return (
     <div className="quiz-screen p-4">
       <div className="flex justify-between mb-4">
-        <MCQPanel
+        {/* <MCQPanel
           question={questions[currentQuestion]?.text}
           options={questions[currentQuestion]?.choices}
           onOptionSelect={handleOptionSelect}
           currentQuestion={currentQuestion}
           totalQuestions={questions.length}
         />
+         */}
 
+         {/* TrueFalse Panel */}
+         {/* <TrueFalse question={questions[currentQuestion]?.text}
+          options={questions[currentQuestion]?.choices}
+          onAnswerSelect={handleOptionSelect}
+          currentQuestion={currentQuestion}
+          totalQuestions={questions.length}/> */}
+
+            {/* TextAnswer Panel */}
+            <TextAnswer question={questions[currentQuestion]?.text}
+          options={questions[currentQuestion]?.choices}
+          currentQuestion={currentQuestion}
+          totalQuestions={questions.length} />
+
+
+        <div  className="sm:w-1/2 h-1/2 "
+>
+        {/* Display the QuizImage component */}
+        <QuizImage imageUrl={questions[currentQuestion]?.imageurl} />
         {/* Timer component */}
+        </div>
+ 
         <Timer initialTime={60 * 5} /> {/* Initial time in seconds, e.g., 5 minutes */}
         <div className='pt-6'>
       <QuizNavigation

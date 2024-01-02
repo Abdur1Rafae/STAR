@@ -4,6 +4,7 @@ import { BsChevronDown, BsChevronRight } from 'react-icons/bs';
 import { AiOutlineFlag, AiFillFlag } from 'react-icons/ai';
 
 
+
 const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
   const [expandedGroups, setExpandedGroups] = useState({});
 
