@@ -34,6 +34,7 @@ const QuizScreen = () => {
 
   return (
     <div className="quiz-screen p-4">
+      
       <div className="flex justify-between mb-4">
         {/* <MCQPanel
           question={questions[currentQuestion]?.text}
@@ -45,28 +46,26 @@ const QuizScreen = () => {
          */}
 
          {/* TrueFalse Panel */}
-         {/* <TrueFalse question={questions[currentQuestion]?.text}
+         <TrueFalse question={questions[currentQuestion]?.text}
           options={questions[currentQuestion]?.choices}
           onAnswerSelect={handleOptionSelect}
           currentQuestion={currentQuestion}
-          totalQuestions={questions.length}/> */}
+          totalQuestions={questions.length}/>
 
             {/* TextAnswer Panel */}
-            <TextAnswer question={questions[currentQuestion]?.text}
+            {/* <TextAnswer question={questions[currentQuestion]?.text}
           options={questions[currentQuestion]?.choices}
           currentQuestion={currentQuestion}
-          totalQuestions={questions.length} />
+          totalQuestions={questions.length} /> */}
 
 
-        <div  className="sm:w-1/2 h-1/2 "
->
+        
         {/* Display the QuizImage component */}
         <QuizImage imageUrl={questions[currentQuestion]?.imageurl} />
         {/* Timer component */}
-        </div>
- 
+          <div>
         <Timer initialTime={60 * 5} /> {/* Initial time in seconds, e.g., 5 minutes */}
-        <div className='pt-6'>
+        <div className='pt-2'>
       <QuizNavigation
         currentQuestion={currentQuestion}
         totalQuestions={questions.length}
@@ -74,9 +73,10 @@ const QuizScreen = () => {
       />
       </div>
       </div>
-
       
-      <div className="flex justify-end mt-4">
+      </div>
+
+      <div className="flex justify-end">
         {/* Add a button to move to the next question */}
         <SubmitButton
           onClick={handleNextQuestion}
@@ -85,6 +85,8 @@ const QuizScreen = () => {
           Next Question
         </SubmitButton>
       </div>
+
+      
     </div>
   );
 };

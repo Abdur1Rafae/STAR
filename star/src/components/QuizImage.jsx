@@ -7,7 +7,7 @@ const QuizImage = ({ imageUrl }) => {
       <img
         src={imageUrl}
         alt="Quiz Image"
-        className="w-full h-auto sm:w-64 sm:h-80 md:w-96 md:h-96 lg:w-2/3 lg:h-auto xl:w-2/3 xl:h-auto"
+        className="w-64 h-auto sm:object-[center_bottom] md:object-[center_bottom]"
       />
     </div>
   );
