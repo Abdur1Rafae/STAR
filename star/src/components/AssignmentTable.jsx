@@ -1,20 +1,24 @@
 import React from 'react'
 import { TbArrowsMoveVertical } from "react-icons/tb";
+import { useMediaQuery } from 'react-responsive'
 
 const AssignmentTable = () => {
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+
     function createData(name, course, openDate,closeDate, startTime, duration, status) {
         return { name, course, openDate, closeDate, startTime, duration, status };
-      }
-      
-      const rows = [
+    }
+        
+    const rows = [
         createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "Active"),
         createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023", "23 October 2023","23:55", "20 minutes", "InActive"),
         createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "Active"),
         createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "InActive"),
         createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "Active"),
-      ];
+    ];
     return (
     <div>
+        {!isTabletOrMobile ?
         <div className="quizTable flex justify-center overflow-auto rounded-lg">
             <div className="container w-11/12">
                 <table className='w-full'>
@@ -51,8 +55,8 @@ const AssignmentTable = () => {
                                     <td className='p-3 text-sm'>{row.duration}</td>
                                     {
                                         row.status == "Active" ? (
-                                            <td className='p-3 text-sm'><button><img src='./startQuiz.jpg' className='w-5'></img></button></td>
-                                        ) : (<td className='p-3 text-sm'>-</td>)
+                                            <td className=''><button><img src='./startQuiz.jpg' className='w-[25px]'></img></button></td>
+                                        ) : (<td className=''>-</td>)
                                     }
                                     
                                 </tr>
@@ -62,6 +66,9 @@ const AssignmentTable = () => {
                 </table>
             </div>
         </div>
+        : 
+        <div className='bg-red-100 w-full h-[200px]'></div>
+        }
     </div>
     )
 }

@@ -4,7 +4,7 @@ import StudentDashboard from './pages/Student/StudentDashboard';
 
 function App() {
   return (
-    <div>
+    <div className='w-full'>
       <StudentDashboard/>
     </div>
   );

@@ -25,7 +25,7 @@ const StudentDashboard = () => {
                         <CourseCard Quiz_Count={3} Course_Title={"CSE 345 - Introduction to Computing"}/>
                         <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Introduction to Computing"}/>
                         <CourseCard Quiz_Count={3} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Introduction to Computing"}/>
+                        <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Computer Communication and Networking"}/>
                     </div>
                 </div>
             </div>

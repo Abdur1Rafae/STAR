@@ -11,7 +11,7 @@ const MenuBar = () => {
 
     return (
         <div className="container">
-            <div className='menu-container w-full h-14 bg-[#CAE0F9] flex items-center'>
+            <div className='menu-container w-screen lg:max-w-full h-14 bg-[#CAE0F9] flex items-center'>
                 <div className='menubar w-full flex justify-between'>
                     <div className="menuleft logo flex justify-start">
                         <img src='./mindloom.png' className='w-10 ml-4 mr-2'></img>
