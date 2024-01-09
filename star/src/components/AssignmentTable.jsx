@@ -20,7 +20,7 @@ const AssignmentTable = () => {
     return (
     <div>
         {!isTabletOrMobile ?
-        <div className="quizTable flex justify-start ml-4 overflow-auto rounded-lg">
+        <div className="quizTable flex justify-start ml-4 rounded-lg">
             <div className="container w-11/12">
                 <table className='w-full border-separate border-spacing-y-2'>
                     <thead className=''>
@@ -61,7 +61,7 @@ const AssignmentTable = () => {
             </div>
         </div>
         : 
-        <div className='w-full h-[200px]'>
+        <div className='w-full h-[200px] flex flex-wrap'>
             {
                 rows.map((row) => (
                     <MobUpQuiz name={row.name} course={row.course} duration={row.duration} openDate={row.openDate} startTime={row.startTime} closeDate={row.closeDate} closeTime={row.closeTime}/>
