@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{mjs,js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        body: ['Poppins']
+      }
+    },
   },
   plugins: [],
 }

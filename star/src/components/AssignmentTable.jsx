@@ -1,64 +1,58 @@
 import React from 'react'
 import { TbArrowsMoveVertical } from "react-icons/tb";
 import { useMediaQuery } from 'react-responsive'
+import MobUpQuiz from './MobUpQuiz';
 
 const AssignmentTable = () => {
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 770px)' })
 
-    function createData(name, course, openDate,closeDate, startTime, duration, status) {
-        return { name, course, openDate, closeDate, startTime, duration, status };
+    function createData(name, course, openDate,closeDate, startTime, duration, closeTime) {
+        return { name, course, openDate, closeDate, startTime, duration, closeTime};
     }
         
     const rows = [
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "Active"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023", "23 October 2023","23:55", "20 minutes", "InActive"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "Active"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "InActive"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "Active"),
+        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023", "23 October 2023","23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55")
     ];
     return (
     <div>
         {!isTabletOrMobile ?
-        <div className="quizTable flex justify-center overflow-auto rounded-lg">
+        <div className="quizTable flex justify-start ml-4 overflow-auto rounded-lg">
             <div className="container w-11/12">
-                <table className='w-full'>
-                    <thead className='border-b-2 border-black'>
-                        <tr>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left'>Quiz Title</th>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left flex items-center'>
+                <table className='w-full border-separate border-spacing-y-2'>
+                    <thead className=''>
+                        <tr className='text-center '>
+                            <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Quiz Title</th>
+                            <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Course
                                 <button><TbArrowsMoveVertical/></button>
                             </th>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left items-center'>
+                            <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Open Date
                                 <button><TbArrowsMoveVertical/></button>
                             </th>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left items-center'>
+                            <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Close Date
                                 <button><TbArrowsMoveVertical/></button>
                             </th>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left'>Start Time</th>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left'>Duration</th>
-                            <th className='p-3 text-sm font-semibold tracking-wide text-left'></th>
+                            <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Start Time</th>
+                            <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Duration</th>
                         </tr>
                     </thead>
 
                     <tbody className="">
                         {
                             rows.map((row) => (
-                                <tr className='border-b-2'>
-                                    <td className='p-3 text-sm'>{row.name}</td>
-                                    <td className='p-3 text-sm'>{row.course}</td>
-                                    <td className='p-3 text-sm'>{row.openDate}</td>
-                                    <td className='p-3 text-sm'>{row.closeDate}</td>
-                                    <td className='p-3 text-sm'>{row.startTime}</td>
-                                    <td className='p-3 text-sm'>{row.duration}</td>
-                                    {
-                                        row.status == "Active" ? (
-                                            <td className=''><button><img src='./startQuiz.jpg' className='w-[25px]'></img></button></td>
-                                        ) : (<td className=''>-</td>)
-                                    }
-                                    
+                                <tr className='text-center'>
+                                    <td className='p-3 text-sm border-black border-l-[1px] border-y-[1px]'>{row.name}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.course}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.closeDate}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-centr'>{row.startTime}</td>
+                                    <td className='p-3 text-sm border-black border-r-[1px] border-y-[1px] text-center'>{row.duration}</td>     
                                 </tr>
                             ))
                         }
@@ -67,7 +61,13 @@ const AssignmentTable = () => {
             </div>
         </div>
         : 
-        <div className='bg-red-100 w-full h-[200px]'></div>
+        <div className='w-full h-[200px]'>
+            {
+                rows.map((row) => (
+                    <MobUpQuiz name={row.name} course={row.course} duration={row.duration} openDate={row.openDate} startTime={row.startTime} closeDate={row.closeDate} closeTime={row.closeTime}/>
+                ))
+            }
+        </div>
         }
     </div>
     )

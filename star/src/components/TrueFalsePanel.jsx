@@ -16,7 +16,7 @@ const TrueFalsePanel = ({ question, onAnswerSelect, currentQuestion, totalQuesti
   };
 
   return (
-    <div className="true-false-panel">
+    <div className="true-false-panel bg-red-100">
       <h2 className="text-lg font-semibold mb-4 flex items-center">
         {heading}
         <span className="pl-32 ml-auto">

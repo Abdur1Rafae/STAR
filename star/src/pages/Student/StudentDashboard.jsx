@@ -2,32 +2,27 @@ import React from 'react';
 import MenuBar from '../../components/MenuBar';
 import AssignmentTable from '../../components/AssignmentTable';
 import CourseCard from '../../components/CourseCard';
+import SubHeader from '../../components/SubHeader';
+import LiveQuiz from '../../components/LiveQuiz';
 
 const StudentDashboard = () => {
-    let error = false;
     
-
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col mb-20'>
             <MenuBar/>
+            <SubHeader isActive={"Dashboard"}/>
             <div className='pageContainer overflow-auto rounded-lg'>
-                <h1 className='font-[700] mt-5 ml-4'>Upcoming Assignments</h1>
-                <div className='border-b-2 border-grey ml-4 mr-4'></div>
-                <AssignmentTable/>
-                <h1 className='font-[700] mt-5 ml-4'>My Courses</h1>
-                <div className='border-b-2 border-grey ml-4 mr-4'></div>
-                <div className="flexContainer flex flex-wrap justify-center gap-x-2 mb-4">
-                    <div className='courseContainer w-10/12 flex flex-wrap gap-x-2 justify-around'>
-                        <CourseCard Quiz_Count={3} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={3} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={3} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={3} Course_Title={"CSE 345 - Introduction to Computing"}/>
-                        <CourseCard Quiz_Count={1} Course_Title={"CSE 345 - Computer Communication and Networking"}/>
-                    </div>
+                <h1 className='font-[500] mt-5 ml-4 font-body'>Ongoing Assessments</h1>
+                <div className='border-b-[1px] border-[#937D7D] ml-4 mr-4'></div>
+                <div className="QuizContainer flex flex-wrap">
+                    <LiveQuiz/>
+                    <LiveQuiz/>
+                    <LiveQuiz/>
+                    <LiveQuiz/>
                 </div>
+                <h1 className='font-[500] mt-5 ml-4 font-body'>Upcoming Assessments</h1>
+                <div className='border-b-[1px] border-[#937D7D] ml-4 mr-4'></div>
+                <AssignmentTable/>
             </div>
         </div>
     );

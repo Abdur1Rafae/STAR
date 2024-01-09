@@ -16,12 +16,11 @@ const Timer = ({ initialTime }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Convert remaining time to hours, minutes, and seconds
+
   const hours = Math.floor(remainingTime / 3600);
   const minutes = Math.floor((remainingTime % 3600) / 60);
   const seconds = remainingTime % 60;
 
-  // Format the time values to ensure they are displayed with leading zeros
   const formattedTime = {
     hours: hours.toString().padStart(2, '0'),
     minutes: minutes.toString().padStart(2, '0'),
@@ -29,11 +28,12 @@ const Timer = ({ initialTime }) => {
   };
 
   return (
-    <div className="pl-4 h-32 timer-container flex items-center pt-6">
-      <div className="w-36 timer-box bg-blue-100 p-2 rounded-md mr-2" style={{ backgroundColor: '#E7ECEF' }}> 
+    <div className="h-10 timer-container flex items-center ml-auto mr-4">
+      <div className="w-36 timer-box bg-blue-100 p-2 rounded-md" style={{ backgroundColor: '#E7ECEF' }}> 
         
-        <p className="timer-text text-black font-bold flex justify-between"> {
-        formattedTime.hours} : {formattedTime.minutes} : {formattedTime.seconds} <span className='pl-2'><AiOutlineClockCircle size={24} /></span>
+        <p className="timer-text text-black font-bold flex justify-between"> 
+            {formattedTime.hours} : {formattedTime.minutes} : {formattedTime.seconds} 
+            <span className='pl-2'><AiOutlineClockCircle size={24} /></span>
         </p>
       
       </div>
