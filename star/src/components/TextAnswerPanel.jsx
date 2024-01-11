@@ -1,45 +1,68 @@
 import React, { useState } from 'react';
-import { AiOutlineFlag, AiFillFlag } from 'react-icons/ai';
+import { CiViewList } from 'react-icons/ci';
+import QuizImage from './QuizImage';
+import FlagButton from './FlagButton';
 
-const TextAnswerPanel = ({ question, currentQuestion, totalQuestions }) => {
-  const heading = 'Text Answer Question:';
-  const [typedAnswer, setTypedAnswer] = useState('');
+const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuestions }) => {
+  const [userAnswer, setUserAnswer] = useState('');
   const [isFlagged, setIsFlagged] = useState(false);
 
-  const handleAnswerChange = (e) => {
-    setTypedAnswer(e.target.value);
+  const handleAnswerChange = (event) => {
+    setUserAnswer(event.target.value);
   };
 
-  const handleFlagClick = () => {
-    setIsFlagged(!isFlagged);
+  const handleAnswerSubmit = () => {
+    // You can add any validation or additional logic here before submitting the answer
+    onAnswerSubmit(userAnswer);
+  };
+
+  const handleToggleFlag = () => {
+    setIsFlagged((prevFlag) => !prevFlag);
+    // Add logic to handle flag toggling (you can pass this information to the parent component if needed)
   };
 
   return (
-    <div className="text-answer-panel">
-      <h2 className="text-lg font-semibold mb-4 flex items-center">
-        {heading}
-        <span className="pl-32 ml-auto">
-          {isFlagged ? (
-            <AiFillFlag className="text-red-500 mr-2 cursor-pointer" onClick={handleFlagClick} />
-          ) : (
-            <AiOutlineFlag className="text-gray-500 mr-2 cursor-pointer" onClick={handleFlagClick} />
-          )}
-          <span className="text-sm">{isFlagged ? 'Flagged' : 'Flag this question'}</span>
-        </span>
-      </h2>
-      <p className="text-sm">
-        Question {currentQuestion + 1} / {totalQuestions}
-      </p>
+    <div className="w-full sm:w-2/3 lg:w-1/2 mx-auto bg-white p-4 shadow-md rounded-md">
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <p className="text-lg font-semibold mr-2 p-2 box-border h-12 border border-black rounded-md">
+              Text Answer Question
+            </p>
+            <div className='flex justify-between space-x-1 p-2 box-border h-12 border border-black rounded-md text-justify font-semibold'>
+              <span><CiViewList /></span>
+              <p className="text-sm"> {question?.marks} marks</p>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-black border-2 mt-2"></div>
+      </div>
+      <div className="mb-4">
+        <div className='flex justify-between'>
+          <p className="text-lg">{question?.text}</p>
+          <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag} />
+        </div>
+        <div className="border-t border-black border-2 mt-2"></div>
+      </div>
 
-      <h3 className="text-xl mb-4">{question}</h3>
+      <div><QuizImage imageUrl={question?.imageurl} /></div>
 
-      <div className="answer">
+      <div className="options">
         <textarea
-          value={typedAnswer}
+          className="w-full p-2 mb-2 bg-transparent border border-black rounded-md"
+          placeholder="Type your answer here..."
+          value={userAnswer}
           onChange={handleAnswerChange}
-          className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
-          style={{borderColor: "black"}} 
-       />
+        />
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleAnswerSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Submit Answer
+        </button>
       </div>
     </div>
   );

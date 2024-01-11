@@ -1,7 +1,7 @@
 // SubmitButton.js
 import React from 'react';
 
-const SubmitButton = ({ onClick, children }) => {
+const SubmitButton = ({ onClick, children , label }) => {
   return (
     <button
       onClick={onClick}
@@ -15,7 +15,7 @@ const SubmitButton = ({ onClick, children }) => {
         // Add other styles as needed
       }}
     >
-      {children}
+      {label}
     </button>
   );
 };

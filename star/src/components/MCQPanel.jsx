@@ -1,62 +1,70 @@
-// MCQPanel.js
 import React, { useState } from 'react';
-import { AiOutlineFlag, AiFillFlag } from 'react-icons/ai';
+import { CiViewList } from 'react-icons/ci';
+import QuizImage from './QuizImage';
+import FlagButton from './FlagButton'; // Import the FlagButton component
 
-const MCQPanel = ({ question, options, onOptionSelect, currentQuestion, totalQuestions }) => {
-  const heading = 'Multiple Choice Question:';
+const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
   const [isFlagged, setIsFlagged] = useState(false);
 
-  const handleOptionClick = (option, index) => {
-    onOptionSelect(option);
+  const handleOptionClick = (option) => {
     setSelectedOption(option);
-    setSelectedOptionIndex(index);
+    onOptionSelect(option);
   };
 
-  const handleFlagClick = () => {
-    setIsFlagged(!isFlagged);
+  const handleToggleFlag = () => {
+    setIsFlagged((prevFlag) => !prevFlag);
+    // Add logic to handle flag toggling (you can pass this information to the parent component if needed)
   };
 
   return (
-    <div className="mcq-panel">
-      <h2 className="text-lg font-semibold mb-4 flex items-center">
-        {heading}
-        <span className="pl-32 ml auto">
-          {isFlagged ? (
-            <AiFillFlag className="text-red-500 mr-2 cursor-pointer" onClick={handleFlagClick} />
-          ) : (
-            <AiOutlineFlag className="text-gray-500 mr-2 cursor-pointer" onClick={handleFlagClick} />
-          )}
-          <span className="text-sm">{isFlagged ? 'Flagged' : 'Flag this question'}</span>
-        </span>
-      </h2>
-      <p className="text-sm">
-        Question {currentQuestion + 1} / {totalQuestions}
-      </p>
+    <div className="w-full sm:w-2/3 lg:w-1/2 mx-auto bg-white p-4 shadow-md rounded-md">
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <p className="text-lg font-semibold mr-2 p-2 box-border h-12 border border-black rounded-md">
+              Multiple Choice Question
+            </p>
+            <div className='flex justify-between space-x-1 p-2 box-border h-12  border border-black rounded-md text-justify font-semibold'>
+              <span><CiViewList /></span>
+              <p className="text-sm"> {question?.marks} marks</p>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-black border-2 mt-2"></div>
+      </div>
+      <div className="mb-4">
+        <div className='flex justify-between'>
+          <p className="text-lg">{question?.text}</p>
+          <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag} />
+        </div>
+        <div className="border-t border-black border-2 mt-2"></div>
+      </div>
 
-      <h3 className="text-xl mb-4">{question}</h3>
+      <div><QuizImage imageUrl={question?.imageurl} /></div>
 
       <div className="options">
-        {options &&
-          options.map((option, index) => (
+        {question?.choices &&
+          question?.choices.map((option, index) => (
             <div
               key={index}
-              className={`flex items-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
+              className={`flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
               onClick={() => handleOptionClick(option, index)}
             >
               <div
-                className={`w-10 h-10 rounded-full mr-2 flex items-center justify-center ${
+                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-center ${
                   selectedOption === option ? 'bg-blue-500 text-white' : ''
                 }`}
                 style={{
-                  background: selectedOptionIndex === index ? '#274C77' : '',
-                  border: selectedOptionIndex === index ? '1px solid #274C77' : '1px solid #000',
+                  background: selectedOption === option ? '#274C77' : '',
+                  border: selectedOption === option ? '1px solid #274C77' : '1px solid #000',
                 }}
               >
-                {String.fromCharCode(65 + index)}
+                <div class="relative inset-y-0 right-20 flex justify-between align-middle	">
+                  {String.fromCharCode(65 + index)} <p>)</p>
+                </div>
+                <div>&nbsp;{option}</div>
               </div>
-              <div>{option}</div>
             </div>
           ))}
       </div>
