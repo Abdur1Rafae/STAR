@@ -12,8 +12,8 @@ const MenuBar = () => {
     }
 
     return (
-        <div className="container">
-            <div className='menu-container w-screen lg:max-w-full h-14 bg-[#2C6491] flex items-center'>
+        <div className="">
+            <div className='menu-container w-full h-14 bg-[#2C6491] flex items-center'>
                 <div className='menubar w-full flex justify-between'>
                     <div className="leftContainer flex border-r-2 border-white w-full justify-between">
                         <div className="menuleft logo flex justify-start">
