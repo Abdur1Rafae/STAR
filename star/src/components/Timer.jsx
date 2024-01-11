@@ -1,9 +1,9 @@
-// Timer.js
 import React, { useState, useEffect } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
 const Timer = ({ initialTime }) => {
   const [remainingTime, setRemainingTime] = useState(initialTime);
+  const [showTime, setShowTime] = useState(true)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -15,6 +15,10 @@ const Timer = ({ initialTime }) => {
 
     return () => clearInterval(timer);
   }, []);
+
+  let handleToggleTime = () => {
+    setShowTime(!showTime)
+  }
 
 
   const hours = Math.floor(remainingTime / 3600);
@@ -28,13 +32,19 @@ const Timer = ({ initialTime }) => {
   };
 
   return (
-    <div className="h-10 timer-container flex items-center ml-auto mr-4">
-      <div className="w-36 timer-box bg-blue-100 p-2 rounded-md" style={{ backgroundColor: '#E7ECEF' }}> 
-        
-        <p className="timer-text text-black font-bold flex justify-between"> 
-            {formattedTime.hours} : {formattedTime.minutes} : {formattedTime.seconds} 
-            <span className='pl-2'><AiOutlineClockCircle size={24} /></span>
-        </p>
+    <div className="h-10 timer-container flex items-center ml-4 mr-4">
+      <div className="w-36 timer-box p-2 rounded-md"> 
+        <button className='h-full flex items-center' onClick={handleToggleTime}>
+          <p className="timer-text text-black font-bold flex justify-center">
+            <span className='mr-1'><AiOutlineClockCircle size={24} /></span>
+            {
+              <div className={`text-sm sm:text flex items-center font-semibold transition-opacity duration-500 ease-out ${showTime ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                {formattedTime.hours} : {formattedTime.minutes} : {formattedTime.seconds}
+              </div>
+            }
+            
+          </p>
+        </button>
       
       </div>
     </div>

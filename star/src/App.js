@@ -11,7 +11,7 @@ import StudentCourses from './pages/Student/StudentCourses.jsx';
 
 const App = () => {
   return (
-      <div>
+      <div className=''>
         <BrowserRouter>
 	        <Routes>
             <Route path = "/home" element = {<StudentDashboard/>} />

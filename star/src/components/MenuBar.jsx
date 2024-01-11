@@ -26,7 +26,7 @@ const MenuBar = () => {
                         <button className='mr-2 sm:mr-6 self-center text-white text-2xl'><PiBellFill/></button>
                     </div>
                     <div className="rightContainer flex">
-                        <button className='ml-2 sm:ml-6 sm:mr-4 text-white flex w-26 lg:w-60' onClick={handleProfileClick}>
+                        <button className='ml-2 sm:ml-4 sm:mr-4 text-white flex w-26 lg:w-56' onClick={handleProfileClick}>
                             <div className="UserInfo w-full text-white whitespace-nowrap self-center flex flex-col">
                                 <h1 className='text-xs self-start font-bold'>Maaz Shamim</h1>
                                 <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>Student</h3>
@@ -36,8 +36,8 @@ const MenuBar = () => {
                     </div>
                 </div> 
             </div>
-            <div className={`dialogue absolute border-2 right-0 bg-[#F4F9FD] transition ease-out duration-500 ${profileDialog ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                {profileDialog ? (
+            <div className={`dialogue z-20 absolute border-2 right-0 bg-[#F4F9FD] transition ease-out duration-500 ${profileDialog ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                {profileDialog && (
                     <div className='h-20 dropdown-list w-36 lg:w-60 flex flex-col items-center justify-around' onClick={()=>window.location.assign('/manage-account')}>
                         <div className='h-8 w-full flex text-md'>
                             <FaUserCog className='self-center ml-4 text-lg'/>
@@ -49,9 +49,7 @@ const MenuBar = () => {
                             <button className='ml-2'>Logout</button>
                         </div>
                     </div>
-                ) :
-                    <div className='h-0'></div>
-                }
+                )}
             </div>
         </div>
         

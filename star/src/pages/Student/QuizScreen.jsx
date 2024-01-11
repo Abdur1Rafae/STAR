@@ -6,7 +6,8 @@ import QuizNavigation from '../../components/QuizNavigation';
 import QuizImage from '../../components/QuizImage'; 
 import TrueFalse from '../../components/TrueFalsePanel';
 import TextAnswer from '../../components/TextAnswerPanel';
-import QuizMenuBar from '../../components/QuizMenuBar';
+import MenuBar from '../../components/MenuBar';
+import QuizSubheader from '../../components/QuizSubheader';
 
 const QuizScreen = () => {
   // Sample questions, replace with your data fetching logic
@@ -32,9 +33,10 @@ const QuizScreen = () => {
   };
 
   return (
-    <div>
-      <QuizMenuBar/>
-      <div className="quiz-screen p-4">
+    <div className='flex flex-col w-screen lg:w-full'>
+      <MenuBar/>
+      <QuizSubheader/>
+      <div className="quiz-screen p-4 w-screen lg:w-4/5 border-2 border-black">
         <div className="flex justify-between mb-4">
           {/* <MCQPanel
             question={questions[currentQuestion]?.text}
@@ -57,16 +59,6 @@ const QuizScreen = () => {
             totalQuestions={questions.length} /> */}
 
           <QuizImage imageUrl={questions[currentQuestion]?.imageurl} />
-          <div className='flex flex-col'>
-              
-              <div className='pt-2'>
-                  <QuizNavigation
-                    currentQuestion={currentQuestion}
-                    totalQuestions={questions.length}
-                    onNextClick={handleNextQuestion}
-                  />
-              </div>
-          </div>
         </div>
 
         <div className="flex justify-end">

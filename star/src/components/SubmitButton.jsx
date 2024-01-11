@@ -10,9 +10,8 @@ const SubmitButton = ({ onClick, children }) => {
         width: '180px',
         height: '45px',
         borderRadius: '8px',
-        background: '#274C77',
+        background: '#2C6491',
         position: 'relative',
-        // Add other styles as needed
       }}
     >
       {children}
