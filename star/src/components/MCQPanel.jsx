@@ -18,11 +18,11 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
   };
 
   return (
-    <div className="w-full sm:w-2/3 lg:w-1/2 mx-auto bg-white p-4 shadow-md rounded-md">
+    <div className="w-full mb-4 sm:w-2/3 lg:w-3/4 mx-auto bg-white p-4 shadow-md rounded-md ">
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-lg font-semibold mr-2 p-2 box-border h-12 border border-black rounded-md">
+            <p className="text-lg font-semibold mr-2 p-2 border h-12  border-black rounded-md ">
               Multiple Choice Question
             </p>
             <div className='flex justify-between space-x-1 p-2 box-border h-12  border border-black rounded-md text-justify font-semibold'>
@@ -48,11 +48,11 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
           question?.choices.map((option, index) => (
             <div
               key={index}
-              className={`flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
+              className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
               onClick={() => handleOptionClick(option, index)}
             >
               <div
-                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-center ${
+                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between  ${
                   selectedOption === option ? 'bg-blue-500 text-white' : ''
                 }`}
                 style={{
@@ -60,10 +60,11 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
                   border: selectedOption === option ? '1px solid #274C77' : '1px solid #000',
                 }}
               >
-                <div class="relative inset-y-0 right-20 flex justify-between align-middle	">
+                <div class="relative start-5 inset-y-0 flex ">
                   {String.fromCharCode(65 + index)} <p>)</p>
                 </div>
-                <div>&nbsp;{option}</div>
+
+                <div className='relative end-32'>&nbsp;{option}</div>
               </div>
             </div>
           ))}

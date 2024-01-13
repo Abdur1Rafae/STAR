@@ -37,7 +37,7 @@ const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
   };
 
   return (
-    <div className="w-64 quiz-navigation-box p-4 border rounded-md" style={{ backgroundColor: '#E7ECEF' }}>
+    <div className="w-64 lg:1/4 quiz-navigation-box p-4 border rounded-md" style={{ backgroundColor: '#E7ECEF' }}>
       <h2 className="text-lg font-semibold mb-4">Quiz Navigation</h2>
 
       {categories.map((category, index) => (

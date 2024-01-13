@@ -18,7 +18,7 @@ const TrueFalsePanel = ({ question, onAnswerSelect, currentQuestion, totalQuesti
   };
 
   return (
-    <div className="w-full sm:w-2/3 lg:w-1/2 mx-auto bg-white p-4 shadow-md rounded-md">
+    <div className="w-full sm:w-2/3 lg:w-3/4 mx-auto bg-white p-4 shadow-md rounded-md">
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
