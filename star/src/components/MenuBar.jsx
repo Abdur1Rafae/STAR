@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { FaUserCog } from "react-icons/fa";
-import { RiLogoutCircleRLine } from "react-icons/ri";
-import { PiBellFill } from "react-icons/pi";
-import { MdKeyboardArrowDown } from "react-icons/md";
-
+import React, { useState } from 'react';
+import { FaUserCog } from 'react-icons/fa';
+import { RiLogoutCircleRLine } from 'react-icons/ri';
+import { PiBellFill } from 'react-icons/pi';
+import { MdKeyboardArrowDown } from 'react-icons/md';
 
 const MenuBar = () => {
-    let [profileDialog, setProfileDialog] = useState(false)
-    let handleProfileClick = () => {
-        setProfileDialog(!profileDialog)
-    }
+  let [profileDialog, setProfileDialog] = useState(false);
+
+  let handleProfileClick = () => {
+    setProfileDialog(!profileDialog);
+  };
 
     return (
         <div className="">
@@ -56,4 +56,4 @@ const MenuBar = () => {
     )
 }
 
-export default MenuBar
+export default MenuBar;
