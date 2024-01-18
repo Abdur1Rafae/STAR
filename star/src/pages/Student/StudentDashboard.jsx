@@ -8,7 +8,7 @@ import LiveQuiz from '../../components/LiveQuiz';
 const StudentDashboard = () => {
     
     return (
-        <div className='flex flex-col mb-20 overflow-auto h-full'>
+        <div className='flex flex-col mb-20 h-screen lg:h-full overflow-y-auto'>
             <MenuBar/>
             <SubHeader isActive={"Dashboard"}/>
             <div className='pageContainer'>

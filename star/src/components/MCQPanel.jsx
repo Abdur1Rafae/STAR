@@ -14,18 +14,17 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
-    // Add logic to handle flag toggling (you can pass this information to the parent component if needed)
   };
 
   return (
-    <div className="w-full mb-4 sm:w-2/3 lg:w-3/4 mx-auto bg-white p-4 shadow-md rounded-md ">
-      <div className="mb-4">
+    <div className="w-full mx-auto bg-white p-4 shadow-md rounded-md">
+      <div className="">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-lg font-semibold mr-2 p-2 border h-12  border-black rounded-md ">
+            <p className="text-sm lg:text-lg font-semibold mr-2 p-2 border h-12 border-black rounded-md flex items-center">
               Multiple Choice Question
             </p>
-            <div className='flex justify-between space-x-1 p-2 box-border h-12  border border-black rounded-md text-justify font-semibold'>
+            <div className='flex justify-between space-x-1 p-2 box-border h-12 border border-black rounded-md text-justify items-center font-semibold'>
               <span><CiViewList /></span>
               <p className="text-sm"> {question?.marks} marks</p>
             </div>

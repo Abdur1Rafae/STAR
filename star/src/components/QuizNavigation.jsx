@@ -8,25 +8,44 @@ import { AiOutlineFlag, AiFillFlag } from 'react-icons/ai';
 const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
   const [expandedGroups, setExpandedGroups] = useState({});
 
-  // Sample categories and questions
   const categories = [
     {
-      name: 'Multiple Choice Questions',
+      name: '',
       questions: [
-        { number: 1, flagged: false },
-        { number: 2, flagged: true },
-        // Add more MCQ questions as needed
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
       ],
     },
     {
       name: 'True/False',
       questions: [
-        { number: 3, flagged: false },
-        { number: 4, flagged: false },
-        // Add more True/False questions as needed
+        { number: 3},
+        { number: 4},
       ],
     },
-    // Add more categories as needed
   ];
 
   const handleToggleGroup = (groupName) => {
@@ -37,38 +56,21 @@ const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
   };
 
   return (
-    <div className="w-64 lg:1/4 quiz-navigation-box p-4 border rounded-md" style={{ backgroundColor: '#E7ECEF' }}>
-      <h2 className="text-lg font-semibold mb-4">Quiz Navigation</h2>
-
+    <div className='flex flex-col items-center w-full overflow-auto'>
+      <select name="cars" id="cars" className='mt-4 w-32 border-b-2 border-black h-8 bg-[#F4F9FD] font-semibold mb-4'>
+          <option value="All">All Questions</option>
+          <option value="Unanswered">Unanswered</option>
+          <option value="Flagged">Flagged</option>
+      </select>
       {categories.map((category, index) => (
-        <div key={index} className="mb-4">
-          <div className="flex justify-between items-center cursor-pointer mb-2">
-            <h3 className="text-md font-semibold">
-              {category.name} ({category.questions.length})
-            </h3>
-            <span
-              onClick={() => handleToggleGroup(category.name)}
-              className="cursor-pointer"
-            >
-              {expandedGroups[category.name] ? <BsChevronDown /> : <BsChevronRight />}
-            </span>
-          </div>
-
-          <ul className={`list-none p-0 ${expandedGroups[category.name] ? 'block' : 'hidden'}`}>
-            {category.questions.map((question, qIndex) => (
-              <li
-                key={qIndex}
-                className={`flex items-center mb-2 cursor-pointer`}
-              >
-                <span className="font-semibold text-black">
+        <div key={index} className="">
+            {category.questions.map((question) => (
+              <button className={`flex items-center justify-center w-32 h-8 bg-[#2C6491] text-white mb-4 p-2`}>
+                <h3 className="self-center">
                   Question {question.number}
-                </span>
-                <span className='pl-2'>
-                {question.flagged ? <AiFillFlag className={`ml-2 text-red-500`} /> : <AiOutlineFlag/>}
-                </span>
-              </li>
+                </h3>
+              </button>
             ))}
-          </ul>
         </div>
       ))}
     </div>
