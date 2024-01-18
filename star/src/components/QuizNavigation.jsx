@@ -26,6 +26,17 @@ const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
         { number: 2},
         { number: 1},
         { number: 2},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
+        { number: 1},
+        { number: 2},
       ],
     },
     {
@@ -45,7 +56,7 @@ const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
   };
 
   return (
-    <div className='flex flex-col items-center w-full h-full overflow-auto'>
+    <div className='flex flex-col items-center w-full overflow-auto'>
       <select name="cars" id="cars" className='mt-4 w-32 border-b-2 border-black h-8 bg-[#F4F9FD] font-semibold mb-4'>
           <option value="All">All Questions</option>
           <option value="Unanswered">Unanswered</option>
