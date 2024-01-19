@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CiViewList } from 'react-icons/ci';
 import QuizImage from './QuizImage';
-import FlagButton from './FlagButton'; // Import the FlagButton component
+import FlagButton from '../button/FlagButton'; // Import the FlagButton component
 
 const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions }) => {
   const [selectedOption, setSelectedOption] = useState(null);

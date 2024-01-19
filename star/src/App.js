@@ -5,7 +5,7 @@ import QuizScreen from './pages/Student/QuizScreen.jsx';
 import logo from './logo.svg';
 import './App.css';
 import StudentDashboard from './pages/Student/StudentDashboard';
-
+import CourseInfo from './pages/Student/CourseInfo.jsx';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import StudentCourses from './pages/Student/StudentCourses.jsx';
 
@@ -18,7 +18,7 @@ const App = () => {
             <Route path = "/manage-account" element = {<AccountManagerPage/>} />
             <Route path="/quiz" element = {<QuizScreen />} />
             <Route path="/courses" element = {<StudentCourses />} />
-
+            <Route path="/courses/:courseName" element= {<CourseInfo />} />
  	      </Routes>
         </BrowserRouter>
         </div>

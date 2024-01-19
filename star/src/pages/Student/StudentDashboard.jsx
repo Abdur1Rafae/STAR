@@ -1,7 +1,6 @@
 import React from 'react';
 import MenuBar from '../../components/MenuBar';
 import AssignmentTable from '../../components/AssignmentTable';
-import CourseCard from '../../components/CourseCard';
 import SubHeader from '../../components/SubHeader';
 import LiveQuiz from '../../components/LiveQuiz';
 

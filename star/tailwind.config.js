@@ -7,7 +7,11 @@ module.exports = {
     extend: {
       fontFamily: {
         body: ['Poppins']
-      }
+      },
+      colors: {
+        'DarkBlue': '#2C6491',
+        'LightBlue': '#F4F9FD'
+      },
     },
   },
   plugins: [],

@@ -19,12 +19,6 @@ const SubHeader = ({isActive}) => {
                         <h1>Courses</h1>
                     </button>
                 </div>
-                <div className="container ml-4 mr-2 h-full flex">
-                    <button className={`dashboard flex items-center justify-center w-full ${isActive === 'Reports' ? 'text-[#2C6491]' : 'text-black'}`} onClick={()=>{window.location.assign("/reports")}}>
-                        <ImStatsBars className='mr-2'/>
-                        Reports
-                    </button>
-                </div>
             </div>
         </div>
     )

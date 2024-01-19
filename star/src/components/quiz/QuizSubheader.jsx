@@ -1,9 +1,9 @@
 import React from 'react'
-import Timer from './Timer'
+import Timer from '../Timer'
 import { CgNotes } from "react-icons/cg";
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive'
-import { toggleNav } from '../redux/qnavSlice';
+import { toggleNav } from '../../redux/qnavSlice';
 
 
 const QuizSubheader = () => {

@@ -23,7 +23,6 @@ const MenuBar = () => {
                                 <div className='sm:text-xs text-[10px] font-[600] text-white'>Assess.Enhance.Excel</div>
                             </div>
                         </div>
-                        <button className='mr-2 sm:mr-6 self-center text-white text-2xl'><PiBellFill/></button>
                     </div>
                     <div className="rightContainer flex">
                         <button className='ml-2 sm:ml-4 sm:mr-4 text-white flex w-26 lg:w-56' onClick={handleProfileClick}>

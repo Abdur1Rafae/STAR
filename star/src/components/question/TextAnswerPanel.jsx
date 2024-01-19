@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CiViewList } from 'react-icons/ci';
 import QuizImage from './QuizImage';
-import FlagButton from './FlagButton';
+import FlagButton from '../button/FlagButton';
 
 const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuestions }) => {
   const [userAnswer, setUserAnswer] = useState('');

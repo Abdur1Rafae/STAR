@@ -1,11 +1,11 @@
 import React from 'react';
-import MCQPanel from '../../components/MCQPanel';
-import SubmitButton from '../../components/SubmitButton';
-import QuizNavigation from '../../components/QuizNavigation';
-import TrueFalse from '../../components/TrueFalsePanel';
-import TextAnswer from '../../components/TextAnswerPanel';
+import MCQPanel from '../../components/question/MCQPanel';
+import SubmitButton from '../../components/button/SubmitButton';
+import QuizNavigation from '../../components/quiz/QuizNavigation';
+import TrueFalse from '../../components/question/TrueFalsePanel';
+import TextAnswer from '../../components/question/TextAnswerPanel';
 import MenuBar from '../../components/MenuBar';
-import QuizSubheader from '../../components/QuizSubheader';
+import QuizSubheader from '../../components/quiz/QuizSubheader';
 import { toggleNav } from '../../redux/qnavSlice';
 import { useSelector } from 'react-redux';
 

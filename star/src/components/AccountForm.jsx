@@ -1,7 +1,7 @@
 // AccountForm.js
 import React, { useState } from 'react';
-import SubmitButton from './SubmitButton';
-import CancelButton from './CancelButton';
+import SubmitButton from './button/SubmitButton';
+import CancelButton from './button/CancelButton';
 
 import '../index.css'; // Import the CSS file
 
