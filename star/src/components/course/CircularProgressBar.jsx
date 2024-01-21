@@ -12,7 +12,7 @@ const CircularProgressBar = ({percentage}) => {
         <svg class="w-full h-full" viewBox="0 0 100 100">
             <circle
                 className="text-gray-200 stroke-current"
-                strokeWidth="7"
+                strokeWidth="6"
                 cx="50"
                 cy="50"
                 r="40"
@@ -21,8 +21,8 @@ const CircularProgressBar = ({percentage}) => {
             </circle>
 
             <circle
-                className={`text-green-500 progress-ring__circle stroke-current`}
-                strokeWidth="7"
+                className={`${percentage>=50 ? (percentage>=80 ? 'text-green-500' : 'text-yellow-500') : 'text-red-500'} progress-ring__circle stroke-current`}
+                strokeWidth="10"
                 strokeLinecap="round"
                 cx="50"
                 cy="50"

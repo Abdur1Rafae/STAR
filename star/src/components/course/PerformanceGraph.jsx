@@ -18,7 +18,7 @@ export const options = {
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const labels = ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5', 'Test 6', 'Test 7'];
 const getRandomNumberFromRange = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -27,7 +27,7 @@ export const data = {
   labels,
   datasets: [
     {
-      label: 'Dataset 2',
+      label: 'Assessments',
       data: labels.map(() => getRandomNumberFromRange(0, 100)),
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',

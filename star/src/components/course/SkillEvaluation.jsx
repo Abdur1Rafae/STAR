@@ -14,7 +14,7 @@ const SkillEvaluation = () => {
         <div className='mx-2 mb-4'>
             <HorizontalProgressBar Skill={"Design Basic"} Score={93} Color={"#7D88FD"}/>
         </div>
-        <div className='mx-2 mb-12'>
+        <div className='mx-2 mb-10'>
             <HorizontalProgressBar Skill={"Logic"} Score={39} Color={"#EC5491"}/>
         </div>
         

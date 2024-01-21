@@ -3,7 +3,7 @@ import React from 'react'
 const HorizontalProgressBar = ({Skill, Score, Color}) => {
   return (
     <div className=''>
-        <div className='flex w-full justify-between'>
+        <div className='flex w-full justify-between mb-1'>
             <h2 className='text-gray-600 text-xs'>{Skill}</h2>
             <h2 className='text-xs font-medium'>{Score}/100</h2>
         </div>

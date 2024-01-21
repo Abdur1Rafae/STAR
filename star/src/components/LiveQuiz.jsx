@@ -25,7 +25,6 @@ const LiveQuiz = () => {
                 </div>
             </div>
         </div>
-
     </div>
   )
 }
