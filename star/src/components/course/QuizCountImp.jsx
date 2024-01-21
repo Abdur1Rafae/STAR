@@ -32,7 +32,7 @@ const QuizCountImp = () => {
             <p className='text-xs ml-[1px]'>Attempted</p>
         </div>
         <div className="imp flex flex-col justify-center items-center w-auto">
-        <div className='flex items-center'>
+            <div className='flex items-center'>
                 <AiOutlineBarChart  className='text-DarkBlue'/>
                 <p className='text-xs ml-[1px]'>Achieved</p>
             </div>

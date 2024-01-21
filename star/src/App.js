@@ -7,7 +7,8 @@ import './App.css';
 import StudentDashboard from './pages/Student/StudentDashboard';
 import CourseInfo from './pages/Student/CourseInfo.jsx';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import StudentCourses from './pages/Student/StudentCourses.jsx';
+import StudentCourses from './pages/Student/StudentCourses';
+import AssessmentInfo from './pages/Student/AssessmentInfo'
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/quiz" element = {<QuizScreen />} />
             <Route path="/courses" element = {<StudentCourses />} />
             <Route path="/courses/:courseName" element= {<CourseInfo />} />
+            <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
  	      </Routes>
         </BrowserRouter>
         </div>

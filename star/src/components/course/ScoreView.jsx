@@ -11,7 +11,7 @@ const ScoreView = () => {
         <div className='w-24 h-28 rounded-lg flex flex-col'>
             <h3 className='text-xs mt-4 font-medium self-center'>Average Score</h3>
             <div className='h-16 flex justify-center p-1'>
-                <CircularProgressBar percentage={95}/>
+                <CircularProgressBar percentage={95} width={10}/>
             </div>
         </div>
         <div className='separator h-20 border-[1px] border-black self-center'></div>
