@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CiViewList } from 'react-icons/ci';
+import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import FlagButton from './FlagButton'; // Import the FlagButton component
 
@@ -60,8 +61,7 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
                 }}
               >
                 <div class="relative start-5 inset-y-0 flex ">
-                  {String.fromCharCode(65 + index)} <p>)</p>
-                </div>
+                {selectedOption === option ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
 
                 <div className='relative end-32'>&nbsp;{option}</div>
               </div>
