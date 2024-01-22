@@ -2,6 +2,8 @@
 import React from 'react';
 import AccountManagerPage from './pages/Student/AccountManagerPage.jsx';
 import QuizScreen from './pages/Student/QuizScreen.jsx';
+import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
+
 import logo from './logo.svg';
 import './App.css';
 import StudentDashboard from './pages/Student/StudentDashboard';
@@ -21,6 +23,8 @@ const App = () => {
             <Route path="/courses" element = {<StudentCourses />} />
             <Route path="/courses/:courseName" element= {<CourseInfo />} />
             <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
+            <Route path="/quiz-result" element = {<QuizResultScreen />} />
+
  	      </Routes>
         </BrowserRouter>
         </div>
