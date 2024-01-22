@@ -11,7 +11,7 @@ import CourseNameInst from '../../components/course/CourseNameInst'
 
 const CourseInfo = () => {
   return (
-    <div className="">
+    <div className="flex flex-col mb-20 h-screen lg:h-full overflow-y-auto">
       <MenuBar/>
       <SubHeader/>
       <div className='mt-4 ml-auto mr-auto w-11/12'>

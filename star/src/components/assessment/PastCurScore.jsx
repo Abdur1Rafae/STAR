@@ -12,7 +12,7 @@ const PastCurScore = () => {
     <div className='flex-grow md:mb-0 mb-4 bg-LightBlue h-28 flex p-2 items-center justify-around drop-shadow-md'>
         <div className='w-24 h-20 flex flex-col'>
             <h3 className='text-xs font-medium self-center'>Previous Score</h3>
-            <div className='h-16 flex flex-col justify-end'>
+            <div className='h-12 mt-2 flex flex-col justify-end'>
                 <h3 className='text-xl font-body font-semibold mt-2 self-center'>{PreviousScore}</h3>
                 <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {PrevTotalScore}</h3>
             </div>
@@ -25,14 +25,12 @@ const PastCurScore = () => {
                 <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>
             </div>
         </div>
-        <div className="h-16 ml-4 flex flex-col justify-center items-center w-auto">
-            <div className='flex items-center'>
+        <div className='w-24 h-20 flex flex-col justify-center'>
+            <h3 className='text-xs font-medium self-center'>Improvement</h3>
+            <div className='h-16 flex flex-col justify-center items-center'>
                 <AiOutlineBarChart  className='text-orange-500 text-3xl'/>
-            </div>
-            <div className='flex'>
                 <h1 className={`text-DarkBlue text-xl md:text-2xl ${improvement>0 ? 'text-green-500' : 'text-red-500'}`}>+{improvement}%</h1>
             </div>
-            <h3 className='text-xs font-medium self-center'>Improvement</h3>
         </div>
     </div>
   )

@@ -11,7 +11,7 @@ import QuizSkilEval from '../../components/assessment/QuizSkilEval'
 
 const AssessmentInfo = () => {
   return (
-    <div>
+    <div className='flex flex-col lg:h-full'>
         <MenuBar/>
         <SubHeader/>
         <div className='mt-4 ml-auto mr-auto w-11/12'>

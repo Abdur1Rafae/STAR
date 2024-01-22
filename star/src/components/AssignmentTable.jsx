@@ -39,6 +39,7 @@ const AssignmentTable = () => {
                                 <button><TbArrowsMoveVertical/></button>
                             </th>
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Start Time</th>
+                            <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>End Time</th>
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Duration</th>
                         </tr>
                     </thead>
@@ -52,6 +53,7 @@ const AssignmentTable = () => {
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.closeDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px] text-centr'>{row.startTime}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-centr'>{row.closeTime}</td>
                                     <td className='p-3 text-sm border-black border-r-[1px] border-y-[1px] text-center'>{row.duration}</td>     
                                 </tr>
                             ))

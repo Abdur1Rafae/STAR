@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaUserCog } from 'react-icons/fa';
 import { RiLogoutCircleRLine } from 'react-icons/ri';
-import { PiBellFill } from 'react-icons/pi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import logo from './logo.png'
 
 const MenuBar = () => {
   let [profileDialog, setProfileDialog] = useState(false);
@@ -13,15 +13,11 @@ const MenuBar = () => {
 
     return (
         <div className="">
-            <div className='menu-container w-full h-14 bg-[#2C6491] flex items-center'>
+            <div className='menu-container w-full h-14 bg-DarkBlue flex items-center'>
                 <div className='menubar w-full flex justify-between'>
                     <div className="leftContainer flex border-r-2 border-white w-full justify-between">
                         <div className="menuleft logo flex justify-start">
-                            <img src='./mindloom.png' className='w-10 sm:ml-4 ml-2 mr-2'></img>
-                            <div className="h-full flex flex-col">
-                                <div className='font-sans font-[800] self-start mb-0 text-white'>mindLoom</div>
-                                <div className='sm:text-xs text-[10px] font-[600] text-white'>Assess.Enhance.Excel</div>
-                            </div>
+                            <img src={logo} className='w-44 sm:ml-4 ml-2 mr-2'></img>
                         </div>
                     </div>
                     <div className="rightContainer flex">
