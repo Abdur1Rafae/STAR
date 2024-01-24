@@ -9,7 +9,7 @@ const PastCurScore = () => {
 
     let improvement = 20;
   return (
-    <div className='flex-grow md:mb-0 mb-4 bg-LightBlue h-28 flex p-2 items-center justify-around drop-shadow-md'>
+    <div className='flex-grow md:mb-0 bg-LightBlue h-28 flex p-2 items-center justify-around drop-shadow-md'>
         <div className='w-24 h-20 flex flex-col'>
             <h3 className='text-xs font-medium self-center'>Previous Score</h3>
             <div className='h-12 mt-2 flex flex-col justify-end'>

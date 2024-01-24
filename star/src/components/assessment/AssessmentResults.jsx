@@ -6,7 +6,7 @@ import { TbPasswordFingerprint } from "react-icons/tb";
 
 const AssessmentResults = () => {
   return (
-    <div className='flex-grow bg-LightBlue h-28 md:mb-0 mb-4 flex p-2 items-center drop-shadow-md md:w-60 w-full'>
+    <div className='flex-grow bg-LightBlue h-28 md:mb-0 flex p-2 items-center drop-shadow-md md:w-60 w-full'>
         <div className='h-28 flex'>
             <CircularProgressBar percentage={87} width={8}/>
         </div>

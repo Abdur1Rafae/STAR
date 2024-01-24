@@ -22,7 +22,7 @@ const QuizSubheader = () => {
               <h1 className='ml-2 sm:ml-4 font-bold text-sm sm:text-lg'>{name}</h1>
               <Timer initialTime = {60*5}/>
             </div>
-            <div className={`rightContainer flex border-black ${showNav ? 'border-b-0' : 'border-b-[1px]'} items-center justify-center`}>
+            <div className={`rightContainer flex border-black transition-all duration-200 hover:text-DarkBlue ${showNav ? 'border-b-0' : 'border-b-[1px]'} items-center justify-center`}>
                 <button className='ml-2 sm:ml-4 sm:mr-4 flex w-26 justify-around items-center lg:w-56' onClick={handleShowNav}>
                     <div className='sm:text-sm flex'>
                       {!isTabletOrMobile && <span>Quiz Navigation</span>}

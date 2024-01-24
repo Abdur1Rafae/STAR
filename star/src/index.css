@@ -20,7 +20,15 @@
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #196999;
-    border-radius: 0 0 5px 5px;
+    background: #196999;;
 }
- 
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

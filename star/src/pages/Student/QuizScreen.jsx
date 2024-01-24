@@ -40,7 +40,7 @@ const handlePrevious = () => {
 };
 
 return (
-  <div className='flex flex-col w-screen lg:w-full overflow-x-hidden'>
+  <div className='flex flex-col w-screen lg:w-full'>
     <MenuBar/>
     <QuizSubheader/>
     <div className="flex">
@@ -81,8 +81,8 @@ return (
         </div>
 
       </div>
-      <div className={`z-10 absolute right-0 md:static border-l-[1px] border-black bg-[#F4F9FD] transition-all ease-out duration-500 ${showNav ? ' w-64' : 'w-0'}`}>
-        <div className='dropdown-list w-full sm:w-36 md:w-64 flex items-start justify-around'>
+      <div className={`h-screen z-10 absolute md:sticky md:top-0 right-0 border-l-[1px] border-black bg-LightBlue transition-all ease-out flex-shrink duration-500 ${showNav ? 'w-[16.1rem]' : 'w-0'}`}>
+        <div className={`dropdown-list ${showNav ? 'sm:w-36 md:w-[15.9rem]' : 'w-0'} flex items-start justify-around`}>
           {(
             <>
               <QuizNavigation/>

@@ -3,64 +3,49 @@
 import React from 'react';
 
 const QuestionDetails = ({ score, topic, difficulty, skillTargeted, currentQuestion, totalQuestions }) => {
-  // Define CSS classes for different difficulty levels
+
   const difficultyClasses = {
-    Easy: 'text-green-500', // Adjust color according to your preference
-    Medium: 'text-yellow-500', // Adjust color according to your preference
-    Hard: 'text-red-500', // Adjust color according to your preference
+    Easy: 'text-green-500',
+    Medium: 'text-yellow-500', 
+    Difficult: 'text-red-500',
+    Hard: 'text-DarkBlue'
   };
 
   // Get the corresponding CSS class for the current difficulty
-  const difficultyClass = difficultyClasses[difficulty] || 'text-gray-500'; // Default to gray if difficulty is not recognized
+  const difficultyClass = difficultyClasses[difficulty] || 'text-gray-500';
 
   return (
     <div className="p-4">
-      <h2 className="text-l font-bold pb-4">Question Details</h2>
+      <h2 className="text-lg font-bold font-body pb-4">Question Details</h2>
       
       <div className="mb-4">
-        <div className="flex justify-between mb-2">
-          <div className='font-bold text-sm'>
-            <p className='sm:text-sm md:text-md md:flex pb-2 md:pb-2 '>
-              Score: 
-              &nbsp;
-              <div className='flex font-medium'>
-                <span>{score} out of 10 </span>
+        <div className="mb-2">
+          <div className='text-sm'>
+            <div className='mt-2 w-full'>
+              <div className='flex text-xs font-body w-full'>
+                  <h4 className='font-medium w-32 md:w-24'>Score:</h4>
+                  <div className='w-full flex justify-center'>{score} out of 10</div>
               </div>
-            </p>
-            <p className={`flex pb-2 `}>
-              Difficulty: 
-              &nbsp;
-              <div className={`flex font-medium  ${difficultyClass}`}>
-                <span >{difficulty}</span>
+
+              <div className='flex text-xs mt-2  font-body'>
+                  <h4 className='font-medium w-32 md:w-24'>Difficulty:</h4>
+                  <div className={`w-full flex justify-center ${difficultyClass}`}>{difficulty}</div>
               </div>
-            </p>
-            <p className='flex pb-2'>
-                Skill Targeted:
-                &nbsp;
-            <div className={`flex font-medium  items-center`}>
-                <span>{skillTargeted}</span>
+
+              <div className='flex text-xs mt-2 font-body'>
+                  <h4 className='font-medium w-32 md:w-24'>Skill Targeted:</h4>
+                  <div className='w-full flex justify-center self-center'>{skillTargeted}</div>
               </div>
-            </p>
-            <p className='flex pb-2'>
-              Topic: 
-              &nbsp;
-              <div className={`flex font-medium `}>
-                <span >{topic}</span>
+
+              <div className='flex text-xs mt-2 font-body'>
+                  <h4 className='font-medium w-32 md:w-24'>Topic:</h4>
+                  <div className='w-full flex justify-center'>{topic}</div>
               </div>
-            </p>
+            </div>
           </div>
         </div>
-        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
 
-        <div>
-        <h2 className="text-l font-bold pb-4">Explanation</h2>
-        <p className='text-sm font-light'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
-            lectus, quis consectetur nunc elit sed lorem. Donec euismod
-        </p>
-        </div>
-        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+        <hr class="h-px my-8 border-[1px] border-black"></hr>
 
         <div>
         <h2 className="text-l font-bold pb-4">Feedback</h2>

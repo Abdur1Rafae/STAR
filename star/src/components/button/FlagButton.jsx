@@ -1,9 +1,9 @@
 import React from 'react';
-import { AiOutlineFlag, AiFillFlag } from 'react-icons/ai';
+import { IoFlagOutline, IoFlag } from "react-icons/io5";
 
 const FlagButton = ({ flagged, onToggleFlag }) => (
-  <button className="focus:outline-none" onClick={onToggleFlag}>
-    {flagged ? <AiFillFlag color="red" /> : <AiOutlineFlag />}
+  <button className="focus:outline-none text-2xl" onClick={onToggleFlag}>
+    {flagged ? <IoFlag color="red" /> : <IoFlagOutline />}
   </button>
 );
 

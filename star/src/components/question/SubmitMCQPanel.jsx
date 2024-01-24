@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
-import SubmitButton from './SubmitButton';
+import SubmitButton from '../button/SubmitButton';
 
 const SubmitMCQPanel = ({ question }) => {
 
   return (
-    <div className="w-full mx-auto bg-white p-4 shadow-md rounded-md">
+    <div className="flex-grow w-full mx-auto p-4 shadow-md rounded-md">
       <div className="">
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
       <div className="mb-4">
         <div className='flex justify-between'>
-          <p className="text-lg">{question?.text}</p>
+          <p className="text-md">{question?.text}</p>
         </div>
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
@@ -29,7 +29,7 @@ const SubmitMCQPanel = ({ question }) => {
               <div
                 className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between border border-2 ${
                   question?.correctAnswer === option ? 'bg-green-300 ' : question?.selectedAnswer === option
-                  ? 'bg-red-300 ' // Selected but incorrect answer
+                  ? 'bg-red-300 '
                   : ''
                 }`}
               
@@ -45,9 +45,9 @@ const SubmitMCQPanel = ({ question }) => {
 
       
       <div className="flex items-center justify-between">
-  <SubmitButton label="Previous" />
-  <SubmitButton label="Next" />
-</div>
+        <SubmitButton label="Previous" />
+        <SubmitButton label="Next" />
+      </div>
       
 
     </div>

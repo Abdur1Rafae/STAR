@@ -48,7 +48,7 @@ export const data = {
     datasets: [
     {
         data: [7, 9, 8, 8, 6, 5],
-        backgroundColor: 'rgba(217, 235, 255, 1)',
+        backgroundColor: 'rgba(197, 216, 109, 0.5)',
         borderColor: 'rgba(44, 100, 145, 1)',
         borderWidth: 1,
     },

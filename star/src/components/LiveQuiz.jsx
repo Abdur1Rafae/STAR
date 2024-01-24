@@ -5,7 +5,7 @@ import { FaCircleArrowRight } from "react-icons/fa6";
 
 const LiveQuiz = () => {
   return (
-    <div className='QuizTile flex border-2 border-grey mt-4 ml-4 rounded-lg'>
+    <button className='flex border-2 border-grey mt-4 ml-4 rounded-lg transition-all duration-200 text-left hover:scale-105'>
         <img src='./liveQuiz.png' className='h-[120px] self-center'></img>
         <div className='infoContainer ml-2 mr-2 flex flex-col w-[200px] h-full'>
             <h1 className='font-[700] text-md mt-1'>Monthly Test</h1>
@@ -25,7 +25,7 @@ const LiveQuiz = () => {
                 </div>
             </div>
         </div>
-    </div>
+    </button>
   )
 }
 
