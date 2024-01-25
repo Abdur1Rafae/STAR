@@ -33,7 +33,7 @@ const MenuBar = () => {
             </div>
             <div className={`dialogue z-20 absolute border-2 right-0 bg-[#F4F9FD] transition ease-out duration-500 ${profileDialog ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                 {profileDialog && (
-                    <div className='h-20 dropdown-list w-36 lg:w-60 flex flex-col items-center justify-around'>
+                    <div className='h-20 dropdown-list w-36 lg:w-64 flex flex-col items-center justify-around'>
                         <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>window.location.assign('/manage-account')}>
                             <FaUserCog className='self-center ml-4 text-lg'/>
                             <button className='ml-2'>Profile</button>

@@ -3,6 +3,7 @@ import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import FlagButton from '../button/FlagButton';
 import { MdChecklistRtl } from "react-icons/md";
+import { GiBullseye } from "react-icons/gi";
 
 const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -22,12 +23,12 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
       <div className="">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
+            <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
               Multiple Choice Question
             </p>
             <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
-              <div><MdChecklistRtl className='text-lg self-center'/></div>
-              <p className="text-sm self-center"> {question?.marks} marks</p>
+              <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
+              <p className="text-gray-500 text-sm self-center"> {question?.marks} marks</p>
             </div>
           </div>
         </div>

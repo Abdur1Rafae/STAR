@@ -6,7 +6,6 @@ import TrueFalse from '../../components/question/TrueFalsePanel';
 import TextAnswer from '../../components/question/TextAnswerPanel';
 import MenuBar from '../../components/MenuBar';
 import QuizSubheader from '../../components/quiz/QuizSubheader';
-import { toggleNav } from '../../redux/qnavSlice';
 import { useSelector } from 'react-redux';
 
 const QuizScreen = () => {
@@ -46,7 +45,7 @@ return (
     <div className="flex">
       <div className="quiz-screen p-4 w-screen">
         <div className="flex justify-between mb-4">
-          <MCQPanel
+              <MCQPanel
                 question={questions[currentQuestion]}
                 onOptionSelect={handleOptionSelect}
                 currentQuestion={currentQuestion}

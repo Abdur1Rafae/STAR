@@ -33,12 +33,12 @@ const QuizTitleBar = ({Course_Name, assessment_Name}) => {
             </div>
         </div>
         <div className='self-center mt-4 md:m-0 md:mr-4 flex justify-around md:justify-end text-sm w-full md:w-1/2 h-12'>
-            <button className={`flex h-full items-center mr-4 ${showTab ? 'border-b-2 border-DarkBlue' : ''} group relative inline-block`} onClick={setSummaryActive}>
+            <button className={`flex h-full items-center mr-4 ${showTab ? 'border-b-2 border-DarkBlue' : 'group relative inline-block'}`} onClick={setSummaryActive}>
               <TbReportAnalytics className='self-center text-xl'/>
               <span class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-DarkBlue transition-all duration-200 group-hover:w-full"></span>
               <h3 className='font-medium'>Summmary</h3>
             </button>
-            <button className={`flex items-center ${showTab ? '' : 'border-b-2 border-DarkBlue'} group relative inline-block`} onClick={setSubmissionActive}>
+            <button className={`flex items-center ${showTab ? 'group relative inline-block' : 'border-b-2 border-DarkBlue'}`} onClick={setSubmissionActive}>
               <LiaPaperclipSolid className='self-center text-xl'/>
               <span class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-DarkBlue transition-all duration-200 group-hover:w-full"></span>
               <h3 className='font-medium'>Submission</h3>

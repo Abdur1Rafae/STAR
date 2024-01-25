@@ -5,17 +5,17 @@ const AssessmentDetiails = () => {
     <div className='bg-LightBlue w-full mb-4 md:mb-0 md:w-72 h-auto py-2 px-4 drop-shadow-md'>
         <h3 className='font-medium text-sm font-body'>Asessment Details</h3>
         <div className='mt-2 w-full'>
-            <div className='flex text-xs font-body w-full'>
+            <div className='flex text-xs font-body w-full justify-between'>
                 <h4 className='font-medium w-24'>Questions:</h4>
-                <div className='w-full flex justify-center'>10</div>
+                <div className='w-40 flex justify-center'>10</div>
             </div>
-            <div className='flex text-xs mt-2  font-body'>
+            <div className='flex text-xs mt-2 font-body justify-between'>
                 <h4 className='font-medium w-24'>Duration:</h4>
-                <div className='w-full flex justify-center'>30 mins</div>
+                <div className='w-40 flex justify-center'>30 mins</div>
             </div>
-            <div className='flex text-xs mt-2 font-body'>
+            <div className='flex text-xs mt-2 font-body justify-between'>
                 <h4 className='font-medium w-24'>Taken On:</h4>
-                <div className='w-full flex justify-center'>22 Dec 2023 23:59</div>
+                <div className='w-40 flex justify-center'>22 Dec 2023 23:59</div>
             </div>
         </div>
 

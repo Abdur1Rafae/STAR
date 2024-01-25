@@ -12,7 +12,7 @@ import CourseNameInst from '../../components/course/CourseNameInst'
 const CourseInfo = () => {
   const quizzes = 1
   return (
-    <div className="flex flex-col mb-20 h-screen lg:h-full overflow-y-auto">
+    <div className="flex flex-col mb-20">
       <MenuBar/>
       <SubHeader/>
       <div className='mt-4 ml-auto mr-auto w-11/12'>

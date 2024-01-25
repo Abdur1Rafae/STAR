@@ -8,14 +8,14 @@ export const options = {
   responsive: true,
   tension: 0.4,
   plugins: {
-    // legend: {
-    //   position: 'top',
-    // },
+    legend: {
+    display: false,
+    }
+  },
     // title: {
     //   display: true,
     //   text: 'Performance',
     // },
-  },
 };
 
 const labels = ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5', 'Test 6', 'Test 7'];
@@ -27,7 +27,6 @@ export const data = {
   labels,
   datasets: [
     {
-      label: 'Assessments',
       data: labels.map(() => getRandomNumberFromRange(0, 100)),
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',

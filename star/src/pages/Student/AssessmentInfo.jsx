@@ -11,7 +11,7 @@ const AssessmentInfo = () => {
   let showTab = useSelector((state)=> state.qrTab.value)
 
   return (
-    <div className='flex flex-col lg:h-full'>
+    <div className='flex flex-col'>
         <MenuBar/>
         <SubHeader/>
         <div className='mt-4 ml-auto mr-auto w-11/12'>

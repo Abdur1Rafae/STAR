@@ -13,14 +13,13 @@
     width: 10px;
 }
  
-/* Track */
+
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
  
-/* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #196999;;
+    background: #196999;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
