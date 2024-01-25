@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
+import { TbClockOff } from "react-icons/tb";
 
 const Timer = ({ initialTime }) => {
   const [remainingTime, setRemainingTime] = useState(initialTime);
@@ -36,7 +37,7 @@ const Timer = ({ initialTime }) => {
       <div className="w-36 timer-box p-2 rounded-md"> 
         <button className='h-full flex items-center' onClick={handleToggleTime}>
           <p className="timer-text text-black font-bold flex justify-center">
-            <span className='mr-1'><AiOutlineClockCircle size={24} /></span>
+            {showTime ? <span className='mr-1 text-DarkBlue'><TbClockOff size={24} /></span> : <span className='mr-1 text-DarkBlue'><AiOutlineClockCircle size={24} /></span> }
             {
               <div className={`text-sm sm:text flex items-center font-semibold transition-opacity duration-500 ease-out ${showTime ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                 {formattedTime.hours} : {formattedTime.minutes} : {formattedTime.seconds}

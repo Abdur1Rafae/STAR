@@ -1,12 +1,9 @@
-// QuizNavigation.js
 import React, { useState } from 'react';
-import { BsChevronDown, BsChevronRight } from 'react-icons/bs';
-import { AiOutlineFlag, AiFillFlag } from 'react-icons/ai';
 
 
 
 const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
-  const [expandedGroups, setExpandedGroups] = useState({});
+  const [ setExpandedGroups] = useState({});
 
   const categories = [
     {
@@ -56,8 +53,8 @@ const QuizNavigation = ({ currentQuestion, totalQuestions, onNextClick }) => {
   };
 
   return (
-    <div className='flex flex-col items-center w-full overflow-auto'>
-      <select name="cars" id="cars" className='mt-4 w-32 border-b-2 border-black h-8 bg-[#F4F9FD] font-semibold mb-4'>
+    <div className='flex flex-col h-screen items-center w-full overflow-y-auto no-scrollbar'>
+      <select name="cars" id="cars" className='mt-4 w-32 border-b-2 border-black h-8 bg-LightBlue font-semibold mb-4'>
           <option value="All">All Questions</option>
           <option value="Unanswered">Unanswered</option>
           <option value="Flagged">Flagged</option>

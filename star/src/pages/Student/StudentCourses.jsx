@@ -1,7 +1,7 @@
 import React from 'react'
 import MenuBar from '../../components/MenuBar';
 import AssignmentTable from '../../components/AssignmentTable';
-import CourseCard from '../../components/CourseCard';
+import CourseCard from '../../components/course/CourseCard';
 import SubHeader from '../../components/SubHeader';
 
 const StudentCourses = () => {

@@ -1,12 +1,11 @@
 import React from 'react';
-import MCQPanel from '../../components/MCQPanel';
-import SubmitButton from '../../components/SubmitButton';
-import QuizNavigation from '../../components/QuizNavigation';
-import TrueFalse from '../../components/TrueFalsePanel';
-import TextAnswer from '../../components/TextAnswerPanel';
+import MCQPanel from '../../components/question/MCQPanel';
+import SubmitButton from '../../components/button/SubmitButton';
+import QuizNavigation from '../../components/quiz/QuizNavigation';
+import TrueFalse from '../../components/question/TrueFalsePanel';
+import TextAnswer from '../../components/question/TextAnswerPanel';
 import MenuBar from '../../components/MenuBar';
-import QuizSubheader from '../../components/QuizSubheader';
-import { toggleNav } from '../../redux/qnavSlice';
+import QuizSubheader from '../../components/quiz/QuizSubheader';
 import { useSelector } from 'react-redux';
 
 const QuizScreen = () => {
@@ -40,13 +39,13 @@ const handlePrevious = () => {
 };
 
 return (
-  <div className='flex flex-col w-screen lg:w-full overflow-x-hidden'>
+  <div className='flex flex-col w-screen lg:w-full'>
     <MenuBar/>
     <QuizSubheader/>
     <div className="flex">
       <div className="quiz-screen p-4 w-screen">
         <div className="flex justify-between mb-4">
-          <MCQPanel
+              <MCQPanel
                 question={questions[currentQuestion]}
                 onOptionSelect={handleOptionSelect}
                 currentQuestion={currentQuestion}
@@ -81,8 +80,8 @@ return (
         </div>
 
       </div>
-      <div className={`z-10 absolute right-0 md:static border-l-[1px] border-black bg-[#F4F9FD] transition-all ease-out duration-500 ${showNav ? ' w-64' : 'w-0'}`}>
-        <div className='dropdown-list w-full sm:w-36 md:w-64 flex items-start justify-around'>
+      <div className={`h-screen z-10 absolute md:sticky md:top-0 right-0 border-l-[1px] border-black bg-LightBlue transition-all ease-out flex-shrink duration-500 ${showNav ? 'w-[16.1rem]' : 'w-0'}`}>
+        <div className={`dropdown-list ${showNav ? 'sm:w-36 md:w-[15.9rem]' : 'w-0'} flex items-start justify-around`}>
           {(
             <>
               <QuizNavigation/>

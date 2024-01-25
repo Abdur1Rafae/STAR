@@ -9,7 +9,8 @@ module.exports = {
         body: ['Poppins']
       },
       colors: {
-        'brand-blue': '#2C6491',
+        'DarkBlue': '#2C6491',
+        'LightBlue': '#F4F9FD'
       },
     },
   },
