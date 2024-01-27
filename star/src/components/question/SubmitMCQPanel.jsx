@@ -44,11 +44,36 @@ const SubmitMCQPanel = ({ question }) => {
       </div>
 
       
-      <div className="flex items-center justify-between">
+      <div className="sm:flex items-center justify-between md:hidden">
         <SubmitButton label="Previous" />
         <SubmitButton label="Next" />
       </div>
       
+      <div class="overflow-y-auto h-32 border border-black border-2 ">
+    <h2 className="text-l font-bold pb-4">Explanation</h2>
+
+    <p className='text-sm font-light'>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+        tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
+        lectus, quis consectetur nunc elit sed lorem. Donec euismod
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+        tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
+        lectus, quis consectetur nunc elit sed lorem. Donec euismod
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+        tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
+        lectus, quis consectetur nunc elit sed lorem. Donec euismodLorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+        tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
+        lectus, quis consectetur nunc elit sed lorem. Donec euismod
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+        tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
+        lectus, quis consectetur nunc elit sed lorem. Donec euismod
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+        tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
+        lectus, quis consectetur nunc elit sed lorem. Donec euismod
+        
+        
+    </p>
+</div>
 
     </div>
   );
