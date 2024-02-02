@@ -1,9 +1,5 @@
-// AccountForm.js
 import React, { useState } from 'react';
-import SubmitButton from './button/SubmitButton';
-import CancelButton from './button/CancelButton';
-
-import '../index.css'; // Import the CSS file
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 const AccountForm = () => {
   const [formData, setFormData] = useState({
@@ -11,9 +7,11 @@ const AccountForm = () => {
     lastName: 'Doe',
     email: 'john@example.com',
     studentId: '123456',
-    currentPassword: '********',
+    currentPassword: 'mypassword',
     newPassword: '',
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -22,85 +20,90 @@ const AccountForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic to handle form submission
-    console.log('Form submitted:', formData);
+  const handlePasswordToggle = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
-    <div className="my-4 max-w-screen-md border px-4 shadow-xl sm:mx-4 sm:rounded-xl sm:px-4 sm:py-4 md:mx-auto">
-      <div className="flex flex-col border-b py-4 sm:flex-row sm:items-start">
-        <div className="shrink-0 mr-auto sm:py-3">
-          <p className="font-medium">Account Details</p>
-          <p className="text-sm text-gray-600">Edit your account details</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-4 border-b py-4 sm:flex-row">
-        <div className="flex flex-col w-full">
-          <label className="shrink-0 w-32 font-medium">Name</label>
+    <div>
+      <div className='flex pb-4'>
+        <div className='h-16 w-2/5 border bg-blue-50 rounded-md shadow-md flex flex-col mr-4'>
+          <span className='pl-2 pt-2 text-xs font-light'>First Name</span>
           <input
+            type="text"
             value={formData.name}
+            name="name"
             onChange={handleChange}
-            className="mb-2 w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
+            className="pl-2 outline-none focus:outline-none bg-blue-50"
+
           />
         </div>
-        <div className="flex flex-col w-full">
-          <label className="shrink-0 w-32 font-medium">Last Name</label>
+        <div className='h-16 w-1/3 border bg-blue-50 rounded-md shadow-md flex flex-col'>
+          <span className='pl-2 pt-2 text-xs font-light'>Last Name</span>
           <input
+            type="text"
             value={formData.lastName}
+            name="lastName"
             onChange={handleChange}
-            className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
+            className="pl-2 outline-none focus:outline-none bg-blue-50"
           />
         </div>
       </div>
-
-      <div className="flex flex-col gap-4 border-b py-4 sm:flex-row">
-        <div className="flex flex-col w-full">
-          <label className="shrink-0 w-32 font-medium">Student ID</label>
+      <div className='flex pb-4'>
+        <div className='h-16 w-1/2 border bg-blue-50 rounded-md shadow-md flex flex-col mr-4'>
+          <span className='pl-2 pt-2 text-xs font-light'>Email</span>
           <input
-            value={formData.studentId}
-            onChange={handleChange}
-            className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
-          />
-        </div>
-        
-      </div>
-      <div className="flex flex-col w-full">
-          <label className="shrink-0 w-32 font-medium">Email</label>
-          <input
+            type="email"
             value={formData.email}
+            name="email"
             onChange={handleChange}
-            className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
+            className="pl-2 outline-none focus:outline-none bg-blue-50"
           />
         </div>
-      <div className="flex flex-col gap-4 border-b py-4 sm:flex-row">
-        <div className="flex flex-col w-full">
-          <label className="shrink-0 w-32 font-medium">Current Password</label>
+        <div className='h-16 w-1/4 border bg-blue-50 rounded-md shadow-md flex flex-col'>
+          <span className='pl-2 pt-2 text-xs font-light'>Student ID</span>
           <input
+            type="text"
+            value={formData.studentId}
+            name="studentId"
+            onChange={handleChange}
+            className="pl-2 outline-none focus:outline-none bg-blue-50"
+          />
+        </div>
+      </div>
+
+      <div className='h-16 w-3/5 border bg-blue-50 rounded-md shadow-md flex flex-col mb-4'>
+        <span className='pl-2 pt-2 text-xs font-light'>Password</span>
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
             value={formData.currentPassword}
+            name="currentPassword"
             onChange={handleChange}
-            className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
+            className="pl-2 outline-none focus:outline-none bg-blue-50"
           />
+          <div
+            className="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer pr-2"
+            onClick={handlePasswordToggle}
+          >
+            {showPassword ? (
+              <FaRegEyeSlash size={20} color="#2C6491" />
+            ) : (
+              <FaRegEye size={20} color="#2C6491" />
+            )}
+          </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-4 border-b py-4 sm:flex-row">
-        <div className="flex flex-col w-full">
-          <label className="shrink-0 w-32 font-medium">New Password</label>
-          <input
-            value={formData.newPassword}
-            onChange={handleChange}
-            className="w-full rounded-md border bg-white px-2 py-2 outline-none ring-blue-600 focus:ring-1"
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-between mt-6">
-      <CancelButton onClick={() => console.log('Cancel Clicked')}>Cancel</CancelButton>
-
-        <SubmitButton>Save Changes</SubmitButton>
+      <div className='h-16 w-3/5 border bg-blue-50 rounded-md shadow-md flex flex-col mb-4'>
+        <span className='pl-2 pt-2 text-xs font-light'>Confirm Password</span>
+        <input
+          type="password"
+          value={formData.newPassword}
+          name="newPassword"
+          onChange={handleChange}
+          className="pl-2 outline-none focus:outline-none bg-blue-50"
+        />
+        
       </div>
     </div>
   );

@@ -1,21 +1,13 @@
-// CancelButton.js
+// SubmitButton.js
 import React from 'react';
 
-const CancelButton = ({ onClick, children }) => {
+const CancelButton = ({ onClick, label }) => {
   return (
     <button
       onClick={onClick}
-      className="bg-transparent hover:bg-gray-300 text-black font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
-      style={{
-        width: '180px',
-        height: '45px',
-        borderRadius: '8px',
-        border: '1px solid #000',
-        position: 'relative',
-        // Add other styles as needed
-      }}
+      className="relative h-8 bg-transparent w-fit border border-black text-black font-bold px-3 rounded focus:outline-none focus:shadow-outline"
     >
-      {children}
+      {label}
     </button>
   );
 };

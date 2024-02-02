@@ -10,7 +10,9 @@ module.exports = {
       },
       colors: {
         'DarkBlue': '#2C6491',
-        'LightBlue': '#F4F9FD'
+        'LightBlue': '#F4F9FD',
+        'DeleteRed' : "#E0241B"
+
       },
     },
   },
