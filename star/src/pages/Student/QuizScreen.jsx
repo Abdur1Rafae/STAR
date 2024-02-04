@@ -45,24 +45,24 @@ return (
     <div className="flex">
       <div className="quiz-screen p-4 w-screen">
         <div className="flex justify-between mb-4">
-              <MCQPanel
+              {/* <MCQPanel
                 question={questions[currentQuestion]}
                 onOptionSelect={handleOptionSelect}
                 currentQuestion={currentQuestion}
                 totalQuestions={questions.length}
-              />
+              /> */}
           
 
-            {/* <TrueFalse question={questions[currentQuestion]?.text}
+            {/* <TrueFalse question={questions[currentQuestion]}
               options={questions[currentQuestion]?.choices}
               onAnswerSelect={handleOptionSelect}
               currentQuestion={currentQuestion}
               totalQuestions={questions.length}/> */}
 
-                {/* <TextAnswer question={questions[currentQuestion]?.text}
+                <TextAnswer question={questions[currentQuestion]}
               options={questions[currentQuestion]?.choices}
               currentQuestion={currentQuestion}
-              totalQuestions={questions.length} /> */}
+              totalQuestions={questions.length} />
         </div>
 
         
@@ -81,7 +81,7 @@ return (
 
       </div>
       <div className={`h-screen z-10 absolute md:sticky md:top-0 right-0 border-l-[1px] border-black bg-LightBlue transition-all ease-out flex-shrink duration-500 ${showNav ? 'w-[16.1rem]' : 'w-0'}`}>
-        <div className={`dropdown-list ${showNav ? 'sm:w-36 md:w-[15.9rem]' : 'w-0'} flex items-start justify-around`}>
+        <div className={`transition-all ease-out duration-500 ${showNav ? 'sm:w-36 md:w-[15.9rem]' : 'w-0'} flex items-start justify-around`}>
           {(
             <>
               <QuizNavigation/>

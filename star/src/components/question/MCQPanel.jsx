@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import FlagButton from '../button/FlagButton';
-import { MdChecklistRtl } from "react-icons/md";
 import { GiBullseye } from "react-icons/gi";
 
 const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions }) => {
@@ -64,7 +63,7 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
                 <div class="relative start-5 inset-y-0 flex ">
                 {selectedOption === option ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
 
-                <div className='relative end-32'>&nbsp;{option}</div>
+                <div className=''>{option}</div>
               </div>
             </div>
           ))}

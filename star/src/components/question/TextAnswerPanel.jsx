@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CiViewList } from 'react-icons/ci';
+import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import FlagButton from '../button/FlagButton';
 
@@ -22,47 +22,42 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuest
   };
 
   return (
-    <div className="w-full sm:w-2/3 lg:w-3/4 mx-auto bg-white p-4 shadow-md rounded-md">
+    <div className="w-full mx-auto bg-white p-4 shadow-md rounded-md mb-4">
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-lg font-semibold mr-2 p-2 box-border h-12 border border-black rounded-md">
-              Text Answer Question
+            <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
+              Short Question
             </p>
-            <div className='flex justify-between space-x-1 p-2 box-border h-12 border border-black rounded-md text-justify font-semibold'>
-              <span><CiViewList /></span>
-              <p className="text-sm"> {question?.marks} marks</p>
+            <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
+              <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
+              <p className="text-gray-500 text-sm self-center"> {question?.marks} marks</p>
             </div>
           </div>
         </div>
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
-      <div className="mb-4">
+      <div className="mb-4 flex flex-col items-center">
+        <button className='h-32 w-40'><QuizImage imageUrl={question?.imageurl} /></button>
         <div className='flex justify-between'>
-          <p className="text-lg">{question?.text}</p>
-          <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag} />
+          <div className='w-11/12'>
+            <p className="text-lg select-none">{question?.text}</p>
+          </div>
+          <div className='flex justify-center w-1/12'>
+            <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
+          </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
 
-      <div><QuizImage imageUrl={question?.imageurl} /></div>
+      <div className="border-t border-black border-2 mb-4 "></div>
 
       <div className="options">
         <textarea
-          className="w-full p-2 mb-2 bg-transparent border border-black rounded-md"
+          className="w-full h-32 p-2 mb-2 bg-transparent border border-black rounded-md resize-none"
           placeholder="Type your answer here..."
           value={userAnswer}
           onChange={handleAnswerChange}
         />
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          onClick={handleAnswerSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
-        >
-          Submit Answer
-        </button>
       </div>
     </div>
   );

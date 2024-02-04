@@ -17,17 +17,16 @@ const App = () => {
       <div className=''>
         <BrowserRouter>
 	        <Routes>
-            <Route path = "/home" element = {<StudentDashboard/>} />
-            <Route path = "/manage-account" element = {<AccountManagerPage/>} />
+            <Route path="/home" element = {<StudentDashboard/>} />
+            <Route path="/manage-account" element = {<AccountManagerPage/>} />
             <Route path="/quiz" element = {<QuizScreen />} />
             <Route path="/courses" element = {<StudentCourses />} />
             <Route path="/courses/:courseName" element= {<CourseInfo />} />
             <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
             <Route path="/quiz-result" element = {<Demo/>} />
-
  	      </Routes>
         </BrowserRouter>
-        </div>
+      </div>
   );
 };
 
