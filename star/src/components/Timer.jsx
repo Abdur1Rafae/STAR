@@ -8,45 +8,39 @@ const Timer = ({ initialTime }) => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setRemainingTime((prevTime) => {
-        const newTime = prevTime - 1;
-        return newTime >= 0 ? newTime : 0;
-      });
+      setRemainingTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
-  let handleToggleTime = () => {
-    setShowTime(!showTime)
-  }
+  useEffect(() => {
+    if (remainingTime === 0) {
+      window.location.assign('/home');
+    }
+  }, [remainingTime]);
 
+  const formatTime = time => time.toString().padStart(2, '0');
 
-  const hours = Math.floor(remainingTime / 3600);
-  const minutes = Math.floor((remainingTime % 3600) / 60);
-  const seconds = remainingTime % 60;
+  const toggleTime = () => setShowTime(prevShowTime => !prevShowTime);
 
-  const formattedTime = {
-    hours: hours.toString().padStart(2, '0'),
-    minutes: minutes.toString().padStart(2, '0'),
-    seconds: seconds.toString().padStart(2, '0'),
+  const { hours, minutes, seconds } = {
+    hours: formatTime(Math.floor(remainingTime / 3600)),
+    minutes: formatTime(Math.floor((remainingTime % 3600) / 60)),
+    seconds: formatTime(remainingTime % 60)
   };
 
   return (
     <div className="h-10 timer-container flex items-center ml-4 mr-4">
-      <div className="w-36 timer-box p-2 rounded-md"> 
-        <button className='h-full flex items-center' onClick={handleToggleTime}>
-          <p className="timer-text text-black font-bold flex justify-center">
-            {showTime ? <span className='mr-1 text-DarkBlue'><TbClockOff size={24} /></span> : <span className='mr-1 text-DarkBlue'><AiOutlineClockCircle size={24} /></span> }
-            {
-              <div className={`text-sm sm:text flex items-center font-semibold transition-opacity duration-500 ease-out ${showTime ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                {formattedTime.hours} : {formattedTime.minutes} : {formattedTime.seconds}
-              </div>
-            }
-            
-          </p>
+      <div className="w-36 timer-box p-2 rounded-md">
+        <button className='h-full flex items-center' onClick={toggleTime}>
+          <div className="timer-text text-black font-bold flex justify-center">
+            {showTime ? <TbClockOff size={24} className='text-DarkBlue mr-1' /> : <AiOutlineClockCircle size={24} className='text-DarkBlue mr-1' />}
+            <p className={`text-sm sm:text flex items-center font-semibold transition-opacity duration-500 ease-out ${showTime ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+              {`${hours} : ${minutes} : ${seconds}`}
+            </p>
+          </div>
         </button>
-      
       </div>
     </div>
   );

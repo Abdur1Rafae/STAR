@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { CiViewList } from 'react-icons/ci';
+import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import FlagButton from '../button/FlagButton';
+import { GrRadialSelected } from "react-icons/gr";
 
 const TrueFalsePanel = ({ question, onAnswerSelect, currentQuestion, totalQuestions }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -22,12 +23,12 @@ const TrueFalsePanel = ({ question, onAnswerSelect, currentQuestion, totalQuesti
       <div className="mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-lg font-semibold mr-2 p-2 box-border h-12 border border-black rounded-md">
-              True/False Question
+            <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
+              Multiple Choice Question
             </p>
-            <div className='flex justify-between space-x-1 p-2 box-border h-12 border border-black rounded-md text-justify font-semibold'>
-              <span><CiViewList /></span>
-              <p className="text-sm"> {question?.marks} marks</p>
+            <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
+              <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
+              <p className="text-gray-500 text-sm self-center"> {question?.marks} marks</p>
             </div>
           </div>
         </div>
@@ -35,46 +36,40 @@ const TrueFalsePanel = ({ question, onAnswerSelect, currentQuestion, totalQuesti
       </div>
       <div className="mb-4">
         <div className='flex justify-between'>
-          <p className="text-lg">{question?.text}</p>
-          <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag} />
+          <div className='w-11/12'>
+            <p className="text-lg">{question?.text}</p>
+          </div>
+          <div className='flex justify-center w-1/12'>
+            <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
+          </div>
         </div>
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
 
       <div><QuizImage imageUrl={question?.imageurl} /></div>
 
-      <div className="options">
-        <div className="flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
+      <div className="options flex justify-center">
+      <div className="flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
-            className={`w-80 h-10 rounded-md mr-2 flex items-center justify-center ${
-              selectedAnswer === 'True' ? 'bg-blue-500 text-white' : ''
+            className={`w-80 h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
+              selectedAnswer === 'True' ? 'bg-DarkBlue text-white' : ''
             }`}
-            style={{
-              background: selectedAnswer === 'True' ? '#274C77' : '',
-              border: selectedAnswer === 'True' ? '1px solid #274C77' : '1px solid #000',
-            }}
             onClick={() => handleAnswerSelect('True')}
           >
-            <div class="relative inset-y-0 right-20 flex justify-between align-middle	">
-              <p>True</p>
-            </div>
+            {selectedAnswer === "True" ?<GrRadialSelected className='ml-4'/> : ""}   
+            <p className='ml-4'>True</p>
           </div>
         </div>
 
         <div className="flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
-            className={`w-80 h-10 rounded-md mr-2 flex items-center justify-center ${
-              selectedAnswer === 'False' ? 'bg-blue-500 text-white' : ''
+            className={`w-80 h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
+              selectedAnswer === 'False' ? 'bg-DarkBlue text-white' : ''
             }`}
-            style={{
-              background: selectedAnswer === 'False' ? '#274C77' : '',
-              border: selectedAnswer === 'False' ? '1px solid #274C77' : '1px solid #000',
-            }}
             onClick={() => handleAnswerSelect('False')}
           >
-            <div class="relative inset-y-0 right-20 flex justify-between align-middle	">
-              <p>False</p>
-            </div>
+            {selectedAnswer === "False" ?<GrRadialSelected className='ml-4'/> : ""}   
+            <p className='ml-4'>False</p>
           </div>
         </div>
       </div>

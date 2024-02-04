@@ -10,14 +10,13 @@ const SubmitMCQPanel = ({ question }) => {
       <div className="">
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
+      <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={question?.imageurl} /></div>
       <div className="mb-4">
         <div className='flex justify-between'>
           <p className="text-md">{question?.text}</p>
         </div>
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
-
-      <div><QuizImage imageUrl={question?.imageurl} /></div>
 
       <div className="options">
         {question?.choices &&

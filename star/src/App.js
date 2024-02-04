@@ -19,8 +19,8 @@ const App = () => {
       <div className=''>
         <BrowserRouter>
 	        <Routes>
-            <Route path = "/home" element = {<StudentDashboard/>} />
-            <Route path = "/manage-account" element = {<AccountManagerPage/>} />
+            <Route path="/home" element = {<StudentDashboard/>} />
+            <Route path="/manage-account" element = {<AccountManagerPage/>} />
             <Route path="/quiz" element = {<QuizScreen />} />
             <Route path="/courses" element = {<StudentCourses />} />
             <Route path="/courses/:courseName" element= {<CourseInfo />} />
@@ -28,10 +28,9 @@ const App = () => {
             <Route path="/quiz-result" element = {<QuizResultScreen/>} />
             <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
 
-
  	      </Routes>
         </BrowserRouter>
-        </div>
+      </div>
   );
 };
 
