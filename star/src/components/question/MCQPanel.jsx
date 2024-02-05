@@ -22,7 +22,7 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
       <div className="flex justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
+            <p className="text-gray-500 w-32 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
               Multiple Choice Question
             </p>
             <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
@@ -50,15 +50,15 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
           question?.choices.map((option, index) => (
             <div
               key={index}
-              className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
+              className={`flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
               onClick={() => handleOptionClick(option, index)}
             >
               <div
-                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between  ${
+                className={`w-80 h-10 rounded-md mr-2 flex items-center gap-4  ${
                   selectedOption === option ? 'bg-DarkBlue text-white' : ''
                 } border-[1px] border-black`}
               >
-                <div class="relative start-5 inset-y-0 flex ">
+                <div class="ml-4">
                 {selectedOption === option ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
 
                 <div className=''>{option}</div>
