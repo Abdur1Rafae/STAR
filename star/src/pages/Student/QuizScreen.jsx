@@ -45,12 +45,12 @@ return (
     <div className="flex">
       <div className="quiz-screen p-4 w-screen">
         <div className="flex justify-between mb-4">
-              {/* <MCQPanel
+              <MCQPanel
                 question={questions[currentQuestion]}
                 onOptionSelect={handleOptionSelect}
                 currentQuestion={currentQuestion}
                 totalQuestions={questions.length}
-              /> */}
+              />
           
 
             {/* <TrueFalse question={questions[currentQuestion]}
@@ -59,10 +59,10 @@ return (
               currentQuestion={currentQuestion}
               totalQuestions={questions.length}/> */}
 
-                <TextAnswer question={questions[currentQuestion]}
+                {/* <TextAnswer question={questions[currentQuestion]}
               options={questions[currentQuestion]?.choices}
               currentQuestion={currentQuestion}
-              totalQuestions={questions.length} />
+              totalQuestions={questions.length} /> */}
         </div>
 
         

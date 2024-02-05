@@ -19,7 +19,7 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
 
   return (
     <div className="w-full mx-auto bg-white p-4 shadow-md rounded-md">
-      <div className="">
+      <div className="flex justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
@@ -31,21 +31,19 @@ const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions })
             </div>
           </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
+        <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
       </div>
-      <div className="mb-4">
+      <div className="border-t border-black border-2 mt-2 mb-4"></div>
+      <div className="mb-4 flex flex-col items-center">
+        <button className='h-32 w-40'><QuizImage imageUrl={question?.imageurl} /></button>
         <div className='flex justify-between'>
-          <div className='w-11/12'>
+          <div className=''>
             <p className="text-lg">{question?.text}</p>
           </div>
-          <div className='flex justify-center w-1/12'>
-            <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
-          </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
 
-      <div><QuizImage imageUrl={question?.imageurl} /></div>
+      <div className="border-t border-black border-2 mt-2"></div>
 
       <div className="options">
         {question?.choices &&

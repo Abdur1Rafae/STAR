@@ -23,7 +23,7 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuest
 
   return (
     <div className="w-full mx-auto bg-white p-4 shadow-md rounded-md mb-4">
-      <div className="mb-4">
+      <div className="mb-4 flex justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
@@ -35,16 +35,14 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuest
             </div>
           </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
+        <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
       </div>
+      <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
         <button className='h-32 w-40'><QuizImage imageUrl={question?.imageurl} /></button>
         <div className='flex justify-between'>
-          <div className='w-11/12'>
+          <div className=''>
             <p className="text-lg select-none">{question?.text}</p>
-          </div>
-          <div className='flex justify-center w-1/12'>
-            <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
           </div>
         </div>
       </div>

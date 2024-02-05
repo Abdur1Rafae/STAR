@@ -4,6 +4,8 @@ import { FaRegHourglassHalf } from "react-icons/fa6";
 import { CiClock2 } from "react-icons/ci";
 import { CiViewList } from "react-icons/ci";
 import SubmitButton from '../../components/button/SubmitButton';
+import MenuBar from '../../components/MenuBar';
+import SubHeader from '../../components/SubHeader';
 
 
 const QuizInstructions = () => {
@@ -16,38 +18,46 @@ const QuizInstructions = () => {
   const marks = 50;
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-      <div className="w-full bg-white p-8 rounded shadow-md w-96 shadow-outline">
-        <div className='flex justify-between '>
-            <h1 className="sm:text-xl md:text-2xl font-bold mb-4">Monthly Test</h1>
-            <div className=''>
-            <span className='pb-4 flex items-center text-md'><FaRegHourglassHalf /> &nbsp;{date} {time}</span>
-            <div className='flex '>
-            <div className='items-center text-sm flex w-fit min-[320px]:h-fit sm:h-8 border border-black align-middle pr-2 pl-2  mr-4'><CiClock2 size={20}/>&nbsp; {duration} Mins</div>
-            <div className='items-center text-sm flex w-fit min-[320px]:h-fit sm:h-8 border border-black align-middle pr-2 pl-2'><CiViewList size={20}/>&nbsp; {marks} Marks</div>
-            </div>
-            </div>
+    <div className='flex flex-col mb-8'>
+      <MenuBar/>
+      <SubHeader/>
+      <div className="mt-4 md:mx-4 flex flex-col items-center justify-center border-t-4 border-grey-600">
+        <div className="w-full p-8 rounded shadow-md w-96 shadow-outline">
+          <h1 className="text-xl md:text-2xl font-bold">Monthly Test</h1>
+          <div className='flex flex-col-reverse md:flex-row justify-between'>
+              <div className='md:mt-0 mt-2'> 
+                <div className='flex'>
+                  <p className='text-#5F6368'><strong>Course:</strong>&nbsp;{course}</p> 
+                </div>
+                <div className='flex'>
+                  <p className='text-#5F6368'><strong>Instructor:</strong>&nbsp;{instructor}</p> 
+                </div>
+              </div>
+              <div className=''>
+                <div className='flex items-center text-sm md:text-md justify-start md:justify-end'><FaRegHourglassHalf/><p>&nbsp;{date} {time}</p></div>
+                <div className='flex md:justify-between justify-center mt-2'>
+                  <div className='items-center text-sm flex w-fit h-8 border border-black align-middle pr-2 pl-2  mr-4'><CiClock2 size={20}/>&nbsp; {duration} Mins</div>
+                  <div className='items-center text-sm flex w-fit h-8 border border-black align-middle pr-2 pl-2'><CiViewList size={20}/>&nbsp; {marks} Marks</div>
+                </div>
+              </div>
+          </div>
+
+          <hr className="h-px my-8 border-[1px] border-background: #5F6368;"></hr>
+
+          <div>
+            <h2 className="font-bold mb-4">Instructions:</h2>
+            <ul className="list-disc pl-6">
+              {instructions.map((instruction, index) => (
+                <li key={index} className="mb-2">
+                  {instruction}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className='flex'>
-        <h3 className='text-#5F6368 font-semibold'>Course:&nbsp;</h3> <p>{course}</p>
+        <div className='mt-8'>
+          <SubmitButton label="Begin Assessment" onClick={()=> {window.location.assign('/quiz')}}/>
         </div>
-        <div className='flex'>
-        <h3 className='text-#5F6368 font-semibold'>Instructor:&nbsp;</h3> <p>{instructor}</p>
-        </div>
-        <hr className="h-px my-8 border-[1px] border-background: #5F6368;"></hr>
-        <div>
-          <h2 className="font-bold mb-4">Instructions:</h2>
-          <ul className="list-disc pl-6">
-            {instructions.map((instruction, index) => (
-              <li key={index} className="mb-2">
-                {instruction}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className='mt-8'>
-        <SubmitButton label="Begin Assessment" />
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ const StudentDashboard = () => {
             <div className='pageContainer'>
                 <h1 className='font-[500] mt-5 ml-4 font-body'>Ongoing Assessments</h1>
                 <div className='border-b-[1px] border-[#937D7D] ml-4 mr-4'></div>
-                <div className="QuizContainer  flex flex-wrap">
+                <div className="flex flex-wrap mx-4 gap-4 mt-4">
                     <LiveQuiz/>
                     <LiveQuiz/>
                     <LiveQuiz/>

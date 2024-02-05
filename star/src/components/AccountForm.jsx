@@ -26,8 +26,8 @@ const AccountForm = () => {
 
   return (
     <div>
-      <div className='flex pb-4'>
-        <div className='h-16 w-2/5 border bg-blue-50 rounded-md shadow-md flex flex-col mr-4'>
+      <div className='flex md:flex-row flex-col pb-4 gap-4 md:w-8/12'>
+        <div className='h-16 w-full border bg-blue-50 rounded-md shadow-md flex flex-col'>
           <span className='pl-2 pt-2 text-xs font-light'>First Name</span>
           <input
             type="text"
@@ -38,7 +38,7 @@ const AccountForm = () => {
 
           />
         </div>
-        <div className='h-16 w-1/3 border bg-blue-50 rounded-md shadow-md flex flex-col'>
+        <div className='h-16 w-full border bg-blue-50 rounded-md shadow-md flex flex-col'>
           <span className='pl-2 pt-2 text-xs font-light'>Last Name</span>
           <input
             type="text"
@@ -49,8 +49,8 @@ const AccountForm = () => {
           />
         </div>
       </div>
-      <div className='flex pb-4'>
-        <div className='h-16 w-1/2 border bg-blue-50 rounded-md shadow-md flex flex-col mr-4'>
+      <div className='flex md:flex-row flex-col pb-4 gap-4 md:w-8/12'>
+        <div className='h-16 w-full border bg-blue-50 rounded-md shadow-md flex flex-col'>
           <span className='pl-2 pt-2 text-xs font-light'>Email</span>
           <input
             type="email"
@@ -60,7 +60,7 @@ const AccountForm = () => {
             className="pl-2 outline-none focus:outline-none bg-blue-50"
           />
         </div>
-        <div className='h-16 w-1/4 border bg-blue-50 rounded-md shadow-md flex flex-col'>
+        <div className='h-16 w-full border bg-blue-50 rounded-md shadow-md flex flex-col'>
           <span className='pl-2 pt-2 text-xs font-light'>Student ID</span>
           <input
             type="text"
@@ -72,7 +72,7 @@ const AccountForm = () => {
         </div>
       </div>
 
-      <div className='h-16 w-3/5 border bg-blue-50 rounded-md shadow-md flex flex-col mb-4'>
+      <div className='h-16 w-full md:w-8/12 border bg-blue-50 rounded-md shadow-md flex flex-col mb-4'>
         <span className='pl-2 pt-2 text-xs font-light'>Password</span>
         <div className="relative">
           <input
@@ -94,7 +94,7 @@ const AccountForm = () => {
           </div>
         </div>
       </div>
-      <div className='h-16 w-3/5 border bg-blue-50 rounded-md shadow-md flex flex-col mb-4'>
+      <div className='h-16 w-full md:w-8/12 border bg-blue-50 rounded-md shadow-md flex flex-col mb-4'>
         <span className='pl-2 pt-2 text-xs font-light'>Confirm Password</span>
         <input
           type="password"

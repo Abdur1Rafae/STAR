@@ -7,6 +7,7 @@ import { MdAccountBox } from "react-icons/md";
 import SubmitButton from '../../components/button/SubmitButton';
 import CancelButton from '../../components/button/CancelButton';
 import DeleteButton from '../../components/button/DeleteButton';
+import SubHeader from '../../components/SubHeader';
 
 const AccountManagerPage = () => {
     const match = useMatch('/manage-account');
@@ -15,13 +16,14 @@ const AccountManagerPage = () => {
     }
 
     return (
-        <div>
+        <div className='flex flex-col mb-20'>
             <MenuBar/>
+            <SubHeader/>
             <div className="flex items-center justify-center  ">
                 <div className="w-full">
                     <div className="bg-white p-8 items-center">
                         <div className='flex mb-6'>
-                        <MdAccountBox size={42}/> <h1 className="text-2xl font-semibold ml-4">Account Settings</h1>
+                            <MdAccountBox size={42}/> <h1 className="text-2xl font-semibold ml-4">Account Settings</h1>
                         </div>
 
                         <h1 className='text-xl font-semibold'>Profile</h1>
@@ -33,13 +35,14 @@ const AccountManagerPage = () => {
 
                         <Notifications />
                         <div className='flex justify-between mt-6'>
-        <div className='flex '>
-            <div className='pr-4'>
-          <CancelButton label="Cancel"  /></div>
-          <SubmitButton label="Save"  />
-        </div>
-        <DeleteButton label="Delete"  />
-      </div>
+                            <div className='flex '>
+                                <div className='pr-4'>
+                                    <CancelButton label="Cancel"  />
+                                </div>
+                                <SubmitButton label="Save"  />
+                            </div>
+                            <DeleteButton label="Delete"  />
+                        </div>
                     </div>
                 </div>
             </div>
