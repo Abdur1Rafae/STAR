@@ -1,13 +1,13 @@
 import React from 'react'
-import QuizCountImp from '../../components/course/QuizCountImp'
-import ScoreView from '../../components/course/ScoreView'
-import MenuBar from '../../components/MenuBar'
-import SubHeader from '../../components/SubHeader'
-import UpQuiz from '../../components/course/UpQuiz'
-import SkillEvaluation from '../../components/course/SkillEvaluation'
-import AssessmentHistory from '../../components/course/AssessmentHistory'
-import PerformanceGraph from '../../components/course/PerformanceGraph'
-import CourseNameInst from '../../components/course/CourseNameInst'
+import QuizCountImp from '../../components/Student/course/QuizCountImp'
+import ScoreView from '../../components/Student/course/ScoreView'
+import MenuBar from '../../components/Student/MenuBar'
+import SubHeader from '../../components/Student/SubHeader'
+import UpQuiz from '../../components/Student/course/UpQuiz'
+import SkillEvaluation from '../../components/Student/course/SkillEvaluation'
+import AssessmentHistory from '../../components/Student/course/AssessmentHistory'
+import PerformanceGraph from '../../components/Student/course/PerformanceGraph'
+import CourseNameInst from '../../components/Student/course/CourseNameInst'
 
 const CourseInfo = () => {
   const quizzes = 1

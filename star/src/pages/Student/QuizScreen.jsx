@@ -1,11 +1,11 @@
 import React from 'react';
-import MCQPanel from '../../components/question/MCQPanel';
+import MCQPanel from '../../components/Student/question/MCQPanel';
 import SubmitButton from '../../components/button/SubmitButton';
-import QuizNavigation from '../../components/quiz/QuizNavigation';
-import TrueFalse from '../../components/question/TrueFalsePanel';
-import TextAnswer from '../../components/question/TextAnswerPanel';
-import MenuBar from '../../components/MenuBar';
-import QuizSubheader from '../../components/quiz/QuizSubheader';
+import QuizNavigation from '../../components/Student/quiz/QuizNavigation';
+import TrueFalse from '../../components/Student/question/TrueFalsePanel';
+import TextAnswer from '../../components/Student/question/TextAnswerPanel';
+import MenuBar from '../../components/Student/MenuBar';
+import QuizSubheader from '../../components/Student/quiz/QuizSubheader';
 import { useSelector } from 'react-redux';
 
 const QuizScreen = () => {

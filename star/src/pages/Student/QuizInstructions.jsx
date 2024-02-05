@@ -4,8 +4,8 @@ import { FaRegHourglassHalf } from "react-icons/fa6";
 import { CiClock2 } from "react-icons/ci";
 import { CiViewList } from "react-icons/ci";
 import SubmitButton from '../../components/button/SubmitButton';
-import MenuBar from '../../components/MenuBar';
-import SubHeader from '../../components/SubHeader';
+import MenuBar from '../../components/Student/MenuBar';
+import SubHeader from '../../components/Student/SubHeader';
 
 
 const QuizInstructions = () => {
