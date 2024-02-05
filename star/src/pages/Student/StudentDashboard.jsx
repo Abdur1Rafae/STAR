@@ -1,8 +1,8 @@
 import React from 'react';
-import MenuBar from '../../components/MenuBar';
-import AssignmentTable from '../../components/AssignmentTable';
-import SubHeader from '../../components/SubHeader';
-import LiveQuiz from '../../components/LiveQuiz';
+import MenuBar from '../../components/Student/MenuBar';
+import AssignmentTable from '../../components/Student/AssignmentTable';
+import SubHeader from '../../components/Student/SubHeader';
+import LiveQuiz from '../../components/Student/LiveQuiz';
 
 const StudentDashboard = () => {
     

@@ -1,8 +1,8 @@
 import React from 'react'
-import MenuBar from '../../components/MenuBar';
-import AssignmentTable from '../../components/AssignmentTable';
-import CourseCard from '../../components/course/CourseCard';
-import SubHeader from '../../components/SubHeader';
+import MenuBar from '../../components/Student/MenuBar';
+import AssignmentTable from '../../components/Student/AssignmentTable';
+import CourseCard from '../../components/Student/course/CourseCard';
+import SubHeader from '../../components/Student/SubHeader';
 
 const StudentCourses = () => {
     let term = "Spring 2024"
