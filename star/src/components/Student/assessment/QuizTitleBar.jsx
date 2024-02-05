@@ -3,7 +3,7 @@ import { MdOutlineArrowBackIos } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { LiaPaperclipSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from 'react-redux';
-import {toggleTab} from '../../redux/qrTab';
+import {toggleTab} from '../../../redux/qrTab';
 
 const QuizTitleBar = ({Course_Name, assessment_Name}) => {
   let showTab = useSelector((state)=> state.qrTab.value)

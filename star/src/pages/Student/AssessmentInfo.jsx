@@ -1,8 +1,8 @@
 import React from 'react'
-import MenuBar from '../../components/MenuBar'
-import SubHeader from '../../components/SubHeader'
-import QuizTitleBar from '../../components/assessment/QuizTitleBar'
-import Summary from '../../components/assessment/Summary'
+import MenuBar from '../../components/Student/MenuBar'
+import SubHeader from '../../components/Student/SubHeader'
+import QuizTitleBar from '../../components/Student/assessment/QuizTitleBar'
+import Summary from '../../components/Student/assessment/Summary'
 import QuizResultScreen from './QuizResultScreen'
 import { useSelector } from 'react-redux'
 

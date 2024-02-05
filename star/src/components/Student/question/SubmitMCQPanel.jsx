@@ -1,7 +1,7 @@
 import React from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
-import SubmitButton from '../button/SubmitButton';
+import SubmitButton from '../../button/SubmitButton';
 
 const SubmitMCQPanel = ({ question }) => {
 

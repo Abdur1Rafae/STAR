@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
-import FlagButton from '../button/FlagButton';
+import FlagButton from '../../button/FlagButton';
 import { GiBullseye } from "react-icons/gi";
 
 const MCQPanel = ({ question, onOptionSelect, currentQuestion, totalQuestions }) => {

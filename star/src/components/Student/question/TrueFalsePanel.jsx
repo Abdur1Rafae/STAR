@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
-import FlagButton from '../button/FlagButton';
+import FlagButton from '../../button/FlagButton';
 import { GrRadialSelected } from "react-icons/gr";
 
 const TrueFalsePanel = ({ question, onAnswerSelect, currentQuestion, totalQuestions }) => {

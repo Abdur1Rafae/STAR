@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
-import FlagButton from '../button/FlagButton';
+import FlagButton from '../../button/FlagButton';
 
 const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuestions }) => {
   const [userAnswer, setUserAnswer] = useState('');

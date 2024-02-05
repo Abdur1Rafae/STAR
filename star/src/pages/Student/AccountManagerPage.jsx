@@ -1,13 +1,13 @@
 import React from 'react';
 import { useMatch } from 'react-router-dom';
-import AccountForm from '../../components/AccountForm';
-import Notifications from '../../components/Notifications';
-import MenuBar from '../../components/MenuBar';
+import AccountForm from '../../components/Student/AccountForm';
+import Notifications from '../../components/Student/Notifications';
+import MenuBar from '../../components/Student/MenuBar';
 import { MdAccountBox } from "react-icons/md";
 import SubmitButton from '../../components/button/SubmitButton';
 import CancelButton from '../../components/button/CancelButton';
 import DeleteButton from '../../components/button/DeleteButton';
-import SubHeader from '../../components/SubHeader';
+import SubHeader from '../../components/Student/SubHeader';
 
 const AccountManagerPage = () => {
     const match = useMatch('/manage-account');
