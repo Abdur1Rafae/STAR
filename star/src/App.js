@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React from 'react';
+import AccountManagerPage from './pages/Student/AccountManagerPage.jsx';
+import QuizScreen from './pages/Student/QuizScreen.jsx';
+import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
+import QuizInstructions from './pages/Student/QuizInstructions.jsx';
 
-function App() {
+
+import './App.css';
+import StudentDashboard from './pages/Student/StudentDashboard';
+import CourseInfo from './pages/Student/CourseInfo.jsx';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import StudentCourses from './pages/Student/StudentCourses';
+import AssessmentInfo from './pages/Student/AssessmentInfo'
+import Demo from './pages/demo.jsx';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className=''>
+        <BrowserRouter>
+	        <Routes>
+            <Route path="/home" element = {<StudentDashboard/>} />
+            <Route path="/manage-account" element = {<AccountManagerPage/>} />
+            <Route path="/quiz" element = {<QuizScreen />} />
+            <Route path="/courses" element = {<StudentCourses />} />
+            <Route path="/courses/:courseName" element= {<CourseInfo />} />
+            <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
+            <Route path="/quiz-result" element = {<QuizResultScreen/>} />
+            <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
+
+ 	      </Routes>
+        </BrowserRouter>
+      </div>
   );
-}
+};
 
 export default App;
