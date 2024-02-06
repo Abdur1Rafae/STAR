@@ -8,6 +8,9 @@ import AccountManagerPage from './pages/Student/AccountManagerPage.jsx';
 import QuizScreen from './pages/Student/QuizScreen.jsx';
 import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
 import QuizInstructions from './pages/Student/QuizInstructions.jsx';
+import ScheduledAssessmentPage from './pages/Teacher/ScheduledAssessmentPage.jsx';
+import QuestionBankPage from './pages/Teacher/QuestionBankPage';
+
 
 const AppRoutes = () => {
   return (
@@ -20,6 +23,8 @@ const AppRoutes = () => {
             <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
             <Route path="/quiz-result" element = {<QuizResultScreen/>} />
             <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
+            <Route path="/scheduled-assessment" element = {<ScheduledAssessmentPage/>} />
+            <Route path="/question-bank" element = {<QuestionBankPage/>} />
 
         </Routes>
   )

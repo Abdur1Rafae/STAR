@@ -11,8 +11,8 @@ module.exports = {
       colors: {
         'DarkBlue': '#2C6491',
         'LightBlue': '#F4F9FD',
-        'DeleteRed' : "#E0241B"
-
+        'DeleteRed' : "#E0241B",
+        'MonitorYellow' : "#FFB224"
       },
     },
   },
