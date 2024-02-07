@@ -3,7 +3,7 @@ import { FaSearch } from 'react-icons/fa';
 
 const LCSearchBar = ({ value, onChange }) => {
   return (
-    <div className='bg-LightBlue flex items-center pl-4 pr-4 py-2 w-9/12 border border-black focus:outline-none focus:border-blue-500'>
+    <div className='bg-LightBlue flex items-center pl-4 pr-4 py-2 w-full md:w-9/12 border border-black focus:outline-none focus:border-blue-500'>
         <input
             type="text"
             placeholder="Search Question Bank"

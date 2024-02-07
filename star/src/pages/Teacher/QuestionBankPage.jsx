@@ -57,26 +57,28 @@ function App() {
                             </div>
                         ) :
                         <div className='flex flex-col gap-4 overflow-hidden'>
-                             <div className='flex'>
+                             <div className='flex md:flex-row flex-col'>
                                     <LCSearchBar/>
-                                    <CategoryFilter
-                                    categoryName="Skill : All"
-                                    categories={skills}
-                                    selectedCategory={selectedCategory}
-                                    onSelectCategory={handleSelectCategory}
-                                    /> 
-                                    <CategoryFilter
-                                        categoryName="Difficulty : All"
-                                        categories={difficulty}
+                                    <div className='flex justify-between'>
+                                        <CategoryFilter
+                                        categoryName="Skill : All"
+                                        categories={skills}
                                         selectedCategory={selectedCategory}
                                         onSelectCategory={handleSelectCategory}
-                                    />
-                                    <CategoryFilter
-                                        categoryName="Topic: All"
-                                        categories={topics}
-                                        selectedCategory={selectedCategory}
-                                        onSelectCategory={handleSelectCategory}
-                                    /> 
+                                        /> 
+                                        <CategoryFilter
+                                            categoryName="Difficulty : All"
+                                            categories={difficulty}
+                                            selectedCategory={selectedCategory}
+                                            onSelectCategory={handleSelectCategory}
+                                        />
+                                        <CategoryFilter
+                                            categoryName="Topic: All"
+                                            categories={topics}
+                                            selectedCategory={selectedCategory}
+                                            onSelectCategory={handleSelectCategory}
+                                        /> 
+                                    </div>
                             </div>
                             <TopicContainer topic={"History of Computers"}/>
                             <TopicContainer topic={"History of Computers"}/>
