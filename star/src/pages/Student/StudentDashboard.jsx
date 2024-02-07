@@ -1,5 +1,5 @@
 import React from 'react';
-import MenuBar from '../../components/Student/MenuBar';
+import MenuBar from '../../components/MenuBar';
 import AssignmentTable from '../../components/Student/AssignmentTable';
 import SubHeader from '../../components/Student/SubHeader';
 import LiveQuiz from '../../components/Student/LiveQuiz';
@@ -8,7 +8,7 @@ const StudentDashboard = () => {
     
     return (
         <div className='flex flex-col mb-20'>
-            <MenuBar/>
+            <MenuBar name={"Maaz Shamim"} role={"Student"}/>
             <SubHeader isActive={"Dashboard"}/>
             <div className='pageContainer'>
                 <h1 className='font-[500] mt-5 ml-4 font-body'>Ongoing Assessments</h1>

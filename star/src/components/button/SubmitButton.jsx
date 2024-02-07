@@ -1,4 +1,3 @@
-// SubmitButton.js
 import React from 'react';
 
 const SubmitButton = ({ onClick, label }) => {

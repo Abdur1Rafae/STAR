@@ -14,6 +14,9 @@ module.exports = {
         'DeleteRed' : "#E0241B"
 
       },
+      transitionProperty: {
+        'max-height': 'max-height'
+      }
     },
   },
   plugins: [],

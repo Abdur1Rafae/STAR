@@ -1,4 +1,3 @@
-// QuizImage.js
 import React from 'react';
 
 const QuizImage = ({ imageUrl }) => {

@@ -4,7 +4,7 @@ import { RiLogoutCircleRLine } from 'react-icons/ri';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import logo from './logo.png'
 
-const MenuBar = () => {
+const MenuBar = ({name, role}) => {
   let [profileDialog, setProfileDialog] = useState(false);
 
   let handleProfileClick = () => {
@@ -17,14 +17,14 @@ const MenuBar = () => {
                 <div className='menubar w-full flex justify-between'>
                     <div className="leftContainer flex border-r-2 border-white w-full justify-between">
                         <div className="menuleft logo flex justify-start">
-                            <img src={logo} className='w-44 sm:ml-4 ml-2 mr-2'></img>
+                            <img src={logo} className='w-44 h-14 mr-2'></img>
                         </div>
                     </div>
                     <div className="rightContainer flex">
                         <button className='ml-2 sm:ml-4 sm:mr-4 text-white flex w-26 lg:w-56' onClick={handleProfileClick}>
                             <div className="UserInfo w-full text-white whitespace-nowrap self-center flex flex-col">
-                                <h1 className='text-xs self-start font-bold'>Maaz Shamim</h1>
-                                <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>Student</h3>
+                                <h1 className='text-xs self-start font-bold'>{name}</h1>
+                                <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>{role}</h3>
                             </div>
                             <MdKeyboardArrowDown className='text-3xl self-center'/>
                         </button>

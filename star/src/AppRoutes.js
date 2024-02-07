@@ -8,20 +8,26 @@ import AccountManagerPage from './pages/Student/AccountManagerPage.jsx';
 import QuizScreen from './pages/Student/QuizScreen.jsx';
 import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
 import QuizInstructions from './pages/Student/QuizInstructions.jsx';
+import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx';
+import Classes from './pages/Teacher/Classes.jsx';
+import Library from './pages/Teacher/Library.jsx';
 
 const AppRoutes = () => {
   return (
-        <Routes>
-            <Route path="/home" element = {<StudentDashboard/>} />
-            <Route path="/manage-account" element = {<AccountManagerPage/>} />
-            <Route path="/quiz" element = {<QuizScreen />} />
-            <Route path="/courses" element = {<StudentCourses />} />
-            <Route path="/courses/:courseName" element= {<CourseInfo />} />
-            <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
-            <Route path="/quiz-result" element = {<QuizResultScreen/>} />
-            <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
+    <Routes>
+      <Route path="/home" element = {<StudentDashboard/>} />
+      <Route path="/manage-account" element = {<AccountManagerPage/>} />
+      <Route path="/quiz" element = {<QuizScreen />} />
+      <Route path="/courses" element = {<StudentCourses />} />
+      <Route path="/courses/:courseName" element= {<CourseInfo />} />
+      <Route path="/courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
+      <Route path="/quiz-result" element = {<QuizResultScreen/>} />
+      <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
 
-        </Routes>
+      <Route path='/teacher/home' element={<TeacherDashboard/>}></Route>
+      <Route path='/teacher/classes' element={<Classes/>}></Route>
+      <Route path='/teacher/library' element={<Library/>}></Route>
+    </Routes>
   )
 }
 
