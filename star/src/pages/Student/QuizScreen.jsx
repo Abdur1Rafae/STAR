@@ -4,7 +4,7 @@ import SubmitButton from '../../components/button/SubmitButton';
 import QuizNavigation from '../../components/Student/quiz/QuizNavigation';
 import TrueFalse from '../../components/Student/question/TrueFalsePanel';
 import TextAnswer from '../../components/Student/question/TextAnswerPanel';
-import MenuBar from '../../components/Student/MenuBar';
+import MenuBar from '../../components/MenuBar';
 import QuizSubheader from '../../components/Student/quiz/QuizSubheader';
 import { useSelector } from 'react-redux';
 
@@ -40,7 +40,7 @@ const handlePrevious = () => {
 
 return (
   <div className='flex flex-col w-screen lg:w-full'>
-    <MenuBar/>
+    <MenuBar name={"Maaz Shamim"} role={"Student"}/>
     <QuizSubheader/>
     <div className="flex">
       <div className="quiz-screen p-4 w-screen">

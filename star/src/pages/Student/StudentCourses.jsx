@@ -1,5 +1,5 @@
 import React from 'react'
-import MenuBar from '../../components/Student/MenuBar';
+import MenuBar from '../../components/MenuBar';
 import AssignmentTable from '../../components/Student/AssignmentTable';
 import CourseCard from '../../components/Student/course/CourseCard';
 import SubHeader from '../../components/Student/SubHeader';
@@ -8,7 +8,7 @@ const StudentCourses = () => {
     let term = "Spring 2024"
     return (
     <div className='flex flex-col mb-20'>
-        <MenuBar/>
+        <MenuBar name={"Maaz Shamim"} role={"Student"}/>
         <SubHeader isActive={"Courses"}/>
         <div className='pageContainer overflow-auto rounded-lg'>
             <h1 className='font-[300] mt-5 ml-4 font-body'>{term}</h1>

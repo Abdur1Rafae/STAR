@@ -1,5 +1,5 @@
 import React from 'react'
-import MenuBar from '../components/Student/MenuBar'
+import MenuBar from '../components/MenuBar'
 import SubHeader from '../components/Student/SubHeader'
 import Loader from '../components/Loader'
 
