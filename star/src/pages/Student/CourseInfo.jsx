@@ -1,7 +1,7 @@
 import React from 'react'
 import QuizCountImp from '../../components/Student/course/QuizCountImp'
 import ScoreView from '../../components/Student/course/ScoreView'
-import MenuBar from '../../components/Student/MenuBar'
+import MenuBar from '../../components/MenuBar'
 import SubHeader from '../../components/Student/SubHeader'
 import UpQuiz from '../../components/Student/course/UpQuiz'
 import SkillEvaluation from '../../components/Student/course/SkillEvaluation'
@@ -13,7 +13,7 @@ const CourseInfo = () => {
   const quizzes = 1
   return (
     <div className="flex flex-col mb-20">
-      <MenuBar/>
+      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
       <SubHeader/>
       <div className='mt-4 ml-auto mr-auto w-11/12'>
         <CourseNameInst Course_Name={"CSE 345 - Introduction to Computing"} Instructor_Name={"Jawwad Farid"}/>

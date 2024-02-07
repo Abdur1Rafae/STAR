@@ -4,7 +4,7 @@ import { FaRegHourglassHalf } from "react-icons/fa6";
 import { CiClock2 } from "react-icons/ci";
 import { CiViewList } from "react-icons/ci";
 import SubmitButton from '../../components/button/SubmitButton';
-import MenuBar from '../../components/Student/MenuBar';
+import MenuBar from '../../components/MenuBar';
 import SubHeader from '../../components/Student/SubHeader';
 
 
@@ -19,7 +19,7 @@ const QuizInstructions = () => {
 
   return (
     <div className='flex flex-col mb-8'>
-      <MenuBar/>
+      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
       <SubHeader/>
       <div className="mt-4 md:mx-4 flex flex-col items-center justify-center border-t-4 border-grey-600">
         <div className="w-full p-8 rounded shadow-md w-96 shadow-outline">
