@@ -28,9 +28,8 @@ const AppRoutes = () => {
             <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
               
               
-            <Route path="/teacher/scheduled-assessment" element = {<ScheduledAssessmentPage/>} />
+            <Route path="/teacher/scheduled-assessments" element = {<ScheduledAssessmentPage/>} />
             <Route path="/teacher/question-bank" element = {<QuestionBankPage/>} />
-            <Route path='/teacher/home' element={<TeacherDashboard/>}></Route>
             <Route path='/teacher/classes' element={<Classes/>}></Route>
             <Route path='/teacher/library' element={<Library/>}></Route>
          </Routes>

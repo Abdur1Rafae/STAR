@@ -5,7 +5,7 @@ const MonitorButton = ({ onClick, label }) => {
   return (
     <button
       onClick={onClick}
-      className="bg-MonitorYellow w-fit text-white font-normal text-sm px-3 rounded focus:outline-none focus:shadow-outline"
+      className="h-6 bg-MonitorYellow min-w-16 text-white font-normal text-xs rounded focus:outline-none focus:shadow-outline"
     >
       {label}
     </button>
