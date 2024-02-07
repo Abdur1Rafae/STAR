@@ -2,8 +2,8 @@ import React from 'react';
 
 const CategoryFilter = ({ categoryName, categories, selectedCategory, onSelectCategory }) => {
     return (
-        <div className="sm:text-xs md:text-sm flex justify-between items-center">
-            <div className="block appearance-none bg-LightBlue border border-black hover:border-gray-400 p-2 py-3 leading-tight">
+        <div className="text-[10px] md:text-sm flex justify-between items-center">
+            <div className="bg-LightBlue border border-black hover:border-gray-400 md:p-2 md:py-3">
                 <select
                     value={selectedCategory}
                     onChange={(e) => onSelectCategory(e.target.value)}
