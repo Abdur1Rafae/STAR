@@ -36,3 +36,11 @@ services:
     ports:
       - '8081:8081'
 
+  api-gateway:
+    build: ./APIGateway
+    restart: unless-stopped
+    container_name: api-gateway
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./APIGateway:/app
