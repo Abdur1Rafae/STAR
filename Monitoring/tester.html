@@ -25,7 +25,11 @@
     
     <button onclick="feedHandler_startCamera()">Start Camera</button>
     <button onclick="feedHandler_stopCamera()">Stop Camera</button>
+    <button id="startButton">Start Monitoring</button>
 
+    <video id="webcam" width="640" height="480" autoplay style="display: none;"></video>
+    <canvas id="output" width="640" height="480" style="display: none;"></canvas>
+  
     <!-- Container for video element -->
     <div id="container">
         <video autoplay="true" id="videoElement"></video>
@@ -36,5 +40,7 @@
 
     <script src="feedHandler.js"></script>
     <script src="tabHandler.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>  
 </body>
 </html>

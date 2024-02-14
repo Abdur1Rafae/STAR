@@ -7,28 +7,26 @@ let tabHandler_violations = [];
 let tabHandler_warningTimer; // Timer for warning
 
 function tabHandler_startTest() {
-    // Start the test
-    // You can also reset counts and start event listeners here
+    // For starting the test
     tabHandler_resetCounts();
     tabHandler_addEventListeners();
 }
 
 function tabHandler_stopTest() {
-    // Stop the test
-    // Clear any ongoing timers and remove event listeners
-    clearTimeout(tabHandler_warningTimer); // Clear warning timer if it's running
+    // For stopping the test
+    clearTimeout(tabHandler_warningTimer); // Clearing warning timer if it's running
     tabHandler_removeEventListeners();
     tabHandler_resetCounts(); // Reset counts
 }
 
 function tabHandler_addEventListeners() {
-    // Add event listeners for tab/window switches
+    // Adding event listeners for tab/window switches
     window.addEventListener('blur', tabHandler_handleBlur);
     document.addEventListener('visibilitychange', tabHandler_handleVisibilityChange);
 }
 
 function tabHandler_removeEventListeners() {
-    // Remove event listeners for tab/window switches
+    // Removing event listeners for tab/window switches
     window.removeEventListener('blur', tabHandler_handleBlur);
     document.removeEventListener('visibilitychange', tabHandler_handleVisibilityChange);
 }
