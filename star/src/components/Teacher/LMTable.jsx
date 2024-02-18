@@ -1,29 +1,42 @@
-import React from "react";
+import React, {useState} from "react";
+import CategoryFilter from '../../components/Teacher/CategoryFilter';
 
 const LMTable = ({ data }) => {
+  const skills = ['Submitted', 'Active', 'Yet to attempt'];
+  const sections = ['A', 'B', 'C', 'D'];
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);}
+    const [selectedCategory, setSelectedCategory] = useState('');
   return (
-    <table className=" table-auto border-separate border-spacing-y-4 w-full">
-      <thead>
-        <tr>
-          <th className="border-b-2 border-gray-300 font-semibold text-sm text-gray-500 px-4 py-2">Student Name</th>
-          <th className="border-b-2 border-gray-300 font-semibold text-sm text-gray-500 px-4 py-2">Section</th>
-          <th className="border-b-2 border-gray-300 font-semibold text-sm text-gray-500 px-4 py-2">Start Time</th>
-          <th className="border-b-2 border-gray-300 font-semibold text-sm text-gray-500 px-4 py-2">Submit Time</th>
-          <th className="border-b-2 border-gray-300 font-semibold text-sm text-gray-500 px-4 py-2">Status</th>
+    <table className='w-full border-separate border-spacing-y-2'>
+    <thead className=''>
+        <tr className='text-center text-md font-semibold text-gray-600'>
+            <th className='px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]'>Name</th>
+            <th className='px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D] flex justify-center items-center'>Section  
+              <CategoryFilter categoryName="All" categories={sections} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory}/>
+            </th>
+            <th className='px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]'>Start Time</th>
+            <th className='px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]'>Submit Time</th>
+            <th className='px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D] flex justify-center item-center'>Status
+              <CategoryFilter categoryName="All" categories={skills} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory}/>
+            </th>
         </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => (
-          <tr key={index}>
-            <td className=" px-4 py-4 bg-[#F4F9FD] border-r-0  shadow-inner drop-shadow-lg	 text-sm">{row.studentName}</td>
-            <td className=" px-4 py-4 bg-[#F4F9FD] border-r-0 shadow-inner drop-shadow-lg text-sm">{row.section}</td>
-            <td className=" px-4 py-4 bg-[#F4F9FD]  border-r-0 shadow-inner  drop-shadow-lg text-sm">{row.startTime}</td>
-            <td className=" px-4 py-4 bg-[#F4F9FD]  border-r-0 shadow-inner drop-shadow-lg  text-sm">{row.submitTime}</td>
-            <td className=" px-4 py-4 bg-[#F4F9FD]  border-r-0 shadow-inner  drop-shadow-lg text-sm">{row.status}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    </thead>
+
+    <tbody className="">
+        {
+            data.map((row) => (
+                <tr className='text-center drop-shadow-md bg-LightBlue'>
+                    <td className='px-1 py-3 text-sm border-black border-y-[1px]'>{row.studentName}</td>
+                    <td className='px-1 py-3 text-sm border-black border-y-[1px]'>{row.section}</td>
+                    <td className='px-1 py-3 text-sm border-black border-y-[1px]'>{row.startTime}</td>
+                    <td className='px-1 py-3 text-sm border-black border-y-[1px]'>{row.submitTime}</td>
+                    <td className='px-1 py-3 text-sm border-black border-y-[1px]'>{row.status}</td>   
+                </tr>
+            ))
+        }
+    </tbody>
+</table>
   );
 };
 
