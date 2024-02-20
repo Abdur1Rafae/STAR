@@ -10,6 +10,8 @@ import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
 import QuizInstructions from './pages/Student/QuizInstructions.jsx';
 import ScheduledAssessmentPage from './pages/Teacher/ScheduledAssessmentPage.jsx';
 import QuestionBankPage from './pages/Teacher/QuestionBankPage';
+import LiveMonitoring from './pages/Teacher/LiveMonitoring';
+
 import Classes from './pages/Teacher/Classes.jsx';
 
 
@@ -29,6 +31,8 @@ const AppRoutes = () => {
             <Route path="/teacher/scheduled-assessments" element = {<ScheduledAssessmentPage/>} />
             <Route path='/teacher/classes' element={<Classes/>}></Route>
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
+            <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
+
          </Routes>
   )
 }
