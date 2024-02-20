@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { TbLayoutNavbarExpand, TbLayoutBottombarExpand } from "react-icons/tb";
 import { MdEdit } from "react-icons/md";
 import QuizImage from '../Student/question/QuizImage';
+import { MdOutlineDeleteOutline } from "react-icons/md";
 
 const StoredQuestion = ({number, question, skill, difficulty, point}) => {
     const [display, setDisplay] = useState(false);
@@ -16,13 +17,14 @@ const StoredQuestion = ({number, question, skill, difficulty, point}) => {
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={point}/>
                     <div className='ml-auto flex'>
+                        <button className='self-center'><MdOutlineDeleteOutline className='text-lg text-red-400 mr-2'/></button>
                         <button className='self-center'><MdEdit className='text-lg text-gray-400 mr-2'/></button>
                         <button onClick={()=>{setDisplay(!display)}}>
                         {
                             display ?
-                            <TbLayoutBottombarExpand className='text-lg self-center text-gray-400'/>
+                            <TbLayoutBottombarExpand className='text-lg self-center text-DarkBlue'/>
                             :
-                            <TbLayoutNavbarExpand className='text-lg self-center text-gray-400'/>
+                            <TbLayoutNavbarExpand className='text-lg self-center text-DarkBlue'/>
                         }
                         </button>
                     </div>

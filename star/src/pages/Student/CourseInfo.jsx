@@ -6,13 +6,13 @@ import SubHeader from '../../components/Student/SubHeader'
 import UpQuiz from '../../components/Student/course/UpQuiz'
 import SkillEvaluation from '../../components/Student/course/SkillEvaluation'
 import AssessmentHistory from '../../components/Student/course/AssessmentHistory'
-import PerformanceGraph from '../../components/Student/course/PerformanceGraph'
 import CourseNameInst from '../../components/Student/course/CourseNameInst'
+import PerformanceGraph from '../../components/Student/course/PerformanceGraph'
 
 const CourseInfo = () => {
   const quizzes = 1
   return (
-    <div className="flex flex-col mb-20">
+    <div className="flex flex-col mb-2">
       <MenuBar name={"Maaz Shamim"} role={"Student"}/>
       <SubHeader/>
       <div className='mt-4 ml-auto mr-auto w-11/12'>

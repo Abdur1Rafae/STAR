@@ -1,10 +1,6 @@
 import React from 'react'
 import RadialTimer from '../RadialTimer';
 import { BsCardChecklist } from "react-icons/bs";
-import profileimagecircle from '../profile-circle.png'
-import greentick from '../tick-green.png'
-import redflagged from '../flagged-red.png'
-import sandglass from '../sandglass.png'
 import { RxClock } from "react-icons/rx";
 import { StudentTicker } from '../Tickers';
 import { SubmissionTicker } from '../Tickers';

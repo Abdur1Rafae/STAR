@@ -13,9 +13,9 @@ import QuestionBankPage from './pages/Teacher/QuestionBankPage';
 import LiveMonitoring from './pages/Teacher/LiveMonitoring';
 
 import Classes from './pages/Teacher/Classes.jsx';
+import OpenBank from './pages/Teacher/OpenBank.jsx';
 
-
-const AppRoutes = () => {
+const WebRoutes = () => {
   return (
         <Routes>
             <Route path="/home" element = {<StudentDashboard/>} />
@@ -32,9 +32,10 @@ const AppRoutes = () => {
             <Route path='/teacher/classes' element={<Classes/>}></Route>
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
+            <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
 
          </Routes>
   )
 }
 
-export default AppRoutes
+export default WebRoutes

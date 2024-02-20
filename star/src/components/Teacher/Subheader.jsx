@@ -1,5 +1,4 @@
 import React from 'react'
-import NewButton from '../button/NewButton'
 import { MdOutlineViewSidebar } from "react-icons/md";
 import { toggleNavTab } from '../../redux/teacherNav';
 import { useDispatch } from 'react-redux';

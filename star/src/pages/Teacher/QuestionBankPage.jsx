@@ -1,5 +1,3 @@
-import SearchBar from '../../components/Teacher/SearchBar';
-import QuestionBankCard from '../../components/Teacher/QuestionBankCard';
 import React ,{ useState }from 'react';
 import SubmitButton from '../../components/button/SubmitButton';
 import { FaFolderOpen } from "react-icons/fa";
@@ -7,23 +5,14 @@ import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { GrStorage } from "react-icons/gr";
-import TopicContainer from '../../components/Teacher/TopicContainer'
-import CategoryFilter from '../../components/Teacher/CategoryFilter';
-import LCSearchBar from '../../components/Teacher/LCSearchBar';
+import AllQuestions from '../../components/Teacher/AllQuestions';
+import QuestionBanks from '../../components/Teacher/QuestionBanks';
 
 
 
-function App() {
+function QuestionBankPage() {
     const [tab, setTab] = useState('Question Bank')
-    const total_assessment = 4;
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const skills = ['Logic', 'Problem Solving', 'Quantitative Analysis', 'Critical Thinking'];
-    const difficulty = ['Easy', 'Medium', 'Difficult', 'Hard'];
-    const topics = ['Computer History', 'Calculus', 'Assembly Language']
-
-    const handleSelectCategory = (category) => {
-        setSelectedCategory(category);
-    };
+    
   return (
     <div className='flex flex-col h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
@@ -43,47 +32,8 @@ function App() {
 
                     {
                         tab == "Question Bank" ? 
-                        (
-                            <div className='flex flex-col gap-4'>
-                                <div className='md:w-3/4 w-full'>
-                                    <SearchBar/>
-                                </div>
-                                <div className='flex flex-wrap gap-8'>
-                                    <QuestionBankCard/>
-                                    <QuestionBankCard/>
-                                    <QuestionBankCard/>
-                                    <QuestionBankCard/>
-                                </div>
-                            </div>
-                        ) :
-                        <div className='flex flex-col gap-4 overflow-hidden'>
-                             <div className='flex md:flex-row flex-col gap-2'>
-                                    <LCSearchBar/>
-                                    <div className='flex justify-between gap-2'>
-                                        <CategoryFilter
-                                        categoryName="Skill : All"
-                                        categories={skills}
-                                        selectedCategory={selectedCategory}
-                                        onSelectCategory={handleSelectCategory}
-                                        /> 
-                                        <CategoryFilter
-                                            categoryName="Difficulty : All"
-                                            categories={difficulty}
-                                            selectedCategory={selectedCategory}
-                                            onSelectCategory={handleSelectCategory}
-                                        />
-                                        <CategoryFilter
-                                            categoryName="Topic: All"
-                                            categories={topics}
-                                            selectedCategory={selectedCategory}
-                                            onSelectCategory={handleSelectCategory}
-                                        /> 
-                                    </div>
-                            </div>
-                            <TopicContainer topic={"History of Computers"}/>
-                            <TopicContainer topic={"History of Computers"}/>
-                            <TopicContainer topic={"History of Computers"}/>
-                        </div>
+                        <QuestionBanks/> :
+                        <AllQuestions/>
                     }
 
         
@@ -94,4 +44,4 @@ function App() {
   );
 }
 
-export default App;
+export default QuestionBankPage;
