@@ -25,16 +25,16 @@ function LiveMonitoring() {
         setSelectedCategory(category);}
 
   return (
-    <div className='flex flex-col h-full font-body'>
+    <div className=' w-full h-full font-body  border border-black '>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+        <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Live Monitoring"}/>
-            <div className='w-full flex flex-col'>
+            <div className='w-full '>
                 <Subheader name={"Live Monitoring"}/>
-                <div className='px-4 pt-4'>
+                <div className='w-auto m-2 pt-4'>
                     <OverallSummary/>
                 </div>
-                <div className = 'mx-4 flex gap-2 w-11/12'>
+                <div className='w-auto mx-2'>
                     <LMTable data = {data} />
                 </div>
             </div>
