@@ -58,3 +58,17 @@ CREATE TABLE TargetAudience (
     FOREIGN KEY (AssessmentID) REFERENCES Assessment(AssessmentID),
     FOREIGN KEY (SectionID) REFERENCES Section(SectionID)
 );
+
+CREATE TABLE refresh_tokens (
+    email VARCHAR(255) PRIMARY KEY,
+    refreshToken VARCHAR(255) NOT NULL,
+    uuid VARCHAR(36) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (email) REFERENCES User(Email)
+);
+
+CREATE EVENT IF NOT EXISTS `Arete`.`delete_expired_tokens` 
+ON SCHEDULE  
+EVERY 1 minute 
+DO 
+DELETE FROM SessionInfo WHERE created_at  < NOW() - INTERVAL 5 minute
