@@ -1,0 +1,936 @@
+.adding-students-to {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .adding-students-to .overlap-wrapper {
+    background-color: #ffffff;
+    height: 1024px;
+    width: 1440px;
+  }
+  
+  .adding-students-to .overlap {
+    height: 1024px;
+    position: relative;
+  }
+  
+  .adding-students-to .rectangle {
+    height: 56px;
+    left: 146px;
+    position: absolute;
+    top: 527px;
+    width: 1028px;
+  }
+  
+  .adding-students-to .rectangle-2 {
+    height: 56px;
+    left: 146px;
+    position: absolute;
+    top: 415px;
+    width: 1028px;
+  }
+  
+  .adding-students-to .browser-chrome-dark {
+    box-shadow: 0px 1.85px 3.15px #00000004, 0px 8.15px 6.52px #00000007, 0px 20px 13px #00000009,
+      0px 38.52px 25.48px #0000000b, 0px 64.81px 46.85px #0000000e, 0px 100px 80px #00000012;
+    height: 1024px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1440px;
+  }
+  
+  .adding-students-to .browser-chrome-light {
+    background-color: #ffffff;
+    height: 1024px;
+  }
+  
+  .adding-students-to .overlap-group {
+    border-radius: 8px;
+    height: 1024px;
+    position: relative;
+    width: 1440px;
+  }
+  
+  .adding-students-to .browser-URL-controls {
+    height: 80px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1440px;
+  }
+  
+  .adding-students-to .toolbar-URL-controls-instance {
+    left: 0 !important;
+    position: absolute !important;
+    top: 42px !important;
+  }
+  
+  .adding-students-to .design-component-instance-node {
+    background-color: #35363a !important;
+  }
+  
+  .adding-students-to .toolbar-URL-controls-2 {
+    height: 16px !important;
+    left: 35px !important;
+    top: 3px !important;
+    width: 16px !important;
+  }
+  
+  .adding-students-to .toolbar-URL-controls-3 {
+    background-color: #202124 !important;
+  }
+  
+  .adding-students-to .toolbar-URL-controls-4 {
+    color: #ffffff !important;
+  }
+  
+  .adding-students-to .toolbar-URL-controls-5 {
+    color: #86888a !important;
+  }
+  
+  .adding-students-to .toolbar-browser {
+    height: 42px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1440px;
+  }
+  
+  .adding-students-to .broswer-control-bar {
+    background-color: #202124;
+    box-shadow: 0px 4px 4px #00000040;
+    height: 42px;
+    position: relative;
+  }
+  
+  .adding-students-to .tab-plus {
+    height: 34px;
+    left: 72px;
+    position: absolute;
+    top: 8px;
+    width: 167px;
+  }
+  
+  .adding-students-to .browser-tab-with {
+    height: 34px;
+    left: 8px;
+    position: relative;
+    width: 131px;
+  }
+  
+  .adding-students-to .frame-2 {
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+    left: -6px;
+    position: relative;
+  }
+  
+  .adding-students-to .frame-3 {
+    align-items: flex-start;
+    display: inline-flex;
+    flex: 0 0 auto;
+    position: relative;
+  }
+  
+  .adding-students-to .img-2 {
+    height: 8px;
+    position: relative;
+    width: 6px;
+  }
+  
+  .adding-students-to .favicon-text-icons {
+    align-items: center;
+    background-color: #35363a;
+    border-radius: 8px 8px 0px 0px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 9px;
+    overflow: hidden;
+    padding: 8px;
+    position: relative;
+  }
+  
+  .adding-students-to .tab-name {
+    color: transparent;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: normal;
+    position: relative;
+    white-space: nowrap;
+    width: fit-content;
+  }
+  
+  .adding-students-to .text-wrapper {
+    color: #ffffff;
+    letter-spacing: 0.03px;
+  }
+  
+  .adding-students-to .span {
+    color: #ffffff;
+    font-size: 12px;
+    letter-spacing: 0.02px;
+  }
+  
+  .adding-students-to .text-wrapper-2 {
+    color: #35363a;
+    font-size: 12px;
+    letter-spacing: 0.02px;
+  }
+  
+  .adding-students-to .icon-close {
+    height: 18px !important;
+    position: relative !important;
+    width: 18px !important;
+  }
+  
+  .adding-students-to .icon-plus {
+    height: 20px !important;
+    position: relative !important;
+    width: 20px !important;
+  }
+  
+  .adding-students-to .browser-controls {
+    height: 12px;
+    left: 13px;
+    position: absolute;
+    top: 16px;
+    width: 52px;
+  }
+  
+  .adding-students-to .option-expand {
+    background-color: #27ca40;
+    border: 0.5px solid;
+    border-color: #3eaf3f;
+    border-radius: 6px;
+    height: 12px;
+    left: 40px;
+    position: absolute;
+    top: 0;
+    width: 12px;
+  }
+  
+  .adding-students-to .option-minimize {
+    background-color: #ffc130;
+    border: 0.5px solid;
+    border-color: #e1a325;
+    border-radius: 6px;
+    height: 12px;
+    left: 20px;
+    position: absolute;
+    top: 0;
+    width: 12px;
+  }
+  
+  .adding-students-to .option-close {
+    background-color: #ff6058;
+    border: 0.5px solid;
+    border-color: #e14942;
+    border-radius: 6px;
+    height: 12px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 12px;
+  }
+  
+  .adding-students-to .browser-outline {
+    border: 1px solid;
+    border-color: #000000;
+    border-radius: 8px;
+    height: 1024px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1440px;
+  }
+  
+  .adding-students-to .group {
+    height: 38px;
+    left: 165px;
+    position: absolute;
+    top: 592px;
+    width: 951px;
+  }
+  
+  .adding-students-to .text-wrapper-3 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 4px;
+    width: 294px;
+  }
+  
+  .adding-students-to .text-wrapper-4 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 395px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 70px;
+  }
+  
+  .adding-students-to .text-wrapper-5 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 627px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 318px;
+  }
+  
+  .adding-students-to .overlap-group-wrapper {
+    -webkit-backdrop-filter: blur(4px) brightness(100%);
+    backdrop-filter: blur(4px) brightness(100%);
+    height: 944px;
+    left: 0;
+    position: absolute;
+    top: 80px;
+    width: 79px;
+  }
+  
+  .adding-students-to .overlap-2 {
+    height: 944px;
+    position: relative;
+  }
+  
+  .adding-students-to .group-wrapper {
+    height: 944px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 79px;
+  }
+  
+  .adding-students-to .div-wrapper {
+    height: 944px;
+  }
+  
+  .adding-students-to .group-2 {
+    height: 944px;
+    width: 79px;
+  }
+  
+  .adding-students-to .group-3 {
+    background-image: url(./rectangle-1.svg);
+    background-size: 100% 100%;
+    height: 944px;
+    position: relative;
+  }
+  
+  .adding-students-to .rectangle-3 {
+    height: 38px;
+    left: 15px;
+    object-fit: cover;
+    position: absolute;
+    top: 387px;
+    width: 41px;
+  }
+  
+  .adding-students-to .rectangle-4 {
+    height: 38px;
+    left: 15px;
+    object-fit: cover;
+    position: absolute;
+    top: 460px;
+    width: 41px;
+  }
+  
+  .adding-students-to .rectangle-5 {
+    height: 73px;
+    left: 5px;
+    object-fit: cover;
+    position: absolute;
+    top: 71px;
+    width: 69px;
+  }
+  
+  .adding-students-to .rectangle-6 {
+    height: 38px;
+    left: 15px;
+    object-fit: cover;
+    position: absolute;
+    top: 238px;
+    width: 41px;
+  }
+  
+  .adding-students-to .rectangle-7 {
+    height: 38px;
+    left: 15px;
+    object-fit: cover;
+    position: absolute;
+    top: 869px;
+    width: 41px;
+  }
+  
+  .adding-students-to .rectangle-8 {
+    height: 37px;
+    left: 15px;
+    object-fit: cover;
+    position: absolute;
+    top: 538px;
+    width: 41px;
+  }
+  
+  .adding-students-to .rectangle-9 {
+    height: 37px;
+    left: 15px;
+    object-fit: cover;
+    position: absolute;
+    top: 311px;
+    width: 41px;
+  }
+  
+  .adding-students-to .group-4 {
+    background-image: url(./rectangle-6.png);
+    background-position: 50% 50%;
+    background-size: cover;
+    height: 38px;
+    left: 14px;
+    position: absolute;
+    top: 16px;
+    width: 41px;
+  }
+  
+  .adding-students-to .p {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 28px;
+    font-weight: 400;
+    left: 148px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 199px;
+    white-space: nowrap;
+    width: 368px;
+  }
+  
+  .adding-students-to .pop-up-screen {
+    height: 40px;
+    left: 98px;
+    object-fit: cover;
+    position: absolute;
+    top: 176px;
+    width: 40px;
+  }
+  
+  .adding-students-to .rectangle-10 {
+    height: 30px;
+    left: 514px;
+    object-fit: cover;
+    position: absolute;
+    top: 201px;
+    width: 30px;
+  }
+  
+  .adding-students-to .rectangle-11 {
+    height: 25px;
+    left: 1192px;
+    object-fit: cover;
+    position: absolute;
+    top: 369px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-12 {
+    height: 25px;
+    left: 1255px;
+    object-fit: cover;
+    position: absolute;
+    top: 369px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-13 {
+    height: 25px;
+    left: 1192px;
+    object-fit: cover;
+    position: absolute;
+    top: 426px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-14 {
+    height: 25px;
+    left: 1255px;
+    object-fit: cover;
+    position: absolute;
+    top: 426px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-15 {
+    height: 25px;
+    left: 1192px;
+    object-fit: cover;
+    position: absolute;
+    top: 484px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-16 {
+    height: 25px;
+    left: 1255px;
+    object-fit: cover;
+    position: absolute;
+    top: 484px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-17 {
+    height: 25px;
+    left: 1192px;
+    object-fit: cover;
+    position: absolute;
+    top: 540px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-18 {
+    height: 25px;
+    left: 1255px;
+    object-fit: cover;
+    position: absolute;
+    top: 540px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-19 {
+    height: 25px;
+    left: 1192px;
+    object-fit: cover;
+    position: absolute;
+    top: 595px;
+    width: 25px;
+  }
+  
+  .adding-students-to .rectangle-20 {
+    height: 25px;
+    left: 1255px;
+    object-fit: cover;
+    position: absolute;
+    top: 595px;
+    width: 25px;
+  }
+  
+  .adding-students-to .line {
+    height: 2px;
+    left: 147px;
+    position: absolute;
+    top: 357px;
+    width: 1150px;
+  }
+  
+  .adding-students-to .group-5 {
+    height: 34px;
+    left: 165px;
+    position: absolute;
+    top: 324px;
+    width: 739px;
+  }
+  
+  .adding-students-to .text-wrapper-6 {
+    color: #000000;
+    font-family: "Roboto-Medium", Helvetica;
+    font-size: 20px;
+    font-weight: 500;
+    height: 34px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 93px;
+  }
+  
+  .adding-students-to .text-wrapper-7 {
+    color: #000000;
+    font-family: "Roboto-Medium", Helvetica;
+    font-size: 20px;
+    font-weight: 500;
+    height: 34px;
+    left: 367px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 117px;
+  }
+  
+  .adding-students-to .text-wrapper-8 {
+    color: #000000;
+    font-family: "Roboto-Medium", Helvetica;
+    font-size: 20px;
+    font-weight: 500;
+    height: 34px;
+    left: 623px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 110px;
+  }
+  
+  .adding-students-to .group-6 {
+    height: 38px;
+    left: 165px;
+    position: absolute;
+    top: 365px;
+    width: 947px;
+  }
+  
+  .adding-students-to .text-wrapper-9 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 4px;
+    width: 151px;
+  }
+  
+  .adding-students-to .text-wrapper-10 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 391px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 70px;
+  }
+  
+  .adding-students-to .text-wrapper-11 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 623px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 318px;
+  }
+  
+  .adding-students-to .group-7 {
+    height: 38px;
+    left: 165px;
+    position: absolute;
+    top: 422px;
+    width: 947px;
+  }
+  
+  .adding-students-to .group-8 {
+    height: 34px;
+    left: 1130px;
+    position: absolute;
+    top: 190px;
+    width: 167px;
+  }
+  
+  .adding-students-to .group-9 {
+    height: 34px;
+    width: 169px;
+  }
+  
+  .adding-students-to .overlap-group-2 {
+    background-color: #274c77;
+    border-radius: 10px;
+    height: 34px;
+    position: relative;
+    width: 167px;
+  }
+  
+  .adding-students-to .text-wrapper-12 {
+    color: #ffffff;
+    font-family: "Roboto-Bold", Helvetica;
+    font-size: 20px;
+    font-weight: 700;
+    left: 36px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 6px;
+    width: 121px;
+  }
+  
+  .adding-students-to .plus {
+    height: 20px;
+    left: 9px;
+    position: absolute;
+    top: 6px;
+    width: 20px;
+  }
+  
+  .adding-students-to .group-10 {
+    height: 34px;
+    left: 906px;
+    position: absolute;
+    top: 191px;
+    width: 200px;
+  }
+  
+  .adding-students-to .group-11 {
+    height: 34px;
+    width: 202px;
+  }
+  
+  .adding-students-to .overlap-group-3 {
+    background-color: #274c77;
+    border-radius: 10px;
+    height: 34px;
+    position: relative;
+    width: 200px;
+  }
+  
+  .adding-students-to .text-wrapper-13 {
+    color: #ffffff;
+    font-family: "Roboto-Bold", Helvetica;
+    font-size: 20px;
+    font-weight: 700;
+    left: 35px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 5px;
+    width: 143px;
+  }
+  
+  .adding-students-to .group-12 {
+    height: 38px;
+    left: 165px;
+    position: absolute;
+    top: 480px;
+    width: 947px;
+  }
+  
+  .adding-students-to .text-wrapper-14 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 4px;
+    width: 240px;
+  }
+  
+  .adding-students-to .text-wrapper-15 {
+    color: #000000;
+    font-family: "Roboto-Medium", Helvetica;
+    font-size: 34px;
+    font-weight: 500;
+    left: 147px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 153px;
+    white-space: nowrap;
+    width: 405px;
+  }
+  
+  .adding-students-to .group-13 {
+    height: 24px;
+    left: 634px;
+    position: absolute;
+    top: 329px;
+    width: 20px;
+  }
+  
+  .adding-students-to .overlap-3 {
+    height: 24px;
+    position: relative;
+  }
+  
+  .adding-students-to .rectangle-21 {
+    height: 15px;
+    left: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 9px;
+    width: 20px;
+  }
+  
+  .adding-students-to .rectangle-22 {
+    height: 15px;
+    left: 2px;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 15px;
+  }
+  
+  .adding-students-to .group-14 {
+    height: 24px;
+    left: 225px;
+    position: absolute;
+    top: 330px;
+    width: 20px;
+  }
+  
+  .adding-students-to .group-15 {
+    height: 38px;
+    left: 165px;
+    position: absolute;
+    top: 533px;
+    width: 947px;
+  }
+  
+  .adding-students-to .text-wrapper-16 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 20px;
+    font-weight: 400;
+    height: 34px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 4px;
+    width: 200px;
+  }
+  
+  .adding-students-to .rectangle-23 {
+    height: 56px;
+    left: 146px;
+    position: absolute;
+    top: 359px;
+    width: 1151px;
+  }
+  
+  .adding-students-to .rectangle-24 {
+    height: 56px;
+    left: 147px;
+    position: absolute;
+    top: 471px;
+    width: 1151px;
+  }
+  
+  .adding-students-to .rectangle-25 {
+    height: 56px;
+    left: 146px;
+    position: absolute;
+    top: 583px;
+    width: 1151px;
+  }
+  
+  .adding-students-to .plus-2 {
+    height: 20px;
+    left: 914px;
+    position: absolute;
+    top: 197px;
+    width: 20px;
+  }
+  
+  .adding-students-to .plus-3 {
+    height: 25px;
+    left: 1067px;
+    position: absolute;
+    top: 195px;
+    width: 25px;
+  }
+  
+  .adding-students-to .group-16 {
+    height: 107px;
+    left: 791px;
+    position: absolute;
+    top: 134px;
+    width: 133px;
+  }
+  
+  .adding-students-to .group-17 {
+    height: 114px;
+    left: 893px;
+    position: absolute;
+    top: 221px;
+    width: 190px;
+  }
+  
+  .adding-students-to .line-2 {
+    height: 1px;
+    left: 893px;
+    object-fit: cover;
+    position: absolute;
+    top: 282px;
+    width: 187px;
+  }
+  
+  .adding-students-to .group-18 {
+    height: 44px;
+    left: 906px;
+    position: absolute;
+    top: 283px;
+    width: 186px;
+  }
+  
+  .adding-students-to .text-wrapper-17 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 22px;
+    font-weight: 400;
+    height: 44px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 184px;
+  }
+  
+  .adding-students-to .group-19 {
+    height: 39px;
+    left: 906px;
+    position: absolute;
+    top: 239px;
+    width: 130px;
+  }
+  
+  .adding-students-to .text-wrapper-18 {
+    color: #000000;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 22px;
+    font-weight: 400;
+    height: 39px;
+    left: 0;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 0;
+    width: 128px;
+  }
+  
