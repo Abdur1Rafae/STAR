@@ -59,12 +59,18 @@ CREATE TABLE TargetAudience (
     FOREIGN KEY (SectionID) REFERENCES Section(SectionID)
 );
 
-CREATE TABLE refresh_tokens (
+CREATE TABLE SessionInfo (
     email VARCHAR(255) PRIMARY KEY,
     refreshToken VARCHAR(255) NOT NULL,
     uuid VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (email) REFERENCES User(Email)
+);
+
+CREATE TABLE PasswordReset (
+    otp VARCHAR(6) NOT NULL,
+    email VARCHAR(255) PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE EVENT IF NOT EXISTS `Arete`.`delete_expired_tokens` 

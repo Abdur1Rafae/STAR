@@ -21,7 +21,11 @@ const requireAuth = async (req, res, next) =>
                 jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => 
                 {
                     if(err){return res.status(403).json({error: true, message: "Token Expired : Refresh token or login again"})}
-                    else{next()}
+                    else
+                    {
+                        req.decodedToken = decodedToken;
+                        next()
+                    }
                 })
             } 
             else{return res.status(401).json({error: true, message: "Session Expired: You must log in again to access this resource"})}  
