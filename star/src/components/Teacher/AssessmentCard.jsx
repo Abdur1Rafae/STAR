@@ -13,7 +13,7 @@ const AssessmentCard = ({ status }) => {
 
     switch (status) {
         case 'In Progress':
-            buttonComponent = <MonitorButton label="Monitor" />;
+            buttonComponent = <MonitorButton label="Monitor" onClick={()=>{window.location.assign("/teacher/live-monitoring")}}/>;
             statusColor = 'border-MonitorYellow';
             statusTextColor = 'text-MonitorYellow';
             break;

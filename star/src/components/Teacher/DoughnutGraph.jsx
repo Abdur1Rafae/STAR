@@ -60,9 +60,9 @@ export const data = ({ inputData }) => {
 };
 
 const LegendList = ({labels}) => (
-    <div className='mt-2 self-start'>
+    <div className='mt-2 self-start flex md:flex-col flex-row flex-wrap gap-4'>
       {labels.map((label, index) => (
-        <div key={index} className="flex items-center mb-2">
+        <div key={index} className="flex items-center">
           <div
             className="w-4 h-4 rounded-full mr-2"
             style={{ backgroundColor: additionalColors[index % additionalColors.length] }}

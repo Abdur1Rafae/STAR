@@ -3,15 +3,15 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FcAddImage } from "react-icons/fc";
 
-const TFSetup = () => {
+const TFSetup = ({image, options}) => {
     const [markedCorrect, setMarkCorrect] = useState(false);
     const fileInputRef = useRef(null);
-    const [imageUrl, setImageUrl] = useState(null);
+    const [imageUrl, setImageUrl] = useState(image);
 
-    const [choices, setChoices] = useState([
-        { text: "True", isCorrect: false },
-        { text: "False", isCorrect: false },
-    ]);
+    
+
+    const [choices, setChoices] = useState(options.length > 0 ? options : [{ text: "True", isCorrect: true },
+    { text: "False", isCorrect: false }]);
 
     useEffect(() => {
         const hasCorrect = choices.some(choice => choice.isCorrect)

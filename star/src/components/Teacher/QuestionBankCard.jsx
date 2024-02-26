@@ -8,7 +8,7 @@ const AssessmentCard = ({  }) => {
    
 
     return (
-        <div className={`w-72 font-body h-36 rounded bg-LightBlue border border-black shadow-[-7px_7px_0px_0px_rgba(44,100,145,1)] px-4`}>
+        <button className={`w-72 font-body h-36 rounded bg-LightBlue border border-black shadow-[-7px_7px_0px_0px_rgba(44,100,145,1)] px-4 text-left`} onClick={()=>{window.location.assign("/teacher/library/MonthlyTest")}}>
           <div className='flex justify-end '>
             <div  className='mr-2 mt-2'><MdModeEdit size={21} /></div>
             <div className=' mt-2 text-DeleteRed'><MdDelete size={21} /></div>
@@ -24,7 +24,7 @@ const AssessmentCard = ({  }) => {
                 <span className='text-xs font-semibold'>15</span>
             </div>
           </div>
-        </div>
+        </button>
     );
 };
 

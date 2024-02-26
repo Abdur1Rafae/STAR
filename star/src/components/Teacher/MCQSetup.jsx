@@ -4,16 +4,11 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FcAddImage } from "react-icons/fc";
 
-const MCQSetup = () => {
+const MCQSetup = ({image, setImage,  options}) => {
     const [markedCorrect, setMarkCorrect] = useState(false);
     const fileInputRef = useRef(null);
-    const [imageUrl, setImageUrl] = useState(null);
 
-    const [choices, setChoices] = useState([
-        { text: "Hello 1st option", isCorrect: false },
-        { text: "Hello 2nd option", isCorrect: false },
-        { text: "Hello 3rd option", isCorrect: true }
-    ]);
+    const [choices, setChoices] = useState(options);
 
     useEffect(() => {
         const hasCorrect = choices.some(choice => choice.isCorrect)
@@ -42,7 +37,7 @@ const MCQSetup = () => {
         const file = event.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
-            setImageUrl(imageUrl);
+            setImage(imageUrl);
         }
     };
 
@@ -51,7 +46,7 @@ const MCQSetup = () => {
     };
 
     const handleDeleteImage = () => {
-        setImageUrl(null); 
+        setImage(null); 
         fileInputRef.current.value = null; 
     };
 
@@ -68,10 +63,10 @@ const MCQSetup = () => {
                 {!markedCorrect && <p className='text-red-500 text-xs'>Mark atleast one correct choice</p>}
                 <div className='flex flex-col gap-2'>
                     {
-                        choices.map((choice) => {
+                        choices.length > 0 && choices.map((choice) => {
                             return <div className='flex gap-2 items-center'>
                                 <FaCheckCircle className={`${choice.isCorrect ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
-                                <input type='text' onChange={(event)=>handleInputChange(event, choice)} value={choice.text} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${choice.isCorrect ? 'text-green-500' : 'text-gray-600'}`}/>
+                                <input type='text' onChange={(event)=>handleInputChange(event, choice)} defaultValue={choice.text} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${choice.isCorrect ? 'text-green-500' : 'text-gray-600'}`}/>
                                 <MdOutlineDeleteOutline className='hover:text-red-500 hover:cursor-pointer' onClick={()=>handleDeleteChoice(choice)}/>
                             </div>
                         })
@@ -86,12 +81,12 @@ const MCQSetup = () => {
                         onChange={handleFileInputChange}
                         style={{ display: 'none' }}
                     />
-                    <button className={`${imageUrl ? 'hidden' : 'w-28 h-28'}`} onClick={handleClick}>
+                    <button className={`${image ? 'hidden' : 'w-28 h-28'}`} onClick={handleClick}>
                         <FcAddImage className='w-full h-full' />
                     </button>
-                    {imageUrl && (
+                    {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={imageUrl} alt="Uploaded Image" className='w-24 h-24'/>
+                            <img src={image} alt="Uploaded Image" className='w-24 h-24'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>

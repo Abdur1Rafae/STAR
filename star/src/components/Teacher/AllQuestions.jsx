@@ -34,7 +34,7 @@ const AllQuestions = () => {
                         categories={topics}
                         selectedCategory={selectedCategory}
                         onSelectCategory={handleSelectCategory}
-                    /> 
+                    />
                 </div>
         </div>
         <TopicContainer topic={"History of Computers"}/>
