@@ -58,6 +58,7 @@ const sendMail = async ([recipients], type, replacements) =>
     await transporter.sendMail(mailOptions, (error, info) => 
     {
         if (error) {console.error('Error occurred:', error)} 
+       
         else {console.log('Email sent successfully:', info.response)}
     })     
 }

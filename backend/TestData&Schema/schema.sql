@@ -78,3 +78,9 @@ ON SCHEDULE
 EVERY 1 minute 
 DO 
 DELETE FROM SessionInfo WHERE created_at  < NOW() - INTERVAL 5 minute
+
+CREATE EVENT IF NOT EXISTS `Arete`.`delete_expired_otp` 
+ON SCHEDULE  
+EVERY 1 minute 
+DO 
+DELETE FROM SessionInfo WHERE created_at  < NOW() - INTERVAL 5 minute

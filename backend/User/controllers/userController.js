@@ -1,14 +1,13 @@
 const saltRounds = 10
-const tokenExpiration = '2m'
-const refreshExpiration = '5m'
-require('dotenv').config()
+const tokenExpiration = '20m'
+const refreshExpiration = '2h'
 const bcrypt = require('bcrypt')
-const Query = require('../db_manager/userQuery')
-const pool = require('../db_manager/dbconn')
 const jwt = require('jsonwebtoken')
 const uuid = require('uuid')
-const crypto = require('crypto')
+const Query = require('../db_manager/userQuery')
+const pool = require('../db_manager/dbconn')
 const {sendMail} = require('../util/Mail/mail')
+require('dotenv').config()
 
 //executes sql query using the existing connection to MYSQL database
 function executeQuery(sql, values) 
@@ -17,7 +16,10 @@ function executeQuery(sql, values)
     {
         pool.query(sql, values, (error, results) => 
         {
-            if(error){reject(error)}
+            if(error)
+            {
+                reject(error)
+            }
             else{resolve(results)}  
         })
     })
@@ -33,7 +35,7 @@ function createToken(email, role)
             expiresIn: tokenExpiration
         })   
     }
-    else{throw new Error('Could Not Initiate Session')}
+    else{throw new Error('Error Generating Refresh Token')}
 }
 
 //creates a refresh token using the uuid and stores it in database along with user's email
@@ -47,7 +49,10 @@ async function createRefreshToken(email, sessionID)
         const result = await executeQuery(Query.INSERT_TOKEN, [email, token, sessionID])
         return true
     }
-    catch(error){return false}
+    catch(error)
+    {
+        return false
+    }
 }
 
 //validates whether all the required fields are provided in request body
@@ -64,7 +69,14 @@ function validateFields(requiredFields, data)
 function generateOTP() {
     const otp = Math.floor(100000 + Math.random() * 900000)
     return otp.toString()
-  }
+}
+
+async function studentExists(email)
+{
+    const result = await executeQuery(Query.CHECK_STUDENT, [email])
+    if(result.length > 0){return true}
+    else{return false}
+}
 
 module.exports = {executeQuery}
 module.exports.refresh = async (req, res) => 
@@ -81,10 +93,10 @@ module.exports.refresh = async (req, res) =>
     try{
         //retrieve refresh token using user email
         const result = await executeQuery(Query.FETCH_TOKEN, [email])
-        const refreshToken = result[0].refreshToken
 
-        if(refreshToken)
+        if(result.length > 0)
         {
+            const refreshToken = result[0].refreshToken
             jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decodedToken) => 
             {
                 if(err){return res.status(403).json({error: true, message: "Session Expired : You must log in again."})}
@@ -102,6 +114,7 @@ module.exports.refresh = async (req, res) =>
     }
     catch(err)
     {
+        console.log(err)
         res.status(500).json({  error: 'Internal server error: Failed to refresh token' })
     }
 }
@@ -138,38 +151,37 @@ module.exports.login = async (req,res) =>
 module.exports.signup = async (req,res) => 
 {
     //validate if all required fields are provided
-    const requiredFields = ['email', 'password', 'role']
+    const requiredFields = ['first_name', 'last_name', 'email', 'password', 'role']
     const response = validateFields(requiredFields, req.body)
     if(response != null){return res.status(400).json({ error: response })}   
     
-    var { first_name, last_name, erp, email, password, role} = req.body
+    var { first_name, last_name, email, password, role} = req.body
 
     role = role.toLowerCase()
 
     //encrypt password
     password = await bcrypt.hash(password, saltRounds)
 
-    var queryParams, query
+    try
+    {
+        var queryParams, query
 
-    if(role === "teacher")
-    {
-        query = Query.INSERT_TEACHER
-        queryParams = [first_name, last_name, email, password]
-    }
-    else if(role=== 'student')
-    {
-        //additional check for students
-        if (!erp) {return res.status(400).json({ error: true, message: 'ERP field is required for Student' })}
-        query = Query.INSERT_STUDENT
-        queryParams = [first_name, last_name, email, password, erp]
-    }
-    else{return res.status(400).json({ error: true, message: 'Role: ' + role + "doesn't exist"})}
+        if(role === "teacher")
+        {
+            query = Query.INSERT_TEACHER
+            queryParams = [first_name, last_name, email, password]
+        }
+        else if(role === 'student')
+        {
+            if(await studentExists(email) == true){return res.status(409).json({ error: true, message: 'Duplicate entry: The user already exists' })}
+            query = Query.INSERT_STUDENT
+            queryParams = [first_name, last_name, email, password]
+        }
+        else{return res.status(400).json({ error: true, message: 'Role: ' + role + "doesn't exist"})}
 
     //execute query
-    try{
         const result = await executeQuery(query, queryParams)
-        const secret = process.env.JWT_SECRET + password
-        const token = jwt.sign({email}, secret, {
+        const token = jwt.sign({email}, process.env.JWT_SECRET, {
             expiresIn: '3d'
         })   
         const user = 
@@ -178,15 +190,15 @@ module.exports.signup = async (req,res) =>
             username : email,
             verificationLink : `http://localhost:3001/verify-email/${email}/${token}`
         }
-        const emailDelivery = await sendMail([email], 'verification', user)
-        res.status(201).json({error: false, message: 'Verification Link sent to email'})
+        await sendMail([email], 'verification', user)
+        return res.status(201).json({error: false, message: 'User registration successful. Verification link has been sent to registered email.'})
     }
-    catch(err){
+    catch(err)
+    {
         if (err.code === 'ER_DUP_ENTRY') {
-            res.status(400).json({ error: true, message: 'Duplicate entry: The user already exists' })
-          } else {
-            res.status(500).json({ error: true, message: 'Internal server error: Failed to insert user' })
-          }
+            return res.status(400).json({ error: true, message: 'Duplicate entry: The user already exists'})} 
+        else{
+            return res.status(500).json({ error: true, message: 'Internal server error: Failed to insert user'})}
     }
 }
 module.exports.logout = async (req,res) => 
@@ -247,7 +259,7 @@ module.exports.forgotPassword = async (req,res) =>
             }
             const dbResponse = await executeQuery(Query.SAVE_OTP, [email, otp])
             sendMail([email], 'forgotPassword', userInfo)
-            return res.status(200).json({error: false, message: 'Password Reset OTP Sent'})
+            return res.status(200).json({error: false, message: 'OTP Sent'})
         }
     }
     catch(err){res.status(500).json({  error: true, message: 'Internal server error: Failed to reset password' })}
@@ -258,13 +270,17 @@ module.exports.verifyOTP = async (req, res) =>
     const requiredFields = ['email', 'otp']
     const response = validateFields(requiredFields, req.body)
     if(response != null){return res.status(400).json({ error: true, message: response })} 
+
+    const {email, otp} = req.body
     
     try{
         //verify OTP
         const result = await executeQuery(Query.VERIFY_OTP, [email, otp])
         return res.status(200).json({error: false, message: 'OTP Verified'})  
     }
-    catch(err){res.status(500).json({  error: true, message: 'Internal server error: Failed to verify OTP' })}
+    catch(err){
+        console.log(err)
+        res.status(500).json({  error: true, message: 'Internal server error: Failed to verify OTP' })}
 }
 module.exports.resetPassword = async (req,res) => 
 {
@@ -284,25 +300,19 @@ module.exports.resetPassword = async (req,res) =>
 }
 module.exports.verifyEmail = async (req,res) => 
 {
-    const{email, token} = req.params
-    try{
-        //Fetch user
-        const result = await executeQuery(Query.FETCH_USER, [email])
-        if(result)
+    const{token} = req.params
+    try
+    {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => 
         {
-            const secret = process.env.JWT_SECRET + result[0].Password
-            jwt.verify(token, secret, async (err, decodedToken) => 
+            if(err){return res.status(403).json({error: true, message: "Token Expired. Register Again"})}
+            else
             {
-                if(err){return res.status(403).json({error: true, message: "Token Expired. Register Again"})}
-                else
-                {
-                    await executeQuery(Query.MARK_VERIFIED, [email])
-                    return res.status(200).json({error: false, message: 'Verification Complete'})  
-
-                }
-            })
-        } 
-        else{res.status(403).json({error: true, message: 'User not found'})}
+                const email = decodedToken.email
+                await executeQuery(Query.MARK_VERIFIED, [email])
+                return res.status(200).json({error: false, message: 'Verification Complete'})  
+            }
+        })
     }
     catch(err){res.status(500).json({error: true, message: 'Internal server error: Failed to insert user'})}
 
@@ -310,11 +320,18 @@ module.exports.verifyEmail = async (req,res) =>
 module.exports.deleteAccount = async (req,res) => 
 {
     const email = req.decodedToken.email
+    const role = req.decodedToken.role
+
+    var query
+    if(role.toLowerCase() === 'student'){query = Query.DELETE_STUDENT}
+    else{query = Query.DELETE_TEACHER}
+
 
     try{
-        //Delete user
-        const result = await executeQuery(Query.DELETE_USER, [email])
+        const result = await executeQuery(query, [email])
         return res.status(200).json({error: false, message: 'User Deleted Successfully'})  
     }
-    catch(err){res.status(500).json({error: true, message: 'Internal server error: Failed to delete user'})}
+    catch(err){
+        console.log(err)
+        res.status(500).json({error: true, message: 'Internal server error: Failed to delete user'})}
 }
