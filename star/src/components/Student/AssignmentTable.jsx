@@ -24,7 +24,7 @@ const AssignmentTable = () => {
             <div className="container w-11/12">
                 <table className='w-full border-separate border-spacing-y-2'>
                     <thead className=''>
-                        <tr className='text-center '>
+                        <tr className='text-center bg-LightBlue'>
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Quiz Title</th>
                             <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Course
@@ -47,7 +47,7 @@ const AssignmentTable = () => {
                     <tbody className="">
                         {
                             rows.map((row) => (
-                                <tr className='text-center'>
+                                <tr className='text-center bg-LightBlue'>
                                     <td className='p-3 text-sm border-black border-l-[1px] border-y-[1px]'>{row.name}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.course}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>

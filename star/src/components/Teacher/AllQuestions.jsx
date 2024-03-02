@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import TopicContainer from '../../components/Teacher/TopicContainer'
+import AllTopicsContainer from '../../components/Teacher/AllTopicsContainer'
 import CategoryFilter from '../../components/Teacher/CategoryFilter';
 import LCSearchBar from '../../components/Teacher/LCSearchBar';
 
@@ -37,9 +37,9 @@ const AllQuestions = () => {
                     />
                 </div>
         </div>
-        <TopicContainer topic={"History of Computers"}/>
-        <TopicContainer topic={"History of Computers"}/>
-        <TopicContainer topic={"History of Computers"}/>
+        <AllTopicsContainer topic={"History of Computers"}/>
+        <AllTopicsContainer topic={"History of Computers"}/>
+        <AllTopicsContainer topic={"History of Computers"}/>
     </div>
   )
 }

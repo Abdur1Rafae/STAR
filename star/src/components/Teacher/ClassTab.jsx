@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
-import { MdEdit } from "react-icons/md";
 import SectionTab from './SectionTab';
 import { FaCirclePlus } from "react-icons/fa6";
 import { MdDeleteOutline } from 'react-icons/md';
-import { LiaSaveSolid } from "react-icons/lia";
 import { FaAngleDown } from "react-icons/fa";
+import { ClickOutsideFunc } from '../ClickOutsideFunc';
 
 const ClassTab = ({name, onDelete}) => {
     const [className, setClassName] = useState(name);
     const [newClass, setNewClass] = useState(name);
     const [display, setDisplay] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(name == "New Class" ? true : false);
 
     const [sections, setSections] = useState(["1234(11:30 - 12:45)", "6734(13:00 - 14:15)"])
 
@@ -24,35 +23,44 @@ const ClassTab = ({name, onDelete}) => {
         let updatedSections = [...sections];
         updatedSections.splice(index, 1);
         setSections(updatedSections);
-      }
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            setClassName(newClass);
+            setIsEditing(false);
+        }
+    }
+
+    let saveClassName = ClickOutsideFunc(()=>{
+        setIsEditing(false);
+    })
 
 
   return (
     <div className='w-full md:w-7/12 border-[1px] border-black p-2 overflow-hidden flex flex-col'>
         <div className='flex justify-between'>
-            <div className='flex'>
+            <div ref={saveClassName} className='flex'>
                 {
                     isEditing ? 
                     (
                         <>                       
                             <input 
+                                autoFocus
+                                placeholder='Topic'
                                 type='text' 
                                 value={newClass} 
                                 onChange={(e) => setNewClass(e.target.value)} 
-                                className='text-sm md:text-md ml-2 font-body text-DarkBlue font-medium border-[1px] border-DarkBlue'
+                                className='text-sm md:text-md ml-2 bg-LightBlue border-none outline-none'
+                                onKeyDown={handleKeyPress}
                             />
-                            <button onClick={() => {
-                                setClassName(newClass);
-                                setIsEditing(false);
-                            }}><LiaSaveSolid className='text-lg text-gray-400 ml-2 md:mr-0 mr-4'/></button>
                         </>
 
                     ) 
                     : 
                     (
                         <>
-                            <h1 className='text-sm md:text-md ml-2 font-body text-DarkBlue font-medium'>{className}</h1>
-                            <button onClick={() => setIsEditing(true)}><MdEdit className='text-lg text-gray-400 ml-2 md:mr-0 mr-4'/></button>
+                            <button onClick={() => setIsEditing(true)}><h1 className='text-sm md:text-md ml-2 font-body text-DarkBlue hover:underline'>{className}</h1></button>
                         </>
                     )
                 }
@@ -62,15 +70,15 @@ const ClassTab = ({name, onDelete}) => {
             </button>
         </div>
         <div className={`transition-all ease-out duration-500 ${display ? '' : 'opacity-0 pointer-events-none h-0'}`}>
-            <div className='flex gap-2'>
-                <AddSection onClick={handleAddingSection}/>
-                <DeleteClass onClick={onDelete}/>
-            </div>
             {
                 sections.map((sectionItem, index)=> {
                     return <SectionTab key={`${index} ${sectionItem}`} section={sectionItem} onDelete={()=>handleDeletingSection(index)}/>
                 })
             }
+            <div className='flex gap-2'>
+                <AddSection onClick={handleAddingSection}/>
+                <DeleteClass onClick={onDelete}/>
+            </div>
         </div>
     </div>
   )
