@@ -9,6 +9,7 @@ import SAQuestion from '../shortAnswer.png'
 import QuestionCreator from './QuestionCreator';
 import DisplayOnlyQuestions from './DisplayOnlyQuestions';
 import { ClickOutsideFunc } from '../ClickOutsideFunc';
+import SkillFilter from './SkillFilter';
 
 const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
     const [display, setDisplay] = useState(false);
@@ -17,7 +18,7 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
     const [isEditing, setIsEditing] = useState(toBeEdited);
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
-    const skills = ['Logic', 'Problem Solving', 'Quantitative Analysis', 'Critical Thinking'];
+    const [selectedSkill, setSelectedSkill] = useState("Logic")
     const difficulty = ['Easy', 'Medium', 'Hard'];
 
     const handleSelectCategory = (category) => {
@@ -168,15 +169,15 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
                 <h4 className='text-sm text-center'>Add a question</h4>
                 <div className='w-full flex items-end justify-center gap-4 mt-2'>
                     <button className='flex flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setCreateQuestion("Multiple Choice Question")}>
-                        <img className='w-12 mix-blend-multiply' src={questionMCQ}/>
+                        <img className='w-12 mix-blend-multiply' src={questionMCQ} alt=''/>
                         <p className='text-xs'>MCQ</p>
                     </button>
                     <button className='flex flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setCreateQuestion("Short Question")}>
-                        <img className='w-12 mix-blend-multiply' src={SAQuestion}/>
+                        <img className='w-12 mix-blend-multiply' src={SAQuestion} alt=''/>
                         <p className='text-xs'>Short Question</p>
                     </button>
                     <button className='flex flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setCreateQuestion("True/False")}>
-                        <img className='w-12 mix-blend-multiply' src={TFQuestion}/>
+                        <img className='w-12 mix-blend-multiply' src={TFQuestion} alt=''/>
                         <p className='text-xs'>True/False</p>
                     </button>
                     <button className='flex min-w-12 flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setReuseDialog(true)}>
@@ -199,7 +200,7 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
             {reuseDialog &&
                 <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10'>
                     <div className='relative inset-x-0 mx-auto top-20 w-11/12 md:w-7/12 h-5/6 overflow-y-auto bg-LightBlue z-10'>
-                        <div className='bg-DarkBlue h-12 w-full flex text-white justify-between'>
+                        <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between'>
                             <h3 className='my-auto ml-2'>Select Questions to add</h3>
                             <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
                         </div>
@@ -207,27 +208,15 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
                             <div className='flex gap-4 mb-4'>
                                 <div className='flex flex-col md:flex-row items-center'>
                                     <p className='text-xs'>Skill Targeted :&nbsp; </p>
-                                    <div className="md:h-6 text-xs h-12 bg-LightBlue border border-black rounded-md hover:border-gray-400 ">
-                                        <select
-                                            value={selectedCategory}
-                                            onChange={(e) => handleSelectCategory(e.target.value)}
-                                            className='outline-none bg-LightBlue rounded-md md:h-5 h-11'
-                                        >
-                                            {skills.map((category, index) => (
-                                                <option key={index} value={category}>
-                                                    {category}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/>
                                 </div>
                                 <div className='flex flex-col md:flex-row items-center'>
                                     <p className='text-xs'>Difficulty :&nbsp;</p>
-                                    <div className="md:h-6 text-xs h-12 bg-LightBlue border border-black rounded-md hover:border-gray-400 ">
+                                    <div className="md:h-6 text-xs h-6 bg-LightBlue border border-black rounded-md hover:border-gray-400 ">
                                         <select
                                             value={selectedCategory}
                                             onChange={(e) => handleSelectCategory(e.target.value)}
-                                            className='outline-none bg-LightBlue rounded-md md:h-5 h-11'
+                                            className='outline-none bg-LightBlue rounded-md h-5'
                                         >
                                             {difficulty.map((category, index) => (
                                                 <option key={index} value={category}>
@@ -246,7 +235,7 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
                             })}
                         </div>
                         <div className='sticky border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                            <button className='bg-DarkBlue rounded-md p-2 min-w-16'>Save ({8})</button>
+                            <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16'>Save ({8})</button>
                         </div>
                     </div>
                 </div>

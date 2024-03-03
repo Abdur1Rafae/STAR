@@ -21,10 +21,10 @@ const AssignmentTable = () => {
     <div>
         {!isTabletOrMobile ?
         <div className="quizTable flex justify-start ml-4 rounded-lg">
-            <div className="container w-11/12">
+            <div className="container w-11/12 overflow-x-auto">
                 <table className='w-full border-separate border-spacing-y-2'>
                     <thead className=''>
-                        <tr className='text-center bg-LightBlue'>
+                        <tr className='text-center font-bold'>
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Quiz Title</th>
                             <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Course
@@ -47,14 +47,14 @@ const AssignmentTable = () => {
                     <tbody className="">
                         {
                             rows.map((row) => (
-                                <tr className='text-center bg-LightBlue'>
-                                    <td className='p-3 text-sm border-black border-l-[1px] border-y-[1px]'>{row.name}</td>
+                                <tr className='text-center bg-LightBlue drop-shadow-md'>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.name}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.course}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.closeDate}</td>
-                                    <td className='p-3 text-sm border-black border-y-[1px] text-centr'>{row.startTime}</td>
-                                    <td className='p-3 text-sm border-black border-y-[1px] text-centr'>{row.closeTime}</td>
-                                    <td className='p-3 text-sm border-black border-r-[1px] border-y-[1px] text-center'>{row.duration}</td>     
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.startTime}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.closeTime}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.duration}</td>     
                                 </tr>
                             ))
                         }

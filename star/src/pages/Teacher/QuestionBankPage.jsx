@@ -35,8 +35,6 @@ function QuestionBankPage() {
                         <QuestionBanks/> :
                         <AllQuestions/>
                     }
-
-        
                 </div>
             </div>
         </div>

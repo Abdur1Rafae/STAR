@@ -16,7 +16,7 @@ const AllQuestions = () => {
     <div className='flex flex-col gap-4 overflow-hidden'>
         <div className='flex md:flex-row flex-col gap-2'>
                 <LCSearchBar/>
-                <div className='flex justify-between gap-2'>
+                <div className='flex flex-wrap md:flex-nowrap gap-2'>
                     <CategoryFilter
                     categoryName="Skill : All"
                     categories={skills}

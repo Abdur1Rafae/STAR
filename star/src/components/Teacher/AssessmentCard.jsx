@@ -7,6 +7,7 @@ import { IoIosPeople } from "react-icons/io";
 import MonitorButton from '../button/MonitorButton';
 import GradeButton from '../button/GradeButton';
 import EditButton from '../button/EditButton';
+import Asssessment from '../Assessment.png'
 
 const AssessmentCard = ({ status }) => {
     let buttonComponent, statusColor, statusTextColor;
@@ -37,7 +38,7 @@ const AssessmentCard = ({ status }) => {
 
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>
-            <img className="w-full h-32 rounded-lg" src="https://s3-alpha-sig.figma.com/img/f614/31bd/60215bb28c13d103939beadefde69b9e?Expires=1708300800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=n19JJK1Fc6nbZ-jnwTxO4dOgR~VI1P~AJ0IaBYdHFJ7IJwkAkc525ZrLI9-o9Ptsoa3gvb0ZVVqkGcX1eITgbjVziAL2-rR7SwOti1XOimlPcrdO2jPGQi8mCFGMhq8lJcoqKF7oPbeiuET5YBa6ognqEsxwLPrHWa3PviByxygqTlL7fN9rxwUAoCEtUtMD5NBtniar8SsjBClaJdVMTORWXo6KbrLSzXv5Kewq9~KadIStDcrgSTF-rL5nUlkCLbqkTutzGsV6LeEXe~EpvFNZHaY8gbTECpcAUQ8iocn06o33BhH5KmAZJEvfJBztLc~dwow2WtkVvbteMFMNxA__" alt="" />
+            <img className="w-full h-32 rounded-lg" src={Asssessment} alt="" />
             <div className='flex mt-2 items-center'>
                 <h3 className={`text-md font-medium text-DarkBlue ml-2`}>Monthly Test</h3>
                 <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{status}</div>

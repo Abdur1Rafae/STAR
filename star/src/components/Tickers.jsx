@@ -10,7 +10,7 @@ export const StudentTicker = ({value}) => {
         <PiStudentLight className='text-4xl self-center' />
         <div className='self-center flex flex-col'>
             <div className='font-semibold text-xs sm:text-sm text-gray-500'>Students</div>
-            <div className='font-semibold text-md md:text-2xl self-center'>{value}</div>
+            <div className='font-semibold text-base md:text-2xl self-center'>{value}</div>
         </div>
    </div>
   )
@@ -22,7 +22,7 @@ export const SubmissionTicker = ({value}) => {
         <VscLayersActive className='text-4xl self-center text-green-600' />
         <div className='self-center flex flex-col'>
             <div className='font-semibold text-xs sm:text-sm text-gray-500'>Submissions</div>
-            <div className='font-semibold text-md md:text-2xl self-center'>{value}</div>
+            <div className='font-semibold text-base md:text-2xl self-center'>{value}</div>
         </div>
    </div>
   )
@@ -34,7 +34,7 @@ export const ActiveTicker = ({value}) => {
         <FcReadingEbook className='text-4xl self-center' />
         <div className='self-center flex flex-col'>
             <div className='font-semibold text-xs sm:text-sm text-gray-500'>Attempting</div>
-            <div className='font-semibold text-md md:text-2xl self-center'>{value}</div>
+            <div className='font-semibold text-base md:text-2xl self-center'>{value}</div>
         </div>
    </div>
   )
@@ -46,7 +46,7 @@ export const FlagTicker = ({value}) => {
         <AiFillAlert className='text-4xl self-center text-red-600' />
         <div className='self-center flex flex-col'>
             <div className='font-semibold text-xs sm:text-sm text-gray-500'>Flagged</div>
-            <div className='font-semibold text-md md:text-2xl self-center'>{value}</div>
+            <div className='font-semibold text-base md:text-2xl self-center'>{value}</div>
         </div>
    </div>
   )

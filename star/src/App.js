@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import './App.css';
-import WebRoutes from './Routes.js';
-import Demo from './pages/demo.jsx';
+import AppRoutes from './AppRoutes.js';
 import { BrowserRouter } from 'react-router-dom';
 
 const App = () => {
   return (
+    
       <BrowserRouter>
-        <WebRoutes/>
+      <StrictMode>
+        <AppRoutes/>
+        </StrictMode>
       </BrowserRouter>
   );
 };

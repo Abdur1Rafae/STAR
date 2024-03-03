@@ -91,7 +91,7 @@ const OpenBank = () => {
                                     </>
                                 )
                             }
-                        </div>
+                            </div>
                         </div>
                         <NewButton label={"Topic"} onClick={()=>setTopicDialog(true)}/>
                     </div>

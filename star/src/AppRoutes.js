@@ -9,14 +9,13 @@ import QuizScreen from './pages/Student/QuizScreen.jsx';
 import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
 import QuizInstructions from './pages/Student/QuizInstructions.jsx';
 import ScheduledAssessment from './pages/Teacher/ScheduledAssessmentPage.jsx';
-import QuestionBankPage from './pages/Teacher/QuestionBankPage';
-import LiveMonitoring from './pages/Teacher/LiveMonitoring';
+import QuestionBankPage from './pages/Teacher/QuestionBankPage.jsx';
+import LiveMonitoring from './pages/Teacher/LiveMonitoring.jsx';
 import AddQuestions from './pages/Teacher/AddQuestions.jsx';
-
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
 
-const WebRoutes = () => {
+const AppRoutes = () => {
   return (
         <Routes>
             <Route path="/home" element = {<StudentDashboard/>} />
@@ -40,4 +39,4 @@ const WebRoutes = () => {
   )
 }
 
-export default WebRoutes
+export default AppRoutes
