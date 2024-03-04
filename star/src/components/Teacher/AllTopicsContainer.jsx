@@ -1,29 +1,22 @@
 import React from 'react'
 import { useState } from 'react';
-import { MdOutlineSettingsBackupRestore, MdClose, MdOutlineDeleteOutline } from "react-icons/md";
+import { MdEdit, MdOutlineSettingsBackupRestore, MdClose, MdOutlineDeleteOutline } from "react-icons/md";
 import { FaAngleDown } from "react-icons/fa";
 import StoredQuestion from './StoredQuestion';
+import { LiaSaveSolid } from "react-icons/lia";
 import questionMCQ from '../MCQ.png'
 import TFQuestion from '../TF.png'
 import SAQuestion from '../shortAnswer.png'
 import QuestionCreator from './QuestionCreator';
 import DisplayOnlyQuestions from './DisplayOnlyQuestions';
-import { ClickOutsideFunc } from '../ClickOutsideFunc';
-import SkillFilter from './SkillFilter';
 
-const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
+const AllTopicsContainer = ({topic, topics, toBeEdited}) => {
     const [display, setDisplay] = useState(false);
     const [topicName, setTopicName] = useState(topic);
     const [newTopic, setNewTopic] = useState(topic);
     const [isEditing, setIsEditing] = useState(toBeEdited);
     const [creatingQuestion, setCreateQuestion] = useState(null);
-    const [reuseDialog, setReuseDialog] = useState(false);
-    const [selectedSkill, setSelectedSkill] = useState("Logic")
-    const difficulty = ['Easy', 'Medium', 'Hard'];
 
-    const handleSelectCategory = (category) => {
-        setSelectedCategory(category);
-    }
     const [selectedCategory, setSelectedCategory] = useState('');
 
     const [questions, setQuestions] = useState(
@@ -116,34 +109,37 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
         setQuestions(updatedQuestions);
     };
     
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            setTopicName(newTopic);
-            setIsEditing(false);
-        }
-    }
-
-    let saveTopicName = ClickOutsideFunc(()=>{
-        setIsEditing(false);
-    })
 
   return (
-    <div className={`bg-LightBlue w-full border-[1px] border-black p-2 px-4 flex flex-col`}>
+    <div className={`bg-LightBlue w-full md:w-9/12 border-[1px] border-black p-2 px-4 flex flex-col`}>
         <div className='flex justify-between'>
-            <div ref={saveTopicName} className='flex'>
+            <div className='flex'>
+                <input type='checkbox'></input>
                 {
                     isEditing ? 
                     (
                         <>                       
                             <input 
                                 autoFocus
-                                placeholder='Class'
+                                placeholder='Topic'
                                 type='text' 
                                 value={newTopic} 
                                 onChange={(e) => setNewTopic(e.target.value)} 
                                 className='text-sm md:text-md ml-2 bg-LightBlue border-none outline-none'
-                                onKeyDown={handleKeyPress}
+                                list='topiclist'
                             />
+                            
+                            <datalist id='topiclist'>
+                                {
+                                    topics.map(((item, index) => (
+                                        <option>{item.name}</option>
+                                    )))
+                                }
+                            </datalist>
+                            <button onClick={() => {
+                                setTopicName(newTopic);
+                                setIsEditing(false);
+                            }}><LiaSaveSolid className='text-lg text-gray-400 ml-2 md:mr-0 mr-4 hover:text-DarkBlue'/></button>
                         </>
 
                     ) 
@@ -156,7 +152,7 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
                 }
             </div>
             <div className='flex items-center'>
-                <button onClick={()=>{selfDelete(index)}}>
+                <button onClick={()=>{}}>
                     <MdOutlineDeleteOutline className='text-lg hover:text-red-400 mr-2'/>
                 </button>
                 <button onClick={()=>{setDisplay(!display)}}>
@@ -169,20 +165,16 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
                 <h4 className='text-sm text-center'>Add a question</h4>
                 <div className='w-full flex items-end justify-center gap-4 mt-2'>
                     <button className='flex flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setCreateQuestion("Multiple Choice Question")}>
-                        <img className='w-12 mix-blend-multiply' src={questionMCQ} alt=''/>
+                        <img className='w-12 mix-blend-multiply' src={questionMCQ}/>
                         <p className='text-xs'>MCQ</p>
                     </button>
                     <button className='flex flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setCreateQuestion("Short Question")}>
-                        <img className='w-12 mix-blend-multiply' src={SAQuestion} alt=''/>
+                        <img className='w-12 mix-blend-multiply' src={SAQuestion}/>
                         <p className='text-xs'>Short Question</p>
                     </button>
                     <button className='flex flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setCreateQuestion("True/False")}>
-                        <img className='w-12 mix-blend-multiply' src={TFQuestion} alt=''/>
+                        <img className='w-12 mix-blend-multiply' src={TFQuestion}/>
                         <p className='text-xs'>True/False</p>
-                    </button>
-                    <button className='flex min-w-12 flex-col items-center gap-1 hover:border-2 hover:border-DarkBlue' onClick={()=>setReuseDialog(true)}>
-                        <MdOutlineSettingsBackupRestore className='w-full h-full'/>
-                        <p className='text-xs'>Reuse</p>
                     </button>
                 </div>
 
@@ -197,52 +189,9 @@ const TopicContainer = ({index ,topic, toBeEdited, selfDelete}) => {
                     return <StoredQuestion savingHandler={updateQuestion} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
                 })
             }
-            {reuseDialog &&
-                <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10'>
-                    <div className='relative inset-x-0 mx-auto top-20 w-11/12 md:w-7/12 h-5/6 overflow-y-auto bg-LightBlue z-10'>
-                        <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between'>
-                            <h3 className='my-auto ml-2'>Select Questions to add</h3>
-                            <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
-                        </div>
-                        <div className='p-4 flex flex-col gap-4'>
-                            <div className='flex gap-4 mb-4'>
-                                <div className='flex flex-col md:flex-row items-center'>
-                                    <p className='text-xs'>Skill Targeted :&nbsp; </p>
-                                    <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/>
-                                </div>
-                                <div className='flex flex-col md:flex-row items-center'>
-                                    <p className='text-xs'>Difficulty :&nbsp;</p>
-                                    <div className="md:h-6 text-xs h-6 bg-LightBlue border border-black rounded-md hover:border-gray-400 ">
-                                        <select
-                                            value={selectedCategory}
-                                            onChange={(e) => handleSelectCategory(e.target.value)}
-                                            className='outline-none bg-LightBlue rounded-md h-5'
-                                        >
-                                            {difficulty.map((category, index) => (
-                                                <option key={index} value={category}>
-                                                    {category}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>  
-                                </div>
-                            </div>
-                            {questions.map((question, index)=> {
-                                return <DisplayOnlyQuestions skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
-                            })}
-                            {questions.map((question, index)=> {
-                                return <DisplayOnlyQuestions skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
-                            })}
-                        </div>
-                        <div className='sticky border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                            <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16'>Save ({8})</button>
-                        </div>
-                    </div>
-                </div>
-            }
         </div>
     </div>
   )
 }
 
-export default TopicContainer
+export default AllTopicsContainer

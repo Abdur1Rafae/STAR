@@ -5,7 +5,7 @@ import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 
-function App() {
+function ScheduledAssessment() {
     const total_assessment = 4;
     const [selectedCategory, setSelectedCategory] = useState('');
     const classes = ['All', 'Technology', 'Science', 'Art', 'Sports'];
@@ -56,4 +56,4 @@ function App() {
   );
 }
 
-export default App;
+export default ScheduledAssessment;
