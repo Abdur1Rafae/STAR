@@ -9,7 +9,7 @@ import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 
 const OSummary = ({  }) => {
   return (
-    <div className='bg-LightBlue flex flex-col justify-around p-4' >
+    <div className='bg-LightBlue shadow-lg flex flex-col justify-around p-4' >
       <div className='flex flex-col md:flex-row justify-between md:gap-0 gap-4'>
         <div className='w-full flex flex-col gap-2'>
             <h2 className='font-bold text-xl'>Monthly Test</h2>

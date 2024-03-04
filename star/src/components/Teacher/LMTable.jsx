@@ -45,7 +45,7 @@ const LMTable = () => {
         <tbody>
             {
                 data.map((row, index) => (
-                    <tr key={index} className='text-center bg-LightBlue'>
+                    <tr key={index} className='text-center shadow-md bg-LightBlue'>
                         <td className='px-1 py-3 text-xs md:text-sm border-black border-y-[1px]'>{row.studentName}</td>
                         <td className='px-1 py-3 text-xs md:text-sm border-black border-y-[1px]'>{row.section}</td>
                         <td className='px-1 py-3 text-xs md:text-sm border-black border-y-[1px]'>{row.startTime}</td>
