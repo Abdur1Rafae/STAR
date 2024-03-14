@@ -4,11 +4,11 @@ import SubHeader from '../../components/Student/SubHeader'
 import QuizTitleBar from '../../components/Student/assessment/QuizTitleBar'
 import Summary from '../../components/Student/assessment/Summary'
 import QuizResultScreen from './QuizResultScreen'
-import { useSelector } from 'react-redux'
+import { ToggleStore } from '../../Stores/ToggleStore'
 
 
 const AssessmentInfo = () => {
-  let showTab = useSelector((state)=> state.qrTab.value)
+  let showTab = ToggleStore((store)=> store.QuizResultTab)
 
   return (
     <div className='flex flex-col'>

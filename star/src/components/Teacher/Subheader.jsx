@@ -1,13 +1,12 @@
 import React from 'react'
 import { MdOutlineViewSidebar } from "react-icons/md";
-import { toggleNavTab } from '../../redux/teacherNav';
-import { useDispatch } from 'react-redux';
+import { ToggleStore } from '../../Stores/ToggleStore';
 
 const Subheader = ({name}) => {
-    const dispatch = useDispatch()
+    const toggleSidebar = ToggleStore((store)=> store.toggleSidebar)
 
     const handleNav = () => {
-        dispatch(toggleNavTab())
+      toggleSidebar()
     }
   return (
     <div className='h-14 w-full bg-LightBlue border-b-[1px] border-black flex p-4 items-center'>

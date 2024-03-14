@@ -1,18 +1,17 @@
 import React from 'react'
 import Timer from '../Timer'
 import { CgNotes } from "react-icons/cg";
-import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive'
-import { toggleNav } from '../../../redux/qnavSlice';
+import { ToggleStore } from '../../../Stores/ToggleStore';
 
 
 const QuizSubheader = () => {
-  let showNav = useSelector((state)=> state.showNav.value)
-  const dispatch = useDispatch()
+  let showNav = ToggleStore((store) => store.showNav)
+  const toggleNav = ToggleStore((store) => store.toggleNav)
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 770px)' })
 
   let handleShowNav = () => {
-    dispatch(toggleNav())
+    toggleNav()
   }
     let name = "Monthly Test"
     return (

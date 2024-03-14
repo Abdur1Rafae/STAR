@@ -22,7 +22,7 @@ const QuizInstructions = () => {
       <MenuBar name={"Maaz Shamim"} role={"Student"}/>
       <SubHeader/>
       <div className="mt-4 md:mx-4 flex flex-col items-center justify-center border-t-4 border-grey-600">
-        <div className="w-full p-8 rounded shadow-md w-96 shadow-outline">
+        <div className="w-full p-8 rounded shadow-md shadow-outline">
           <h1 className="text-xl md:text-2xl font-bold">Monthly Test</h1>
           <div className='flex flex-col-reverse md:flex-row justify-between'>
               <div className='md:mt-0 mt-2'> 

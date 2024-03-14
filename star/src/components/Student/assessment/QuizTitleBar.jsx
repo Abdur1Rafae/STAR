@@ -2,22 +2,21 @@ import React from 'react'
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { LiaPaperclipSolid } from "react-icons/lia";
-import { useDispatch, useSelector } from 'react-redux';
-import {toggleTab} from '../../../redux/qrTab';
+import { ToggleStore } from '../../../Stores/ToggleStore';
 
 const QuizTitleBar = ({Course_Name, assessment_Name}) => {
-  let showTab = useSelector((state)=> state.qrTab.value)
-  const dispatch = useDispatch()
+  let showTab = ToggleStore((store)=>store.QuizResultTab)
+  let toggleTab = ToggleStore((store)=> store.switchTab)
 
   let setSummaryActive = () => {
     if (showTab == false) {
-      dispatch(toggleTab())
+      toggleTab()
     }
   }
 
   let setSubmissionActive = () => {
     if (showTab == true) {
-      dispatch(toggleTab())
+      toggleTab()
     }
   }
 

@@ -12,7 +12,7 @@ import PerformanceGraph from '../../components/Student/course/PerformanceGraph'
 const CourseInfo = () => {
   const quizzes = 1
   return (
-    <div className="flex flex-col mb-2">
+    <div className="flex flex-col mb-2 font-body">
       <MenuBar name={"Maaz Shamim"} role={"Student"}/>
       <SubHeader/>
       <div className='mt-4 ml-auto mr-auto w-11/12'>

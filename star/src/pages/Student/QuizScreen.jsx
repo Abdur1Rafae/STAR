@@ -6,11 +6,11 @@ import TrueFalse from '../../components/Student/question/TrueFalsePanel';
 import TextAnswer from '../../components/Student/question/TextAnswerPanel';
 import MenuBar from '../../components/MenuBar';
 import QuizSubheader from '../../components/Student/quiz/QuizSubheader';
-import { useSelector } from 'react-redux';
+import { ToggleStore } from '../../Stores/ToggleStore';
 
 const QuizScreen = () => {
-  const showNav = useSelector((state)=>state.showNav.value)
-  // Sample questions, replace with your data fetching logic
+  const showNav = ToggleStore((store)=> store.showNav)
+
   const questions = [
     {
       text: 'What is the capital of France?lewqkjfneflqwfn  wejifnlqwinf jwenfljewnf wnlfnlqw qwnflnqwefljq hwfljqwnflq wnlfnuqwlenfulnl wedwnqke bwlfenqwen nfqewfiun nfilqnweufn inlfnqewfl liuqfnlqiwef  liunflqewnf fuluieqn uwenfluiqenf el ulweuflqnfl wuWhat is the capital of France?lewqkjfneflqwfn  wejifnlqwinf jwenfljewnf wnlfnlqw qwnflnqwefljq hwfljqwnflq wnlfnuqwlenfulnl wedwnqke bwlfenqwen nfqewfiun nfilqnweufn inlfnqewfl liuqfnlqiwef  liunflqewnf fuluieqn uwenfluiqenf el ulweuflqnfl wu',
