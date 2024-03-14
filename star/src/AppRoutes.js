@@ -12,6 +12,7 @@ import ScheduledAssessmentPage from './pages/Teacher/ScheduledAssessmentPage.jsx
 import QuestionBankPage from './pages/Teacher/QuestionBankPage';
 import LiveMonitoring from './pages/Teacher/LiveMonitoring';
 import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
+import AddQuestions from './pages/Teacher/AddQuestions';
 
 
 import Classes from './pages/Teacher/Classes.jsx';
@@ -35,7 +36,7 @@ const AppRoutes = () => {
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-
+            <Route path = '/teacher/addquestion' element = {<AddQuestions/>}></Route>
          </Routes>
   )
 }
