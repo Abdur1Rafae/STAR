@@ -56,7 +56,7 @@ const QuizInstructions = () => {
           </div>
         </div>
         <div className='mt-8'>
-          <SubmitButton label="Begin Assessment" onClick={()=> {window.location.assign('/quiz')}}/>
+          <SubmitButton label="Begin Assessment" onClick={()=> {window.location.assign('/quiz')}} active={true}/>
         </div>
       </div>
     </div>
