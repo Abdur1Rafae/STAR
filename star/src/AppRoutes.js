@@ -11,7 +11,8 @@ import QuizInstructions from './pages/Student/QuizInstructions.jsx';
 import ScheduledAssessment from './pages/Teacher/ScheduledAssessmentPage.jsx';
 import QuestionBankPage from './pages/Teacher/QuestionBankPage.jsx';
 import LiveMonitoring from './pages/Teacher/LiveMonitoring.jsx';
-import AddQuestions from './pages/Teacher/AddQuestions.jsx';import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
+import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
+import AddQuestions from './pages/Teacher/AddQuestions';
 
 
 import Classes from './pages/Teacher/Classes.jsx';
@@ -37,7 +38,7 @@ const AppRoutes = () => {
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
             <Route path='/teacher/scheduled-assessments/adding-questions' element={<AddQuestions/>}></Route>
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-
+            <Route path = '/teacher/addquestion' element = {<AddQuestions/>}></Route>
          </Routes>
   )
 }
