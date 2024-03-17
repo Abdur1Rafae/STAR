@@ -1,18 +1,16 @@
 import React from 'react'
 import Timer from '../Timer'
 import { CgNotes } from "react-icons/cg";
-import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive'
-import { toggleNav } from '../../../redux/qnavSlice';
+import { ToggleStore } from '../../../Stores/ToggleStore';
 
 
 const QuizSubheader = () => {
-  let showNav = useSelector((state)=> state.showNav.value)
-  const dispatch = useDispatch()
+  const toggleNav = ToggleStore((store) => store.toggleNav)
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 770px)' })
 
   let handleShowNav = () => {
-    dispatch(toggleNav())
+    toggleNav()
   }
     let name = "Monthly Test"
     return (
@@ -20,9 +18,9 @@ const QuizSubheader = () => {
         <div className="h-12 w-screen lg:max-w-full bg-[#F4F9FD] border-black font-body flex">
             <div className={'leftContainer w-full border-black border-b-[1px] flex items-center'}>
               <h1 className='ml-2 sm:ml-4 font-bold text-sm sm:text-lg'>{name}</h1>
-              <Timer initialTime = {60*2}/>
+              <Timer initialTime = {60*60}/>
             </div>
-            <div className={`rightContainer flex border-black transition-all duration-200 hover:text-DarkBlue ${showNav ? 'border-b-0' : 'border-b-[1px]'} items-center justify-center`}>
+            <div className={`rightContainer flex border-black transition-all duration-200 hover:text-DarkBlue border-b-[1px] items-center justify-center`}>
                 <button className='ml-2 sm:ml-4 sm:mr-4 flex w-26 justify-around items-center lg:w-56' onClick={handleShowNav}>
                     <div className='sm:text-sm flex'>
                       {!isTabletOrMobile && <span>Quiz Navigation</span>}

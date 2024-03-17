@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { TbArrowsMoveVertical } from "react-icons/tb";
 import { useMediaQuery } from 'react-responsive'
 import MobUpQuiz from './MobUpQuiz';
@@ -10,13 +10,39 @@ const AssignmentTable = () => {
         return { name, course, openDate, closeDate, startTime, duration, closeTime};
     }
         
-    const rows = [
+    const initialRows = [
         createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023", "23 October 2023","23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55")
+        createData('Weekly Quiz 1', "Supply Chain Management", "25 October 2023", "23 October 2023","23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Calculus 1", "23 January 2023","27 January 2023", "23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Intorduction to Data Mining", "2 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
+        createData('Weekly Quiz 1', "Object Orient Programming", "12 December 2024","23 October 2023", "23:55", "20 minutes", "23:55")
     ];
+
+    const [rows, setRows] = useState(initialRows)
+
+    const sortByCourse = () => {
+        const sortedRows = [...rows].sort((a, b) => a.course.localeCompare(b.course));
+        setRows(sortedRows);
+    };
+
+    const sortByOpenDate = () => {
+        const sortedRows = [...rows].sort((a, b) => {
+            const dateA = new Date(a.openDate);
+            const dateB = new Date(b.openDate);
+            return dateA - dateB;
+        });
+        setRows(sortedRows);
+    };
+
+    const sortByCloseDate = () => {
+        const sortedRows = [...rows].sort((a, b) => {
+            const dateA = new Date(a.closeDate);
+            const dateB = new Date(b.closeDate);
+            return dateA - dateB;
+        });
+        setRows(sortedRows);
+    };
+
     return (
     <div>
         {!isTabletOrMobile ?
@@ -28,15 +54,15 @@ const AssignmentTable = () => {
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Quiz Title</th>
                             <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Course
-                                <button><TbArrowsMoveVertical/></button>
+                                <button onClick={sortByCourse}><TbArrowsMoveVertical/></button>
                             </th>
                             <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Open Date
-                                <button><TbArrowsMoveVertical/></button>
+                                <button onClick={sortByOpenDate}><TbArrowsMoveVertical/></button>
                             </th>
                             <th className='p-3 text-sm font-semibold tracking-wide items-center border-b-[1px] border-[#937D7D]'>
                                 Close Date
-                                <button><TbArrowsMoveVertical/></button>
+                                <button onClick={sortByCloseDate}><TbArrowsMoveVertical/></button>
                             </th>
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>Start Time</th>
                             <th className='p-3 text-sm font-semibold tracking-wide border-b-[1px] border-[#937D7D]'>End Time</th>
@@ -46,8 +72,8 @@ const AssignmentTable = () => {
 
                     <tbody className="">
                         {
-                            rows.map((row) => (
-                                <tr className='text-center bg-LightBlue drop-shadow-md'>
+                            rows.map((row, index) => (
+                                <tr key={index} className='text-center bg-LightBlue drop-shadow-md'>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.name}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.course}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>

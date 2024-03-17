@@ -1,14 +1,13 @@
 import React from 'react'
 import NewButton from '../button/NewButton'
 import { MdOutlineViewSidebar } from "react-icons/md";
-import { toggleNavTab } from '../../redux/teacherNav';
-import { useDispatch } from 'react-redux';
+import { ToggleStore } from '../../Stores/ToggleStore';
 
 const SubheaderBut = ({name, button, onClick}) => {
-    const dispatch = useDispatch()
+    const toggleSidebar = ToggleStore((store) => store.toggleSidebar)
 
     const handleNav = () => {
-        dispatch(toggleNavTab())
+      toggleSidebar()
     }
   return (
     <div className='h-14 w-full bg-LightBlue border-b-[1px] border-black flex p-4 items-center'>

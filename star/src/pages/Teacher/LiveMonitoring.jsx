@@ -1,9 +1,9 @@
-import React ,{ useState }from 'react';
+import React from 'react';
 import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import LMTable from '../../components/Teacher/LMTable'
-import OSummary from '../../components/Teacher/OSummary';
+import OverallSummary from '../../components/Teacher/OverallSummary';
 
 
 function LiveMonitoring() {
@@ -16,10 +16,9 @@ function LiveMonitoring() {
             <div className='w-full '>
                 <Subheader name={"Live Monitoring"}/>
                 <div className='px-4 pt-4 flex flex-col'>
-                    <OSummary/>
+                  <OverallSummary/>
                 </div>
-                    <LMTable />
-
+                  <LMTable />
             </div>   
         </div>
     </div>
