@@ -38,7 +38,7 @@ const AppRoutes = () => {
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
             <Route path='/teacher/scheduled-assessments/adding-questions' element={<AddQuestions/>}></Route>
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-            <Route path = '/teacher/addquestion' element = {<AddQuestions/>}></Route>
+            <Route path = '/teacher/add-question' element = {<AddQuestions/>}></Route>
          </Routes>
   )
 }

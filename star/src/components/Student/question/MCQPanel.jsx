@@ -3,10 +3,13 @@ import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
 import { GiBullseye } from "react-icons/gi";
+import QuizStore from '../../../Stores/QuizStore';
 
-const MCQPanel = ({ question, onOptionSelect }) => {
+const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [isFlagged, setIsFlagged] = useState(false);
+  const [isFlagged, setIsFlagged] = useState(Flagged);
+  const flagQuestion = QuizStore(store=> store.flagQuestion)
+  const filterQuestions = QuizStore(store=> store.filterQuestions)
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -15,6 +18,8 @@ const MCQPanel = ({ question, onOptionSelect }) => {
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
+    flagQuestion()
+    filterQuestions()
   };
 
   return (
@@ -22,8 +27,8 @@ const MCQPanel = ({ question, onOptionSelect }) => {
       <div className="flex justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <p className="text-gray-500 min-w-32 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
-              Multiple Choice Question
+            <p className="text-gray-500 min-w-32 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center justify-center">
+              Multiple Choice
             </p>
             <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
               <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
@@ -35,7 +40,7 @@ const MCQPanel = ({ question, onOptionSelect }) => {
       </div>
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
-        <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>
+        {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
         <div className='self-start'>
           <div className=''>
             <p className="text-lg">{question?.question}</p>

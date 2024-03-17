@@ -2,6 +2,7 @@ import {create} from 'zustand';
 
 const QuizStore = create((set) => ({
   questions: [{
+    number:1,
     type: "MCQ",
     question: "Who developed the theory of relativity?",
     options: [
@@ -12,10 +13,11 @@ const QuizStore = create((set) => ({
     ],
     imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
     point: 20.,
-    unanswered: false,
-    flagged: true 
+    unanswered: true,
+    flagged: false 
   },
   {
+    number:2,
     type: "T/F",
     question: "The mitochondria is the powerhouse of the cell.",
     options: [
@@ -24,10 +26,11 @@ const QuizStore = create((set) => ({
     ],
     imageUrl: null,
     point: 15,
-    unanswered: false,
-    flagged: true 
+    unanswered: true,
+    flagged: false 
   },
   {
+    number:3,
     type: "SA",
     question: "What is the capital of Mongolia?",
     options: [],
@@ -37,6 +40,7 @@ const QuizStore = create((set) => ({
     flagged: true 
   },
   {
+    number:4,
     type: "MCQ",
     question: "Which country has the largest population?",
     options: [
@@ -51,6 +55,7 @@ const QuizStore = create((set) => ({
     flagged: true 
   },
   {
+    number:5,
     type: "T/F",
     question: "The Amazon Rainforest produces 20% of the world's oxygen.",
     options: [
@@ -60,36 +65,32 @@ const QuizStore = create((set) => ({
     imageUrl: "https://files.worldwildlife.org/wwfcmsprod/images/Amazon_River_New_Hero_Image/hero_full/96jxl0p02y_Amazon_River_Hero.jpg",
     point: 20,
     unanswered: false,
-    flagged: true 
+    flagged: false 
   },
   {
+    number:6,
     type: "SA",
     question: "What is the formula for calculating the area of a circle?",
     options: [],
     imageUrl: null,
     point: 20,
     unanswered: false,
-    flagged: true 
-  }], // Array to store the questions
-  currentQuestionIndex: 0, // Index of the current question
-  filter: 'all', // Filter for displaying questions (all, flagged, unanswered)
-  filteredQuestions: [], // Array to store the filtered questions
+    flagged: false 
+  }],
+  currentQuestionIndex: 0,
+  filter: 'all',
+  filteredQuestions: [],
 
-  // Function to set the questions in the store
   setQuestions: (newQuestions) => set({ questions: newQuestions }),
 
-  // Function to set the current question index
   setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
 
-  // Function to set the filter
   setFilter: (filter) => {
-    set({ filter });
     set((state) => {
-      state.filter === filter || state.filterQuestions();
+      return {...state, filter: filter}
     });
   },
 
-  // Function to move to the next question
   nextQuestion: () => {
     set((state) => {
       const nextIndex = (state.currentQuestionIndex + 1) % state.questions.length;
@@ -97,7 +98,6 @@ const QuizStore = create((set) => ({
     });
   },
 
-  // Function to move to the previous question
   prevQuestion: () => {
     set((state) => {
       if(state.currentQuestionIndex == 0) {
@@ -108,46 +108,50 @@ const QuizStore = create((set) => ({
     });
   },
 
-  // Function to mark a question as answered
   markAsAnswered: () => {
     set((state) => {
-      state.questions[state.currentQuestionIndex].unanswered = false;
+        const updatedQuestions = state.questions.map((question, index) => {
+          if (index === state.currentQuestionIndex) {
+            return { ...question, unanswered: false };
+          }
+          return question;
+        });
+        return { ...state, questions: updatedQuestions };
     });
   },
-
-  // Function to flag a question
+   
   flagQuestion: () => {
     set((state) => {
-      state.questions[state.currentQuestionIndex].flagged = true;
+        const updatedQuestions = state.questions.map((question, index) => {
+          if (index === state.currentQuestionIndex) {
+            return { ...question, flagged: !question.flagged };
+          }
+          return question;
+        });
+        return { ...state, questions: updatedQuestions };
     });
   },
+   
 
-  // Function to filter and update the filtered questions
   filterQuestions: () => {
     set((state) => {
-      const { questions, filter } = state;
       let filteredQuestions = [];
-      if (filter === 'all') {
-        filteredQuestions = [...questions];
-      } else if (filter === 'flagged') {
-        filteredQuestions = questions.filter((question) => question.flagged);
-      } else if (filter === 'unanswered') {
-        filteredQuestions = questions.filter((question) => question.unanswered);
+      if (state.filter === 'all') {
+        filteredQuestions = [...state.questions];
+      } else if (state.filter === 'flagged') {
+        filteredQuestions = state.questions.filter((question) => question.flagged);
+      } else if (state.filter === 'unanswered') {
+        filteredQuestions = state.questions.filter((question) => question.unanswered);
       }
-      state.filteredQuestions = filteredQuestions;
+      return { ...state, filteredQuestions };
     });
   },
 
-  // Function to handle selection of a question from the filtered set
-  selectQuestionFromFiltered: (index) => {
+  selectQuestionFromFiltered: (number) => {
     set((state) => {
-      const selectedQuestion = state.filteredQuestions[index];
-      const originalIndex = state.questions.findIndex((question) => question === selectedQuestion);
-      if (originalIndex !== -1) {
-        state.currentQuestionIndex = originalIndex;
-      }
+      return { ...state, currentQuestionIndex: number - 1 };
     });
-  },
+  }
 }));
 
 export default QuizStore;

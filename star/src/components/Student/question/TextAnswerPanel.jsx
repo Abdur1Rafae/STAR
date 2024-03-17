@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
+import QuizStore from '../../../Stores/QuizStore';
 
-const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuestions }) => {
+const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
   const [userAnswer, setUserAnswer] = useState('');
-  const [isFlagged, setIsFlagged] = useState(false);
+  const [isFlagged, setIsFlagged] = useState(Flagged);
+  const flagQuestion = QuizStore(store=> store.flagQuestion)
+  const filter = QuizStore(store=> store.filterQuestions)
 
   const handleAnswerChange = (event) => {
     setUserAnswer(event.target.value);
@@ -18,11 +21,13 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuest
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
+    flagQuestion()
+    filter()
     // Add logic to handle flag toggling (you can pass this information to the parent component if needed)
   };
 
   return (
-    <div className="w-full mx-auto bg-white p-4 shadow-md rounded-md mb-4">
+    <div className="w-full mx-auto bg-white p-4 rounded-md mb-4">
       <div className="mb-4 flex justify-between">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
@@ -39,11 +44,9 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, currentQuestion, totalQuest
       </div>
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
-        <button className='h-32 w-40'><QuizImage imageUrl={question?.imageurl} /></button>
-        <div className='flex justify-between'>
-          <div className=''>
-            <p className="text-lg select-none">{question?.text}</p>
-          </div>
+        {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
+        <div className='flex justify-between self-start'>
+            <p className="text-lg select-none">{question?.question}</p>
         </div>
       </div>
 
