@@ -21,7 +21,8 @@ router.all(/^\/([^\/]+)\/(.*)/, (req,res) =>
         }).then((response) => {
             res.send(response.data)
         }).catch((error) => {
-            res.status(error.response.status || 500).send(error.response.data)
+            if (error.response) {res.status(error.response.status || 500).send(error.response.data)} 
+            else {res.status(500).send('Internal Server Error')}              
         })        
     }
     else 

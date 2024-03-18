@@ -84,3 +84,15 @@ ON SCHEDULE
 EVERY 1 minute 
 DO 
 DELETE FROM SessionInfo WHERE created_at  < NOW() - INTERVAL 5 minute
+
+Alter View Assessments As
+SELECT AssessmentID, SectionID, Title, ClassName, Duration, OpenDate, CloseDate, Questions, Marks, CoverImage,
+CASE WHEN OpenDate <= NOW() AND CloseDate >= NOW() THEN "In Progress" 
+WHEN OpenDate > NOW() THEN "Not Started" 
+WHEN Status = 'Published' THEN 'Published'
+ELSE 'Under Review' 
+END AS Status
+FROM Assessment 
+JOIN TargetAudience USING (AssessmentID) 
+JOIN Section USING (SectionID) 
+JOIN Class USING (ClassID);

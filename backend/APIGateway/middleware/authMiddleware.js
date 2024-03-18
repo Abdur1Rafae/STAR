@@ -37,7 +37,7 @@ const checkSession = async (sessionID) => {
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
-    if (req.path.startsWith('/edumanage/user/verify-email')) {return next()}
+    if (req.path.startsWith('/edumanage/user/verify-email') || req.path.startsWith('/edumanage/uploads')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']
@@ -48,7 +48,7 @@ const authentication = async (req, res, next) =>
         {
             const decodedToken = await verifyToken(token)
             const sessionID = decodedToken.sessionID
-            await checkSession(sessionID)
+            //await checkSession(sessionID)
             req.body.decodedToken = decodedToken
             return next()
         }

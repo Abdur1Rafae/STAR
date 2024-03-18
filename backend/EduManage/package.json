@@ -1,7 +1,7 @@
 {
   "name": "user-microservice",
   "version": "1.0.0",
-  "description": "A user microservice for authentication, authorization, profile management, and data storage in a Node.js application.",
+  "description": "A microservice for user access, class and assessment management for Arete platform.",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon -L app.js",
@@ -29,6 +29,7 @@
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.1",
     "nodemailer": "^6.9.10",
     "uuid": "^9.0.1"

@@ -16,6 +16,7 @@ app.use('/admin', adminRoutes)
 app.use(auth)
 app.use(serviceRoutes)
 
-app.listen(PORT, () => {
+app.listen(PORT, () => 
+{
     console.log('API Gateway established at port ' + PORT)
 })
