@@ -22,11 +22,7 @@
 </head>
 <body>
     <h1>Test Interface</h1>
-    
-    <button onclick="feedHandler_startCamera()">Start Camera</button>
-    <button onclick="feedHandler_stopCamera()">Stop Camera</button>
-    <button id="startButton">Start Monitoring</button>
-
+  
     <video id="webcam" width="640" height="480" autoplay style="display: none;"></video>
     <canvas id="output" width="640" height="480" style="display: none;"></canvas>
   
@@ -38,7 +34,8 @@
     <button onclick="tabHandler_startTest()">Start Test</button>
     <button onclick="tabHandler_stopTest()">Stop Test</button>
 
-    <script src="feedHandler.js"></script>
+    <script src="main.js" type='module'></script>
+    <script src="feedHandler.js" type='module'></script>
     <script src="tabHandler.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>  

@@ -3,7 +3,7 @@ let tabHandler_windowSwitchCount = 0;
 let tabHandler_switchStartTime;
 const tabHandler_switchThreshold = 3;
 const tabHandler_switchDurationThreshold = 7 * 1000;
-let tabHandler_violations = [];
+let tabHandler_violations = {};
 let tabHandler_warningTimer; // Timer for warning
 
 function tabHandler_startTest() {
@@ -17,6 +17,7 @@ function tabHandler_stopTest() {
     clearTimeout(tabHandler_warningTimer); // Clearing warning timer if it's running
     tabHandler_removeEventListeners();
     tabHandler_resetCounts(); // Reset counts
+    console.log("Violations:", tabHandler_violations);
 }
 
 function tabHandler_addEventListeners() {
@@ -55,16 +56,22 @@ function tabHandler_checkWarnings() {
     const switchDuration = currentTime - tabHandler_switchStartTime;
 
     if (document.hidden && switchDuration > tabHandler_switchDurationThreshold) {
-        alert("Warning: Hey there! It seems like you've been away from the test for more than 7 seconds. Please focus on the test!");
-        tabHandler_violations.push("Staying away from the test for more than 7 seconds");
+        if (!tabHandler_violations['Staying away from the test for more than 7 seconds']) {
+            tabHandler_raiseWarning('Staying away from the test for more than 7 seconds');
+        }
+        tabHandler_violations['Staying away from the test for more than 7 seconds'] = (tabHandler_violations['Staying away from the test for more than 7 seconds'] || 0) + 1;
         tabHandler_resetCounts();
     } else if (tabHandler_tabSwitchCount >= tabHandler_switchThreshold) {
-        alert("Warning: Hey there! You've switched tabs more than 3 times. Stay focused on the test!");
-        tabHandler_violations.push("Switching tabs more than 3 times");
+        if (!tabHandler_violations['Switching tabs more than 3 times']) {
+            tabHandler_raiseWarning('Switching tabs more than 3 times');
+        }
+        tabHandler_violations['Switching tabs more than 3 times'] = (tabHandler_violations['Switching tabs more than 3 times'] || 0) + 1;
         tabHandler_resetCounts();
     } else if (tabHandler_windowSwitchCount >= tabHandler_switchThreshold) {
-        alert("Warning: Hey there! You've switched windows more than 3 times. Stay focused on the test!");
-        tabHandler_violations.push("Switching windows more than 3 times");
+        if (!tabHandler_violations['Switching windows more than 3 times']) {
+            tabHandler_raiseWarning('Switching windows more than 3 times');
+        }
+        tabHandler_violations['Switching windows more than 3 times'] = (tabHandler_violations['Switching windows more than 3 times'] || 0) + 1;
         tabHandler_resetCounts();
     }
 }
@@ -75,7 +82,22 @@ function tabHandler_resetCounts() {
     tabHandler_switchStartTime = null;
 }
 
+function tabHandler_raiseWarning(violation) {
+    alert(`Warning: ${violation}. Please focus on the test!`);
+}
+
+// This function is to be used to send all violations committed by the candidate
 function tabHandler_sendViolationsToTeacher() {
     console.log("Sending violations to teacher:");
-    console.log(tabHandler_violations);
 }
+
+// Start and stop monitoring for tab handling
+function startTabMonitoring() {
+    tabHandler_startTest();
+}
+
+function stopTabMonitoring() {
+    tabHandler_stopTest();
+}
+
+export { startTabMonitoring, stopTabMonitoring };
