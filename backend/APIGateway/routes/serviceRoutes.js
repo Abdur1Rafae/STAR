@@ -15,12 +15,15 @@ router.all(/^\/([^\/]+)\/(.*)/, (req,res) =>
         const url = service.instances[newIndex].url
         axios({
             method: req.method,
+            responseType: 'arraybuffer',
             url: url + path,
-            headers: { "Content-Type": "application/json" }, 
+            headers: { "Content-Type": req.headers['content-type'] }, 
             data: req.body
         }).then((response) => {
+            res.set('Content-Type', response.headers['content-type'])
             res.send(response.data)
         }).catch((error) => {
+            console.log(error)
             if (error.response) {res.status(error.response.status || 500).send(error.response.data)} 
             else {res.status(500).send('Internal Server Error')}              
         })        
