@@ -1,0 +1,35 @@
+{
+  "name": "teacherhub",
+  "version": "1.0.0",
+  "description": "Manages teacher functionalities for class, assessment and question management",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon -L app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdur1Rafae/STAR.git"
+  },
+  "keywords": [
+    "assessment",
+    "monitoring",
+    "questions"
+  ],
+  "author": "Maaz Shamim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abdur1Rafae/STAR/issues"
+  },
+  "homepage": "https://github.com/Abdur1Rafae/STAR#readme",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "joi": "^17.12.2",
+    "moment-timezone": "^0.5.45",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.2.3",
+    "morgan": "^1.10.0"
+  }
+}
