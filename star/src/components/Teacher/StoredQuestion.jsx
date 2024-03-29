@@ -5,7 +5,7 @@ import { MdEdit, MdOutlineDeleteOutline } from "react-icons/md";
 import QuizImage from '../Student/question/QuizImage';
 import QuestionCreator from './QuestionCreator';
 
-const StoredQuestion = ({type, id, question, skill, difficulty, point, image, explanation, options, savingHandler}) => {
+const StoredQuestion = ({type, id, question, skill, difficulty, point, image, explanation, options, savingHandler ,deleteHandler}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -19,7 +19,7 @@ const StoredQuestion = ({type, id, question, skill, difficulty, point, image, ex
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={point}/>
                     <div className='ml-auto flex'>
-                        <button className='self-center'><MdOutlineDeleteOutline className='text-lg hover:text-red-400 mr-2'/></button>
+                        <button className='self-center'><MdOutlineDeleteOutline onClick={deleteHandler} className='text-lg hover:text-red-400 mr-2'/></button>
                         <button className='self-center' onClick={() => {setIsEditing(true);setDisplay(true)}}><MdEdit className='text-lg text-gray-400 hover:text-black mr-2'/></button>
                         <button onClick={()=>{setDisplay(!display)}}>
                         {
