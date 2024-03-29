@@ -11,7 +11,7 @@ const QUERY =
     GET_ROSTER : 'SELECT CONCAT(u.FirstName, " ", u.LastName) AS Name, u.Email, u.ERP FROM User u JOIN Enrollment e ON e.StudentID = u.Email WHERE e.SectionID = ?',
     GET_CLASSES : 'Select ClassID, ClassName, JSON_ARRAYAGG(JSON_OBJECT("SectionID", SectionID, "SectionName", SectionName)) AS Sections from Class LEFT JOIN Section using(ClassID) where TeacherID = ? GROUP BY ClassName, ClassID;',
 
-    GET_ENROLLED_CLASSES : 'SELECT SectionID, ClassName, Count(AssessmentID) As Assessments FROM Arete.Enrollment JOIN Assessments using (SectionID) where StudentID = ? GROUP BY ClassName, SectionID;'
+    GET_ENROLLED_CLASSES : "SELECT ClassName, SectionID, AssessmentsConducted, CASE WHEN MONTH(EnrollmentDate) BETWEEN 1 AND 5 THEN CONCAT('Spring ', YEAR(EnrollmentDate)) WHEN MONTH(EnrollmentDate) BETWEEN 6 AND 7 THEN CONCAT('Summer ', YEAR(EnrollmentDate)) WHEN MONTH(EnrollmentDate) BETWEEN 8 AND 12 THEN CONCAT('Fall ', YEAR(EnrollmentDate)) ELSE 'Unknown' END AS SemesterName from classdetails LEFT JOIN Enrollment using (SectionID) where StudentID = ?;"
 }
 
 module.exports = QUERY

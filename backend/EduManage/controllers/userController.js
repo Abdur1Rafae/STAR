@@ -95,7 +95,7 @@ module.exports.refresh = async (req, res) =>
     }
 }
 module.exports.login = async (req,res) => 
-{   
+{
     //validate if all required fields are provided
     const requiredFields = ['email', 'password']
     const response = validateFields(requiredFields, req.body)

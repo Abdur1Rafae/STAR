@@ -16,7 +16,7 @@ const ScoreView = () => {
         </div>
         <div className='separator h-20 border-[1px] border-black self-center'></div>
         <div className='w-24 h-28 rounded-lg flex flex-col'>
-            <h3 className='text-xs mt-2 mt-4 font-medium self-center'>Highest Score</h3>
+            <h3 className='text-xs mt-4 font-medium self-center'>Highest Score</h3>
             <div className='h-16 flex flex-col'>
                 <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{HighestScore}</h3>
                 <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>

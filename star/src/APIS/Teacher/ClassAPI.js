@@ -3,7 +3,6 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_ACCESS_TOKEN
 
 const GetAllClasses = async () => {
-    console.log(process.env)
     const res = await AxiosBase.get(`edumanage/class/my-classes`,{
         headers: {
             authorization: `Bearer ${token}`

@@ -13,7 +13,7 @@ const MobUpQuiz = ({ name, course, openDate, closeDate, startTime, duration, clo
                     <h1 className='font-bold text-md'>{name}</h1>
                     <div className="durationContainer flex text-xs text-slate-400 ml-2">
                         <FaClock className='self-center'/>
-                        <h3 className='ml-1 self-center'>{duration}</h3>
+                        <h3 className='ml-1 self-center'>{duration} minutes</h3>
                     </div>
                 </div>
                 <div className='text-sm mb-1'>{course}</div>

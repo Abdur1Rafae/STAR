@@ -42,6 +42,7 @@ module.exports.createClass = async (req,res) =>
 }
 module.exports.deleteClass = async (req,res) => 
 {
+    console.log("here")
     const requiredFields = ['classId']
     const response = validateFields(requiredFields, req.body)
     if(response != null){return res.status(400).json({ error: 'ER_MSG_ARG', message: response })}   
@@ -165,7 +166,7 @@ module.exports.removeStudent = async (req,res) =>
 
     try{
         var result = await executeQuery(Query.REMOVE_STUDENT, [studentId,sectionId])
-        res.status(200).json({message: `Student '${studentId}' Removed From Section '${sectionId}'`})
+        result.status(200).json({message: `Student '${studentId}' Removed From Section '${sectionId}'`})
         
     }
     catch(err){
