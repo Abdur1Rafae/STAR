@@ -3,22 +3,26 @@ import { TbArrowsMoveVertical } from "react-icons/tb";
 import { useMediaQuery } from 'react-responsive'
 import MobUpQuiz from './MobUpQuiz';
 
-const AssignmentTable = () => {
+const AssignmentTable = ({assessments}) => {
+    console.log(assessments)
+    function formatDate(date) {
+        return new Date(date).toISOString().split('T')[0];
+    }
+
+    function formatTime(date) {
+        return new Date(date).toISOString().split('T')[1].substring(0, 5);
+    }
+
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 770px)' })
 
-    function createData(name, course, openDate,closeDate, startTime, duration, closeTime) {
-        return { name, course, openDate, closeDate, startTime, duration, closeTime};
-    }
-        
-    const initialRows = [
-        createData('Weekly Quiz 1', "Introduction to Computing", "23 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Supply Chain Management", "25 October 2023", "23 October 2023","23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Calculus 1", "23 January 2023","27 January 2023", "23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Intorduction to Data Mining", "2 October 2023","23 October 2023", "23:55", "20 minutes", "23:55"),
-        createData('Weekly Quiz 1', "Object Orient Programming", "12 December 2024","23 October 2023", "23:55", "20 minutes", "23:55")
-    ];
-
-    const [rows, setRows] = useState(initialRows)
+    const [rows, setRows] = useState(assessments.map((obj)=>{
+        return {...obj, 
+        openDate: formatDate(obj.OpenDate),
+        startTime: formatTime(obj.OpenDate),
+        closeDate: formatDate(obj.CloseDate),
+        closeTime: formatTime(obj.CloseDate)}}))
+    
+    
 
     const sortByCourse = () => {
         const sortedRows = [...rows].sort((a, b) => a.course.localeCompare(b.course));
@@ -74,13 +78,13 @@ const AssignmentTable = () => {
                         {
                             rows.map((row, index) => (
                                 <tr key={index} className='text-center bg-LightBlue drop-shadow-md'>
-                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.name}</td>
-                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.course}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.Title}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.ClassName}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.closeDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.startTime}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.closeTime}</td>
-                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.duration}</td>     
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.Duration} minutes</td>     
                                 </tr>
                             ))
                         }
@@ -92,7 +96,7 @@ const AssignmentTable = () => {
         <div className='w-full h-[200px] flex flex-wrap'>
             {
                 rows.map((row) => (
-                    <MobUpQuiz name={row.name} course={row.course} duration={row.duration} openDate={row.openDate} startTime={row.startTime} closeDate={row.closeDate} closeTime={row.closeTime}/>
+                    <MobUpQuiz name={row.Title} course={row.ClassName} duration={row.Duration} openDate={row.openDate} startTime={row.startTime} closeDate={row.closeDate} closeTime={row.closeTime}/>
                 ))
             }
         </div>

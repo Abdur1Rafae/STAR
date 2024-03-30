@@ -1,16 +1,36 @@
 import React, {useState} from 'react'
 import { MdOutlineGroups, MdOutlineDeleteOutline } from "react-icons/md";
 import { ClickOutsideFunc } from '../ClickOutsideFunc';
+import { AddSection, UpdateSection } from '../../APIS/Teacher/SectionAPI';
 
-const SectionTab = ({section, onDelete}) => {
-    const [sectionName, setSectionName] = useState(section);
-    const [newSection, setNewSection] = useState(section);
-    const [isEditing, setIsEditing] = useState(section == "New Section" ? true : false);
+const SectionTab = ({classID, section, onDelete}) => {
+    const [sectionName, setSectionName] = useState(section.SectionName ?? "");
+    const [newSection, setNewSection] = useState(section.SectionName);
+    const [isEditing, setIsEditing] = useState(section.SectionName ? false : true);
 
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            setSectionName(newSection);
-            setIsEditing(false);
+    async function handleKeyPress(event) {
+        if(newSection !== "") {
+            if (event.key === 'Enter') {
+                if(sectionName == "") {
+                    try {
+                        const res = await AddSection({classID: classID, name: newSection})
+                        section.SectionID = res.sectionId
+                        console.log(res) 
+                    } catch(err) {
+                        console.log(err)
+                    }
+                }
+                else {
+                    try {
+                        const res = await UpdateSection({id:section.SectionID, name: newSection})
+                        console.log(res) 
+                    } catch(err) {
+                        console.log(err)
+                    }
+                }
+                setSectionName(newSection);
+                setIsEditing(false);
+            }
         }
     }
 
@@ -52,7 +72,7 @@ const SectionTab = ({section, onDelete}) => {
                 <MdOutlineGroups className='text-xl'/>
                 <p className='text-xs font-body'>Roster</p>
             </button>
-            <button className='flex flex-col justify-center items-center hover:text-red-600' onClick={onDelete}>
+            <button className='flex flex-col justify-center items-center hover:text-red-600' onClick={()=>onDelete(section.SectionID)}>
                 <MdOutlineDeleteOutline className='text-xl'/>
                 <p className='text-xs font-body'>Delete</p>
             </button>
