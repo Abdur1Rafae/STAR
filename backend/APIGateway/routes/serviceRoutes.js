@@ -23,9 +23,9 @@ router.all(/^\/([^\/]+)\/(.*)/, (req,res) =>
             res.set('Content-Type', response.headers['content-type'])
             res.send(response.data)
         }).catch((error) => {
-            console.log(error)
+            res.set('Content-Type', 'application/json')
             if (error.response) {res.status(error.response.status || 500).send(error.response.data)} 
-            else {res.status(500).send('Internal Server Error')}              
+            else {res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to complete request'})}              
         })        
     }
     else 
