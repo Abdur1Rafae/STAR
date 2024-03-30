@@ -13,7 +13,6 @@ import QuestionBankPage from './pages/Teacher/QuestionBankPage.jsx';
 import LiveMonitoring from './pages/Teacher/LiveMonitoring.jsx';
 import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
 import AddQuestions from './pages/Teacher/AddQuestions';
-import QuestionSummary from './pages/Teacher/QuestionSummary';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
 import Reports from './pages/Teacher/Reports.jsx';
 
@@ -40,7 +39,8 @@ const AppRoutes = () => {
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
             <Route path='/teacher/scheduled-assessments/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-            <Route path = '/teacher/add-question' element = {<AddQuestions/>}></Route>
+            <Route path='/teacher/add-question' element = {<AddQuestions/>}></Route>
+            <Route path='/teacher/reports' element = {<Reports/>}></Route>
          </Routes>
   )
 }
