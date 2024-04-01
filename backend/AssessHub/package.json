@@ -12,9 +12,8 @@
     "url": "git+https://github.com/Abdur1Rafae/STAR.git"
   },
   "keywords": [
-    "class-management",
-    "assessment-management",
-    "questions-management"
+    "assessment",
+    "monitoring"
   ],
   "author": "Maaz Shamim",
   "license": "ISC",
@@ -26,10 +25,9 @@
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
-    "joi": "^17.12.2",
     "moment-timezone": "^0.5.45",
     "mongodb": "^6.5.0",
-    "mongoose": "^8.2.4",
+    "mongoose": "^8.2.3",
     "morgan": "^1.10.0"
   }
 }
