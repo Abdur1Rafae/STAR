@@ -6,7 +6,7 @@ const QuizStore = create((set) => ({
     type: "MCQ",
     question: "Who developed the theory of relativity?",
     options: [
-      { text: "Isaac Newton", isCorrect: false },
+      { text: "Isaac Newton ewlfkwef lkefmwe lkmfw lorem*10 eroifwenf rfewonf ofinernf  weoif foeiwf foienfew oirenf o", isCorrect: false },
       { text: "Albert Einstein", isCorrect: true },
       { text: "Stephen Hawking", isCorrect: false },
       { text: "Galileo Galilei", isCorrect: false }
@@ -80,6 +80,39 @@ const QuizStore = create((set) => ({
   currentQuestionIndex: 0,
   filter: 'all',
   filteredQuestions: [],
+  quizConfig: {
+    instantResponse: true,
+    navigation: false,
+    randomizeQuestions: false,
+    randomizeOptions: false
+  },
+
+  responses: [],
+
+  addResponse: (response) => set((state) => ({
+    responses: [...state.responses, response]
+  })),
+
+  updateResponse: (questionNumber, updatedResponse) => set((state) => {
+    const index = state.responses.findIndex(response => response.number === questionNumber)
+
+    if (index !== -1) {
+        return {
+          responses: state.responses.map((response, i) => 
+            i === index ? updatedResponse : response
+          )
+        };
+    }
+
+    return {
+        responses: [...state.responses, updatedResponse]
+    };
+  }),
+
+  getResponseByQuestionNumber: (questionNumber) => {
+    const state = QuizStore.getState();
+    return state.responses.find(response => response.number === questionNumber);
+  },
 
   setQuestions: (newQuestions) => set({ questions: newQuestions }),
 
@@ -93,7 +126,7 @@ const QuizStore = create((set) => ({
 
   nextQuestion: () => {
     set((state) => {
-      const nextIndex = (state.currentQuestionIndex + 1) % state.questions.length;
+      const nextIndex = state.currentQuestionIndex == state.questions.length -1 ?state.currentQuestionIndex : state.currentQuestionIndex + 1
       return { ...state, currentQuestionIndex: nextIndex };
     });
   },
@@ -110,13 +143,13 @@ const QuizStore = create((set) => ({
 
   markAsAnswered: () => {
     set((state) => {
-        const updatedQuestions = state.questions.map((question, index) => {
-          if (index === state.currentQuestionIndex) {
-            return { ...question, unanswered: false };
-          }
-          return question;
-        });
-        return { ...state, questions: updatedQuestions };
+      const updatedQuestions = state.questions.map((question, index) => {
+        if (index === state.currentQuestionIndex) {
+          return { ...question, unanswered: false };
+        }
+        return question;
+      });
+      return { ...state, questions: updatedQuestions };
     });
   },
    

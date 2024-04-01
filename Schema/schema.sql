@@ -85,7 +85,7 @@ EVERY 1 minute
 DO 
 DELETE FROM SessionInfo WHERE created_at  < NOW() - INTERVAL 5 minute
 
-Alter View Assessments As
+Create View Assessments As
 SELECT AssessmentID, SectionID, Title, ClassName, Duration, OpenDate, CloseDate, Questions, Marks, CoverImage,
 CASE WHEN OpenDate <= NOW() AND CloseDate >= NOW() THEN "In Progress" 
 WHEN OpenDate > NOW() THEN "Not Started" 
@@ -96,3 +96,9 @@ FROM Assessment
 JOIN TargetAudience USING (AssessmentID) 
 JOIN Section USING (SectionID) 
 JOIN Class USING (ClassID);
+
+Create View ClassDetails AS
+SELECT Class.ClassName, Class.ClassID, Section.SectionID,  Count(AssessmentID) as AssessmentsConducted from Class LEFT JOIN Section using (ClassID) LEFT JOIN TargetAudience using (SectionID) GROUP BY SectionID, ClassName, ClassID;
+
+ALTER TABLE Enrollment
+ADD COLUMN EnrollmentDate DATETIME DEFAULT CURRENT_TIMESTAMP;

@@ -95,7 +95,7 @@ module.exports.refresh = async (req, res) =>
     }
 }
 module.exports.login = async (req,res) => 
-{   
+{
     //validate if all required fields are provided
     const requiredFields = ['email', 'password']
     const response = validateFields(requiredFields, req.body)
@@ -122,7 +122,7 @@ module.exports.login = async (req,res) =>
         }
         else{return res.status(401).json({error: 'ER_INVLD_CRED', message: 'Invalid Email or Password'})}
     }
-    catch(err){res.status(500).json({  error: 'ER_INT_SERV', message: 'Internal server error: Failed to refresh token'})}
+    catch(err){res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to authenticate user'})}
 }
 module.exports.signup = async (req,res) => 
 {

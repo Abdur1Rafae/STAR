@@ -13,7 +13,8 @@ import QuestionBankPage from './pages/Teacher/QuestionBankPage.jsx';
 import LiveMonitoring from './pages/Teacher/LiveMonitoring.jsx';
 import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
 import AddQuestions from './pages/Teacher/AddQuestions';
-
+import { QuestionProvider } from '../src/Context/QuestionsContext.js';
+import Reports from './pages/Teacher/Reports.jsx';
 
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
@@ -36,9 +37,10 @@ const AppRoutes = () => {
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
-            <Route path='/teacher/scheduled-assessments/adding-questions' element={<AddQuestions/>}></Route>
+            <Route path='/teacher/scheduled-assessments/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-            <Route path = '/teacher/add-question' element = {<AddQuestions/>}></Route>
+            <Route path='/teacher/add-question' element = {<AddQuestions/>}></Route>
+            <Route path='/teacher/reports' element = {<Reports/>}></Route>
          </Routes>
   )
 }

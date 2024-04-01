@@ -9,8 +9,8 @@ const QUERY =
     
     GET_ASSESSMENT_DETAILS : 'Select * from Assessment where AssessmentID = ?',
 
-    GET_UPCOMING_ASSESSMENTS : 'SELECT OpenDate, CloseDate, Duration, Marks, Questions From Assessments Join Enrollment using (SectionID) where StudentID = ? AND Status COLLATE utf8mb4_unicode_ci= "Not Started"',
-    GET_ONGOING_ASSESSMENTS : "SELECT  AssessmentID, OpenDate, CloseDate, Duration, Marks, Questions, CoverImage From Enrollment JOIN Assessments using (SectionID) where Status COLLATE utf8mb4_unicode_ci= 'In Progress' AND StudentID = ?  "
+    GET_UPCOMING_ASSESSMENTS : 'SELECT Title, ClassName, OpenDate, CloseDate, Duration, Marks, Questions From Assessments Join Enrollment using (SectionID) where StudentID = ? AND Status COLLATE utf8mb4_unicode_ci= "Not Started"',
+    GET_ONGOING_ASSESSMENTS : "SELECT  AssessmentID, Title, ClassName, OpenDate, CloseDate, Duration, Marks, Questions, CoverImage From Enrollment JOIN Assessments using (SectionID) where Status COLLATE utf8mb4_unicode_ci= 'In Progress' AND StudentID = ?  "
 }
 
 module.exports = QUERY

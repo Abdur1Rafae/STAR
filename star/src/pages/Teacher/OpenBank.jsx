@@ -106,7 +106,7 @@ const OpenBank = () => {
                             </div>
                         )}
                     </div>
-                    <div className='flex flex-col-reverse md:flex-row justify-between gap-4 bg-red-100'>
+                    <div className='flex flex-col-reverse md:flex-row justify-between gap-4'>
                         <div className='flex-grow flex flex-col gap-4'>
                             <div className='w-full flex flex-grow flex-col gap-2'>
                                 {

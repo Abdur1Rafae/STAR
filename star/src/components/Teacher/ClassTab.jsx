@@ -4,31 +4,48 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { MdDeleteOutline } from 'react-icons/md';
 import { FaAngleDown } from "react-icons/fa";
 import { ClickOutsideFunc } from '../ClickOutsideFunc';
+import { UpdateClass } from '../../APIS/Teacher/ClassAPI';
+import { DeleteSection } from '../../APIS/Teacher/SectionAPI';
 
-const ClassTab = ({name, onDelete}) => {
+const ClassTab = ({id, name, onDelete, classSections}) => {
     const [className, setClassName] = useState(name);
     const [newClass, setNewClass] = useState(name);
     const [display, setDisplay] = useState(false);
-    const [isEditing, setIsEditing] = useState(name == "New Class" ? true : false);
+    const [isEditing, setIsEditing] = useState(name ? false : true);
 
-    const [sections, setSections] = useState(["1234(11:30 - 12:45)", "6734(13:00 - 14:15)"])
+    const [sections, setSections] = useState(classSections ? (classSections[0].SectionName ? classSections : []) : [])
 
     const handleAddingSection = () => {
         let updatedSections = [...sections]
-        updatedSections.push("New Section")
+        updatedSections.push({isNew: true})
         setSections(updatedSections)
     }
 
-    const handleDeletingSection = (index) => {
-        let updatedSections = [...sections];
-        updatedSections.splice(index, 1);
-        setSections(updatedSections);
-    }
+    const handleDeletingSection = async (id) => {
+        try {
+            const res = await DeleteSection({ id: id });
+            console.log(res);
+            const indexToDelete = sections.findIndex(section => section.SectionID === id);
+            if (indexToDelete !== -1) {
+                const updatedSections = [...sections];
+                updatedSections.splice(indexToDelete, 1);
+                setSections(updatedSections);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    
 
-    function handleKeyPress(event) {
+    async function handleKeyPress(event) {
         if (event.key === 'Enter') {
-            setClassName(newClass);
-            setIsEditing(false);
+            try {
+                const res = await UpdateClass({id: id, name: newClass})
+                setClassName(newClass);
+                setIsEditing(false);
+            } catch(err) {
+                console.log(err)
+            }
         }
     }
 
@@ -47,7 +64,7 @@ const ClassTab = ({name, onDelete}) => {
                         <>                       
                             <input 
                                 autoFocus
-                                placeholder='Topic'
+                                placeholder='Class'
                                 type='text' 
                                 value={newClass} 
                                 onChange={(e) => setNewClass(e.target.value)} 
@@ -72,7 +89,7 @@ const ClassTab = ({name, onDelete}) => {
         <div className={`transition-all ease-out duration-500 ${display ? '' : 'opacity-0 pointer-events-none h-0'}`}>
             {
                 sections.map((sectionItem, index)=> {
-                    return <SectionTab key={`${index} ${sectionItem}`} section={sectionItem} onDelete={()=>handleDeletingSection(index)}/>
+                    return <SectionTab key={`${index} ${sectionItem.SectionID}`} classID={id} section={sectionItem} onDelete={handleDeletingSection}/>
                 })
             }
             <div className='flex gap-2'>
