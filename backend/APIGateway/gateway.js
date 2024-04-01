@@ -9,7 +9,7 @@ const cors = require('cors')
 
 const app = express()
 let corsAllow = {
-    origin: "http://localhost:3002",
+    origin: "http://localhost:3003",
     methods: "PUT, GET, POST, PATCH, DELETE, HEAD",
     credentials: true
 }

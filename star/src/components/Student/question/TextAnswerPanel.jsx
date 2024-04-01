@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
@@ -10,12 +10,34 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const filter = QuizStore(store=> store.filterQuestions)
 
+  const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
+  const updateResponse = QuizStore(store=>store.updateResponse)
+  const [response, setResponse] = useState(null)
+
+  useEffect(()=> {
+    const answer = getSelectedResponse(question.number)
+    setResponse(answer ? answer.selectedAnswer : '')
+    setUserAnswer(answer ? answer.selectedAnswer : '')
+  }, [])
+
+  useEffect(() => {
+    setResponse(answer => {
+      const updatedAnswer = {
+        number: question.number,
+        type: question.type,
+        selectedAnswer: answer ? answer : userAnswer
+      };
+      console.log(updatedAnswer)
+      updateResponse(question.number, updatedAnswer);
+      return answer;
+    });
+  }, [userAnswer]);
+
   const handleAnswerChange = (event) => {
     setUserAnswer(event.target.value);
   };
 
   const handleAnswerSubmit = () => {
-    // You can add any validation or additional logic here before submitting the answer
     onAnswerSubmit(userAnswer);
   };
 
@@ -36,7 +58,7 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
             </p>
             <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
               <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
-              <p className="text-gray-500 text-sm self-center"> {question?.marks} marks</p>
+              <p className="text-gray-500 text-sm self-center"> {question?.point} marks</p>
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_STUDENT_TOKEN
 
 const GetOngoingAssessments = async () => {
-    const res = await AxiosBase.get(`edumanage/assessment/ongoing-assessments`,{
+    const res = await AxiosBase.get(`assesshub/assessment/ongoing-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
         }
@@ -13,7 +13,7 @@ const GetOngoingAssessments = async () => {
 };
 
 const GetUpcomingAssessments = async () => {
-    const res = await AxiosBase.get(`edumanage/assessment/upcoming-assessments`,{
+    const res = await AxiosBase.get(`assesshub/assessment/upcoming-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
         }

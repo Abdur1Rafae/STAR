@@ -1,70 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
-import FlagButton from '../../button/FlagButton';
 import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
 
-const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
-  const [isFlagged, setIsFlagged] = useState(Flagged);
-  const flagQuestion = QuizStore(store=> store.flagQuestion)
-  const filterQuestions = QuizStore(store=> store.filterQuestions)
+const CorrectMCQ = ({ question }) => {
+    console.log(question)
+    const [selectedOption, setSelectedOption] = useState([])
+    const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
+    const [correctAnswersMarked, setCAM] = useState([]);
+    const [correctAnswersMissed, setCAMissed] = useState([]);
 
-  const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
-  const updateResponse = QuizStore(store=>store.updateResponse)
-  const [selectedOption, setSelectedOption] = useState([]);
-  const [response, setResponse] = useState(null)
-  const instantResponse = QuizStore(store => store.quizConfig.instantResponse)
 
-  useEffect(()=> {
-    const answer = getSelectedResponse(question.number)
-    setResponse(answer)
-    setSelectedOption(answer ? answer.selectedAnswer : [])
-  }, [])
+    useEffect(()=> {
+        const answer = getSelectedResponse(question.number)
+        setSelectedOption(answer ? answer.selectedAnswer : [])
+    }, [])
 
-  useEffect(() => {
-    setResponse(answer => {
-      const updatedAnswer = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: answer ? answer.selectedAnswer : selectedOption
-      };
-      updateResponse(question.number, updatedAnswer);
-      return answer;
-    });
-  }, [selectedOption]);
+    useEffect(()=> {
+        let userSelectedCorrectAnswers = [];
+        let correctAnswersNotSelected = [];
+        question.options.forEach(option => {
+            const isCorrect = option.isCorrect;
+            const isSelected = selectedOption.includes(option.text);
 
-  const handleOptionClick = (option) => {
-    const index = selectedOption.indexOf(option.text);
+            if (isSelected && isCorrect) {
+                userSelectedCorrectAnswers.push(option.text);
+            } else if (!isSelected && isCorrect) {
+                correctAnswersNotSelected.push(option.text);
+            }
+        });
+        setCAM(userSelectedCorrectAnswers)
+        setCAMissed(correctAnswersNotSelected)
+    }, [selectedOption])
 
-    if (index !== -1) {
-      const updatedOptions = [...selectedOption];
-      updatedOptions.splice(index, 1);
-      setSelectedOption(updatedOptions);
-      const updatedResponse = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: updatedOptions
-      };
-      setResponse(updatedResponse)
-    } else {
-      setSelectedOption([...selectedOption, option.text]);
-      const updatedResponse = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: [...selectedOption, option.text]
-      };
-      setResponse(updatedResponse)
-    }
-
-    onOptionSelect(option);
-  };
-
-  const handleToggleFlag = () => {
-    setIsFlagged((prevFlag) => !prevFlag);
-    flagQuestion()
-    filterQuestions()
-  };
 
   return (
     <div className="w-full mx-auto bg-white p-4 rounded-md select-none">
@@ -80,7 +49,6 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
             </div>
           </div>
         </div>
-        <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
       </div>
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
@@ -100,11 +68,10 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
             <div
               key={index}
               className={`mt-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
-              onClick={() => handleOptionClick(option, index)}
             >
               <div
                 className={`min-h-10 rounded-md flex items-center gap-4  ${
-                  selectedOption.includes(option.text) ? 'bg-DarkBlue text-white' : ''
+                  correctAnswersMarked.includes(option.text) || correctAnswersMissed.includes(option.text) ? 'bg-emerald-300' : 'bg-rose-300'
                 } border-[1px] border-black`}
               >
                 <div className="ml-4">
@@ -119,4 +86,4 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
   );
 };
 
-export default MCQPanel;
+export default CorrectMCQ;

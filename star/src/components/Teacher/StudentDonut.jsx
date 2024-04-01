@@ -38,7 +38,7 @@ export const data = ({ inputData }) => {
 };
 
 const LegendList = ({labels}) => (
-    <div className='mt-2 flex md:flex-col flex-row flex-wrap gap-4 h-full'>
+    <div className='mt-2 flex md:flex-col flex-row flex-wrap gap-4 h-full justify-center'>
         <h4 className='text-sm font-medium'>Participants Dichotomy</h4>
       {labels.map((label, index) => (
         <div key={index} className="flex items-center">

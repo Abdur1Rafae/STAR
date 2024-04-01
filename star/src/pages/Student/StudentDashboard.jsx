@@ -14,6 +14,7 @@ const StudentDashboard = () => {
             try{
                 const res = await GetOngoingAssessments()
                 SetLiveAssessments(res)
+                console.log(res)
             } catch(err) {
                 console.log(err)
             }

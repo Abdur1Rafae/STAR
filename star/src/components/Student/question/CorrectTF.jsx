@@ -1,49 +1,39 @@
 import React, { useState,useEffect } from 'react';
 import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
-import FlagButton from '../../button/FlagButton';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizStore from '../../../Stores/QuizStore';
 
-const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
+const CorrectTF = ({ question }) => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [isFlagged, setIsFlagged] = useState(Flagged);
-  const flagQuestion = QuizStore(store=> store.flagQuestion)
-
-  const filterQuestions = QuizStore(store=> store.filterQuestions)
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
-  const updateResponse = QuizStore(store=>store.updateResponse)
-  const [response, setResponse] = useState(null)
+  const [correctAnswersMarked, setCAM] = useState([]);
+  const [correctAnswersMissed, setCAMissed] = useState([]);
+
 
   useEffect(()=> {
-    const answer = getSelectedResponse(question.number)
-    setResponse(answer ? answer.selectedAnswer : null)
-    setSelectedOption(answer ? answer.selectedAnswer : null)
+      const answer = getSelectedResponse(question.number)
+      setSelectedOption(answer ? answer.selectedAnswer : [])
   }, [])
 
-  useEffect(() => {
-    setResponse(answer => {
-      const updatedAnswer = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: answer ? answer : selectedOption
-      };
-      updateResponse(question.number, updatedAnswer);
-      return answer;
-    });
-  }, [selectedOption]);
+  useEffect(()=> {
+      let userSelectedCorrectAnswers = [];
+      let correctAnswersNotSelected = [];
+      question.options.forEach(option => {
+          const isCorrect = option.isCorrect;
+          const isSelected = selectedOption == option.text;
+          console.log(option.text)
 
-  const handleAnswerSelect = (answer) => {
-    setSelectedOption(answer);
-    setResponse(answer)
-    onOptionSelect(answer);
-  };
-
-  const handleToggleFlag = () => {
-    setIsFlagged((prevFlag) => !prevFlag);
-    flagQuestion()
-    filterQuestions()
-  };
+          if (isSelected && isCorrect) {
+              userSelectedCorrectAnswers.push(option.text);
+          } else if (!isSelected && isCorrect) {
+              correctAnswersNotSelected.push(option.text);
+              console.log("ere")
+          }
+      });
+      setCAM(userSelectedCorrectAnswers)
+      setCAMissed(correctAnswersNotSelected)
+  }, [selectedOption])
 
   return (
     <div className="w-full mx-auto bg-white p-4 rounded-md">
@@ -58,7 +48,6 @@ const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
               <p className="text-gray-500 text-sm self-center"> {question?.point} marks</p>
             </div>
           </div>
-          <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
         </div>
         <div className="border-t border-black border-2 mt-2"></div>
       </div>
@@ -76,9 +65,8 @@ const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
       <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
             className={`w-full min-h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
-              selectedOption === 'True' ? 'bg-DarkBlue text-white' : ''
+              correctAnswersMarked.includes("True") || correctAnswersMissed.includes("True") ? 'bg-emerald-300' : 'bg-rose-300'
             }`}
-            onClick={() => handleAnswerSelect('True')}
           >
             {selectedOption === "True" ?<GrRadialSelected className='ml-4'/> : ""}   
             <p className='ml-4'>True</p>
@@ -88,9 +76,8 @@ const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
         <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
             className={`w-full min-h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
-              selectedOption === 'False' ? 'bg-DarkBlue text-white' : ''
+                correctAnswersMarked.includes("False") || correctAnswersMissed.includes("False") ? 'bg-emerald-300' : 'bg-rose-300'
             }`}
-            onClick={() => handleAnswerSelect('False')}
           >
             {selectedOption === "False" ?<GrRadialSelected className='ml-4'/> : ""}   
             <p className='ml-4'>False</p>
@@ -101,4 +88,4 @@ const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
   );
 };
 
-export default TrueFalsePanel;
+export default CorrectTF;
