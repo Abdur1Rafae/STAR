@@ -2,21 +2,15 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require("morgan")
 const axios = require('axios')
-const path = require('path')
-const questionBankRoutes = require('./routes/questionBankRoutes')
-const classManagementRoutes = require('./routes/classManagementRoutes')
-const assessmentManagementRoutes = require('./routes/assessmentManagementRoutes')
+const assessmentRoutes = require('./routes/assessmentRoutes')
 
 const app = express()
-const PORT = 3002
+const PORT = 3003
 const HOST = 'localhost'
 
 app.use(express.json())
 app.use(morgan('combined'))
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
-app.use('/question-bank', questionBankRoutes)
-app.use('/class-management', classManagementRoutes)
-app.use('/assessment-management', assessmentManagementRoutes)
+app.use('/assessment', assessmentRoutes)
 
 
 app.listen(PORT, () => 
@@ -27,7 +21,7 @@ app.listen(PORT, () =>
       headers: {'Content-Type': 'application/json'},
       data: 
       {
-          serviceName: "teacherhub",
+          serviceName: "assesshub",
           protocol: "http",
           host: HOST,
           port: PORT,
@@ -36,7 +30,7 @@ app.listen(PORT, () =>
   }).then((response) => 
   {
     console.log(response.data)
-    console.log(`TeacherHub Microservice avilable at port ${PORT}`)
+    console.log(`AssessHub Microservice avilable at port ${PORT}`)
   }).catch((error) => 
   {
     console.error('Error registering service:', error.code)

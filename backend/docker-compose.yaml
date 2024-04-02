@@ -2,17 +2,6 @@ version: “3.8”
 
 services:
 
-  mysql-db:
-    image: mysql:latest
-    restart: unless-stopped
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - '4000:3306'
-    volumes:
-      - ./MySql:/var/lib/mysql
-
   api-gateway:
     build: ./APIGateway
     restart: unless-stopped
@@ -31,14 +20,14 @@ services:
     volumes:
       - ./TeacherHub:/app
   
-  edumanage-service:
-    build: ./TeacherHub
+  assesshub-service:
+    build: ./AssessHub
     restart: unless-stopped
-    container_name: edumanage
+    container_name: assesshub
     ports:
-      - '3001:3001'
+      - '3003:3003'
     volumes:
-      - ./EduManage:/app
+      - ./AssessHub:/app
 
 volumes:
     - "/etc/timezone:/etc/timezone:ro"

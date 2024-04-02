@@ -1,8 +1,6 @@
-const validateFields = require('../util/library') 
 const conn = require('../dbconfig/dbcon')
-const Question = require('../models/Questions')
-const QuestionBank = require('../models/Question_Banks')
-const Assessment = require('../models/AssessmentManagement')
+const Question = require('../models/Question')
+const Assessment = require('../models/Assessment')
 process.env.TZ ="Asia/Karachi"
 
 
@@ -55,20 +53,16 @@ module.exports.removeQuestionFromBank = async (req,res) =>
     try
     {
         const {assessmentId, questionId} = req.params
+
         const session = await conn.startSession()
-
-        const removedQuestionId = await session.withTransaction(async () => 
+        await session.withTransaction(async () => 
         {
-
             const removedQuestion = await Question.findByIdAndDelete(questionId, {session})
             await Assessment.findByIdAndUpdate(
                 assessmentId,
                 { $pull: { "questionBank.questions": questionId } }
             , {session})
-
-            return removedQuestion._id
         })
-
         session.endSession()
     
         res.status(201).json({message: 'Question Removed From Bank Successfully'})

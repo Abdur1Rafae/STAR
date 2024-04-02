@@ -7,13 +7,13 @@ router.delete('/delete-class/:classId', controller.deleteClass)
 router.put('/update-class/:classId', controller.updateClass)
 
 router.post('/new-section/:classId', controller.createSection)
-router.delete('/delete-section/:classId/:sectionId', controller.deleteSection)
-router.put('/update-section/:classId/:sectionId', controller.updateSection)
+router.delete('/delete-section/:sectionId', controller.deleteSection)
+router.put('/update-section/:sectionId', controller.updateSection)
 
-router.post('/add-students/:classId/:sectionId', controller.addStudentsToSection)
-router.delete('/remove-student/:classId/:sectionId/:studentId', controller.removeStudentFromSection)
+router.post('/add-students/:sectionId', controller.addStudentsToSection)
+router.delete('/remove-student/:sectionId/:studentId', controller.removeStudentFromSection)
 
-router.get('/roster/:classId/:sectionId', controller.getRoster)
+router.get('/roster/:sectionId', controller.getRoster)
 router.get('/my-classes', controller.getClasses)
 
 module.exports = router
