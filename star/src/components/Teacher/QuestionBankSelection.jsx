@@ -4,11 +4,10 @@ import QuestionBankCard from '../../components/Teacher/QuestionBankCard';
 import DisplayOnlyQuestions from '../../components/Teacher/DisplayOnlyQuestions';
 import { useEffect } from 'react';
 import { QuestionContext } from '../../Context/QuestionsContext';
-
-
+import QuestionBankSelectionbars from './QuestionBankSelectionbars';
 
 const QuestionBankSelection = () => {
-  const { QBquestions , setQBQuestions, } = useContext(QuestionContext);
+  const { QBquestions , setQBQuestions } = useContext(QuestionContext);
   const [selectedCard, setSelectedCard] = useState(null);
   const [questionBanks, setQuestionBanks] = useState({
     "Bank A": [
@@ -90,37 +89,36 @@ const QuestionBankSelection = () => {
       return updatedQuestions;
   };
 
-  // useEffect(() => {
-
-    
-  // }, [filteredQuestions]);
-  //     updateQuestionsFromSelectedBanks();
-  // }, [selectedCards, questionBanks]);
-
-
-
   return (
     <div className='flex flex-col gap-4'>
       <div className='md:w-3/4 w-full'>
         <SearchBar />
       </div>
       <div className='flex flex-wrap gap-8'>
-        {
-        Object.keys(questionBanks).map((bankName) => (
-          <QuestionBankCard
+        {Object.entries(questionBanks).map(([bankName, bank]) => (
+          <QuestionBankSelectionbars
             key={bankName}
-            isselection={selectedCard == bankName}
+            bankName={bankName}
+            bank={bank}
+            isSelected={selectedCard === bankName}
             onClick={() => handleCardClick(bankName)}
           />
         ))}
       </div>
-      <div className='flex flex-col gap-2'>
-        {filteredQuestions.map((question, index)=> {
-          return <DisplayOnlyQuestions skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
-          })
-        }
-       
-      </div>
+      {/* <div className='flex flex-col gap-2'>
+        {filteredQuestions.map((question, index) => (
+          <DisplayOnlyQuestions
+            key={index}
+            skill={question.skill}
+            difficulty={question.difficulty}
+            point={question.point}
+            question={question.question}
+            explanation={question.explanation}
+            options={question.options}
+            image={question.imageUrl}
+          />
+        ))}
+      </div> */}
     </div>
   );
 };
