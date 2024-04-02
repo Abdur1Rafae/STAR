@@ -27,7 +27,6 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
         type: question.type,
         selectedAnswer: answer ? answer : userAnswer
       };
-      console.log(updatedAnswer)
       updateResponse(question.number, updatedAnswer);
       return answer;
     });

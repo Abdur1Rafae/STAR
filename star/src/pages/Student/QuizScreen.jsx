@@ -15,10 +15,13 @@ const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
 
   const quizStore = QuizStore();
+  const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
 
   const navigation = quizStore.quizConfig.navigation
-  console.log(navigation)
-  const instantResponse = quizStore.quizConfig.instantResponse
+  const instantResponse = quizStore.quizConfig.instantFeedback
+  const startTime = quizStore.initializeQuestionStartTime
+  startTime()
+
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)
   
@@ -47,17 +50,16 @@ const QuizScreen = () => {
 
   const handleNextQuestion = () => {
     if(quizStore.currentQuestionIndex == quizStore.questions.length - 1) {
-
+      quizStore.nextQuestion()
+      SetReachedLastQuestion(true)
     }
     else {
       setAnswerSubmit(false)
       quizStore.nextQuestion()
     }
-
   };
 
   const handlePrevious = () => {
-    console.log(quizStore.responses)
     quizStore.prevQuestion()
   };
 
@@ -136,20 +138,30 @@ const QuizScreen = () => {
 
             <div className="flex items-center space-y-0 space-x-4">
               {
-                instantResponse ? 
-                <>
-                {
-                  answerSubmitted ? 
-                  <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
-                  :
-                  <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
-                }
-                </> 
+                reachedLastQuestion ? 
+                <SubmitButton label="Submit" onClick={handleNextQuestion} active={true}/>
                 :
-                <>
-                  <SubmitButton label="Previous" onClick={navigation ? handlePrevious : ()=>{}} active={ navigation ? true : false} />
-                  <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
-                </>
+                (
+                  !navigation ? 
+                  (
+                    instantResponse ? 
+                    <>
+                    {
+                      answerSubmitted ? 
+                      <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                      :
+                      <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
+                    }
+                    </>
+                    :
+                    <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                  ) 
+                  :
+                  <>
+                    <SubmitButton label="Previous" onClick={navigation ? handlePrevious : ()=>{}} active={ navigation ? true : false} />
+                    <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                  </>
+                )
               }
                 
             </div>

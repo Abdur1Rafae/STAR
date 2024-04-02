@@ -7,7 +7,7 @@ import { FaHourglassEnd } from "react-icons/fa";
 const MobUpQuiz = ({ name, course, openDate, closeDate, startTime, duration, closeTime }) => {
   return (
     <div className="ml-4 mt-4 w-[300px]">
-        <div className="container border-2 flex h-full w-full px-2 py-2 rounded-lg bg-[#F4F9FD]">
+        <div className="container border-2 flex w-full px-2 py-2 rounded-lg bg-[#F4F9FD]">
             <div className='w-full'>
                 <div className="heading flex">
                     <h1 className='font-bold text-md'>{name}</h1>

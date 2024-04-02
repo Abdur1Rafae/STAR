@@ -5,7 +5,6 @@ import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
 
 const CorrectMCQ = ({ question }) => {
-    console.log(question)
     const [selectedOption, setSelectedOption] = useState([])
     const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
     const [correctAnswersMarked, setCAM] = useState([]);

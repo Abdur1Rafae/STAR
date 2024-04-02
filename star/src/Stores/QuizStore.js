@@ -1,6 +1,16 @@
 import {create} from 'zustand';
 
 const QuizStore = create((set) => ({
+  id: '',
+  title : '',
+  teacher: '',
+  duration: 0,
+  closeDate: 0,
+  closeTime: 0,
+  questionsCount: 0,
+  description: '',
+  className: '',
+  marks: 0,
   questions: [{
     number:1,
     type: "MCQ",
@@ -81,13 +91,36 @@ const QuizStore = create((set) => ({
   filter: 'all',
   filteredQuestions: [],
   quizConfig: {
-    instantResponse: true,
+    adaptiveTesting: false,
+    instantFeedback: false,
     navigation: false,
     randomizeQuestions: false,
-    randomizeOptions: false
+    randomizeAnswers: false
   },
+  currentQuestionStartTime: null,
 
   responses: [],
+
+  setTitle: (title) => set({ title: title }),
+  setTeacher: (teacher) => set({ teacher: teacher }),
+  setDuration: (duration) => set({ duration: duration }),
+  setId: (id) => set({ id: id }),
+  setCloseDate: (date) => set({ closeDate: date }),
+  setCloseTime: (time) => set({ closeTime: time }),
+  setDescription: (desc) => set({ description: desc }),
+
+  updateQuizDetails: (details) => set((state) => {
+    return {
+    ...state,
+    title: details.title,
+    teacher: details.teacher,
+    duration: details.duration,
+    id: details.id,
+    closeTime: details.closeTime,
+    description: details.description,
+    className: details.className,
+    marks: details.marks
+ } }),
 
   addResponse: (response) => set((state) => ({
     responses: [...state.responses, response]
@@ -126,10 +159,34 @@ const QuizStore = create((set) => ({
 
   nextQuestion: () => {
     set((state) => {
-      const nextIndex = state.currentQuestionIndex == state.questions.length -1 ?state.currentQuestionIndex : state.currentQuestionIndex + 1
-      return { ...state, currentQuestionIndex: nextIndex };
+       let nextState = { ...state };
+   
+       if (state.quizConfig.navigation == false) {
+         const elapsedTime = (Date.now() - state.currentQuestionStartTime)/1000;
+         console.log(elapsedTime);
+         const responseIndex = state.responses.findIndex(response => response.number === state.currentQuestionIndex + 1);
+         if (responseIndex !== -1) {
+           const updatedResponse = { ...state.responses[responseIndex], elapsedTime: elapsedTime };
+           nextState.responses = [
+             ...state.responses.slice(0, responseIndex),
+             updatedResponse,
+             ...state.responses.slice(responseIndex + 1)
+           ];
+         }
+       }
+   
+       const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
+       const nextQuestionStartTime = Date.now();
+       nextState = { ...nextState, currentQuestionIndex: nextIndex, currentQuestionStartTime: nextQuestionStartTime };
+   
+       return nextState;
     });
-  },
+   },
+   
+
+  initializeQuestionStartTime: () => ({
+    currentQuestionStartTime: Date.now()
+  }),
 
   prevQuestion: () => {
     set((state) => {

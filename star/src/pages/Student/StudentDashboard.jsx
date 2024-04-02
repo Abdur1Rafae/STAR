@@ -42,18 +42,24 @@ const StudentDashboard = () => {
                 <div className='border-b-[1px] border-[#937D7D] ml-4 mr-4'></div>
                 <div className="flex flex-wrap mx-4 gap-4 mt-4">
                     {
-                        LiveAssessments.map((assessment)=>{
-                            return(
-                            <LiveQuiz QuizName={assessment.Title} duration={assessment.Duration} EndTime={assessment.CloseDate} ClassName={assessment.ClassName}/>
-                        )})
+                        LiveAssessments.length > 0 ?
+                        (
+                            LiveAssessments.map((assessment)=>{
+                                return(
+                                <LiveQuiz teacher={assessment.teacher} description={assessment.description} id={assessment.id} title={assessment.title} duration={assessment.duration} closeTime={assessment.closeDate} className={assessment.className} marks={assessment.marks}/>
+                            )})
+                        )
+                        :
+                        <p className=''>No ongoing assessments</p>
                     }
+                    
                 </div>
                 <h1 className='font-[500] mt-5 ml-4 font-body'>Upcoming Assessments</h1>
                 <div className='border-b-[1px] border-[#937D7D] ml-4 mr-4'></div>
                 {UpcomingAssessments.length > 0 ? (
                     <AssignmentTable assessments={UpcomingAssessments}/>
                 ) : (
-                    <p>No upcoming assessments.</p>
+                    <p className='ml-4 mt-4'>No upcoming assessments.</p>
                 )}
             </div>
         </div>

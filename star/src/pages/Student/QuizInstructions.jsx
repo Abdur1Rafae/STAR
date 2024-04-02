@@ -1,21 +1,40 @@
 // QuizInstructions.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaRegHourglassHalf } from "react-icons/fa6";
 import { CiClock2 } from "react-icons/ci";
 import { CiViewList } from "react-icons/ci";
 import SubmitButton from '../../components/button/SubmitButton';
 import MenuBar from '../../components/MenuBar';
 import SubHeader from '../../components/Student/SubHeader';
+import QuizStore from '../../Stores/QuizStore';
 
 
 const QuizInstructions = () => {
-  const course = "Introduction to Computer Science";
-  const instructor = "Sir Jawwad Farid";
-  const instructions = ["The quiz consists of 5 questions carefully designed to help you self-assess your comprehension of the information presented on the topics covered in the module. ", "Select an answer for every question. Unanswered questions will be scored as incorrect." , "If you use a wheel button mouse, take care not to accidentally change your answers. Sometimes scrolling the wheel will rotate through the answers in a selection list, when you might have meant simply to scroll farther down in the quiz window."];
-  const date = "22-December-2021"
-  const time = "23:00"
-  const duration = 120;
+  const quizStore = QuizStore()
+  const title = QuizStore(store=>store.title);
+  const course = QuizStore(store=>store.className);
+  const instructor = QuizStore(store=>store.teacher);;
+  const instructions = [QuizStore(store=>store.description)];
+  const dateTime = QuizStore(store=>store.closeTime);
+  const duration = QuizStore(store=>store.duration);;
   const marks = 50;
+
+  const formattedDate = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'UTC',
+    hour12: false,
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(new Date(dateTime));
+  console.log(formattedDate)
+
+  useEffect(()=> {
+    const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+    quizStore.updateQuizDetails(storedQuizDetails)
+  }, [])
+  
 
   return (
     <div className='flex flex-col mb-8'>
@@ -23,7 +42,7 @@ const QuizInstructions = () => {
       <SubHeader/>
       <div className="mt-4 md:mx-4 flex flex-col items-center justify-center border-t-4 border-grey-600">
         <div className="w-full p-8 rounded shadow-md shadow-outline">
-          <h1 className="text-xl md:text-2xl font-bold">Monthly Test</h1>
+          <h1 className="text-xl md:text-2xl font-bold">{title}</h1>
           <div className='flex flex-col-reverse md:flex-row justify-between'>
               <div className='md:mt-0 mt-2'> 
                 <div className='flex'>
@@ -34,7 +53,7 @@ const QuizInstructions = () => {
                 </div>
               </div>
               <div className=''>
-                <div className='flex items-center text-sm md:text-md justify-start md:justify-end'><FaRegHourglassHalf/><p>&nbsp;{date} {time}</p></div>
+                <div className='flex items-center text-sm md:text-md justify-start md:justify-end'><FaRegHourglassHalf/><p>&nbsp;{formattedDate}</p></div>
                 <div className='flex md:justify-between justify-center mt-2'>
                   <div className='items-center text-sm flex w-fit h-8 border border-black align-middle pr-2 pl-2  mr-4'><CiClock2 size={20}/>&nbsp; {duration} Mins</div>
                   <div className='items-center text-sm flex w-fit h-8 border border-black align-middle pr-2 pl-2'><CiViewList size={20}/>&nbsp; {marks} Marks</div>

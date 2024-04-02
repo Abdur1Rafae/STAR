@@ -22,13 +22,10 @@ const CorrectTF = ({ question }) => {
       question.options.forEach(option => {
           const isCorrect = option.isCorrect;
           const isSelected = selectedOption == option.text;
-          console.log(option.text)
-
           if (isSelected && isCorrect) {
               userSelectedCorrectAnswers.push(option.text);
           } else if (!isSelected && isCorrect) {
               correctAnswersNotSelected.push(option.text);
-              console.log("ere")
           }
       });
       setCAM(userSelectedCorrectAnswers)

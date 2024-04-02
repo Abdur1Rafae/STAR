@@ -14,7 +14,6 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
   const updateResponse = QuizStore(store=>store.updateResponse)
   const [selectedOption, setSelectedOption] = useState([]);
   const [response, setResponse] = useState(null)
-  const instantResponse = QuizStore(store => store.quizConfig.instantResponse)
 
   useEffect(()=> {
     const answer = getSelectedResponse(question.number)
