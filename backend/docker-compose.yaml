@@ -11,6 +11,15 @@ services:
     volumes:
       - ./APIGateway:/app
 
+  userguardian-service:
+    build: ./UserGuardian
+    restart: unless-stopped
+    container_name: userguardian
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./UserGuardian:/app
+
   teacherhub-service:
     build: ./TeacherHub
     restart: unless-stopped

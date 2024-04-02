@@ -4,7 +4,6 @@ const controller = require('../controllers/assessmentController')
 
 router.get('/upcoming-assessments', controller.getUpcomingAssessments)
 router.get('/ongoing-assessments', controller.getOngoingAssessments)
-router.get('/assessment-details/:assessmentId', controller.getAssessmentDetails)
 router.get('/assessment-questions/:assessmentId', controller.getAssessmentQuestions)
 
 module.exports = router
