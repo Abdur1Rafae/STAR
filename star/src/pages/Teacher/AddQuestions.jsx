@@ -42,47 +42,48 @@ useEffect(() => {
 }, [questions]); 
 
     const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point) => {
-            const updatedQuestions = [...questions];
-            updatedQuestions[index].options = newOptions;
-            updatedQuestions[index].question = questionText;
-            updatedQuestions[index].explanation = explanationText;
-            updatedQuestions[index].imageUrl = imageUrl;
-            updatedQuestions[index].skill = skill;
-            updatedQuestions[index].difficulty = difficulty;
-            updatedQuestions[index].point = point;
-            setQuestions(updatedQuestions);
-        };
-        const deleteQuestion = (id) => {
-            const updatedQuestions = questions.filter((_, index) => index !== id);
-            setQuestions(updatedQuestions);
-        };
-            
-        const handleCreateQuestion = (type) => {
-            setCreateQuestion(type); // Set the type of question to create
-        };
-        const handleCloseQuestionCreator = () => {
-            setCreateQuestion(null); // Close the QuestionCreator
-        };
+        console.log(index)
+        const updatedQuestions = [...questions];
+        updatedQuestions[index].options = newOptions;
+        updatedQuestions[index].question = questionText;
+        updatedQuestions[index].explanation = explanationText;
+        updatedQuestions[index].imageUrl = imageUrl;
+        updatedQuestions[index].skill = skill;
+        updatedQuestions[index].difficulty = difficulty;
+        updatedQuestions[index].point = point;
+        setQuestions(updatedQuestions);
+    };
+    const deleteQuestion = (id) => {
+        const updatedQuestions = questions.filter((_, index) => index !== id);
+        setQuestions(updatedQuestions);
+    };
         
-        const handleReuseDialog = () => {
-            setReuseDialog(true); // Open the reuse dialog
-        };
+    const handleCreateQuestion = (type) => {
+        setCreateQuestion(type); // Set the type of question to create
+    };
+    const handleCloseQuestionCreator = () => {
+        setCreateQuestion(null); // Close the QuestionCreator
+    };
+    
+    const handleReuseDialog = () => {
+        setReuseDialog(true); // Open the reuse dialog
+    };
 
-        const handleCloseReuseDialog = () => {
+    const handleCloseReuseDialog = () => {
         setReuseDialog(false); // Close the reuse dialog
-        };
-        const deleteTopicHandler = ({ index }) => {
+    };
+    const deleteTopicHandler = ({ index }) => {
         const updatedTopics = [...topics];
         updatedTopics.splice(index, 1);
         setTopics(updatedTopics); 
-        };
-        const handleSelectCategory = (category) => {
-            setSelectedCategory(category);
-        }
+    };
+    const handleSelectCategory = (category) => {
+        setSelectedCategory(category);
+    }
 
 
   return (
-    <div className=' w-full h-full font-body  border border-black '>
+    <div className=' w-full h-full font-body border-black'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
@@ -118,14 +119,14 @@ useEffect(() => {
                         </div>
                         {
                         reuseDialog &&
-                        <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10'>       
-                            <div className='relative inset-x-0 mx-auto top-20 w-11/12 md:w-7/12 h-5/6 overflow-y-auto bg-LightBlue z-10'>
-                                <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between'>
+                        <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
+                            <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 overflow-y-auto bg-LightBlue z-10'>
+                                <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between z-50'>
                                     <h3 className='my-auto ml-2'>Select Questions to add</h3>
                                     <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
                                 </div>
                                 <div>
-                                    <div className='p-4 md:pl-8 md:pt-4 flex flex-col gap-4 '>
+                                    <div className='p-4 md:pl-4 md:pt-4 flex flex-col gap-4 '>
                                         <div className='w-full flex items-center justify-between md:justify-start md:gap-4 pb-2 border-b-2 border-grey-800'>
                                             <div className=''>
                                                 <SubmitButton label = "All Questions" icon = {<GrStorage/>} active={tab == 'All Questions'} onClick={()=>{setTab("All Questions")}}/>
@@ -172,7 +173,7 @@ useEffect(() => {
                                         }
                                     </div>               
                                 </div>
-                                <div className='sticky border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
+                                <div className='fixed border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
                                     <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Save ({8})</button>
                                 </div>
                             </div>

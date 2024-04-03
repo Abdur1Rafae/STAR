@@ -37,9 +37,8 @@ const AppRoutes = () => {
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
-            <Route path='/teacher/scheduled-assessments/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
+            <Route path='/teacher/create-new-assessment/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-            <Route path='/teacher/add-question' element = {<AddQuestions/>}></Route>
             <Route path='/teacher/reports' element = {<Reports/>}></Route>
          </Routes>
   )
