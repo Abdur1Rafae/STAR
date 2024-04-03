@@ -15,6 +15,7 @@ import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
 import AddQuestions from './pages/Teacher/AddQuestions';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
 import Reports from './pages/Teacher/Reports.jsx';
+import Grading from './pages/Teacher/Grading.jsx';
 
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
@@ -40,6 +41,7 @@ const AppRoutes = () => {
             <Route path='/teacher/create-new-assessment/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
             <Route path='/teacher/reports' element = {<Reports/>}></Route>
+            <Route path='/teacher/grading/:assessmentName' element={<Grading/>}/>
          </Routes>
   )
 }
