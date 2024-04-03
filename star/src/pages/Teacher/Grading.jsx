@@ -21,7 +21,7 @@ const Grading = () => {
                             <h4 className='font-semibold'>Monthly Test</h4>
                         </div>
                     </div>
-                    <div className='flex w-full'>
+                    <div className='flex md:flex-row flex-col-reverse w-full'>
                         <div className='w-full mt-4 border-[1px] border-black'>
                             <div className='bg-LightBlue h-10 flex items-center p-2'>
                                 <h3 className='font-semibold'>Question</h3>
@@ -38,8 +38,8 @@ const Grading = () => {
                                     <p className='p-4 text-sm border-black border-[1px]'>In programming, a stack and a queue are both data structures that organize and manage elements. The key difference lies in their principles of access and removal. A stack follows the Last In, First Out (LIFO) principle, where the last element added is the first one to be removed. On the other hand, a queue adheres to the First In, First Out (FIFO) principle, meaning the first element added is the first to be removed.</p>
                                 </div>
 
-                                <div className='flex mt-2'>
-                                    <div className='w-1/2'>
+                                <div className='flex md:flex-row flex-col mt-2'>
+                                    <div className='w-full md:w-1/2'>
                                         <div className='flex gap-4'>
                                             <h3 className='font-medium'>Score</h3>
                                             <input type='number' className='border-[1px] border-black w-8'></input>
@@ -50,8 +50,8 @@ const Grading = () => {
                                             <textarea type="text" className='p-1 w-full max-h-48 border-[1px] border-black'/> 
                                         </div>
                                     </div>
-                                    <div className='w-1/2 flex flex-col justify-center items-center gap-6'>
-                                        <div className='flex gap-4 h-6 self-end'>
+                                    <div className='w-full md:w-1/2 md:relative'>
+                                        <div className='md:absolute bottom-0 right-0 flex gap-4 mt-4 justify-between md:justify-normal md:mt-0 h-6 self-end'>
                                             <button
                                                 className={`font-body font-medium flex items-center text-sm pl-2 gap-2 active:shadow-lg relative h-6 ${false ? 'bg-DarkBlue text-white' : 'bg-gray-200 text-black' } w-fit px-3 rounded focus:outline-none focus:shadow-outline`}
                                                 >
@@ -68,8 +68,8 @@ const Grading = () => {
                             </div>
 
                         </div>
-                        <div className='w-44 mt-4 border-[1px] border-black font-body'>
-                            <div className='bg-LightBlue h-10 flex items-center p-2'>
+                        <div className='w-full md:w-44 mt-4 border-[1px] border-black font-body'>
+                            <div className='bg-LightBlue h-10 flex items-center justify-center p-2'>
                                 <h3 className='font-semibold'>Responses</h3>
                             </div>
                             <div className='p-4 flex gap-4 flex-wrap items-center justify-center'>
