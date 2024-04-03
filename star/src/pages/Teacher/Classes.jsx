@@ -64,7 +64,7 @@ const Classes = () => {
                 <div className='p-4 md:pl-8 md:pt-8 flex flex-col gap-4 overflow-auto'>
                   {
                     classes.map((item, index) => (
-                      <ClassTab key={`${index} ${item.ClassID}`} id={item.ClassID} name={item.ClassName} classSections={item.Sections} onDelete={()=>{handleDeletingClass(index, item.ClassID)}} />
+                      <ClassTab key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{handleDeletingClass(index, item._id)}} />
                     ))
                   }
                 </div>

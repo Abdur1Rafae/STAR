@@ -13,7 +13,9 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(name ? false : true);
 
-    const [sections, setSections] = useState(classSections ? (classSections[0].SectionName ? classSections : []) : [])
+    console.log(classSections)
+
+    const [sections, setSections] = useState(classSections ? classSections: [])
 
     const handleAddingSection = () => {
         let updatedSections = [...sections]
@@ -89,7 +91,7 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
         <div className={`transition-all ease-out duration-500 ${display ? '' : 'opacity-0 pointer-events-none h-0'}`}>
             {
                 sections.map((sectionItem, index)=> {
-                    return <SectionTab key={`${index} ${sectionItem.SectionID}`} classID={id} section={sectionItem} onDelete={handleDeletingSection}/>
+                    return <SectionTab key={`${index} ${sectionItem._id}`} classID={id} section={sectionItem.sectionName} onDelete={handleDeletingSection}/>
                 })
             }
             <div className='flex gap-2'>

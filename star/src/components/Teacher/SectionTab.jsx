@@ -4,9 +4,9 @@ import { ClickOutsideFunc } from '../ClickOutsideFunc';
 import { AddSection, UpdateSection } from '../../APIS/Teacher/SectionAPI';
 
 const SectionTab = ({classID, section, onDelete}) => {
-    const [sectionName, setSectionName] = useState(section.SectionName ?? "");
-    const [newSection, setNewSection] = useState(section.SectionName);
-    const [isEditing, setIsEditing] = useState(section.SectionName ? false : true);
+    const [sectionName, setSectionName] = useState(section ?? "");
+    const [newSection, setNewSection] = useState(section);
+    const [isEditing, setIsEditing] = useState(section ? false : true);
 
     async function handleKeyPress(event) {
         if(newSection !== "") {
@@ -14,7 +14,7 @@ const SectionTab = ({classID, section, onDelete}) => {
                 if(sectionName == "") {
                     try {
                         const res = await AddSection({classID: classID, name: newSection})
-                        section.SectionID = res.sectionId
+                        section = res.sectionId
                         console.log(res) 
                     } catch(err) {
                         console.log(err)

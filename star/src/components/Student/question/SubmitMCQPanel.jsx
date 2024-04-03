@@ -26,7 +26,7 @@ const SubmitMCQPanel = ({ question }) => {
               className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
             >
               <div
-                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between border border-2 ${
+                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between border-2 ${
                   question?.correctAnswer === option ? 'bg-green-300 ' : question?.selectedAnswer === option
                   ? 'bg-red-300 '
                   : ''
@@ -43,7 +43,7 @@ const SubmitMCQPanel = ({ question }) => {
       </div>
 
       
-      <div class="overflow-y-auto h-32 border border-black border-[1px] p-2">
+      <div class="overflow-y-auto h-32 border-black border-[1px] p-2">
         <h2 className="text-l font-bold">Explanation</h2>
 
         <p className='text-sm font-light'>

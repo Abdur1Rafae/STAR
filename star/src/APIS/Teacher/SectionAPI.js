@@ -3,9 +3,8 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_ACCESS_TOKEN
 
 const AddSection = async({name, classID}) => {
-    const res = await AxiosBase.post('edumanage/class/new-section',{
-        sectionName: name,
-        classId: classID
+    const res = await AxiosBase.post(`teacherhub/class-management/new-section/${classID}`,{
+        sectionName: name
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -16,13 +15,11 @@ const AddSection = async({name, classID}) => {
 }
 
 const DeleteSection = async ({ id }) => {
+    console.log(id)
     try {
-        const res = await AxiosBase.delete(`edumanage/class/delete-section`, {
+        const res = await AxiosBase.delete(`teacherhub/class-management/delete-section/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            },
-            data: {
-                sectionId: id
             }
         });        
 
@@ -33,9 +30,8 @@ const DeleteSection = async ({ id }) => {
 };
 
 const UpdateSection = async({id, name}) => {
-    const res = await AxiosBase.put('edumanage/class/update-section',{
-        sectionName: name,
-        sectionId: id
+    const res = await AxiosBase.put(`teacherhub/class-management/new-section/${id}`,{
+        sectionName: name
     },{
         headers: {
             authorization: `Bearer ${token}`

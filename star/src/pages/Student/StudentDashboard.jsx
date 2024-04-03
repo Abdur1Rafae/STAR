@@ -46,7 +46,7 @@ const StudentDashboard = () => {
                         (
                             LiveAssessments.map((assessment)=>{
                                 return(
-                                <LiveQuiz teacher={assessment.teacher} description={assessment.description} id={assessment.id} title={assessment.title} duration={assessment.duration} closeTime={assessment.closeDate} className={assessment.className} marks={assessment.marks}/>
+                                <LiveQuiz assessment={assessment}/>
                             )})
                         )
                         :

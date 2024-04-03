@@ -7,6 +7,7 @@ import SubmitButton from '../../components/button/SubmitButton';
 import MenuBar from '../../components/MenuBar';
 import SubHeader from '../../components/Student/SubHeader';
 import QuizStore from '../../Stores/QuizStore';
+import { GetAssessmentQuestions } from '../../APIS/Student/AssessmentAPI';
 
 
 const QuizInstructions = () => {
@@ -15,9 +16,9 @@ const QuizInstructions = () => {
   const course = QuizStore(store=>store.className);
   const instructor = QuizStore(store=>store.teacher);;
   const instructions = [QuizStore(store=>store.description)];
-  const dateTime = QuizStore(store=>store.closeTime);
-  const duration = QuizStore(store=>store.duration);;
-  const marks = 50;
+  const dateTime = QuizStore(store=>store.closeDate);
+  const duration = QuizStore(store=>store.duration);
+  const marks = QuizStore(store=>store.marks);
 
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'UTC',
@@ -28,13 +29,22 @@ const QuizInstructions = () => {
     hour: '2-digit',
     minute: '2-digit'
   }).format(new Date(dateTime));
-  console.log(formattedDate)
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     quizStore.updateQuizDetails(storedQuizDetails)
   }, [])
-  
+
+  const handleBeginAssessment = async() => {
+    try {
+      const res = await GetAssessmentQuestions(quizStore.id)
+      localStorage.setItem('questions', JSON.stringify(res));
+      window.location.assign('/quiz')
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className='flex flex-col mb-8'>
@@ -75,7 +85,7 @@ const QuizInstructions = () => {
           </div>
         </div>
         <div className='mt-8'>
-          <SubmitButton label="Begin Assessment" onClick={()=> {window.location.assign('/quiz')}} active={true}/>
+          <SubmitButton label="Begin Assessment" onClick={handleBeginAssessment} active={true}/>
         </div>
       </div>
     </div>

@@ -23,4 +23,14 @@ const GetUpcomingAssessments = async () => {
     return res.data.data;
 };
 
-export {GetOngoingAssessments, GetUpcomingAssessments}
+const GetAssessmentQuestions = async(id) => {
+    const res = await AxiosBase.get(`assesshub/assessment/assessment-questions/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data;
+}
+
+export {GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions}

@@ -7,63 +7,6 @@ const Student = require('../models/Student')
 const Section = require('../models/Section')
 const Teacher = require('../models/Teacher')
 
-module.exports.getAssessmentDetails = async (req,res) => 
-{ 
-    try{
-        var {assessmentId} = req.params
-
-        const assessment = await Assessment.aggregate([
-          { 
-            $match: { _id: new ObjectId(assessmentId) } 
-          },
-          {
-            $project: {
-              configurations: 1,
-              title: 1,
-              description: 1,
-              questionCount: {
-                $add: [
-                  { $size: '$questionBank.questions' },
-                  { $size: '$questionBank.reusedQuestions' }
-                ]
-              },
-              questionIds: {
-                $concatArrays: ['$questionBank.questions', '$questionBank.reusedQuestions']
-              }
-            }
-          },
-          {
-            $lookup: {
-              from: 'questions',
-              localField: 'questionIds',
-              foreignField: '_id',
-              as: 'questions'
-            }
-          },
-          {
-            $addFields: {
-              totalMarks: {
-                $sum: '$questions.points'
-              }
-            }
-          },
-          {
-            $project: {
-              configurations: 1,
-              title: 1,
-              description: 1,
-              questionCount: 1,
-              marks: '$totalMarks'
-            }
-          }
-        ]);
-
-        return res.status(200).json({data: assessment[0]})  
-    }
-    catch(err){
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get assessment details'})}
-}
 module.exports.getAssessmentQuestions = async (req,res) => 
 {
     try
@@ -82,13 +25,20 @@ module.exports.getAssessmentQuestions = async (req,res) =>
       
         const allQuestions = 
         [
-            ...assessment.questionBank.questions,
-            ...assessment.questionBank.reusedQuestions
+          ...assessment.questionBank.questions,
+          ...assessment.questionBank.reusedQuestions
         ]
+
+        let number = 1; 
+        const transformedQuestions = allQuestions.map(question => {
+        const plainQuestion = question.toObject();
+          plainQuestion.number = number++;
+          return plainQuestion;
+        });
 
      if (!allQuestions) {return res.status(404).json({ error: 'ER_NOT_FOUND', message: 'Empty Question Bank' })}
 
-        res.status(201).json({data: allQuestions})
+        res.status(201).json({data: transformedQuestions})
 
     }
     catch (err) {
@@ -149,7 +99,8 @@ module.exports.getUpcomingAssessments = async (req,res) =>
 }
 module.exports.getOngoingAssessments = async (req,res) => 
 {
-    try{
+    try
+    {
       //const student = req.body.decodedToken.email
       const student = '6609c05b69f531c541e366a0'
 
@@ -161,40 +112,51 @@ module.exports.getOngoingAssessments = async (req,res) =>
         select: '-_id class assessments', 
         populate: 
         [
-            {
-                path: 'class', 
-                select: '-_id className' 
-            },
-            {
-                path: 'assessments', 
-                select: '_id title configurations.openDate configurations.closeDate configurations.duration coverImage',
-                match: 
-                { 
-                  'configurations.openDate': { $lt: new Date() },
-                  'configurations.closeDate': { $gt: new Date() }
-                },
-                populate: {
+          {
+              path: 'class', 
+              select: '-_id className' 
+          },
+          {
+              path: 'assessments', 
+              select: '_id title description configurations coverImage',
+              match: 
+              { 
+                'configurations.openDate': { $lt: new Date() },
+                'configurations.closeDate': { $gt: new Date() }
+              },
+              populate: 
+              [
+                {
                   path: 'teacher',
                   select: 'firstName lastName -_id'
                 },
-                model: Assessment
-            }
+                {
+                  path: 'questionBank.questions questionBank.reusedQuestions',
+                  select: 'points'
+                }
+              ],
+              model: Assessment
+          },
         ]
       })
-
+      
       const data = [];
-      assessments.enrolledSections.forEach(section => {
-          section.assessments.forEach(assessment => {
+      assessments.enrolledSections.forEach(section => 
+      {
+          section.assessments.forEach(assessment => 
+            {
+              const allQuestions = [...assessment.questionBank.questions, ...assessment.questionBank.reusedQuestions]
               const assessmentData = 
               {
                 id : assessment._id,
                 title: assessment.title,
+                description : assessment.description,
+                teacher: assessment.teacher.firstName + " " + assessment.teacher.lastName,
                 className: section.class.className,
-                openDate: assessment.configurations.openDate,
-                closeDate: assessment.configurations.closeDate,
-                duration: assessment.configurations.duration,
+                totalMarks: allQuestions.reduce((total, question) => total + question.points, 0),
+                totalQuestions: assessment.questionBank.questions.length + assessment.questionBank.reusedQuestions.length,
                 coverImage: assessment.coverImage,
-                teacher : assessment.teacher.firstName + " " + assessment.teacher.lastName
+                configurations:  assessment.configurations,
               };
               data.push(assessmentData);
           })
@@ -205,7 +167,5 @@ module.exports.getOngoingAssessments = async (req,res) =>
     catch(err){
         console.log(err)
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get upcoming assessments'})
-    }
-
-    
+    } 
 }
