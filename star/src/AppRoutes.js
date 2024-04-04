@@ -18,6 +18,7 @@ import Reports from './pages/Teacher/Reports.jsx';
 
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
+import QuestionSummary from './pages/Teacher/QuestionSummary.jsx';
 
 const AppRoutes = () => {
   return (
@@ -41,6 +42,8 @@ const AppRoutes = () => {
             <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
             <Route path='/teacher/add-question' element = {<AddQuestions/>}></Route>
             <Route path='/teacher/reports' element = {<Reports/>}></Route>
+            <Route path='/teacher/question-summary'element={<QuestionProvider><QuestionSummary /></QuestionProvider>}></Route>
+
          </Routes>
   )
 }
