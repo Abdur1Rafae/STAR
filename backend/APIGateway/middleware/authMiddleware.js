@@ -1,43 +1,37 @@
 const jwt = require('jsonwebtoken')
-const executeQuery = require('../db_manager/dbconn')
+const client = require('../dbconfig/dbcon')
+const SESSION_HASH_KEY = 'SESSION_ID'
 
 //paths that do not require authentication
 const unauthenticatedPaths = 
 [
-'/edumanage/user/login', 
-'/edumanage/user/signup', 
-'/edumanage/user/forgot-password', 
-'/edumanage/user/refresh', 
-'/edumanage/user/verify-email', 
-'/edumanage/user/verify-otp', 
-'/edumanage/user/password-reset' 
+'/userguardian/user/signup', 
+'/userguardian/user/forgot-password', 
+'/userguardian/user/verify-email', 
+'/userguardian/user/verify-otp', 
+'/userguardian/user/password-reset' 
 ]
 
-// Function to verify JWT
-const verifyToken = async (token) => {
-    try {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
-        return decodedToken
-    } catch (error) {
-        throw new Error('Token verification failed')
-    }
+const verifyToken = async (token) => 
+{
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+    if(!decodedToken){ throw new Error('Token verification failed')}
+    return decodedToken
 }
 
-// Function to check if session is valid
-const checkSession = async (sessionID) => {
-    const query = 'Select uuid from SessionInfo where uuid = ?'
-    const result = await executeQuery(query, [sessionID])
-    if (result.length > 0) {
-        return true
-    } else {
-        throw new Error('Session expired')
-    }
+const checkSession = async (id, sessionId) =>
+{
+    const refreshToken = await client.hGet(SESSION_HASH_KEY, id)
+    if(!refreshToken){ throw new Error('Session Expired')}
+    const decodedToken = jwt.decode(refreshToken)
+    const redisSess = decodedToken.sessionId
+    if(redisSess != sessionId){ throw new Error('Session Expired')}
 }
 
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
-    if (req.path.startsWith('/edumanage/user/verify-email') || req.path.startsWith('/edumanage/uploads')) {return next()}
+    if (req.path.startsWith('/userguardian/user/verify-email') || req.path.startsWith('/userguardian/uploads')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']
@@ -47,14 +41,15 @@ const authentication = async (req, res, next) =>
         try
         {
             const decodedToken = await verifyToken(token)
-            const sessionID = decodedToken.sessionID
-            //await checkSession(sessionID)
+            const id = decodedToken.id
+            const sessionId = decodedToken.sessionId
+            await checkSession(id, sessionId)
             req.body.decodedToken = decodedToken
             return next()
         }
         catch(error)
         {
-            if (error.message === 'Session expired') {return res.status(401).json({ error: true, message: 'Session Expired: You must log in again to access this resource' })} 
+            if (error.message === 'Session Expired') {return res.status(401).json({ error: 'ER_EXP_SESSION', message: 'Session Expired: You must log in again to access this resource' })} 
             else {return res.status(403).json({ error: true, message: 'Token Expired: Refresh token or login again' })}
         }
     }

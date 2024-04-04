@@ -1,5 +1,4 @@
 const conn = require('../dbconfig/dbcon')
-const { ObjectId } = require('mongodb')
 const Assessment = require('../models/Assessment')
 const Class = require('../models/Class')
 const Question = require('../models/Question')

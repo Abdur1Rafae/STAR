@@ -1,14 +1,17 @@
+const client = require('../dbconfig/dbcon')
+
 const loadbalancer = {}
 
-loadbalancer.ROUND_ROBIN = (service) => 
+loadbalancer.ROUND_ROBIN = async (serviceName, instances) => 
 {   
-    const newIndex = ++service.index >= service.instances.length ? 0 : service.index
-    service.index = newIndex
-    return loadbalancer.isEnabled(service, newIndex)
+    let serviceIndex = await client.hGet('ROUND_ROBIN_INDEX', serviceName) || 0
+    const newIndex = ++serviceIndex >= instances.length ? 0 : serviceIndex
+    await client.hSet('ROUND_ROBIN_INDEX', serviceName, newIndex)
+    return loadbalancer.isEnabled(serviceName, instances, newIndex)
 }
 
-loadbalancer.isEnabled = (service,index) => {
-    return service.instances[index].enabled ? index : this.ROUND_ROBIN(service)
+loadbalancer.isEnabled = (serviceName, instances, index) => {
+    return instances[index].enabled ? index : this.ROUND_ROBIN(serviceName, instances)
 }
 
 module.exports = loadbalancer

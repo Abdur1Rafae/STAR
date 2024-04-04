@@ -1,16 +1,6 @@
 const fs = require('fs')
 const uploadDir = 'uploads/'
 
-function validateFields(requiredFields, data)
-{
-    const missingFields = requiredFields.filter(field => !(field in data))
-    if (missingFields.length > 0) 
-    {
-        return `Missing fields: ${missingFields.join(', ')}` 
-    } 
-    else  {return null}
-}
-
 function upload(image)
 {
     if(!image){return null}
@@ -34,7 +24,7 @@ function upload(image)
     }
 
     const fileName = `image_${Date.now()}.${imageType}`
-    const filePath = `uploads/${fileName}`
+    const filePath = uploadDir + fileName
     
     // Write the buffer to the file
     fs.writeFile(filePath, buffer, (err) => 
@@ -73,4 +63,4 @@ function getAssessmentStatus(assessment)
 }
 
 
-module.exports = {validateFields, upload, remove, getAssessmentStatus}
+module.exports = {upload, remove, getAssessmentStatus}
