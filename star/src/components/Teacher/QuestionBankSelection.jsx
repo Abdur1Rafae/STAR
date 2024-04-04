@@ -7,24 +7,24 @@ import { QuestionContext } from '../../Context/QuestionsContext';
 import QuestionBankSelectionbars from './QuestionBankSelectionbars';
 
 const QuestionBankSelection = () => {
-  const { QBquestions , setQBQuestions } = useContext(QuestionContext);
-  const [selectedCard, setSelectedCard] = useState(null);
+  const { addQBQuestions, removeQBQuestions } = useContext(QuestionContext);
+  const [selectedCard, setSelectedCard] = useState([]);
   const [questionBanks, setQuestionBanks] = useState({
     "Bank A": [
       {
         type: "MCQ",
-            question: "Who developed the theory of relativity?",
-            options: [
-              { text: "Isaac Newton", isCorrect: false },
-              { text: "Albert Einstein", isCorrect: true },
-              { text: "Stephen Hawking", isCorrect: false },
-              { text: "Galileo Galilei", isCorrect: false }
-            ],
-            imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
-            explanation: "Albert Einstein developed the theory of relativity.",
-            skill: "Physics",
-            difficulty: "Hard",
-            point: 20
+        question: "Who developed the theory of relativity?",
+        options: [
+          { text: "Isaac Newton", isCorrect: false },
+          { text: "Albert Einstein", isCorrect: true },
+          { text: "Stephen Hawking", isCorrect: false },
+          { text: "Galileo Galilei", isCorrect: false }
+        ],
+        imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
+        explanation: "Albert Einstein developed the theory of relativity.",
+        skill: "Physics",
+        difficulty: "Hard",
+        point: 20
       },
       {
         type: "MCQ",
@@ -62,30 +62,30 @@ const QuestionBankSelection = () => {
   });
 
   useEffect(()=>{
-    if(selectedCard == null) {
-      setFilteredQuestions([])
-      setQBQuestions([]);
+    console.log(selectedCard)
+    if(selectedCard.length == 0) {
+      removeQBQuestions([]);
     }
     else {
-      setFilteredQuestions(questionBanks[selectedCard])
-      setQBQuestions(questionBanks[selectedCard]);
+      selectedCard.map((card)=> {
+        addQBQuestions(questionBanks[card]); 
+      })
     }
   }, [selectedCard])
 
   const handleCardClick = (bankName) => {
-    if (selectedCard === bankName) {
-      setSelectedCard(null);
+    const isSelected = selectedCard.includes(bankName);
+    if (isSelected) {
+      setSelectedCard(selectedCard.filter(card => card !== bankName));
     } else {
-      setSelectedCard(bankName);
+      setSelectedCard([...selectedCard, bankName]);
     }
+    console.log(selectedCard)
   };
-
-  const [filteredQuestions, setFilteredQuestions] = useState([])
 
   const updateQuestionsFromSelectedBanks = () => {
       let updatedQuestions = [];
-      console.log(questionBanks[selectedCard])
-      setQBQuestions(questionBanks[selectedCard]);
+      //setQBQuestions(questionBanks[selectedCard]);
       return updatedQuestions;
   };
 

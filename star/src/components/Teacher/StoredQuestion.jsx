@@ -5,12 +5,12 @@ import { MdEdit, MdOutlineDeleteOutline } from "react-icons/md";
 import QuizImage from '../Student/question/QuizImage';
 import QuestionCreator from './QuestionCreator';
 
-const StoredQuestion = ({type, id, question, skill, difficulty, point, image, explanation, options, savingHandler ,deleteHandler}) => {
+const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, point, image, explanation, options, savingHandler ,deleteHandler}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <div className='w-full bg-[#EEF3F3] rounded-lg border-[1px] border-black p-2 overflow-hidden flex gap-2'>
+    <div draggable onDragStart={(e) => handleDrag(e, id)} className='w-full bg-[#EEF3F3] rounded-lg border-[1px] border-black p-2 overflow-hidden flex gap-2 hover:cursor-grabbing'>
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
@@ -45,11 +45,11 @@ const StoredQuestion = ({type, id, question, skill, difficulty, point, image, ex
                 {
                     isEditing ?
                     <>
-                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type == "MCQ" ? "Multiple Choice Question" : type == "T/F" ? "True/False" : "SA"} questionID={id} skill={skill} difficultyLevel={difficulty} point={point} question={question} explanation={explanation} options={options} image={image}/>
+                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type == "MCQ" || "Multiple Choice Question" ? "Multiple Choice Question" : type == "T/F" || "True/False" ? "True/False" : "SA"} questionID={id} skill={skill} difficultyLevel={difficulty} point={point} question={question} explanation={explanation} options={options} image={image}/>
                     </>
                     :
                     <>
-                        {image !== null ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
+                        {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
                         <div className='flex flex-col gap-2 mt-2'>
                             {options.map((option)=>{
                                 return <OptionBox option={option.text} isActive={option.isCorrect}/> 

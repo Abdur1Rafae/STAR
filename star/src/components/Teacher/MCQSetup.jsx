@@ -4,7 +4,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FcAddImage } from "react-icons/fc";
 
-const MCQSetup = ({image, setImage,  options}) => {
+const MCQSetup = ({image, setImage,  options, addOption}) => {
     const [markedCorrect, setMarkCorrect] = useState(false);
     const fileInputRef = useRef(null);
 
@@ -54,6 +54,7 @@ const MCQSetup = ({image, setImage,  options}) => {
         let updatedChoices = [...choices]
         updatedChoices.push({ text: "New Choice", isCorrect: false })
         setChoices(updatedChoices)
+        addOption(updatedChoices)
     };
 
   return (

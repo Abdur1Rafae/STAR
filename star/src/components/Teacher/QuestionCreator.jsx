@@ -4,22 +4,17 @@ import CategoryFilter from './CategoryFilter';
 import MCQSetup from './MCQSetup';
 import TFSetup from './TFSetup';
 import SASetup from './SASetup';
+import SkillFilter from './SkillFilter';
+import DifficultyFilter from './DifficultyFilter';
 
 const QuestionCreator = ({type, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, point, explanation, image}) => {
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const skills = ['Logic', 'Problem Solving', 'Quantitative Analysis', 'Critical Thinking'];
-    const difficulty = ['Easy', 'Medium', 'Hard'];
-
-    const handleSelectCategory = (category) => {
-        setSelectedCategory(category);
-    }
+    const [selectedSkill, setSelectedSkill] = useState(skill || '');
+    const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || '')
 
     const [newQuestion, setNewQuestion] = useState(question);
     const [newOptions, setNewOptions] = useState(options ? JSON.parse(JSON.stringify(options)) : []);
     const [newExplanation, setNewExplanation] = useState(explanation);
     const [newPoints, setNewPoints] = useState(point);
-    const [newSkill, setNewSkill] = useState(skill);
-    const [newDifficulty, setNewDifficulty] = useState(difficultyLevel);
     const [newImage, setNewImage] = useState(image);
 
   return (
@@ -32,21 +27,11 @@ const QuestionCreator = ({type, questionID, savingHandler, closeHandler, questio
         <div className='flex flex-col md:flex-row items-start md:items-center gap-4 mt-4'>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Skill Targeted :&nbsp; </p>
-                <CategoryFilter
-                    categoryName={skill ? skill : "Logic"}
-                    categories={skills}
-                    selectedCategory={selectedCategory}
-                    onSelectCategory={handleSelectCategory}
-                /> 
+                <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/> 
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Difficulty :&nbsp;</p>
-                <CategoryFilter
-                    categoryName={difficultyLevel ? difficultyLevel : "Difficult"}
-                    categories={difficulty}
-                    selectedCategory={selectedCategory}
-                    onSelectCategory={handleSelectCategory}
-                />  
+                <DifficultyFilter selectedLevel={selectedDifficulty} setSelectLevel={setSelectedDifficulty}/>
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Points :&nbsp;</p>
@@ -57,7 +42,7 @@ const QuestionCreator = ({type, questionID, savingHandler, closeHandler, questio
         <textarea value={newQuestion} onChange={(e)=> setNewQuestion(e.target.value)} className='w-full h-32 border-black border-[1px] mt-2 p-4 text-sm resize-none' placeholder='Enter your Question'></textarea>
 
         <div className='mt-2'>
-            {type == "Multiple Choice Question" ? <MCQSetup options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup options={newOptions} image={newImage}/> : <SASetup/>)}
+            {type == "Multiple Choice Question" ? <MCQSetup addOption={setNewOptions} options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup options={newOptions} image={newImage} addOption={setNewOptions}/> : <SASetup/>)}
         </div>
 
         <div className='mt-4'>
@@ -66,8 +51,7 @@ const QuestionCreator = ({type, questionID, savingHandler, closeHandler, questio
         </div>
 
         <div className='w-full flex'><button onClick={()=>{
-            savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, newSkill, newDifficulty, newPoints)
-            console.log(newImage)
+            savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, type)
             closeHandler()
         }} 
         className='bg-DarkBlue w-18 text-white text-sm p-2 rounded-md ml-auto'>Save</button></div>

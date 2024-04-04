@@ -3,7 +3,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FcAddImage } from "react-icons/fc";
 
-const TFSetup = ({image, options}) => {
+const TFSetup = ({image, options, addOption}) => {
     const [markedCorrect, setMarkCorrect] = useState(false);
     const fileInputRef = useRef(null);
     const [imageUrl, setImageUrl] = useState(image);
@@ -27,6 +27,7 @@ const TFSetup = ({image, options}) => {
             }
         });
         setChoices(updatedChoices);
+        addOption(updatedChoices)
     }
 
     const handleFileInputChange = (event) => {

@@ -8,7 +8,7 @@ import { DifficultyBox } from './StoredQuestion';
 import { PointBox } from './StoredQuestion';
 import { OptionBox } from './StoredQuestion';
 
-const DisplayOnlyQuestions = ({question, skill, difficulty, point, image, explanation, options}) => {
+const DisplayOnlyQuestions = ({question, skill, difficulty, point, image, explanation, options, isSlected}) => {
     const [display, setDisplay] = useState(false);
 
   return (
@@ -16,7 +16,7 @@ const DisplayOnlyQuestions = ({question, skill, difficulty, point, image, explan
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
-                    <input type="checkbox"/>
+                    <input type="checkbox" checked={isSlected}/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={point}/>
