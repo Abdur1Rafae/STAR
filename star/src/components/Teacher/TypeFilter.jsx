@@ -10,6 +10,9 @@ const TypeFilter = ({selectedType, setSelectType}) => {
                 onChange={(e) => setSelectType(e.target.value)}
                 className='outline-none bg-LightBlue rounded-md h-5 flex'
             >
+                <option key={"All"} value={"All"} className='flex'>
+                        All
+                    </option>
                 {type.map((type, index) => (
                     <option key={index} value={type == "Multiple Choice Question" ? "MCQ" : type == "True/False" ? "TF" : "SA"} className='flex'>
                         {type}

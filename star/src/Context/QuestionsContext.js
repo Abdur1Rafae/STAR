@@ -54,7 +54,6 @@ export const QuestionProvider = ({ children }) => {
     const temp = newQuestions[id1];
     newQuestions[id1] = newQuestions[id2];
     newQuestions[id2] = temp;
-    console.log(id1, id2)
     setQuestions(newQuestions)
   }
 

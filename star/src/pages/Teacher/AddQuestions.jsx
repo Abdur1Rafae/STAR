@@ -11,8 +11,9 @@ import StoredQuestion from '../../components/Teacher/StoredQuestion';
 import QuestionCreator from '../../components/Teacher/QuestionCreator';
 import { QuestionContext } from '../../Context/QuestionsContext';
 import SelectQuestions from '../../components/Teacher/SelectQuestions';
+import SubheaderBut from '../../components/Teacher/SubheaderBut';
 
-function AddQuestions({}) {
+function AddQuestions() {
     const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
     const skills = ["Problem Solving", "Logic Design", "Quantitative Analysis", "Critical Thinking"]
     const [creatingQuestion, setCreateQuestion] = useState(null);
@@ -26,13 +27,12 @@ function AddQuestions({}) {
         saveQuestions()
         setReuseDialog(false);
     }
-    
-      
-    useEffect(() => {
-        console.log("Questions updated:", questions);
-    }, [questions]); 
 
-    const saveQuestionHandler = (id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, type) => {
+    const handleSubmitQuestions = () => {
+        console.log(questions)
+    }    
+
+    const saveQuestionHandler = (id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type) => {
         const index = questions.length
         const updatedQuestions = [...questions];
         updatedQuestions[index] = {
@@ -44,6 +44,8 @@ function AddQuestions({}) {
             skill: skill,
             difficulty: difficulty,
             point: point,
+            topic: topic,
+            reuse: false
         }
         setQuestions(updatedQuestions);
     };
@@ -89,10 +91,10 @@ function AddQuestions({}) {
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
-                <Subheader name={"Add Questions"}/>
+                <SubheaderBut name={"Add Questions"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
                 <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
-                        <div className='w-full flex items-start justify-center gap-4'>
+                        <div className='w-full flex flex-wrap items-start justify-center gap-4'>
                             <div className='border-2 border-dotted border-slate-400'>
                                 <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=> setCreateQuestion("Multiple Choice Question")}>
                                     <img className='w-12 mix-blend-multiply' src={questionMCQ} alt=''/>

@@ -7,9 +7,26 @@ import { QuestionContext } from '../../Context/QuestionsContext'
 
 const SelectQuestions = () => {
     const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
-    const [selectedSkill, setSelectedSkill] = useState("Logic")
+    
+    const [filteredQuestions, setFilteredQuestions] = useState(reuseQuestions)
+    const [selectedSkill, setSelectedSkill] = useState('')
     const [selectedLevel, setSelectedLevel] = useState('');
-    const [selectedType, setSelectedType] = useState()
+    const [selectedType, setSelectedType] = useState('')
+
+    useEffect(()=> {
+        setReuseQuestions([...AllQuestions])
+    }, [])
+
+    useEffect(() => {
+        const filtered = reuseQuestions.filter(question => {
+            const skillMatch = selectedSkill !== '' && "All" ? question.skill === selectedSkill : true;
+            const levelMatch = selectedLevel !== '' && "All" ? question.difficulty === selectedLevel : true;
+            const typeMatch = selectedType !== '' && "All" ? question.type === selectedType : true;
+            return skillMatch && levelMatch && typeMatch;
+        });
+        setFilteredQuestions(filtered);
+    }, [reuseQuestions, selectedSkill, selectedLevel, selectedType]);
+
     //self note: useEffect will make an api call to set this array
     const AllQuestions = [{
         type: "MCQ",
@@ -94,7 +111,7 @@ const SelectQuestions = () => {
         </div>
     
         {
-            AllQuestions.map((question, index)=> {
+            filteredQuestions.map((question, index)=> {
                 return <button onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSlected={reuseQuestions.some(item => item.question == question.question)} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></button>
             })
         }

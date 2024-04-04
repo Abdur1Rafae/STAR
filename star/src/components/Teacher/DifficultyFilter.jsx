@@ -10,6 +10,9 @@ const DifficultyFilter = ({selectedLevel, setSelectLevel}) => {
                 onChange={(e) => setSelectLevel(e.target.value)}
                 className='outline-none bg-LightBlue rounded-md h-5 flex'
             >
+                <option key={"All"} value={"All"} className='flex'>
+                        All
+                    </option>
                 {difficulty.map((level, index) => (
                     <option key={index} value={level} className='flex'>
                         {level}

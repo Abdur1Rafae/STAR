@@ -7,7 +7,7 @@ import SASetup from './SASetup';
 import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
 
-const QuestionCreator = ({type, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, point, explanation, image}) => {
+const QuestionCreator = ({type,topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, point, explanation, image}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || '');
     const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || '')
 
@@ -16,6 +16,7 @@ const QuestionCreator = ({type, questionID, savingHandler, closeHandler, questio
     const [newExplanation, setNewExplanation] = useState(explanation);
     const [newPoints, setNewPoints] = useState(point);
     const [newImage, setNewImage] = useState(image);
+    const [topicName, setTopicName] = useState(topic ? topic : '')
 
   return (
     <div className='border-black border-[1px] bg-[#EEF3F3] w-full h-auto rounded-lg p-2'>
@@ -24,18 +25,26 @@ const QuestionCreator = ({type, questionID, savingHandler, closeHandler, questio
             <button onClick={closeHandler}><IoClose/></button>
         </div>
 
-        <div className='flex flex-col md:flex-row items-start md:items-center gap-4 mt-4'>
-            <div className='flex flex-col md:flex-row items-center'>
-                <p className='text-xs'>Skill Targeted :&nbsp; </p>
-                <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/> 
+        <div className='flex flex-col gap-2 mt-4'>
+            <div className='flex gap-2 flex-wrap'>
+                <div className='flex flex-col md:flex-row items-center'>
+                    <p className='text-xs'>Skill:&nbsp; </p>
+                    <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/> 
+                </div>
+                <div className='flex flex-col md:flex-row items-center'>
+                    <p className='text-xs'>Difficulty :&nbsp;</p>
+                    <DifficultyFilter selectedLevel={selectedDifficulty} setSelectLevel={setSelectedDifficulty}/>
+                </div>
             </div>
-            <div className='flex flex-col md:flex-row items-center'>
-                <p className='text-xs'>Difficulty :&nbsp;</p>
-                <DifficultyFilter selectedLevel={selectedDifficulty} setSelectLevel={setSelectedDifficulty}/>
-            </div>
-            <div className='flex flex-col md:flex-row items-center'>
-                <p className='text-xs'>Points :&nbsp;</p>
-                <input value={newPoints} onChange={(e)=> setNewPoints(e.target.value)} type='number' className='bg-LightBlue border-black border-[1px] w-16 h-8 rounded-md p-2'/>
+            <div className='flex gap-2 flex-wrap'>
+                <div className='flex flex-col md:flex-row items-center'>
+                    <p className='text-xs'>Topic :&nbsp;</p>
+                    <input value={topicName} onChange={(e)=> setTopicName(e.target.value)} type='text' className='text-xs bg-LightBlue border-black border-[1px] w-44 h-6 rounded-md p-2'/>
+                </div>
+                <div className='flex flex-col md:flex-row items-center'>
+                    <p className='text-xs'>Points :&nbsp;</p>
+                    <input value={newPoints} onChange={(e)=> setNewPoints(e.target.value)} type='number' className='bg-LightBlue border-black border-[1px] w-16 h-6 rounded-md p-2'/>
+                </div>
             </div>
         </div>
 
@@ -51,7 +60,7 @@ const QuestionCreator = ({type, questionID, savingHandler, closeHandler, questio
         </div>
 
         <div className='w-full flex'><button onClick={()=>{
-            savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, type)
+            savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type)
             closeHandler()
         }} 
         className='bg-DarkBlue w-18 text-white text-sm p-2 rounded-md ml-auto'>Save</button></div>
