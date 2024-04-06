@@ -15,10 +15,12 @@ import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
 import AddQuestions from './pages/Teacher/AddQuestions';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
 import Reports from './pages/Teacher/Reports.jsx';
-
+import QuizReports from './pages/Teacher/QuizReports.jsx';
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
 import QuestionSummary from './pages/Teacher/QuestionSummary.jsx';
+import GradingTablePage from './pages/Teacher/GradingTablePage.jsx';
+import IndividualReport from './pages/Teacher/IndividualReport.jsx';
 
 const AppRoutes = () => {
   return (
@@ -43,6 +45,11 @@ const AppRoutes = () => {
             <Route path='/teacher/add-question' element = {<AddQuestions/>}></Route>
             <Route path='/teacher/reports' element = {<Reports/>}></Route>
             <Route path='/teacher/question-summary'element={<QuestionProvider><QuestionSummary /></QuestionProvider>}></Route>
+            <Route path='/teacher/quiz-reports'element={<QuizReports />}></Route>
+            <Route path='/teacher/individual-report'element={<QuestionProvider><IndividualReport /></QuestionProvider>}></Route>
+            <Route path='/teacher/grading-table'element={<GradingTablePage />}></Route>
+
+
 
          </Routes>
   )

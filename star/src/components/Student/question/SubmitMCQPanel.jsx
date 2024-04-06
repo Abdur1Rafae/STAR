@@ -3,7 +3,7 @@ import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import SubmitButton from '../../button/SubmitButton';
 
-const SubmitMCQPanel = ({ question }) => {
+const SubmitMCQPanel = ({ question  , isexplanation = true}) => {
 
   return (
     <div className="flex-grow w-full mx-auto p-4 shadow-md rounded-md">
@@ -42,7 +42,7 @@ const SubmitMCQPanel = ({ question }) => {
           ))}
       </div>
 
-      
+      {isexplanation &&
       <div class="overflow-y-auto h-32 border border-black border-[1px] p-2">
         <h2 className="text-l font-bold">Explanation</h2>
 
@@ -66,7 +66,7 @@ const SubmitMCQPanel = ({ question }) => {
             lectus, quis consectetur nunc elit sed lorem. Donec euismod
           </p>
         </div>
-
+}
         <div className="flex items-center justify-between mt-2">
         <SubmitButton label="Previous" />
         <SubmitButton label="Next" />

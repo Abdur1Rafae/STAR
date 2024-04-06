@@ -4,7 +4,6 @@ import SubmitMCQPanel from '../../components/Student/question/SubmitMCQPanel';
 import QuestionDetail from '../../components/Student/QuestionDetails';
 import FeedbackCard from '../../components/Student/FeedbackCard';
 
-
 const QuizResultScreen = () => {
 
   const correctAnswers = 5;
