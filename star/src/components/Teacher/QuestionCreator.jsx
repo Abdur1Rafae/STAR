@@ -7,8 +7,8 @@ import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
 
 const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, point, explanation, image, correctOptions, isTrue}) => {
-    const [selectedSkill, setSelectedSkill] = useState(skill || '');
-    const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || '')
+    const [selectedSkill, setSelectedSkill] = useState(skill || 'Problem Solving');
+    const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || 'Medium')
 
     const [newQuestion, setNewQuestion] = useState(question);
     const [newOptions, setNewOptions] = useState(options ? options : []);
@@ -18,6 +18,7 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
     const [newImage, setNewImage] = useState(image);
     const [topicName, setTopicName] = useState(topic ? topic : '')
     const [isCorrect, setCorrect] = useState(isTrue ?? false)
+    const [error, setError] = useState('')
 
     const updateOption = (index, newString) => {
         setNewOptions(prevState => {
@@ -38,11 +39,11 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
             <div className='flex gap-2 flex-wrap'>
                 <div className='flex flex-col md:flex-row items-center'>
                     <p className='text-xs'>Skill:&nbsp; </p>
-                    <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/> 
+                    <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill} assigning={true}/> 
                 </div>
                 <div className='flex flex-col md:flex-row items-center'>
                     <p className='text-xs'>Difficulty :&nbsp;</p>
-                    <DifficultyFilter selectedLevel={selectedDifficulty} setSelectLevel={setSelectedDifficulty}/>
+                    <DifficultyFilter selectedLevel={selectedDifficulty} setSelectLevel={setSelectedDifficulty} assigning={true}/>
                 </div>
             </div>
             <div className='flex gap-2 flex-wrap'>
@@ -69,11 +70,30 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
         </div>
 
         <div className='w-full flex'><button onClick={()=>{
-            console.log(newOptions)
+            if(topicName == '') {
+                setError('Question needs to be asigned a topic.')
+                return
+            }
+            if(newPoints.includes('e') || newPoints < 1){
+                setError('Invalid points')
+                return
+            }
+            if(newQuestion == ''){
+                setError('Empty Question cannot be saved.')
+                return
+            }
+            if(type == "Multiple Choice Question" && newCorrectOptions.length == 0) {
+                setError('Select atleast one correct option.')
+                return
+            }
+            setError('')
             savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type, newCorrectOptions, isCorrect)
             closeHandler()
         }} 
         className='bg-DarkBlue w-18 text-white text-sm p-2 rounded-md ml-auto'>Save</button></div>
+        <div className='w-full flex justify-end mt-2'>
+            <p className='text-red-500 text-xs'>{error}</p>
+        </div>
     </div>
   )
 }

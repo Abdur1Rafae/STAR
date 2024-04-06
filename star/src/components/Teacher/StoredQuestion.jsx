@@ -52,11 +52,27 @@ const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, poin
                     :
                     <>
                         {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
-                        <div className='flex flex-col gap-2 mt-2'>
-                            {options.map((option)=>{
-                                return <OptionBox option={option} isActive={correctOptions.includes(option) || (option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
-                            })}
-                        </div>
+                        {
+                            type == "Multiple Choice Question" ? 
+                            (
+                                <div className='flex flex-col gap-2 mt-2'>
+                                    {options.map((option)=>{
+                                        return <OptionBox option={option} isActive={correctOptions.includes(option)}/> 
+                                    })}
+                                </div>
+                            )
+                            :
+                            type == "True/False" ?
+                            (
+                                <div className='flex flex-col gap-2 mt-2'>
+                                    {options.map((option)=>{
+                                        return <OptionBox option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
+                                    })}
+                                </div>
+                            )
+                            :
+                            <></>
+                        }
                         <p className='text-xs mt-4 font-medium'>Explanation</p>
                         <p className='text-xs'>{explanation}</p>
                     </>

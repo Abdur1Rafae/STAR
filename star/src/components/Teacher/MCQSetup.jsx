@@ -71,9 +71,9 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
                 <div className='flex flex-col gap-2'>
                     {
                         choices.length > 0 && choices.map((choice, index) => {
-                            return <div className='flex gap-2 items-center'>
+                            return <div key={index} className='flex gap-2 items-center'>
                                 <FaCheckCircle className={`${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
-                                <input type='text' onChange={(event)=>handleInputChange(event, index)} defaultValue={choice} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'}`}/>
+                                <input type='text' onChange={(event)=>handleInputChange(event, index)} value={choice} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'}`}/>
                                 <MdOutlineDeleteOutline className='hover:text-red-500 hover:cursor-pointer' onClick={()=>handleDeleteChoice(choice)}/>
                             </div>
                         })

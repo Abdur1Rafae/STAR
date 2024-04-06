@@ -13,6 +13,8 @@ import SelectQuestions from '../../components/Teacher/SelectQuestions';
 import SubheaderBut from '../../components/Teacher/SubheaderBut';
 import { IoIosMove } from "react-icons/io";
 import { ToggleStore } from '../../Stores/ToggleStore';
+import { AddQuestion } from '../../APIS/Teacher/AssessmentAPI';
+
 
 function AddQuestions() {
     const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
@@ -35,24 +37,60 @@ function AddQuestions() {
         console.log(questions)
     }    
 
-    const saveQuestionHandler = (id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
+    const saveQuestionHandler = async(id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
         const index = questions.length
         const updatedQuestions = [...questions];
-        updatedQuestions[index] = {
-            type: type,
-            options: newOptions,
-            correctOptions: correctOptions,
-            isTrue: isTrue,
-            question: questionText,
-            explanation: explanationText,
-            imageUrl: imageUrl,
-            skill: skill,
-            difficulty: difficulty,
-            point: point,
-            topic: topic,
-            reuse: false
+        if(type == "Multiple Choice Question") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                correctOptions: correctOptions,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
         }
-        setQuestions(updatedQuestions);
+        else if(type == "True/False") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                isTrue: isTrue,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
+        else {
+            updatedQuestions[index] = {
+                type: type,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
+        try {
+            const res = await AddQuestion({assessmentId:'660fa02a32ebc39f5b9d37b3', question:updatedQuestions[index]})
+        } catch(err) {
+            console.log(err)
+        }
     };
 
     const deleteQuestion = (id) => {
@@ -66,21 +104,52 @@ function AddQuestions() {
 
     const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
         const updatedQuestions = [...questions];
-        updatedQuestions[index] = {
-            type: type,
-            options: newOptions,
-            correctOptions: correctOptions,
-            isTrue: isTrue,
-            question: questionText,
-            explanation: explanationText,
-            imageUrl: imageUrl,
-            skill: skill,
-            difficulty: difficulty,
-            point: point,
-            topic: topic,
-            reuse: false,
+        if(type == "Multiple Choice Question") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                correctOptions: correctOptions,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
         }
-        setQuestions(updatedQuestions);
+        else if(type == "True/False") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                isTrue: isTrue,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
+        else {
+            updatedQuestions[index] = {
+                type: type,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
     }
 
     const handleOnDrag = (e, id) => {
