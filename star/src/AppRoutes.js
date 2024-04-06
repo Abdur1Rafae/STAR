@@ -20,6 +20,7 @@ import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
 import QuestionSummary from './pages/Teacher/QuestionSummary.jsx';
 import GradingTablePage from './pages/Teacher/GradingTablePage.jsx';
+import ClassesTablePage from './pages/Teacher/ClassesTablePage.jsx';
 import IndividualReport from './pages/Teacher/IndividualReport.jsx';
 
 const AppRoutes = () => {
@@ -37,6 +38,7 @@ const AppRoutes = () => {
               
             <Route path="/teacher/scheduled-assessments" element = {<ScheduledAssessment/>} />
             <Route path='/teacher/classes' element={<Classes/>}></Route>
+            <Route path='/teacher/classes/:classID' element={<ClassesTablePage/>}></Route>
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
