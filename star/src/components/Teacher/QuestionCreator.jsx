@@ -1,22 +1,31 @@
 import React, {useState, useEffect} from 'react'
 import { IoClose } from "react-icons/io5";
-import CategoryFilter from './CategoryFilter';
 import MCQSetup from './MCQSetup';
 import TFSetup from './TFSetup';
 import SASetup from './SASetup';
 import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
 
-const QuestionCreator = ({type,topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, point, explanation, image}) => {
+const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, point, explanation, image, correctOptions, isTrue}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || '');
     const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || '')
 
     const [newQuestion, setNewQuestion] = useState(question);
-    const [newOptions, setNewOptions] = useState(options ? JSON.parse(JSON.stringify(options)) : []);
+    const [newOptions, setNewOptions] = useState(options ? options : []);
+    const [newCorrectOptions, setNewCorrectOptions] = useState(correctOptions ? correctOptions : [])
     const [newExplanation, setNewExplanation] = useState(explanation);
     const [newPoints, setNewPoints] = useState(point);
     const [newImage, setNewImage] = useState(image);
     const [topicName, setTopicName] = useState(topic ? topic : '')
+    const [isCorrect, setCorrect] = useState(isTrue ?? false)
+
+    const updateOption = (index, newString) => {
+        setNewOptions(prevState => {
+            const newArray = [...prevState];
+            newArray[index] = newString;
+            return newArray;
+        });
+    };
 
   return (
     <div className='border-black border-[1px] bg-[#EEF3F3] w-full h-auto rounded-lg p-2'>
@@ -51,7 +60,7 @@ const QuestionCreator = ({type,topic, questionID, savingHandler, closeHandler, q
         <textarea value={newQuestion} onChange={(e)=> setNewQuestion(e.target.value)} className='w-full h-32 border-black border-[1px] mt-2 p-4 text-sm resize-none' placeholder='Enter your Question'></textarea>
 
         <div className='mt-2'>
-            {type == "Multiple Choice Question" ? <MCQSetup addOption={setNewOptions} options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup options={newOptions} image={newImage} addOption={setNewOptions}/> : <SASetup/>)}
+            {type == "Multiple Choice Question" ? <MCQSetup updateOption={updateOption} correctOptions={newCorrectOptions} setCorrectOption={setNewCorrectOptions} addOption={setNewOptions} options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup options={newOptions} setOptions={setNewOptions} image={newImage} isTrue={isTrue} setIsTrue={setCorrect}/> : <SASetup/>)}
         </div>
 
         <div className='mt-4'>
@@ -60,7 +69,8 @@ const QuestionCreator = ({type,topic, questionID, savingHandler, closeHandler, q
         </div>
 
         <div className='w-full flex'><button onClick={()=>{
-            savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type)
+            console.log(newOptions)
+            savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type, newCorrectOptions, isCorrect)
             closeHandler()
         }} 
         className='bg-DarkBlue w-18 text-white text-sm p-2 rounded-md ml-auto'>Save</button></div>

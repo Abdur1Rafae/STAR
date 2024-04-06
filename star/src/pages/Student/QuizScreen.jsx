@@ -16,7 +16,7 @@ const QuizScreen = () => {
 
   const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
 
-  const { questions, currentQuestionIndex, nextQuestion, prevQuestion, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails } = QuizStore();
+  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails } = QuizStore();
 
   const {navigation, instantFeedback} = quizConfig
 
@@ -32,6 +32,11 @@ const QuizScreen = () => {
     let question = questions[currentQuestionIndex];
     return question
   }
+
+
+  // useEffect(()=> {
+  //   console.log(responses)
+  // }, [responses])
 
   const currentQuestion = getQuestion()
 

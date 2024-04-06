@@ -19,6 +19,7 @@ import Grading from './pages/Teacher/Grading.jsx';
 
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
+import { SectionProvider } from './Context/SectionsContext.js';
 
 const AppRoutes = () => {
   return (
@@ -38,8 +39,8 @@ const AppRoutes = () => {
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
-            <Route path='/teacher/create-new-assessment/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
-            <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
+            <Route path='/teacher/adding-questions/:assessmentId' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
+            <Route path='/teacher/create-new-assessment' element={<SectionProvider><CreateNewAssessment/></SectionProvider>}></Route>
             <Route path='/teacher/reports' element = {<Reports/>}></Route>
             <Route path='/teacher/grading/:assessmentName' element={<Grading/>}/>
          </Routes>

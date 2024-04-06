@@ -15,7 +15,6 @@ const SectionTab = ({classID, section, onDelete}) => {
                     try {
                         const res = await AddSection({classID: classID, name: newSection})
                         section = res.sectionId
-                        console.log(res) 
                     } catch(err) {
                         console.log(err)
                     }
@@ -23,7 +22,6 @@ const SectionTab = ({classID, section, onDelete}) => {
                 else {
                     try {
                         const res = await UpdateSection({id:section.SectionID, name: newSection})
-                        console.log(res) 
                     } catch(err) {
                         console.log(err)
                     }

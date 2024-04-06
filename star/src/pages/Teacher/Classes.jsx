@@ -33,7 +33,6 @@ const Classes = () => {
       try {
         const res = await GetAllClasses()
         setClasses(res.data)
-        console.log(res)
       } catch(err) {
         console.log(err)
       }
@@ -45,7 +44,6 @@ const Classes = () => {
   const handleDeletingClass = async(index, classID) => {
     try{
       const res = await DeleteClass({id: classID})
-      console.log(res)
       let updatedClasses = [...classes];
       updatedClasses.splice(index, 1);
       setClasses(updatedClasses);

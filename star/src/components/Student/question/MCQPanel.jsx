@@ -14,12 +14,14 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
   const updateResponse = QuizStore(store=>store.updateResponse)
   const [selectedOption, setSelectedOption] = useState([]);
   const [response, setResponse] = useState(null)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(()=> {
+    console.log(question.number)
     const answer = getSelectedResponse(question.number)
     setResponse(answer)
     setSelectedOption(answer ? answer.selectedAnswer : [])
-  }, [])
+  }, [question.number])
 
   useEffect(() => {
     setResponse(answer => {

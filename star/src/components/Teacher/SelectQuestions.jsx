@@ -7,7 +7,7 @@ import { QuestionContext } from '../../Context/QuestionsContext'
 
 const SelectQuestions = () => {
     const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
-    
+    const { selectedQuestions, setSelectedQuestions } = useContext(QuestionContext);
     const [filteredQuestions, setFilteredQuestions] = useState(reuseQuestions)
     const [selectedSkill, setSelectedSkill] = useState('')
     const [selectedLevel, setSelectedLevel] = useState('');
@@ -18,26 +18,23 @@ const SelectQuestions = () => {
     }, [])
 
     useEffect(() => {
-        const filtered = reuseQuestions.filter(question => {
-            const skillMatch = selectedSkill !== '' && "All" ? question.skill === selectedSkill : true;
-            const levelMatch = selectedLevel !== '' && "All" ? question.difficulty === selectedLevel : true;
-            const typeMatch = selectedType !== '' && "All" ? question.type === selectedType : true;
-            return skillMatch && levelMatch && typeMatch;
-        });
-        setFilteredQuestions(filtered);
+      const filtered = reuseQuestions.filter(question => {
+          const skillMatch = selectedSkill !== '' && selectedSkill !== "All" ? question.skill === selectedSkill : true;
+          const levelMatch = selectedLevel !== '' && selectedLevel !== "All" ? question.difficulty === selectedLevel : true;
+          const typeMatch = selectedType !== '' && selectedType !== "All" ? question.type === selectedType : true;
+          return skillMatch && levelMatch && typeMatch;
+      });
+      setFilteredQuestions(filtered);
     }, [reuseQuestions, selectedSkill, selectedLevel, selectedType]);
 
     //self note: useEffect will make an api call to set this array
     const AllQuestions = [{
-        type: "MCQ",
+        _id: null,
+        type: "Multiple Choice Question",
         reuse: true,
         question: "Who developed the theory of relativity?",
-        options: [
-          { text: "Isaac Newton", isCorrect: false },
-          { text: "Albert Einstein", isCorrect: true },
-          { text: "Stephen Hawking", isCorrect: false },
-          { text: "Galileo Galilei", isCorrect: false }
-        ],
+        options: ["Isaac Newton","Albert Einstein","Stephen Hawking","Galileo Galilei"],
+        correctOptions: ["Albert Einstein"],
         imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
         explanation: "Albert Einstein developed the theory of relativity.",
         skill: "Physics",
@@ -45,49 +42,43 @@ const SelectQuestions = () => {
         point: 20
       },
       {
-        type: "MCQ",
+        type: "True/False",
         reuse: true,
-        question: "Who developed the theory of ACDC?",
-        options: [
-          { text: "Isaac Newton", isCorrect: false },
-          { text: "Albert Einstein", isCorrect: true },
-          { text: "Stephen Hawking", isCorrect: false },
-          { text: "Galileo Galilei", isCorrect: false }
-        ],
+        question: "You are alive.",
+        options: ["True", "False"],
+        correctOptions: [],
+        isTrue: true,
         imageUrl: null,
-        explanation: "Albert Einstein developed the theory of relativity.",
+        explanation: "Stephen Hawking developed the theory of relativity.",
         skill: "Physics",
         difficulty: "Hard",
         point: 20
       },
       {
-        type: "MCQ",
+        type: "Short Answer",
         reuse: true,
-        question: "Who developed the theory of relativity?",
-        options: [
-          { text: "Isaac Newton", isCorrect: false },
-          { text: "Albert Einstein", isCorrect: true },
-          { text: "Stephen Hawking", isCorrect: false },
-          { text: "Galileo Galilei", isCorrect: false }
-        ],
-        imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
-        explanation: "Albert Einstein developed the theory of relativity.",
+        question: "Tell me about yourself",
+        correctOptions:[],
+        options: [],
+        imageUrl: null,
+        explanation: "",
         skill: "Physics",
         difficulty: "Hard",
         point: 20.
       }]
 
-    const handleAddQuestion = (question) => {
-        const exists = reuseQuestions.findIndex(item => item.question === question.question);
-        if(exists !== -1) {
-            const updatedQuestions = [...reuseQuestions];
-            updatedQuestions.splice(exists, 1);
-            setReuseQuestions(updatedQuestions);
-        }
-        else {
-            setReuseQuestions([...reuseQuestions, question])
-        }
+  const handleAddQuestion = (question) => {
+
+    const exists = selectedQuestions.findIndex(item => item.question === question.question);
+    if(exists !== -1) {
+      const updatedQuestions = [...selectedQuestions];
+      updatedQuestions.splice(exists, 1);
+      setSelectedQuestions([...updatedQuestions]);
     }
+    else {
+      setSelectedQuestions([...selectedQuestions, question])
+    }
+  }
 
   return (
     <div className='p-4 flex flex-col gap-4'>
@@ -112,7 +103,7 @@ const SelectQuestions = () => {
     
         {
             filteredQuestions.map((question, index)=> {
-                return <button onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSlected={reuseQuestions.some(item => item.question == question.question)} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></button>
+              return <button key={question.question} onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSlected={selectedQuestions.some(item => item.question == question.question)} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></button>
             })
         }
         

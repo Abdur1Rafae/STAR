@@ -3,31 +3,22 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FcAddImage } from "react-icons/fc";
 
-const TFSetup = ({image, options, addOption}) => {
-    const [markedCorrect, setMarkCorrect] = useState(false);
+const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
+    const [markedCorrect, setMarkCorrect] = useState(isTrue);
     const fileInputRef = useRef(null);
     const [imageUrl, setImageUrl] = useState(image);
 
     
 
-    const [choices, setChoices] = useState(options.length > 0 ? options : [{ text: "True", isCorrect: true },
-    { text: "False", isCorrect: false }]);
+    const [choices, setChoices] = useState(options.length > 0 ? options : ["True", "False"]);
 
     useEffect(() => {
-        const hasCorrect = choices.some(choice => choice.isCorrect)
-        setMarkCorrect(hasCorrect);
+        setOptions([...choices])
     }, [choices])
 
     const handleSetCorrect = (choiceToSetCorrect) => {
-        const updatedChoices = choices.map(choice => {
-            if (choice === choiceToSetCorrect) {
-                return { ...choice, isCorrect: true };
-            } else {
-                return { ...choice, isCorrect: false }; 
-            }
-        });
-        setChoices(updatedChoices);
-        addOption(updatedChoices)
+        setMarkCorrect(choiceToSetCorrect == "True" ? true : false)
+        setIsTrue(choiceToSetCorrect == "True" ? true : false)
     }
 
     const handleFileInputChange = (event) => {
@@ -51,14 +42,13 @@ const TFSetup = ({image, options, addOption}) => {
     <div>
         <div className='w-full flex justify-between'>
             <div className='w-1/2'>
-                {!markedCorrect && <p className='text-red-500 text-xs'>Mark atleast one correct choice</p>}
                 <div className='flex flex-col gap-2'>
                     {
                         choices.map((choice) => {
                             return (
                             <div className='flex gap-2 items-center'>
-                                <FaCheckCircle className={`${choice.isCorrect ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
-                                <div className={`w-16 p-2 border-[1px] border-black rounded-md text-sm ${choice.isCorrect ? 'text-green-500' : 'text-gray-600'}`}>{choice.text}</div>
+                                <FaCheckCircle className={`${choice == "True" && markedCorrect || choice == "False" && !markedCorrect ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
+                                <div className={`w-16 p-2 border-[1px] border-black rounded-md text-sm ${choice == "True" && markedCorrect || choice == "False" && !markedCorrect ? 'text-green-500' : 'text-gray-600'}`}>{choice}</div>
                             </div>)
                         })
                     }

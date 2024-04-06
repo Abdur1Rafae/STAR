@@ -13,8 +13,6 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(name ? false : true);
 
-    console.log(classSections)
-
     const [sections, setSections] = useState(classSections ? classSections: [])
 
     const handleAddingSection = () => {

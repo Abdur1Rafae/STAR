@@ -12,9 +12,9 @@ const CorrectMCQ = ({ question }) => {
 
 
     useEffect(()=> {
-        const answer = getSelectedResponse(question.number)
-        setSelectedOption(answer ? answer.selectedAnswer : [])
-    }, [])
+      const answer = getSelectedResponse(question.number)
+      setSelectedOption(answer ? answer.selectedAnswer : [])
+    }, [question.number])
 
     useEffect(()=> {
         let userSelectedCorrectAnswers = [];

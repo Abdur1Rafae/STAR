@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const QuestionContext = createContext();
 
@@ -6,6 +6,7 @@ export const QuestionProvider = ({ children }) => {
   const [questions, setQuestionSet] = useState([]);
   const [QBquestions, setQBQuestionSet] = useState([])
   const [reuseQuestions, setReuseQuestions] = useState([])
+  const [selectedQuestions, setSelectedQuestions] = useState([])
 
   // useEffect(() => {
   //   localStorage.setItem('questionSet', JSON.stringify(questionSet));
@@ -44,9 +45,9 @@ export const QuestionProvider = ({ children }) => {
   }
 
   const saveQuestions = () => {
-    const newQuestions = reuseQuestions.filter(question => !questions.some(q => q.question === question.question));
+    const newQuestions = selectedQuestions.filter(question => !questions.some(q => q.question === question.question));
     setQuestionSet([...questions, ...newQuestions]);
-    setReuseQuestions([]);  
+    setSelectedQuestions([]);  
   }
 
   const swapQuestion = (id1, id2) => {
@@ -60,7 +61,7 @@ export const QuestionProvider = ({ children }) => {
 
   return (
     <QuestionContext.Provider
-      value={{ swapQuestion, questions, addQuestion, updateQuestion, removeQuestion, clearQuestionSet, setQuestions, saveQuestions, addQBQuestions, removeQBQuestions, reuseQuestions, setReuseQuestions }}
+      value={{ swapQuestion, questions, addQuestion, selectedQuestions, setSelectedQuestions, updateQuestion, removeQuestion, clearQuestionSet, setQuestions, saveQuestions, addQBQuestions, removeQBQuestions, reuseQuestions, setReuseQuestions }}
     >
       {children}
     </QuestionContext.Provider>

@@ -18,7 +18,7 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
     const answer = getSelectedResponse(question.number)
     setResponse(answer ? answer.selectedAnswer : '')
     setUserAnswer(answer ? answer.selectedAnswer : '')
-  }, [])
+  }, [question.number])
 
   useEffect(() => {
     setResponse(answer => {

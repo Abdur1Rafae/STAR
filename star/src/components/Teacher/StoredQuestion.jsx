@@ -4,13 +4,15 @@ import { TbLayoutNavbarExpand, TbLayoutBottombarExpand } from "react-icons/tb";
 import { MdEdit, MdOutlineDeleteOutline } from "react-icons/md";
 import QuizImage from '../Student/question/QuizImage';
 import QuestionCreator from './QuestionCreator';
+import { ToggleStore } from '../../Stores/ToggleStore';
 
-const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, point, image, explanation, options, savingHandler ,deleteHandler}) => {
+const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, point, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const Ordering = ToggleStore((store)=> store.Ordering)
 
   return (
-    <div draggable onDragStart={(e) => handleDrag(e, id)} className='w-full bg-[#EEF3F3] rounded-lg border-[1px] border-black p-2 overflow-hidden flex gap-2 hover:cursor-grabbing'>
+    <div draggable={Ordering} onDragStart={(e) => handleDrag(e, id)} className={`w-full bg-[#EEF3F3] rounded-lg border-[1px] border-black p-2 overflow-hidden flex gap-2 ${Ordering ? 'hover:cursor-grabbing' : ''}`}>
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
@@ -45,14 +47,14 @@ const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, poin
                 {
                     isEditing ?
                     <>
-                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type == "MCQ" || "Multiple Choice Question" ? "Multiple Choice Question" : type == "T/F" || "True/False" ? "True/False" : "SA"} questionID={id} skill={skill} difficultyLevel={difficulty} point={point} question={question} explanation={explanation} options={options} image={image}/>
+                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type} questionID={id} correctOptions={correctOptions} skill={skill} difficultyLevel={difficulty} point={point} question={question} explanation={explanation} options={options} image={image} isTrue={isTrue}/>
                     </>
                     :
                     <>
                         {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
                         <div className='flex flex-col gap-2 mt-2'>
                             {options.map((option)=>{
-                                return <OptionBox option={option.text} isActive={option.isCorrect}/> 
+                                return <OptionBox option={option} isActive={correctOptions.includes(option) || (option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
                             })}
                         </div>
                         <p className='text-xs mt-4 font-medium'>Explanation</p>

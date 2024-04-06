@@ -1,7 +1,6 @@
 import React ,{ useState , useEffect, useContext }from 'react';
 import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
-import Subheader from '../../components/Teacher/Subheader'
 import { MdOutlineSettingsBackupRestore ,MdClose } from 'react-icons/md';
 import { DoughnutGraph } from '../../components/Teacher/DoughnutGraph';
 import questionMCQ from '../../components/MCQ.png'
@@ -12,6 +11,8 @@ import QuestionCreator from '../../components/Teacher/QuestionCreator';
 import { QuestionContext } from '../../Context/QuestionsContext';
 import SelectQuestions from '../../components/Teacher/SelectQuestions';
 import SubheaderBut from '../../components/Teacher/SubheaderBut';
+import { IoIosMove } from "react-icons/io";
+import { ToggleStore } from '../../Stores/ToggleStore';
 
 function AddQuestions() {
     const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
@@ -19,6 +20,8 @@ function AddQuestions() {
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
 
+    const setOrder = ToggleStore((store) => store.setOrder)
+    const order = ToggleStore((store) => store.Ordering)
 
 
     const { questions, setQuestions, saveQuestions, swapQuestion } = useContext(QuestionContext);
@@ -32,12 +35,14 @@ function AddQuestions() {
         console.log(questions)
     }    
 
-    const saveQuestionHandler = (id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type) => {
+    const saveQuestionHandler = (id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
         const index = questions.length
         const updatedQuestions = [...questions];
         updatedQuestions[index] = {
             type: type,
             options: newOptions,
+            correctOptions: correctOptions,
+            isTrue: isTrue,
             question: questionText,
             explanation: explanationText,
             imageUrl: imageUrl,
@@ -59,18 +64,21 @@ function AddQuestions() {
         setCreateQuestion(null);
     };
 
-    const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, type) => {
+    const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
         const updatedQuestions = [...questions];
         updatedQuestions[index] = {
             type: type,
             options: newOptions,
+            correctOptions: correctOptions,
+            isTrue: isTrue,
             question: questionText,
             explanation: explanationText,
             imageUrl: imageUrl,
             skill: skill,
             difficulty: difficulty,
             point: point,
-            reuse: false
+            topic: topic,
+            reuse: false,
         }
         setQuestions(updatedQuestions);
     }
@@ -82,6 +90,29 @@ function AddQuestions() {
     const handleOnDrop = (e, id2) => {
         const id1 = e.dataTransfer.getData("question")
         swapQuestion(id1, id2)
+    }
+
+    const handleOrdering = () => {
+        const buttons = document.querySelectorAll('.QuestionsDisplay button');
+        if(!order) {
+            setOrder(true)
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
+        }
+        else {
+            setOrder(false)
+            const orderArray = questions.map((question)=>{
+                const obj = {
+                    id: question.question,
+                    reuse: question.reuse
+                }
+                return obj
+            })
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
+        }
     }
 
 
@@ -120,6 +151,10 @@ function AddQuestions() {
                                 </button>
                             </div>
                         </div>
+                        <button onClick={handleOrdering} className={`hidden sm:flex self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
+                            <IoIosMove/>
+                            <p>Order</p>
+                        </button>
                         {
                         reuseDialog &&
                         <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
@@ -149,14 +184,14 @@ function AddQuestions() {
                                 />
                             )
                         }
-                        <div className='w-full flex flex-col gap-2'>
+                        <div className='QuestionsDisplay w-full flex flex-col gap-2'>
                         {
                             questions ?
                             questions.map((question, index)=> {
                                 return (
                                     <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
-                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue}/>
                                     </div>
                                 )
                             })

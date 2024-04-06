@@ -4,33 +4,39 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FcAddImage } from "react-icons/fc";
 
-const MCQSetup = ({image, setImage,  options, addOption}) => {
-    const [markedCorrect, setMarkCorrect] = useState(false);
+const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorrectOption}) => {
+    const [markedCorrect, setMarkCorrect] = useState(correctOptions ? correctOptions : []);
     const fileInputRef = useRef(null);
 
     const [choices, setChoices] = useState(options);
 
-    useEffect(() => {
-        const hasCorrect = choices.some(choice => choice.isCorrect)
-        setMarkCorrect(hasCorrect);
-    }, [choices])
 
-
-    const handleInputChange = (event, choice) => {
-        choice.text= event.target.value;
+    const handleInputChange = (event, index) => {
+        const newChoice = event.target.value;
         const updatedChoices = [...choices];
-        setChoices(updatedChoices);
+        updatedChoices[index] = newChoice; 
+        setChoices(updatedChoices); 
+        addOption(updatedChoices);
     };
 
     const handleSetCorrect = (choice) => {
-        choice.isCorrect= !choice.isCorrect;
-        const updatedChoices = [...choices];
-        setChoices(updatedChoices);
+        const exists = markedCorrect.findIndex((option)=> option == choice)
+        if(exists === -1) {
+            setMarkCorrect([...markedCorrect, choice])
+            setCorrectOption([...correctOptions, choice])
+        } 
+        else {
+            const updatedMarkCorrect = [...markedCorrect]
+            updatedMarkCorrect.splice(exists, 1)
+            setMarkCorrect([...updatedMarkCorrect])
+            setCorrectOption([...updatedMarkCorrect])
+        }
     }
 
     const handleDeleteChoice = (choice) => {
         const updatedChoices = choices.filter((option)=>option !== choice)
         setChoices(updatedChoices)
+        addOption(updatedChoices)
     }
 
     const handleFileInputChange = (event) => {
@@ -52,7 +58,7 @@ const MCQSetup = ({image, setImage,  options, addOption}) => {
 
     const handleAddChoice = () => {
         let updatedChoices = [...choices]
-        updatedChoices.push({ text: "New Choice", isCorrect: false })
+        updatedChoices.push("New Choice")
         setChoices(updatedChoices)
         addOption(updatedChoices)
     };
@@ -61,13 +67,13 @@ const MCQSetup = ({image, setImage,  options, addOption}) => {
     <div>
         <div className='w-full flex flex-col md:flex-row justify-between'>
             <div className='md:w-1/2'>
-                {!markedCorrect && <p className='text-red-500 text-xs'>Mark atleast one correct choice</p>}
+                {markedCorrect.length == 0 && <p className='text-red-500 text-xs'>Mark atleast one correct choice</p>}
                 <div className='flex flex-col gap-2'>
                     {
-                        choices.length > 0 && choices.map((choice) => {
+                        choices.length > 0 && choices.map((choice, index) => {
                             return <div className='flex gap-2 items-center'>
-                                <FaCheckCircle className={`${choice.isCorrect ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
-                                <input type='text' onChange={(event)=>handleInputChange(event, choice)} defaultValue={choice.text} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${choice.isCorrect ? 'text-green-500' : 'text-gray-600'}`}/>
+                                <FaCheckCircle className={`${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
+                                <input type='text' onChange={(event)=>handleInputChange(event, index)} defaultValue={choice} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'}`}/>
                                 <MdOutlineDeleteOutline className='hover:text-red-500 hover:cursor-pointer' onClick={()=>handleDeleteChoice(choice)}/>
                             </div>
                         })
