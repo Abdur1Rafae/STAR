@@ -6,7 +6,7 @@ import QuizImage from '../Student/question/QuizImage';
 import QuestionCreator from './QuestionCreator';
 import { ToggleStore } from '../../Stores/ToggleStore';
 
-const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, point, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue}) => {
+const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, points, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const Ordering = ToggleStore((store)=> store.Ordering)
@@ -19,7 +19,7 @@ const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, poin
                     <input type="checkbox"/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
-                    <PointBox point={point}/>
+                    <PointBox point={points}/>
                     <div className='ml-auto flex'>
                         <button className='self-center'><MdOutlineDeleteOutline onClick={deleteHandler} className='text-lg hover:text-red-400 mr-2'/></button>
                         <button className='self-center' onClick={() => {setIsEditing(true);setDisplay(true)}}><MdEdit className='text-lg text-gray-400 hover:text-black mr-2'/></button>
@@ -47,13 +47,13 @@ const StoredQuestion = ({type, id, handleDrag, question, skill, difficulty, poin
                 {
                     isEditing ?
                     <>
-                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type} questionID={id} correctOptions={correctOptions} skill={skill} difficultyLevel={difficulty} point={point} question={question} explanation={explanation} options={options} image={image} isTrue={isTrue}/>
+                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type} questionID={id} correctOptions={correctOptions} skill={skill} difficultyLevel={difficulty} point={points} question={question} explanation={explanation} options={options} image={image} isTrue={isTrue}/>
                     </>
                     :
                     <>
                         {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
                         {
-                            type == "Multiple Choice Question" ? 
+                            type == "MCQ" ? 
                             (
                                 <div className='flex flex-col gap-2 mt-2'>
                                     {options.map((option)=>{

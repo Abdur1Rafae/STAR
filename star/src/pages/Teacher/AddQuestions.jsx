@@ -40,7 +40,7 @@ function AddQuestions() {
     const saveQuestionHandler = async(id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
         const index = questions.length
         const updatedQuestions = [...questions];
-        if(type == "Multiple Choice Question") {
+        if(type == "MCQ") {
             updatedQuestions[index] = {
                 type: type,
                 options: newOptions,
@@ -50,11 +50,10 @@ function AddQuestions() {
                 imageUrl: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
-                point: point,
+                points: point,
                 topic: topic,
                 reuse: false
             }
-            setQuestions(updatedQuestions);
         }
         else if(type == "True/False") {
             updatedQuestions[index] = {
@@ -66,11 +65,10 @@ function AddQuestions() {
                 imageUrl: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
-                point: point,
+                points: point,
                 topic: topic,
                 reuse: false
             }
-            setQuestions(updatedQuestions);
         }
         else {
             updatedQuestions[index] = {
@@ -80,16 +78,18 @@ function AddQuestions() {
                 imageUrl: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
-                point: point,
+                points: point,
                 topic: topic,
                 reuse: false
             }
-            setQuestions(updatedQuestions);
         }
         try {
             const res = await AddQuestion({assessmentId:'660fa02a32ebc39f5b9d37b3', question:updatedQuestions[index]})
+            updatedQuestions[index]._id = res._id
+            setQuestions(updatedQuestions);
         } catch(err) {
             console.log(err)
+            return
         }
     };
 
@@ -196,7 +196,7 @@ function AddQuestions() {
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>
                             <div className='border-2 border-dotted border-slate-400'>
-                                <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=> setCreateQuestion("Multiple Choice Question")}>
+                                <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=> setCreateQuestion("MCQ")}>
                                     <img className='w-12 mix-blend-multiply' src={questionMCQ} alt=''/>
                                     <p className='text-xs'>MCQ</p>
                                 </button>

@@ -41,7 +41,7 @@ const AddQuestion = async({assessmentId, question}) => {
         }
     })
 
-    return res.data
+    return res.data.data
 }
 
 const UpdateQuestion = async({questionId, question}) => {
