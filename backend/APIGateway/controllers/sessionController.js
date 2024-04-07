@@ -5,8 +5,8 @@ const axios = require('axios')
 const getInstanceUrl = require('../util/microservice')
 const client = require('../dbconfig/dbcon')
 
-const ACCESS_TOKEN_EXPIRATION = '1m'
-const REFRESH_TOKEN_EXPIRATION = '3m'
+const ACCESS_TOKEN_EXPIRATION = '1y'
+const REFRESH_TOKEN_EXPIRATION = '1y'
 const AUTHENTICATION_SERVICE = 'userguardian'
 const SESSION_HASH_KEY = 'SESSION_ID'
 
@@ -65,8 +65,9 @@ module.exports.login = async (req,res) =>
         else {return res.status(response.status).json({ error: response.data.error, message: response.data.message })}
     }
     catch(err){
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to authenticate user'})}
+        if(err.message === 'Internal Server Error'){return res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to authenticate user'})}
+        else {return res.status(500).json(err.response.data)}
+    }
 }
 module.exports.refresh = async (req, res) => 
 {

@@ -2537,3 +2537,6 @@
 4/4/2024, 8:53:06 PM | INFO | DatabaseService | Getting database 800ec432-6cc1-4cd2-839d-c65aba147794 | [object Object]
 4/4/2024, 8:53:06 PM | INFO | ZSetTypeInfoStrategy | Getting functionsWithStreams recommendation strategy. | [object Object]
 4/4/2024, 8:53:06 PM | INFO | DatabaseService | Getting database 800ec432-6cc1-4cd2-839d-c65aba147794 | [object Object]
+4/4/2024, 9:08:31 PM | INFO | DatabaseInfoService | Getting database overview for: 800ec432-6cc1-4cd2-839d-c65aba147794 | [object Object]
+4/4/2024, 9:08:32 PM | INFO | DatabaseClientFactory | Trying to get existing redis client. | [object Object]
+4/4/2024, 9:29:03 PM | INFO | NotificationGateway | Client disconnected: oFfPuiEflXPZNS1YAAAV | [object Object]

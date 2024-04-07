@@ -1,45 +1,16 @@
-const saltRounds = 10
-const tokenExpiration = '2y'
-const refreshExpiration = '2h'
+const conn = require('../dbconfig/dbcon')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const uuid = require('uuid')
 const Joi = require('joi')
-// const Query = require('../db_manager/userQuery')
-// const executeQuery = require('../db_manager/dbconn')
+const Student = require('library/models/Student')
+const Teacher = require('library/models/Teacher')
 const {sendMail} = require('../util/Mail/mail')
-// const validateFields = require('../util/library')
-require('dotenv').config()
 
-//generates a uuid, creates an access and refresh token
-function createToken(email, role)
-{
-    const sessionID = uuid.v4()
-    if(createRefreshToken(email, sessionID))
-    {
-        return jwt.sign({id: email, role, sessionID}, process.env.JWT_SECRET, {
-            expiresIn: tokenExpiration
-        })   
-    }
-    else{throw new Error('Error Generating Refresh Token')}
-}
-
-//creates a refresh token using the uuid and stores it in database along with user's email
-async function createRefreshToken(email, sessionID)
-{
-    const token = jwt.sign({uuid}, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: refreshExpiration
-    })
-    try
-    {
-        const result = await executeQuery(Query.INSERT_TOKEN, [email, token, sessionID])
-        return true
-    }
-    catch(error)
-    {
-        return false
-    }
-}
+const USER_SCHEMA = Joi.object
+({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+    role: Joi.string().valid('teacher', 'student').required()
+})
 
 //generates a 6 digit OTP
 function generateOTP() {
@@ -56,119 +27,52 @@ async function studentExists(email)
     else{return false}
 }
 
-module.exports.refresh = async (req, res) => 
-{
-    //validate if all required fields are provided
-    const {accessToken} = req.body
-    if(!accessToken){return res.status(400).json({ error: 'ER_MSG_ARG', message: "Access Token Required" })}    
-
-    const decodedToken = jwt.decode(accessToken)
-    const email = decodedToken.email
-    const role = decodedToken.role
-    const sessionID = decodedToken.sessionID 
-
-    try{
-        //retrieve refresh token using user email
-        const result = await executeQuery(Query.FETCH_TOKEN, [email])
-
-        if(result.length > 0)
-        {
-            const refreshToken = result[0].refreshToken
-            jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decodedToken) => 
-            {
-                if(err){return res.status(403).json({error: 'ER_EXP_SESS', message: "Session Expired : You must log in again."})}
-                else
-                {
-                    const refreshedToken = jwt.sign({email, role, sessionID}, process.env.JWT_SECRET, {
-                        expiresIn: tokenExpiration
-                    })   
-                    return res.status(200).json({message: 'Token Refreshed', accessToken: refreshedToken})  
-
-                }
-            })
-        }
-        else{return res.status(401).json({error: 'ER_AUTH', message: "Unauthenticated : You must log in."})}
-    }
-    catch(err)
-    {
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Internal server error: Failed to refresh token'})
-    }
-}
-
-
 module.exports.authenticate = async (req,res) => 
 {   
-    const loginSchema = Joi.object
-    ({
-        email: Joi.string().email().required(),
-        password: Joi.string().required(),
-        role: Joi.string().valid('teacher', 'student').required()
-    })
-
-    const { error, value: user } = loginSchema.validate(req.body)
+    const { error, value: userInfo } = USER_SCHEMA.validate(req.body)
     if (error) {return res.status(400).json({ error: error.name, message: error.message })} 
 
-
     try{
-        //const result = await executeQuery(Query.FETCH_USER, [email])
-        //compare password if user exists
-        if(true)//&& await bcrypt.compare(password, result[0].Password)
+        let user
+
+        if(userInfo.role === 'teacher'){user = await Teacher.findOne({ email : userInfo.email })}
+        else{user = await Student.findOne({ email : userInfo.email })}
+
+        if(!user){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'User Not Found'})}
+
+        if(user.verified === false){return res.status(403).json({error: 'ER_VERF', message: 'Account Not Verfied'})}
+
+        if(await bcrypt.compare(user.password, userInfo.password))
         {
-            return res.status(200).json({message: 'Authentication Successful', userId: '66089dbe3bb51c488fb69fbc'})  
-            //return res.status(401).json({error: 'ER_INVLD_CRED', message: 'Invalid Email or Password'})
-            //check if account is verified
-            // if(true)//result[0].Verified == 1
-            // {
-            //     const role = result[0].Role
-            //     const token = createToken('66089dbe3bb51c488fb69fbc', role)
-            //     return res.status(200).json({message: 'Login Successful', Role: role, accessToken: token})  
-                
-            // }
-            
-            // else{
-            //     return res.status(403).json({error: 'ER_VERF', message: 'Account Not Verfied'})  
-            // }
+            return res.status(200).json({message: 'Authentication Successful', userId: user._id})
         }
         else{return res.status(401).json({error: 'ER_INVLD_CRED', message: 'Invalid Email or Password'})}
     }
-    catch(err){res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to authenticate user'})}
+    catch(err){
+        console.log(err)
+        res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to authenticate user'})}
 }
 module.exports.signup = async (req,res) => 
 {
-    //validate if all required fields are provided
-    const requiredFields = ['first_name', 'last_name', 'email', 'password', 'role']
-    const response = validateFields(requiredFields, req.body)
-    if(response != null){return res.status(400).json({ error: 'ER_MSG_ARG', message: response })}   
-    
-    var { first_name, last_name, email, password, role} = req.body
-
-    role = role.toLowerCase()
+    const SIGNUP_SCHEMA = USER_SCHEMA.keys
+    ({
+        firstName : Joi.string().required(),
+        lastName : Joi.string().required(),
+    })
+    const { error, value: userInfo } = USER_SCHEMA.validate(req.body)
+    if (error) {return res.status(400).json({ error: error.name, message: error.message })} 
 
     //encrypt password
     password = await bcrypt.hash(password, saltRounds)
 
     try
     {
-        var queryParams, query
+        let newUser
 
-        if(role === "teacher")
-        {
-            query = Query.INSERT_TEACHER
-            queryParams = [first_name, last_name, email, password]
-        }
-        else if(role === 'student')
-        {
-            if(await studentExists(email) == true){return res.status(409).json({ error: 'ER_DUP_ENTRY', message: 'Duplicate entry: The user already exists' })}
-            query = Query.INSERT_STUDENT
-            queryParams = [first_name, last_name, email, password]
-        }
-        else{return res.status(400).json({ error: 'ER_NOT_FOUND', message: 'Role: ' + role + "doesn't exist"})}
+        if(userInfo.role === 'teacher'){user = await Teacher.findOne({ email : userInfo.email })}
+        else{user = await Student.findOne({ email : userInfo.email })}
 
-        const result = await executeQuery(query, queryParams)
-        const token = jwt.sign({email}, process.env.JWT_SECRET, {
-            expiresIn: '3d'
-        })   
+        const token = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: '3d'})   
         const user = 
         {
             firstName : first_name,

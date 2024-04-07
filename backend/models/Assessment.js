@@ -24,10 +24,18 @@ const assessmentSchema = new mongoose.Schema(
         finalScore: { type: Boolean, default: false },
     },
     questionBank: 
-    [{
-        question: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
-        reuse: { type: Boolean, default: false } 
-    }]
+    {
+        questions: 
+        [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question'
+        }],
+        reusedQuestions: 
+        [{
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Question'
+        }], 
+    }
 }, 
 {
     timestamps: true,

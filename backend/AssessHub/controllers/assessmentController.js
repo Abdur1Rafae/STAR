@@ -11,26 +11,23 @@ module.exports.getAssessmentQuestions = async (req,res) =>
     try
     {
         const {assessmentId} = req.params
-        const assessment = await Assessment.findById(assessmentId)
-        .select('questionBank.questions questionBank.reusedQuestions')
-        .populate({
-          path: 'questionBank.questions',
-          model: Question
-        })
-        .populate({
-          path: 'questionBank.reusedQuestions',
-          model: Question
-        })
-      
-        const allQuestions = 
-        [
-            ...assessment.questionBank.questions,
-            ...assessment.questionBank.reusedQuestions
-        ]
 
-     if (!allQuestions) {return res.status(404).json({ error: 'ER_NOT_FOUND', message: 'Empty Question Bank' })}
+        const questions = await Assessment.findById(assessmentId)
+        .select('questionBank.question -_id')
+        .populate({
+            path: 'questionBank.question',
+            select: '-teacher -__v',
+            model: Question
+        })
 
-        res.status(201).json({data: allQuestions})
+      if (!questions) {return res.status(201).json({data: []})}
+
+      const formattedData = questions.questionBank.map(item => ({
+        ...item.question.toObject(),
+        reuse: item.reuse
+      }))
+
+      res.status(201).json({data: formattedData})
 
     }
     catch (err) {
@@ -123,7 +120,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
                   select: 'firstName lastName -_id'
                 },
                 {
-                  path: 'questionBank.questions questionBank.reusedQuestions',
+                  path: 'questionBank.question',
                   select: 'points'
                 }
               ],
@@ -131,13 +128,13 @@ module.exports.getOngoingAssessments = async (req,res) =>
           },
         ]
       })
+
       
       const data = [];
       assessments.enrolledSections.forEach(section => 
       {
           section.assessments.forEach(assessment => 
             {
-              const allQuestions = [...assessment.questionBank.questions, ...assessment.questionBank.reusedQuestions]
               const assessmentData = 
               {
                 id : assessment._id,
@@ -145,8 +142,8 @@ module.exports.getOngoingAssessments = async (req,res) =>
                 description : assessment.description,
                 teacher: assessment.teacher.firstName + " " + assessment.teacher.lastName,
                 className: section.class.className,
-                totalMarks: allQuestions.reduce((total, question) => total + question.points, 0),
-                totalQuestions: assessment.questionBank.questions.length + assessment.questionBank.reusedQuestions.length,
+                totalMarks: assessment.questionBank.reduce((total, questionObj) => {return total + (questionObj.question ? questionObj.question.points : 0)}, 0),
+                totalQuestions: assessment.questionBank.length,
                 coverImage: assessment.coverImage,
                 configurations:  assessment.configurations,
               };

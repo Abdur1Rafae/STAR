@@ -43,7 +43,7 @@ const authentication = async (req, res, next) =>
             const decodedToken = await verifyToken(token)
             const id = decodedToken.id
             const sessionId = decodedToken.sessionId
-            await checkSession(id, sessionId)
+            //await checkSession(id, sessionId)
             req.body.decodedToken = decodedToken
             return next()
         }

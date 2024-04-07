@@ -3,9 +3,9 @@ const uploadDir = 'uploads/'
 
 function upload(image)
 {
-    if(!image){return null}
 
-    const matches = image.match(/^data:image\/([a-zA-Z0-9]+)base64,(.+)$/)
+    if(!image){return null}
+    const matches = image.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
 
     if (!matches || matches.length !== 3) {throw new Error('Invalid image data')}
     

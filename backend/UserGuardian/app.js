@@ -1,8 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require("morgan")
 const axios = require('axios')
 const userRoutes = require('./routes/userRoutes')
-require('dotenv').config()
+
 
 const app = express()
 const PORT = 3001
@@ -33,7 +34,8 @@ app.listen(PORT, () =>
     console.log(`UserGuardian Microservice avilable at port ${PORT}`)
   }).catch((error) => 
   {
-    console.error('Error registering service:', error.code + ":" + error.message)
+    if(error.response.status == 409){console.log(`Configurations already exist for Host: ${HOST} at Port: ${PORT}`)}
+    else{console.error('Error registering service:', error.code + ":" + error.message)}
   })
 })
     

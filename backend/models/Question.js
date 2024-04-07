@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 
 const questionSchema = new mongoose.Schema(
 {
-    teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
     topic: {
         type: String,
         required: true
@@ -35,8 +34,8 @@ const questionSchema = new mongoose.Schema(
             return this.type === 'MCQ';
         }
     },
-    correctOptions: {
-        type: [String],
+    correctOption: {
+        type: String,
         required: function() {
             return this.type === 'MCQ';
         }
