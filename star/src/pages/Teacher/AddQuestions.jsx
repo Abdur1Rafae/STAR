@@ -1,7 +1,6 @@
 import React ,{ useState , useEffect, useContext }from 'react';
 import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
-import Subheader from '../../components/Teacher/Subheader'
 import { MdOutlineSettingsBackupRestore ,MdClose } from 'react-icons/md';
 import { DoughnutGraph } from '../../components/Teacher/DoughnutGraph';
 import questionMCQ from '../../components/MCQ.png'
@@ -9,90 +8,195 @@ import TFQuestion from '../../components/TF.png'
 import SAQuestion from '../../components/shortAnswer.png'
 import StoredQuestion from '../../components/Teacher/StoredQuestion';
 import QuestionCreator from '../../components/Teacher/QuestionCreator';
-import SkillFilter from '../../components/Teacher/SkillFilter';
-import DisplayOnlyQuestions from '../../components/Teacher/DisplayOnlyQuestions';
-import { FaFolderOpen } from "react-icons/fa";
-import { GrStorage } from "react-icons/gr";
-import SubmitButton from '../../components/button/SubmitButton';
 import { QuestionContext } from '../../Context/QuestionsContext';
-import QuestionBankSelection from '../../components/Teacher/QuestionBankSelection';
+import SelectQuestions from '../../components/Teacher/SelectQuestions';
+import SubheaderBut from '../../components/Teacher/SubheaderBut';
+import { IoIosMove } from "react-icons/io";
+import { ToggleStore } from '../../Stores/ToggleStore';
+import { AddQuestion } from '../../APIS/Teacher/AssessmentAPI';
 
-function AddQuestions({}) {
+
+function AddQuestions() {
     const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
     const skills = ["Problem Solving", "Logic Design", "Quantitative Analysis", "Critical Thinking"]
-    const difficulty = ['Easy', 'Medium', 'Hard'];
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
-    const [selectedSkill, setSelectedSkill] = useState("Logic")
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [tab, setTab] = useState('Question Bank')
 
-    const { questions , setQuestions, saveQuestions } = useContext(QuestionContext);
+    const setOrder = ToggleStore((store) => store.setOrder)
+    const order = ToggleStore((store) => store.Ordering)
+
+
+    const { questions, setQuestions, saveQuestions, swapQuestion } = useContext(QuestionContext);
 
     const SaveQuestions = () => {
         saveQuestions()
-        console.log("hello")
         setReuseDialog(false);
     }
-    
-      
-useEffect(() => {
-    // Your code here to handle the updated questions state
-    console.log("Questions updated:", questions);
-}, [questions]); 
 
-    const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point) => {
-            const updatedQuestions = [...questions];
-            updatedQuestions[index].options = newOptions;
-            updatedQuestions[index].question = questionText;
-            updatedQuestions[index].explanation = explanationText;
-            updatedQuestions[index].imageUrl = imageUrl;
-            updatedQuestions[index].skill = skill;
-            updatedQuestions[index].difficulty = difficulty;
-            updatedQuestions[index].point = point;
-            setQuestions(updatedQuestions);
-        };
-        const deleteQuestion = (id) => {
-            const updatedQuestions = questions.filter((_, index) => index !== id);
-            setQuestions(updatedQuestions);
-        };
-            
-        const handleCreateQuestion = (type) => {
-            setCreateQuestion(type); // Set the type of question to create
-        };
-        const handleCloseQuestionCreator = () => {
-            setCreateQuestion(null); // Close the QuestionCreator
-        };
-        
-        const handleReuseDialog = () => {
-            setReuseDialog(true); // Open the reuse dialog
-        };
+    const handleSubmitQuestions = () => {
+        console.log(questions)
+    }    
 
-        const handleCloseReuseDialog = () => {
-        setReuseDialog(false); // Close the reuse dialog
-        };
-        const deleteTopicHandler = ({ index }) => {
-        const updatedTopics = [...topics];
-        updatedTopics.splice(index, 1);
-        setTopics(updatedTopics); 
-        };
-        const handleSelectCategory = (category) => {
-            setSelectedCategory(category);
+    const saveQuestionHandler = async(id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
+        const index = questions.length
+        const updatedQuestions = [...questions];
+        if(type == "MCQ") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                correctOptions: correctOptions,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                points: point,
+                topic: topic,
+                reuse: false
+            }
         }
+        else if(type == "True/False") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                isTrue: isTrue,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                points: point,
+                topic: topic,
+                reuse: false
+            }
+        }
+        else {
+            updatedQuestions[index] = {
+                type: type,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                points: point,
+                topic: topic,
+                reuse: false
+            }
+        }
+        try {
+            const res = await AddQuestion({assessmentId:'660fa02a32ebc39f5b9d37b3', question:updatedQuestions[index]})
+            updatedQuestions[index]._id = res._id
+            setQuestions(updatedQuestions);
+        } catch(err) {
+            console.log(err)
+            return
+        }
+    };
+
+    const deleteQuestion = (id) => {
+        const updatedQuestions = questions.filter((_, index) => index !== id);
+        setQuestions(updatedQuestions);
+    };
+        
+    const handleCloseQuestionCreator = () => {
+        setCreateQuestion(null);
+    };
+
+    const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
+        const updatedQuestions = [...questions];
+        if(type == "Multiple Choice Question") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                correctOptions: correctOptions,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
+        else if(type == "True/False") {
+            updatedQuestions[index] = {
+                type: type,
+                options: newOptions,
+                isTrue: isTrue,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
+        else {
+            updatedQuestions[index] = {
+                type: type,
+                question: questionText,
+                explanation: explanationText,
+                imageUrl: imageUrl,
+                skill: skill,
+                difficulty: difficulty,
+                point: point,
+                topic: topic,
+                reuse: false
+            }
+            setQuestions(updatedQuestions);
+        }
+    }
+
+    const handleOnDrag = (e, id) => {
+        e.dataTransfer.setData("question", id)
+    }
+
+    const handleOnDrop = (e, id2) => {
+        const id1 = e.dataTransfer.getData("question")
+        swapQuestion(id1, id2)
+    }
+
+    const handleOrdering = () => {
+        const buttons = document.querySelectorAll('.QuestionsDisplay button');
+        if(!order) {
+            setOrder(true)
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
+        }
+        else {
+            setOrder(false)
+            const orderArray = questions.map((question)=>{
+                const obj = {
+                    id: question.question,
+                    reuse: question.reuse
+                }
+                return obj
+            })
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
+        }
+    }
 
 
   return (
-    <div className=' w-full h-full font-body  border border-black '>
+    <div className=' w-full h-full font-body border-black'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
-                <Subheader name={"Add Questions"}/>
+                <SubheaderBut name={"Add Questions"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
                 <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
-                        <div className='w-full flex items-start justify-center gap-4'>
+                        <div className='w-full flex flex-wrap items-start justify-center gap-4'>
                             <div className='border-2 border-dotted border-slate-400'>
-                                <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=> setCreateQuestion("Multiple Choice Question")}>
+                                <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=> setCreateQuestion("MCQ")}>
                                     <img className='w-12 mix-blend-multiply' src={questionMCQ} alt=''/>
                                     <p className='text-xs'>MCQ</p>
                                 </button>
@@ -106,74 +210,35 @@ useEffect(() => {
                             <div className='border-2 border-dotted border-slate-400'>
                                 <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=>setCreateQuestion("True/False")}>
                                     <img className='w-12 mix-blend-multiply' src={TFQuestion} alt=''/>
-                                    <p className='text-xs'>True/False</p>
+                                    <p className='text-xs mt-1'>True/False</p>
+                                </button>
+                            </div>
+                            <div className='border-2 border-dotted border-slate-400'>
+                                <button className='w-24 h-24 flex flex-col items-center justify-center border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=>setReuseDialog(true)}>
+                                    <MdOutlineSettingsBackupRestore className=' w-12 h-12'/>
+                                    <p className='text-xs mt-1'>Reuse</p>
                                 </button>
                             </div>
                         </div>
-                        <div className='border-2 border-dotted border-slate-400'>
-                            <button className='w-48 h-24 flex flex-col items-center justify-center border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=>setReuseDialog(true)}>
-                                <MdOutlineSettingsBackupRestore className=' w-12 h-full'/>
-                                <p className='text-xs'>Reuse Question(s) from Question Banks</p>
-                            </button>
-                        </div>
+                        <button onClick={handleOrdering} className={`hidden sm:flex self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
+                            <IoIosMove/>
+                            <p>Order</p>
+                        </button>
                         {
                         reuseDialog &&
-                        <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10'>       
-                            <div className='relative inset-x-0 mx-auto top-20 w-11/12 md:w-7/12 h-5/6 overflow-y-auto bg-LightBlue z-10'>
-                                <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between'>
+                        <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
+                            <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
+                                <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between z-50'>
                                     <h3 className='my-auto ml-2'>Select Questions to add</h3>
                                     <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
                                 </div>
-                                <div>
-                                    <div className='p-4 md:pl-8 md:pt-4 flex flex-col gap-4 '>
-                                        <div className='w-full flex items-center justify-between md:justify-start md:gap-4 pb-2 border-b-2 border-grey-800'>
-                                            <div className=''>
-                                                <SubmitButton label = "All Questions" icon = {<GrStorage/>} active={tab == 'All Questions'} onClick={()=>{setTab("All Questions")}}/>
-                                            </div>
-                                            <div>
-                                                <SubmitButton label = "Question Bank" icon={<FaFolderOpen />} active={tab !== 'All Questions'} onClick={()=>{setTab("Question Bank")}}/>
-                                            </div>
-                                        </div>
-
-                                        {
-                                            tab == "Question Bank" ? 
-                                            <QuestionBankSelection/> :
-                                            // <AllQuestions/>
-                                            (<div className='overflow-y-hidden p-4 flex flex-col gap-4'>
-                                            <div className='flex gap-4 mb-4'>
-                                                <div className='flex flex-col md:flex-row items-center'>
-                                                    <p className='text-xs'>Skill Targeted :&nbsp; </p>
-                                                    <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/>
-                                                </div>
-                                                <div className='flex flex-col md:flex-row items-center'>
-                                                    <p className='text-xs'>Difficulty :&nbsp;</p>
-                                                    <div className="md:h-6 text-xs h-6 bg-LightBlue border border-black rounded-md hover:border-gray-400 ">
-                                                        <select
-                                                            value={selectedCategory}
-                                                            onChange={(e) => handleSelectCategory(e.target.value)}
-                                                            className='outline-none bg-LightBlue rounded-md h-5'
-                                                        >
-                                                            {difficulty.map((category, index) => (
-                                                                <option key={index} value={category}>
-                                                                    {category}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>  
-                                                </div>
-                                            </div>
-                                        
-                                            {
-                                                questions.map((question, index)=> {
-                                                    return <DisplayOnlyQuestions skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
-                                                })
-                                            }
-                                        </div>)
-                                        }
-                                    </div>               
-                                </div>
-                                <div className='sticky border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                                    <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Save ({8})</button>
+                                <div className='overflow-y-auto no-scrollbar'>
+                                    <div className='h-full flex flex-col gap-4'>
+                                        <SelectQuestions/>
+                                    </div>   
+                                    <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
+                                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Save ({8})</button>
+                                    </div>            
                                 </div>
                             </div>
                         </div>
@@ -184,15 +249,20 @@ useEffect(() => {
                                 <QuestionCreator
                                     type={creatingQuestion}
                                     closeHandler={handleCloseQuestionCreator}
-                                    savingHandler={updateQuestion}
+                                    savingHandler={saveQuestionHandler}
                                 />
                             )
                         }
-                        <div className='w-full flex flex-col gap-2'>
+                        <div className='QuestionsDisplay w-full flex flex-col gap-2'>
                         {
                             questions ?
                             questions.map((question, index)=> {
-                                return <StoredQuestion deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/>
+                                return (
+                                    <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
+                                        <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue}/>
+                                    </div>
+                                )
                             })
                             : ''
                         }

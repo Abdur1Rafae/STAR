@@ -4,7 +4,6 @@ import { useMediaQuery } from 'react-responsive'
 import MobUpQuiz from './MobUpQuiz';
 
 const AssignmentTable = ({assessments}) => {
-    console.log(assessments)
     function formatDate(date) {
         return new Date(date).toISOString().split('T')[0];
     }
@@ -17,10 +16,10 @@ const AssignmentTable = ({assessments}) => {
 
     const [rows, setRows] = useState(assessments.map((obj)=>{
         return {...obj, 
-        openDate: formatDate(obj.OpenDate),
-        startTime: formatTime(obj.OpenDate),
-        closeDate: formatDate(obj.CloseDate),
-        closeTime: formatTime(obj.CloseDate)}}))
+        openDate: formatDate(obj.openDate),
+        startTime: formatTime(obj.openDate),
+        closeDate: formatDate(obj.closeDate),
+        closeTime: formatTime(obj.closeDate)}}))
     
     
 
@@ -78,13 +77,13 @@ const AssignmentTable = ({assessments}) => {
                         {
                             rows.map((row, index) => (
                                 <tr key={index} className='text-center bg-LightBlue drop-shadow-md'>
-                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.Title}</td>
-                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.ClassName}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.title}</td>
+                                    <td className='p-3 text-sm border-black border-y-[1px]'>{row.className}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.openDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px]'>{row.closeDate}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.startTime}</td>
                                     <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.closeTime}</td>
-                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.Duration} minutes</td>     
+                                    <td className='p-3 text-sm border-black border-y-[1px] text-center'>{row.duration} minutes</td>     
                                 </tr>
                             ))
                         }
@@ -96,7 +95,7 @@ const AssignmentTable = ({assessments}) => {
         <div className='w-full h-[200px] flex flex-wrap'>
             {
                 rows.map((row) => (
-                    <MobUpQuiz name={row.Title} course={row.ClassName} duration={row.Duration} openDate={row.openDate} startTime={row.startTime} closeDate={row.closeDate} closeTime={row.closeTime}/>
+                    <MobUpQuiz name={row.title} course={row.className} duration={row.duration} openDate={row.openDate} startTime={row.startTime} closeDate={row.closeDate} closeTime={row.closeTime}/>
                 ))
             }
         </div>

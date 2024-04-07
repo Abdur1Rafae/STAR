@@ -3,7 +3,7 @@ import React from 'react'
 const AssessmentDetiails = () => {
   return (
     <div className='bg-LightBlue w-full mb-4 md:mb-0 md:w-72 h-auto py-2 px-4 drop-shadow-md'>
-        <h3 className='font-medium text-sm font-body'>Asessment Details</h3>
+        <h3 className='font-medium text-sm font-body'>Assessment Details</h3>
         <div className='mt-2 w-full'>
             <div className='flex text-xs font-body w-full justify-between'>
                 <h4 className='font-medium w-24'>Questions:</h4>

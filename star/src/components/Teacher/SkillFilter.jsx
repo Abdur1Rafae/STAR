@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SkillFilter = ({selectedSkill, setSelectSkill}) => {
+const SkillFilter = ({selectedSkill, setSelectSkill, assigning}) => {
     const skills = ['Logic', 'Problem Solving', 'Quantitative Analysis', 'Critical Thinking'];
   return (
     <div className="text-sm flex justify-between items-center h-6">
@@ -10,6 +10,11 @@ const SkillFilter = ({selectedSkill, setSelectSkill}) => {
                 onChange={(e) => setSelectSkill(e.target.value)}
                 className='outline-none bg-LightBlue rounded-md h-5 flex'
             >
+                {
+                    assigning ? '' : <option key={"All"} value={"All"} className='flex'>
+                        All
+                    </option>
+                }
                 {skills.map((skill, index) => (
                     <option key={index} value={skill} className='flex'>
                         {skill}

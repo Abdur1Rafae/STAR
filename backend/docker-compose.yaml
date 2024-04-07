@@ -2,54 +2,33 @@ version: “3.8”
 
 services:
 
-  mysql-db:
-    image: mysql:latest
+  api-gateway:
+    build: ./APIGateway
     restart: unless-stopped
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
+    container_name: api-gateway
     ports:
-      - '4000:3306'
+      - '3000:3000'
     volumes:
-      - ./MySql:/var/lib/mysql
+      - ./APIGateway:/app
 
-  mongodb:
-    image: mongo:latest
+  teacherhub-service:
+    build: ./TeacherHub
     restart: unless-stopped
-    container_name: mongodb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root     
+    container_name: teacherhub
     ports:
-      - '27017:27017'
+      - '3002:3002'
     volumes:
-      - ./MongoDB:/data/db
-
-  mongo-express:
-    image: mongo-express
+      - ./TeacherHub:/app
+  
+  assesshub-service:
+    build: ./AssessHub
     restart: unless-stopped
-    container_name: mongo-express
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+    container_name: assesshub
     ports:
-      - '8081:8081'
+      - '3003:3003'
+    volumes:
+      - ./AssessHub:/app
 
-  # api-gateway:
-  #   build: ./APIGateway
-  #   restart: unless-stopped
-  #   container_name: api-gateway
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - ./APIGateway:/app
-
-  # user-service:
-  #   build: ./User
-  #   restart: unless-stopped
-  #   container_name: user-service
-  #   ports:
-  #     - '3001:3001'
-  #   volumes:
-  #     - ./User:/app
+volumes:
+    - "/etc/timezone:/etc/timezone:ro"
+    - "/etc/localtime:/etc/localtime:ro"

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const QuestionContext = createContext();
 
@@ -57,18 +57,18 @@ export const QuestionProvider = ({ children }) => {
     point: 20
   },]);
   const [QBquestions, setQBQuestionSet] = useState([])
+  const [reuseQuestions, setReuseQuestions] = useState([])
+  const [selectedQuestions, setSelectedQuestions] = useState([])
 
   // useEffect(() => {
   //   localStorage.setItem('questionSet', JSON.stringify(questionSet));
   // }, [questionSet]);
 
-  const setQBQuestions = (questionSet) => {
-    console.log(questionSet)
-    setQBQuestionSet([questionSet])
+  const addQBQuestions = (questionSet) => {
+    setQBQuestionSet([...QBquestions, questionSet])
   }
 
   const addQuestion = (question) => {
-    console.log(questions)
     setQuestionSet([...questions, question]);
   };
 
@@ -84,6 +84,10 @@ export const QuestionProvider = ({ children }) => {
     setQuestionSet(updatedQuestionSet);
   };
 
+  const removeQBQuestions = (index) => {
+    setQBQuestionSet([])
+  }
+
   const clearQuestionSet = () => {
     setQuestionSet([]);
   };
@@ -93,13 +97,23 @@ export const QuestionProvider = ({ children }) => {
   }
 
   const saveQuestions = () => {
-    console.log(QBquestions[0].length)
-    setQuestionSet([...questions, ...QBquestions[0]]);
+    const newQuestions = selectedQuestions.filter(question => !questions.some(q => q.question === question.question));
+    setQuestionSet([...questions, ...newQuestions]);
+    setSelectedQuestions([]);  
   }
+
+  const swapQuestion = (id1, id2) => {
+    const newQuestions = [...questions]
+    const temp = newQuestions[id1];
+    newQuestions[id1] = newQuestions[id2];
+    newQuestions[id2] = temp;
+    setQuestions(newQuestions)
+  }
+
 
   return (
     <QuestionContext.Provider
-      value={{ questions, addQuestion, updateQuestion, removeQuestion, clearQuestionSet, setQuestions, saveQuestions, setQBQuestions }}
+      value={{ swapQuestion, questions, addQuestion, selectedQuestions, setSelectedQuestions, updateQuestion, removeQuestion, clearQuestionSet, setQuestions, saveQuestions, addQBQuestions, removeQBQuestions, reuseQuestions, setReuseQuestions }}
     >
       {children}
     </QuestionContext.Provider>

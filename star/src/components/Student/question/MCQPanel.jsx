@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
@@ -6,13 +6,58 @@ import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
 
 const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
   const [isFlagged, setIsFlagged] = useState(Flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const filterQuestions = QuizStore(store=> store.filterQuestions)
 
+  const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
+  const updateResponse = QuizStore(store=>store.updateResponse)
+  const [selectedOption, setSelectedOption] = useState([]);
+  const [response, setResponse] = useState(null)
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(()=> {
+    console.log(question.number)
+    const answer = getSelectedResponse(question.number)
+    setResponse(answer)
+    setSelectedOption(answer ? answer.selectedAnswer : [])
+  }, [question.number])
+
+  useEffect(() => {
+    setResponse(answer => {
+      const updatedAnswer = {
+        number: question.number,
+        type: question.type,
+        selectedAnswer: answer ? answer.selectedAnswer : selectedOption
+      };
+      updateResponse(question.number, updatedAnswer);
+      return answer;
+    });
+  }, [selectedOption]);
+
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
+    const index = selectedOption.indexOf(option);
+
+    if (index !== -1) {
+      const updatedOptions = [...selectedOption];
+      updatedOptions.splice(index, 1);
+      setSelectedOption(updatedOptions);
+      const updatedResponse = {
+        number: question.number,
+        type: question.type,
+        selectedAnswer: updatedOptions
+      };
+      setResponse(updatedResponse)
+    } else {
+      setSelectedOption([...selectedOption, option]);
+      const updatedResponse = {
+        number: question.number,
+        type: question.type,
+        selectedAnswer: [...selectedOption, option]
+      };
+      setResponse(updatedResponse)
+    }
+
     onOptionSelect(option);
   };
 
@@ -32,7 +77,7 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
             </p>
             <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
               <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
-              <p className="text-gray-500 text-sm self-center"> {question?.point} marks</p>
+              <p className="text-gray-500 text-sm self-center"> {question?.points} marks</p>
             </div>
           </div>
         </div>
@@ -50,7 +95,7 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
 
       <div className="border-t border-black border-2 mt-2"></div>
 
-      <div className="options">
+      <div className="w-full md:w-1/2">
         {question?.options &&
           question?.options.map((option, index) => (
             <div
@@ -59,14 +104,14 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
               onClick={() => handleOptionClick(option, index)}
             >
               <div
-                className={`h-10 rounded-md flex items-center gap-4  ${
-                  selectedOption === option ? 'bg-DarkBlue text-white' : ''
+                className={`min-h-10 rounded-md flex items-center gap-4  ${
+                  selectedOption.includes(option) ? 'bg-DarkBlue text-white' : ''
                 } border-[1px] border-black`}
               >
                 <div className="ml-4">
-                {selectedOption === option ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
+                {selectedOption.includes(option) ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
 
-                <div className=''>{option.text}</div>
+                <div className=''>{option}</div>
               </div>
             </div>
           ))}

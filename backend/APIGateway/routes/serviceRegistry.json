@@ -12,6 +12,32 @@
                     "url": "http://localhost:3001/"
                 }
             ]
+        },
+        "assesshub": {
+            "index": 0,
+            "instances": [
+                {
+                    "serviceName": "assesshub",
+                    "protocol": "http",
+                    "host": "localhost",
+                    "port": 3003,
+                    "enabled": true,
+                    "url": "http://localhost:3003/"
+                }
+            ]
+        },
+        "teacherhub": {
+            "index": 0,
+            "instances": [
+                {
+                    "serviceName": "teacherhub",
+                    "protocol": "http",
+                    "host": "localhost",
+                    "port": 3002,
+                    "enabled": true,
+                    "url": "http://localhost:3002/"
+                }
+            ]
         }
     }
 }

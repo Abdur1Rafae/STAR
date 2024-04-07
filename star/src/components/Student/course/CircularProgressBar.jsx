@@ -8,8 +8,8 @@ const CircularProgressBar = ({percentage, width}) => {
     };
 
   return (
-    <div class="">
-        <svg class="w-full h-full" viewBox="0 0 100 100">
+    <div>
+        <svg className="w-full h-full" viewBox="0 0 100 100">
             <circle
                 className="text-gray-200 stroke-current"
                 strokeWidth="6"

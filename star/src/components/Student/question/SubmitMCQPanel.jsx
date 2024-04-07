@@ -26,7 +26,7 @@ const SubmitMCQPanel = ({ question  , isexplanation = true}) => {
               className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
             >
               <div
-                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between border border-2 ${
+                className={`w-80 h-10 rounded-md mr-2 flex items-center justify-between border-2 ${
                   question?.correctAnswer === option ? 'bg-green-300 ' : question?.selectedAnswer === option
                   ? 'bg-red-300 '
                   : ''

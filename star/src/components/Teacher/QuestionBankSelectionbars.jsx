@@ -8,7 +8,7 @@ const QuestionBankSelectionbars = ({ bank, bankName, isSelected, onClick }) => {
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
-    onClick(bankName, !isSelected); // Pass the bankName and updated isSelected state to the parent component
+    onClick(bankName, !isSelected);
   };
 
   const handleExpand = () => {
@@ -16,11 +16,11 @@ const QuestionBankSelectionbars = ({ bank, bankName, isSelected, onClick }) => {
   };
 
   return (
-    <div className={`bg-blue-100  w-full py-2 px-2 bg-[#F4F9FD] shadow-lg rounded-md transition-height ease-out duration-500 ${expanded ? 'h-auto' : 'h-10' }`}>
+    <div className={`bg-blue-100  w-full py-2 px-2  shadow-lg rounded-md transition-height ease-out duration-500 ${expanded ? 'h-auto' : 'h-10' }`}>
       <div className="flex items-center justify-between">
         <div onClick={handleSelectAll} className="flex items-center cursor-pointer gap-2 ">
-          {selectAll ? <FaCheckSquare color='#2C6491' className='border border-2 border-[#2C6491] rounded' /> : <FaSquare color='white' className='border border-2 border-[#2C6491] rounded'/> } {/* Display the appropriate icon based on selectAll state */}
-          <div>{bankName}</div> {/* Display the bank name */}
+          {selectAll ? <FaCheckSquare color='#2C6491' className=' border-2 border-[#2C6491] rounded' /> : <FaSquare color='white' className='border-2 border-[#2C6491] rounded'/> } {/* Display the appropriate icon based on selectAll state */}
+          <div>{bankName}</div>
         </div>
         <div className="flex items-center cursor-pointer" onClick={handleExpand}>
           {expanded ? <FaChevronUp className="mr-1 " /> : <FaChevronDown className="mr-1" />}
@@ -30,6 +30,7 @@ const QuestionBankSelectionbars = ({ bank, bankName, isSelected, onClick }) => {
         <div className="w-full gap-y-2 my-2">
           {bank.map((question, index) => (
             <div key={index} className='py-2'>
+              <button className='w-full'>
               <DisplayOnlyQuestions
                 key={index}
                 skill={question.skill}
@@ -40,6 +41,7 @@ const QuestionBankSelectionbars = ({ bank, bankName, isSelected, onClick }) => {
                 options={question.options}
                 image={question.imageUrl}
               />
+              </button>
             </div>
           ))}
         </div>
