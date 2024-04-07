@@ -1,15 +1,17 @@
 import React from 'react';
 import SubmitButton from '../button/SubmitButton.jsx';
 
-const VerticalCenterNavigationTab = ({ questions, selectedQuestion, handleQuestionClick }) => {
+const HorizontalNavigationTab = ({ questions, selectedQuestion, handleQuestionClick }) => {
+  console.log(questions.length)
+
   return (
-    <div className='w-auto h-screen bg-LightBlue shadow-lg justify-center md:flex-row md:justify-start md:gap-4 gap-y-4 pb-2 border-b-2 border-grey-800'>
+    <div className='w-full h-full rounded-md flex flex-col justify-start items-center'>
       {questions.map((question, index) => (
-        <div key={index} className='bg-transparent m-auto my-4'>
+        <div key={index}   className = "w-full pt-4 text-sm flex justify-center ">
           <SubmitButton
-            label={question}
-            active={selectedQuestion === question}
-            onClick={() => handleQuestionClick(question)}
+            label={"Question " + index}
+            active={selectedQuestion === index}
+            onClick={() => handleQuestionClick(index)}
           />
         </div>
       ))}
@@ -17,4 +19,4 @@ const VerticalCenterNavigationTab = ({ questions, selectedQuestion, handleQuesti
   );
 };
 
-export default VerticalCenterNavigationTab;
+export default HorizontalNavigationTab;
