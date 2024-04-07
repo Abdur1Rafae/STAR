@@ -12,8 +12,7 @@ import ResultSummary from '../../components/Student/ResultSummary';
 import PeopleTabTile from '../../components/Teacher/PeopleTabTile';
 
 const IndividualReport = () => {
-  const [showStudents, setShowStudents] = useState(false); // State to toggle visibility of PeopleNavigation
-  const [activePerson, setActivePerson] = useState(null); // State to store the active person
+  const [showStudents, setShowStudents] = useState(true); // State to toggle visibility of PeopleNavigation
   
   const correctAnswers = 5;
   const wrongAnswers = 3; 
@@ -26,7 +25,7 @@ const IndividualReport = () => {
   const skillTargeted = 'Critical Thinking';
   const topic = 'Mathematics';
   const { questions , setQuestions, saveQuestions } = useContext(QuestionContext);
-
+    
   const data = [{name: 'Top Performers', value: 17},{name: 'Absentees', value: 6},{name: 'Requires Attention', value: 12}];
   const peopleinfo = [
     {name: 'Maaz Shamim', erp: 22222, percentage: 75},
@@ -36,12 +35,13 @@ const IndividualReport = () => {
     {name: 'Alib', erp: 22225, percentage: 70},
     {name: 'Alik', erp: 22225, percentage: 70},
   ];
+  const [activePerson, setActivePerson] = useState([peopleinfo[0]]); // State to store the active person
+
 
   // Function to handle click on a person
   const handlePersonClick = (person) => {
     setActivePerson(person);
   };
-
   return (
     <div className='flex flex-col'>
       <MenuBar name={"Maaz Shamim"} role={"Student"} />
