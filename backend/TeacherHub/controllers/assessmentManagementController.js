@@ -99,6 +99,8 @@ module.exports.deleteAssessment = async (req,res) =>
             )
 
         })
+
+        remove(deletedAssessment.coverImage)
     
         return res.status(200).json({message: `Assessment Deleted Successfully`})  
     }

@@ -2,33 +2,61 @@ version: “3.8”
 
 services:
 
-  api-gateway:
-    build: ./APIGateway
-    restart: unless-stopped
-    container_name: api-gateway
+  redis:
+    image: redis:latest
+    container_name: redis
+    # environment:
+    #   REDIS_ARGS: "--requirepass password --user username on >password ~* allcommands --user default off nopass nocommands"
     ports:
-      - '3000:3000'
+      - "6379:6379"
     volumes:
-      - ./APIGateway:/app
+      - ./Redis/redis:/data
 
-  teacherhub-service:
-    build: ./TeacherHub
-    restart: unless-stopped
-    container_name: teacherhub
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-ui
+    restart: always
     ports:
-      - '3002:3002'
+      - "5540:5540"
     volumes:
-      - ./TeacherHub:/app
+      - ./Redis/redis-insight:/data
+
+  # api-gateway:
+  #   build: ./APIGateway
+  #   restart: unless-stopped
+  #   container_name: api-gateway
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - ./APIGateway:/app
+
+#   userguardian-service:
+#     build: ./UserGuardian
+#     restart: unless-stopped
+#     container_name: userguardian
+#     ports:
+#       - '3001:3001'
+#     volumes:
+#       - ./UserGuardian:/app
+
+#   teacherhub-service:
+#     build: ./TeacherHub
+#     restart: unless-stopped
+#     container_name: teacherhub
+#     ports:
+#       - '3002:3002'
+#     volumes:
+#       - ./TeacherHub:/app
   
-  assesshub-service:
-    build: ./AssessHub
-    restart: unless-stopped
-    container_name: assesshub
-    ports:
-      - '3003:3003'
-    volumes:
-      - ./AssessHub:/app
+#   assesshub-service:
+#     build: ./AssessHub
+#     restart: unless-stopped
+#     container_name: assesshub
+#     ports:
+#       - '3003:3003'
+#     volumes:
+#       - ./AssessHub:/app
 
-volumes:
-    - "/etc/timezone:/etc/timezone:ro"
-    - "/etc/localtime:/etc/localtime:ro"
+# volumes:
+    # - "/etc/timezone:/etc/timezone:ro"
+    # - "/etc/localtime:/etc/localtime:ro"

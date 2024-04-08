@@ -23,7 +23,7 @@ app.listen(PORT, () =>
 {
   axios({
       method: 'POST',
-      url: 'http://localhost:3000/admin/register',
+      url: 'http://localhost:3000/registry/register',
       headers: {'Content-Type': 'application/json'},
       data: 
       {
@@ -35,11 +35,12 @@ app.listen(PORT, () =>
       }
   }).then((response) => 
   {
-    console.log(response.data)
+    console.log(response.data.message)
     console.log(`TeacherHub Microservice avilable at port ${PORT}`)
   }).catch((error) => 
   {
-    console.error('Error registering service:', error.code)
+    if(error.response.status == 409){console.log(`Configurations already exist for Host: ${HOST} at Port: ${PORT}`)}
+    else{console.error('Error registering service:', error.code)}
   })
 })
     

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-mongoose.set('debug', true);
 
 const questionSchema = new mongoose.Schema(
 {
@@ -55,6 +54,6 @@ const questionSchema = new mongoose.Schema(
     }
 })
 
-const Question = mongoose.model('questions', questionSchema);
+const Question = mongoose.model('Question', questionSchema);
 
 module.exports = Question;

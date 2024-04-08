@@ -1,6 +1,5 @@
 const conn = require('../dbconfig/dbcon')
 const Joi = require('joi')
-const {validateFields} = require('../util/library')
 const Class = require('../models/Class')
 const Teacher = require('../models/Teacher')
 const Section = require('../models/Section')

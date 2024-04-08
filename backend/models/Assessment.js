@@ -1,34 +1,10 @@
 const mongoose = require('mongoose')
-const Question = require('./Questions')
-const Class = require('./ClassManagement')
-const Schema = mongoose.Schema
 
-const questionBankSchema = new mongoose.Schema(
+const assessmentSchema = new mongoose.Schema(
 {
-    questions: 
-    [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Question
-    }],
-    reusedQuestions: 
-    [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: Question
-    }]
-})
-
-const assessmentSchema = new Schema(
-{
-    teacherID: { 
-        type: String,
-        required: true,
-        validate: 
-        {
-            validator: function(value) {return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)},
-            message: 'Invalid TeacherId'
-        }},
+    teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true },
     title: { type: String, required: true },
-    participants: [{ type: Schema.Types.ObjectId, ref: Class.sections }],
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Section' }],
     description : {type: String},
     coverImage: { type: String },
     status : {type: String},
@@ -47,13 +23,23 @@ const assessmentSchema = new Schema(
         randomizeAnswers: { type: Boolean, default: false },
         finalScore: { type: Boolean, default: false },
     },
-    questionBank: questionBankSchema, 
+    questionBank: 
+    {
+        questions: 
+        [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question'
+        }],
+        reusedQuestions: 
+        [{
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Question'
+        }], 
+    }
 }, 
 {
     timestamps: true,
 })
-
-assessmentSchema.set('toJSON', { getters: true });
 
 const Assessment = mongoose.model('assessment', assessmentSchema)
 
