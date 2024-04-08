@@ -121,7 +121,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
                 },
                 {
                   path: 'questionBank.question',
-                  select: 'points'
+                  select: 'points -_id'
                 }
               ],
               model: Assessment

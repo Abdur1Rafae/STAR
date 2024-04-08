@@ -10,7 +10,7 @@ module.exports.redirect = async (req,res) =>
         axios({
             method: req.method,
             responseType: 'arraybuffer',
-            url: url + path,
+            url: url + path + '?' + new URLSearchParams(req.query),
             headers: { "Content-Type": req.headers['content-type'] }, 
             data: req.body
         }).then((response) => {

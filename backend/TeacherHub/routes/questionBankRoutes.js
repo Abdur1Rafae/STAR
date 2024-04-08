@@ -3,6 +3,7 @@ const router = express.Router()
 const controller = require('../controllers/questionBankController')
 
 router.put('/update-order/:assessmentId', controller.updateOrder)
+router.get('/all-topics', controller.getTopics)
 
 router.post('/add-question/:assessmentId', controller.addQuestionToBank)
 router.put('/update-question/:questionId', controller.updateQuestionInBank)
