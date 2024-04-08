@@ -41,11 +41,12 @@ const AddQuestion = async({assessmentId, question}) => {
         }
     })
 
-    return res.data.data
+    return res.data
 }
 
-const UpdateQuestion = async({questionId, question}) => {
-    const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${questionId}`,{
+const UpdateQuestion = async({question}) => {
+    console.log(question)
+    const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${question._id}`,{
         question: question,
     },{
         headers: {
@@ -56,8 +57,8 @@ const UpdateQuestion = async({questionId, question}) => {
     return res.data
 }
 
-const DeleteQuestion = async({questionId}) => {
-    const res = await AxiosBase.delete(`teacherhub/question-bank/delete-question/${questionId}`,{
+const DeleteQuestion = async({questionId, assessmentId}) => {
+    const res = await AxiosBase.delete(`teacherhub/question-bank/delete-question/${assessmentId}/${questionId}`,{
         headers: {
             authorization: `Bearer ${token}`
         }
@@ -66,4 +67,76 @@ const DeleteQuestion = async({questionId}) => {
     return res.data
 }
 
-export {CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion}
+const UpdateReuseQuestion = async({assessmentId, question}) => {
+    const res = await AxiosBase.put(`teacherhub/question-bank/update-reused-question/${assessmentId}/${question._id}`,{
+        question: question,
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+const AddReuseQuestion = async({assessmentId, questions}) => {
+    const res = await AxiosBase.post(`teacherhub/question-bank/update-reused-question/${assessmentId}`,{
+        reusedQuestions: questions,
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+const DeleteReuseQuestion = async({questionId, assessmentId}) => {
+    const res = await AxiosBase.delete(`teacherhub/question-bank/delete-reused-question/${assessmentId}/${questionId}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+const UpdateOrder = async({questions, assessmentId}) => {
+    const res = await AxiosBase.put(`teacherhub/question-bank/delete-reused-question/${assessmentId}`,{
+        order: questions
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+const GetStoredQuestions = async({assessmentId}) => {
+    const res = await AxiosBase.get(`teacherhub/question-bank/questions/${assessmentId}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
+    console.log(token)
+    const res = await AxiosBase.get(`teacherhub/question-bank/all-questions`,{
+        skill: skill,
+        topic: topic,
+        difficulty: difficulty,
+        type: type
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+export {CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions}

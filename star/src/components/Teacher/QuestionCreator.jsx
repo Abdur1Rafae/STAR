@@ -6,12 +6,12 @@ import SASetup from './SASetup';
 import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
 
-const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue}) => {
+const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || 'Problem Solving');
     const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || 'Medium')
-
     const [newQuestion, setNewQuestion] = useState(question);
     const [newOptions, setNewOptions] = useState(options ? options : []);
+
     const [newCorrectOptions, setNewCorrectOptions] = useState(correctOptions ? correctOptions : [])
     const [newExplanation, setNewExplanation] = useState(explanation);
     const [newPoints, setNewPoints] = useState(points);
@@ -19,6 +19,12 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
     const [topicName, setTopicName] = useState(topic ? topic : '')
     const [isCorrect, setCorrect] = useState(isTrue ?? false)
     const [error, setError] = useState('')
+
+    useEffect(() => {
+        setNewOptions([]);
+        setNewCorrectOptions([]);
+    }, [type]);
+    
 
     const updateOption = (index, newString) => {
         setNewOptions(prevState => {
@@ -88,7 +94,7 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
             }
             setError('')
             try {
-                savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type, newCorrectOptions, isCorrect)
+                savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type, newCorrectOptions, isCorrect, reuse)
                 closeHandler()
             } catch(err) {
                 console.log(err)

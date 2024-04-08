@@ -20,10 +20,8 @@ import QuizReports from './pages/Teacher/QuizReports.jsx';
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
 import { SectionProvider } from './Context/SectionsContext.js';
-import QuestionSummary from './pages/Teacher/QuestionSummary.jsx';
 import GradingTablePage from './pages/Teacher/GradingTablePage.jsx';
 import ClassesTablePage from './pages/Teacher/ClassesTablePage.jsx';
-import IndividualReport from './pages/Teacher/IndividualReport.jsx';
 
 const AppRoutes = () => {
   return (

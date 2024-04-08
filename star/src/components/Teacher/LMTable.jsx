@@ -9,7 +9,7 @@ const LMTable = ({ data, columns , sections, skills}) => {
   }
   
   return (
-    <div className="w-11/12 mx-4">
+    <div className="w-11/12 mx-2">
       <div className="flex mt-6 font-sans gap-4">
         {sections && <div className="flex">
           <p>Sections :&nbsp;</p>

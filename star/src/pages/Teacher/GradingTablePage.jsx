@@ -33,7 +33,7 @@ const GradingTablePage = () => {
   
   
   return (
-    <div className=' w-full h-full font-body  border border-black '>
+    <div className=' w-full h-full font-body'>
       <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
       <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
          <SideBar active={"Grading"}/>

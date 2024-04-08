@@ -14,7 +14,7 @@ export const QuestionProvider = ({ children }) => {
     explanation: "Albert Einstein developed the theory of relativity.",
     skill: "Physics",
     difficulty: "Hard",
-    point: 20
+    points: 20
   },
   {
     type: "True/False",
@@ -27,7 +27,7 @@ export const QuestionProvider = ({ children }) => {
     explanation: "Stephen Hawking developed the theory of relativity.",
     skill: "Physics",
     difficulty: "Hard",
-    point: 20
+    points: 20
   },
   {
     type: "Short Answer",
@@ -39,7 +39,7 @@ export const QuestionProvider = ({ children }) => {
     explanation: "",
     skill: "Physics",
     difficulty: "Hard",
-    point: 20.
+    points: 20.
   }]);
   const [QBquestions, setQBQuestionSet] = useState([])
   const [reuseQuestions, setReuseQuestions] = useState([])

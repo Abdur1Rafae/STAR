@@ -34,18 +34,18 @@ const QuizReports = () => {
   
   
   return (
-    <div className=' w-full h-full font-body  border border-black '>
+    <div className=' w-full h-full font-body'>
       <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
       <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
          <SideBar active={"Live Monitoring"}/>
          <div className='h-fit w-full	'>
-            <Subheader name={"Reports"}/>
-            <div className='flex m-4 gap-4'>
-                <LCSearchBar/>
-                <CategoryFilter categories={['3452', '2343', '2342']}/>
-            </div>
-            <LMTable data={data} columns = {columns} />
-            </div>
+          <Subheader name={"Reports"}/>
+          <div className='flex m-4 gap-4'>
+              <LCSearchBar/>
+              <CategoryFilter categories={['3452', '2343', '2342']}/>
+          </div>
+          <LMTable data={data} columns = {columns} />
+        </div>
       </div>
    </div>
 );

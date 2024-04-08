@@ -5,9 +5,9 @@ const ViewBox = ({onClick}) => {
     
   
   return (
-   <button className='flex w-fit p-2 shadow-lg flex items-center text-sm gap-2 bg-white rounded-md border ' onClick={onClick}>
+   <button className='w-fit p-2 shadow-lg flex items-center text-sm gap-2 bg-white rounded-md border ' onClick={onClick}>
     <IoEyeOutline/> 
-    <span>View</span>
+    <span className='text-xs'>View</span>
    </button>
 );
 }

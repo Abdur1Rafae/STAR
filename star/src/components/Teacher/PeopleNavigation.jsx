@@ -4,9 +4,10 @@ import { CiFilter } from "react-icons/ci";
 import PeopleTabTile from './PeopleTabTile';
 
 const PeopleNavigation = ({ peopleinfo, activePerson, onPersonClick }) => {
+  console.log(peopleinfo.length)
  
   return (
-    <div className='h-full '>
+    <div className='h-full'>
       <div className='sticky top-0 bg-LightBlue'>
         <div className='flex items-center pl-2 pt-4 gap-4 bg-LightBlue'>
           <LCSearchBar  placeholder="Search" />

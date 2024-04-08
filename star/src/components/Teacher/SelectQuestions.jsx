@@ -4,28 +4,38 @@ import DifficultyFilter from './DifficultyFilter'
 import TypeFilter from './TypeFilter'
 import DisplayOnlyQuestions from './DisplayOnlyQuestions'
 import { QuestionContext } from '../../Context/QuestionsContext'
+import { GetReuseQuestions } from '../../APIS/Teacher/AssessmentAPI'
 
 const SelectQuestions = () => {
     const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
     const { selectedQuestions, setSelectedQuestions } = useContext(QuestionContext);
     const [filteredQuestions, setFilteredQuestions] = useState(reuseQuestions)
-    const [selectedSkill, setSelectedSkill] = useState('')
-    const [selectedLevel, setSelectedLevel] = useState('');
-    const [selectedType, setSelectedType] = useState('')
-
-    useEffect(()=> {
-        setReuseQuestions([...AllQuestions])
-    }, [])
+    const [selectedSkill, setSelectedSkill] = useState(null)
+    const [selectedLevel, setSelectedLevel] = useState(null);
+    const [selectedType, setSelectedType] = useState(null)
+    const [selectedTopic, setSelectedTopic] = useState(null)
 
     useEffect(() => {
-      const filtered = reuseQuestions.filter(question => {
-          const skillMatch = selectedSkill !== '' && selectedSkill !== "All" ? question.skill === selectedSkill : true;
-          const levelMatch = selectedLevel !== '' && selectedLevel !== "All" ? question.difficulty === selectedLevel : true;
-          const typeMatch = selectedType !== '' && selectedType !== "All" ? question.type === selectedType : true;
-          return skillMatch && levelMatch && typeMatch;
-      });
-      setFilteredQuestions(filtered);
-    }, [reuseQuestions, selectedSkill, selectedLevel, selectedType]);
+      // const filtered = reuseQuestions.filter(question => {
+      //   const skillMatch = selectedSkill !== '' && selectedSkill !== "All" ? question.skill === selectedSkill : true;
+      //   const levelMatch = selectedLevel !== '' && selectedLevel !== "All" ? question.difficulty === selectedLevel : true;
+      //   const typeMatch = selectedType !== '' && selectedType !== "All" ? question.type === selectedType : true;
+      //   return skillMatch && levelMatch && typeMatch;
+      // });
+      //setFilteredQuestions(filtered);
+      const GetQuestions = async() => {
+        try {
+          const res = await GetReuseQuestions({skill: selectedSkill, difficulty: selectedLevel, type: selectedType, topic: selectedTopic})
+          console.log(res)
+        } catch(err) {
+          console.log(err)
+        }
+        setReuseQuestions([...AllQuestions])
+      }
+
+      GetQuestions()
+    }, []);
+    // reuseQuestions, selectedSkill, selectedLevel, selectedType
 
     //self note: useEffect will make an api call to set this array
     const AllQuestions = [{

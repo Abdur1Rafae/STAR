@@ -13,10 +13,12 @@ import SelectQuestions from '../../components/Teacher/SelectQuestions';
 import SubheaderBut from '../../components/Teacher/SubheaderBut';
 import { IoIosMove } from "react-icons/io";
 import { ToggleStore } from '../../Stores/ToggleStore';
-import { AddQuestion } from '../../APIS/Teacher/AssessmentAPI';
+import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion } from '../../APIS/Teacher/AssessmentAPI';
+import { useParams } from 'react-router';
 
 
 function AddQuestions() {
+    const assessmentName = useParams()
     const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
     const skills = ["Problem Solving", "Logic Design", "Quantitative Analysis", "Critical Thinking"]
     const [creatingQuestion, setCreateQuestion] = useState(null);
@@ -35,11 +37,26 @@ function AddQuestions() {
 
     const handleSubmitQuestions = () => {
         console.log(questions)
-    }    
+    }  
+    
+    useEffect(()=> {
+        const getAllQuestions = async() => {
+            try{
+                const res = await GetStoredQuestions({assessmentId: assessmentName.assessmentId})
+                console.log(res)
+                setQuestions(res)
+            } catch(err) {
+                console.log(err)
+                return
+            }
+        }
+
+        getAllQuestions() 
+    }, [])
 
     const saveQuestionHandler = async(id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
         const index = questions.length
-        const updatedQuestions = [...questions];
+        const updatedQuestions = index > 0 ? [...questions] : []
         if(type == "MCQ") {
             updatedQuestions[index] = {
                 type: type,
@@ -84,8 +101,8 @@ function AddQuestions() {
             }
         }
         try {
-            const res = await AddQuestion({assessmentId:'660fa02a32ebc39f5b9d37b3', question:updatedQuestions[index]})
-            updatedQuestions[index]._id = res._id
+            const res = await AddQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]})
+            updatedQuestions[index]._id = res.insertedId
             setQuestions(updatedQuestions);
         } catch(err) {
             console.log(err)
@@ -93,19 +110,31 @@ function AddQuestions() {
         }
     };
 
-    const deleteQuestion = (id) => {
-        const updatedQuestions = questions.filter((_, index) => index !== id);
-        setQuestions(updatedQuestions);
+    const deleteQuestion = async(id) => {
+        try{
+            const questionToDelete = questions[id]
+            if(questionToDelete.reuse) {
+                const res = await DeleteReuseQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
+            }
+            else {
+                const res = await DeleteQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
+            }
+            const updatedQuestions = questions.filter((_, index) => index !== id);
+            setQuestions(updatedQuestions);
+        } catch(err) {
+            console.log(err)
+        }
     };
         
     const handleCloseQuestionCreator = () => {
         setCreateQuestion(null);
     };
 
-    const updateQuestion = (index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
+    const updateQuestion = async(index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue, reuse) => {
         const updatedQuestions = [...questions];
-        if(type == "Multiple Choice Question") {
+        if(type == "MCQ") {
             updatedQuestions[index] = {
+                _id: updatedQuestions[index]._id,
                 type: type,
                 options: newOptions,
                 correctOptions: correctOptions,
@@ -114,14 +143,14 @@ function AddQuestions() {
                 imageUrl: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
-                point: point,
+                points: point,
                 topic: topic,
                 reuse: false
             }
-            setQuestions(updatedQuestions);
         }
         else if(type == "True/False") {
             updatedQuestions[index] = {
+                _id: updatedQuestions[index]._id,
                 type: type,
                 options: newOptions,
                 isTrue: isTrue,
@@ -130,25 +159,38 @@ function AddQuestions() {
                 imageUrl: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
-                point: point,
+                points: point,
                 topic: topic,
                 reuse: false
             }
-            setQuestions(updatedQuestions);
         }
         else {
             updatedQuestions[index] = {
+                _id: updatedQuestions[index]._id,
                 type: type,
                 question: questionText,
                 explanation: explanationText,
                 imageUrl: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
-                point: point,
+                points: point,
                 topic: topic,
                 reuse: false
             }
+        }
+
+        try {
+            if(reuse) {
+                const res = await UpdateReuseQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]}) 
+                console.log(res)
+            }
+            else {
+                const res = await UpdateQuestion({question: updatedQuestions[index]}) 
+                console.log(res)
+            }
             setQuestions(updatedQuestions);
+        } catch(err) {
+            console.log(err)
         }
     }
 
@@ -202,7 +244,7 @@ function AddQuestions() {
                                 </button>
                             </div>
                             <div className='border-2 border-dotted border-slate-400'>
-                                <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=>setCreateQuestion("Short Question")}>
+                                <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=>setCreateQuestion("Short Answer")}>
                                     <img className='w-12 mix-blend-multiply' src={SAQuestion} alt=''/>
                                     <p className='text-xs'>Short Question</p>
                                 </button>
@@ -237,7 +279,7 @@ function AddQuestions() {
                                         <SelectQuestions/>
                                     </div>   
                                     <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Save ({8})</button>
+                                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Save</button>
                                     </div>            
                                 </div>
                             </div>
@@ -255,12 +297,12 @@ function AddQuestions() {
                         }
                         <div className='QuestionsDisplay w-full flex flex-col gap-2'>
                         {
-                            questions ?
+                            questions.length > 0 ?
                             questions.map((question, index)=> {
                                 return (
                                     <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
-                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.point} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue}/>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>
                                 )
                             })

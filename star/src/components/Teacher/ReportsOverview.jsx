@@ -61,7 +61,7 @@ const ReportsOverview = () => {
                             <p className='p-2 border-[1px] rounded-full border-[#E14942] font-semibold text-xs text-[#E14942]'>Requires Attention</p>
                         </button>
                     </div>
-                    <div className={`${extendPerformers ? 'max-h-48 overflow-y-auto' : 'h-0 hidden'} space-y-2`}>
+                    <div className={`${extendPerformers ? 'max-h-48 overflow-y-auto no-scrollbar' : 'h-0 hidden'} space-y-2 mt-2 border-[1px] border-black p-2`}>
                         <div className='flex justify-between items-center border-black'>
                             <div>
                                 <p className='text-sm font-medium'>Maaz Shamim - 22792</p>

@@ -44,11 +44,10 @@ function CreateNewAssessment() {
 
       const res = async() => {
          try {
-            // const data = await CreateAssessment({name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
-            // monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-            // setAssessmentId(data.assessmentId)
-            setAssessmentId('660fa02a32ebc39f5b9d37b3')
-            window.location.assign(`/teacher/adding-questions/660fa02a32ebc39f5b9d37b3`)
+            const data = await CreateAssessment({name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
+            monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
+            setAssessmentId(data.assessmentId)
+            window.location.assign(`/teacher/adding-questions/${data.assessmentId}`)
          } catch(err) {
             console.log(err)
          }

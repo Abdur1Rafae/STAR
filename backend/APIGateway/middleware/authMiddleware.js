@@ -36,6 +36,7 @@ const authentication = async (req, res, next) =>
     {   
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
+        console.log(token)
 
         if(!token){return res.status(401).json({error: true, message: "Unauthenticated: You must log in to access this resource"})}
         try
