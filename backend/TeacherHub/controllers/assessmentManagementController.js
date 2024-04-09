@@ -22,22 +22,23 @@ module.exports.createAssessment = async (req,res) =>
                 teacher, title, description, participants, configurations, coverImage : imagePath
             })
 
-            await Section.updateMany
+            const updatedSections = await Section.updateMany
             (
                 { _id: { $in: participants } }, 
                 { $push: { assessments: newAssessment } } 
             )
 
+            if(updatedSections.matchedCount != participants.length){throw new Error('Failed to add all sections')}
+
             return newAssessment._id
 
         })
         session.endSession()
-
+    
         res.status(200).json({assessmentId: insertedId, message: `Assessment Created Successfully`})  
     }
     catch(err){
-        console.log(err)
-        if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        if (err.name === 'ValidationError' || err.message === 'Invalid image data' || err.message === 'Failed to add all sections') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create assessment'})
     }
 }
@@ -62,6 +63,8 @@ module.exports.updateAssessment = async (req,res) =>
                 {teacherID, title, description, participants, configurations, coverImage : imagePath},
                 {new: false}
             )
+
+            if(!oldAssessment){throw new Error('Assessment not found')}
             
             remove(oldAssessment.coverImage)
 
@@ -71,15 +74,16 @@ module.exports.updateAssessment = async (req,res) =>
             const sectionsToRemove = oldParticipants.filter(sectionId => !newParticipants.includes(sectionId))
             const sectionsToAdd = newParticipants.filter(sectionId => !oldParticipants.includes(sectionId))
 
-            await Section.updateMany({ _id: { $in: sectionsToRemove } }, { $pull: { assessments: assessmentId } })
-            await Section.updateMany({ _id: { $in: sectionsToAdd } }, { $addToSet: { assessments: assessmentId } })
+            const removedSections = await Section.updateMany({ _id: { $in: sectionsToRemove } }, { $pull: { assessments: assessmentId } })
+            const addedSections = await Section.updateMany({ _id: { $in: sectionsToAdd } }, { $addToSet: { assessments: assessmentId } })
 
+            if(removedSections.matchedCount != sectionsToRemove.length && addedSections.matchedCount != sectionsToAdd.length){throw new Error('Failed to update participants')}
         })
         session.endSession()
         return res.status(200).json({message: `Assessment Updated Successfully`})  
     }
     catch(err){
-        console.log(err)
+        if (err.name === 'ValidationError' || err.message === 'Failed to update participants') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to update assessment'})}
 }
 module.exports.deleteAssessment = async (req,res) => 
@@ -92,20 +96,24 @@ module.exports.deleteAssessment = async (req,res) =>
         {
             const deletedAssessment = await Assessment.findByIdAndDelete(assessmentId)
 
-            await Section.updateMany
+            if(!deletedAssessment){throw new Error('Assessment not found')}
+
+            const updatedSections = await Section.updateMany
             (
                 { _id: { $in: deletedAssessment.participants } }, 
                 { $pull: { assessments: deletedAssessment._id } } 
             )
 
-        })
+            if(updatedSections.matchedCount != deletedAssessment.participants.length){throw new Error('Failed to update all sections')}
 
-        remove(deletedAssessment.coverImage)
+            remove(deletedAssessment.coverImage)
+        })
+        session.endSession()
     
         return res.status(200).json({message: `Assessment Deleted Successfully`})  
     }
     catch(err){
-        console.log(err)
+        if (err.message === 'Failed to update all sections' || err.message === 'Assessment not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to delete assessment'})}
 }
 module.exports.getAssessmentDetails = async (req,res) => 
@@ -120,10 +128,11 @@ module.exports.getAssessmentDetails = async (req,res) =>
         })
         .select('-questionBank -createdAt -updatedAt -status -teacher -v')
 
+        if(!assessmentDetails){ res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
+
         return res.status(200).json({data: assessmentDetails})  
     }
     catch(err){
-        console.log(err)
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get assessment details'})}
 }
 module.exports.getScheduledAssessments = async (req,res) => 
@@ -168,6 +177,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
             }
         ]);
         
+        if(!assessments){return res.status(200).json({data: []})}
 
         const categorizedAssessments = assessments.map(assessment => {
             return {
@@ -179,6 +189,5 @@ module.exports.getScheduledAssessments = async (req,res) =>
         return res.status(200).json({data: categorizedAssessments})  
     }
     catch(err){
-        console.log(err)
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get scheduled assessments'})}
 }

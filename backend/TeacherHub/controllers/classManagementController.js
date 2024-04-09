@@ -15,7 +15,9 @@ module.exports.createClass = async (req,res) =>
         const insertId = await session.withTransaction(async () => 
         {
             const newClass = await Class.create({className, teacher})
-            await Teacher.findByIdAndUpdate(teacher, { $push: { classes: newClass } }, { new: false })
+            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $push: { classes: newClass } }, { new: false })
+
+            if(!updatedTeacher){throw new Error('Teacher not found')}
 
             return newClass._id
         })
@@ -24,8 +26,8 @@ module.exports.createClass = async (req,res) =>
         return res.status(200).json({classId: insertId, message: `Class Created Successfully`})  
     }
     catch(err){
-        console.log(err)
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        else if(err.message === 'Teacher not found'){return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create class'})}
 }
 module.exports.deleteClass = async (req,res) => 
@@ -37,15 +39,18 @@ module.exports.deleteClass = async (req,res) =>
         const session = await conn.startSession()
         await session.withTransaction(async () => 
         {
-            await Class.findByIdAndDelete(classId)
-            await Teacher.findByIdAndUpdate(teacher, { $pull: { classes: classId } }, { new: false })
+            const deletedClass = await Class.findByIdAndDelete(classId)
+            if(!deletedClass){throw new Error('Class not found')}
+
+            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $pull: { classes: classId } }, { new: false })
+            if(!updatedTeacher){throw new Error('Teacher not found')}
         })
         session.endSession()
 
         return res.status(200).json({message: `Class Deleted Successfully`}) 
     }
     catch(err){
-        console.log(err)
+        if(err.message === 'Teacher not found' || err.message === 'Class not found'){return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to delete class'})
     }
 }
@@ -57,12 +62,12 @@ module.exports.updateClass = async (req,res) =>
     try{
         const {classId} = req.params
 
-        await Class.findByIdAndUpdate(classId, { className })
+        const updatedClass = await Class.findByIdAndUpdate(classId, { className })
+        if(!updatedClass){return res.status(404).json({error: 'ER_NOT_FOUND', message: `Class not found`}) }
 
         return res.status(200).json({message: `Class Updated Successfully`})     
     }
     catch(err){
-        console.log(err)
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update class'})
     }
@@ -77,18 +82,19 @@ module.exports.createSection = async (req,res) =>
         const insertId = await session.withTransaction(async () => 
         {
             const newSection = await Section.create({sectionName, class: classId})
-            await Class.findByIdAndUpdate(classId, { $push: { sections: newSection } }, { new: false })
+            const updatedClass = await Class.findByIdAndUpdate(classId, { $push: { sections: newSection } }, { new: false })
+
+            if(!updatedClass){throw new Error('Class not found')}
 
             return newSection._id
-
         })
         session.endSession()
 
         return res.status(200).json({sectionId: insertId, message: `Section Created Successfully`})  
     }
     catch(err){
-        console.log(err)
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        else if(err.message === 'Class not found'){return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create section'})}
 }
 module.exports.deleteSection = async (req,res) => 
@@ -100,9 +106,12 @@ module.exports.deleteSection = async (req,res) =>
         await session.withTransaction(async () => 
         {
 
-            const removedSection = await Section.findByIdAndDelete(sectionId)
-            const classId = removedSection.class
-            await Class.findByIdAndUpdate( classId,{ $pull: { sections: sectionId } }, { new: false })
+            const deletedSection = await Section.findByIdAndDelete(sectionId)
+            if(!deletedSection){throw new Error('Section not found')}
+
+            const classId = deletedSection.class
+            const updatedClass = await Class.findByIdAndUpdate( classId,{ $pull: { sections: sectionId } }, { new: false })
+            if(!updatedClass){throw new Error('Class not found')}
 
         })
         session.endSession()
@@ -110,7 +119,7 @@ module.exports.deleteSection = async (req,res) =>
         return res.status(200).json({message: `Section Deleted Successfully`})
     }
     catch(err){
-        console.log(err)
+        if(err.message === 'Class not found' || err.message === 'Section not found'){return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to delete section'})
     }
 }
@@ -122,12 +131,12 @@ module.exports.updateSection = async (req,res) =>
     try{
         const {sectionId}  = req.params
         
-        await Section.findByIdAndUpdate(sectionId, { sectionName })
+        const updatedSection = await Section.findByIdAndUpdate(sectionId, { sectionName })
+        if(!updatedSection){return res.status(404).json({error: 'ER_NOT_FOUND', message: `Section not found`}) }
 
         return res.status(200).json({message: `Section Updated Successfully`})        
     }
     catch(err){
-        console.log(err)
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update section'})
     }
 }
@@ -203,7 +212,7 @@ module.exports.addStudentsToSection = async (req,res) =>
         res.status(200).json({studentIds: insertedIds, message: `Enrollment Complete`})  
     }
     catch(err){
-        console.log(err)
+         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to add students to section'})
     }
 }
@@ -213,12 +222,13 @@ module.exports.removeStudentFromSection = async (req,res) =>
         const { sectionId, studentId } = req.params
         
         const section = await Section.findById(sectionId)
-        if (!section) {return res.status(404).json({ message: 'Section not found' })}
+        if (!section) {return res.status(404).json({ error : 'ER_NOT_FOUND', message: 'Section not found' })}
 
         const index = section.roster.indexOf(studentId)
         if (index !== -1) {section.roster.splice(index, 1)}
 
-        await Student.findByIdAndUpdate(studentId, { $pull: { enrolledSections: sectionId } })
+        const removedStudent = await Student.findByIdAndUpdate(studentId, { $pull: { enrolledSections: sectionId } })
+        if (!removedStudent) {return res.status(404).json({ error : 'ER_NOT_FOUND', message: 'Student not found' })}        
 
         await section.save()
 
@@ -226,7 +236,6 @@ module.exports.removeStudentFromSection = async (req,res) =>
         
     }
     catch(err){
-        console.log(err)
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to remove student from section'})
     }
 }
@@ -236,12 +245,11 @@ module.exports.getRoster = async (req,res) =>
         const { sectionId } = req.params
 
         const section = await Section.findById(sectionId).populate('roster', 'name email erp')
-        if (!section) {return res.status(404).json({ message: 'Section not found' })}
+        if (!section) {return res.status(404).json({ error : 'ER_NOT_FOUND', message: 'Section not found' })}
 
         res.status(200).json({data: section.roster}) 
     }
     catch(err){
-        console.log(err)
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get roster'})
     }
 }
@@ -261,12 +269,11 @@ module.exports.getClasses = async (req,res) =>
                 select: 'sectionName'
             }
         })
-        if (!teacherRecord) {return res.status(404).json({ message: 'Teacher not found' })}
+        if (!teacherRecord) {return res.status(404).json({ error : 'ER_NOT_FOUND', message: 'Teacher not found' })}
 
         res.status(200).json({data: teacherRecord.classes})
     }
     catch(err){
-        console.log(err)
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get classes'})
     }
 }
