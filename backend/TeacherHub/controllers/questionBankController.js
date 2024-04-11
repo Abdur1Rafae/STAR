@@ -183,6 +183,8 @@ module.exports.updateReusedQuestionInBank = async (req,res) =>
             assessment.questionBank.pull({ question: questionId })
             await assessment.save()
 
+            console.log(question)
+
             const newQuestion = await Question.create([question], {session})
             assessment.questionBank.addToSet({ question: newQuestion[0]._id })
             await assessment.save()

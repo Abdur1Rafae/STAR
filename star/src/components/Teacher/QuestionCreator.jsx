@@ -21,8 +21,8 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
     const [error, setError] = useState('')
 
     useEffect(() => {
-        setNewOptions([]);
-        setNewCorrectOptions([]);
+        setNewOptions(options ? options : []);
+        setNewCorrectOptions(correctOptions ? correctOptions : []);
     }, [type]);
     
 
@@ -80,7 +80,7 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
                 setError('Question needs to be asigned a topic.')
                 return
             }
-            if(newPoints.includes('e') || newPoints < 1){
+            if(newPoints < 1){
                 setError('Invalid points')
                 return
             }
@@ -94,6 +94,7 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
             }
             setError('')
             try {
+                console.log(newOptions)
                 savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type, newCorrectOptions, isCorrect, reuse)
                 closeHandler()
             } catch(err) {

@@ -68,8 +68,9 @@ const DeleteQuestion = async({questionId, assessmentId}) => {
 }
 
 const UpdateReuseQuestion = async({assessmentId, question}) => {
-    const res = await AxiosBase.put(`teacherhub/question-bank/update-reused-question/${assessmentId}/${question._id}`,{
-        question: question,
+    const { _id, ...newQuestion } = question;
+    const res = await AxiosBase.put(`teacherhub/question-bank/update-reused-question/${assessmentId}/${_id}`,{
+        question: newQuestion,
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -80,7 +81,7 @@ const UpdateReuseQuestion = async({assessmentId, question}) => {
 }
 
 const AddReuseQuestion = async({assessmentId, questions}) => {
-    const res = await AxiosBase.post(`teacherhub/question-bank/update-reused-question/${assessmentId}`,{
+    const res = await AxiosBase.post(`teacherhub/question-bank/add-reused-questions/${assessmentId}`,{
         reusedQuestions: questions,
     },{
         headers: {
@@ -102,7 +103,7 @@ const DeleteReuseQuestion = async({questionId, assessmentId}) => {
 }
 
 const UpdateOrder = async({questions, assessmentId}) => {
-    const res = await AxiosBase.put(`teacherhub/question-bank/delete-reused-question/${assessmentId}`,{
+    const res = await AxiosBase.put(`teacherhub/question-bank/update-order/${assessmentId}`,{
         order: questions
     },{
         headers: {
@@ -124,19 +125,19 @@ const GetStoredQuestions = async({assessmentId}) => {
 }
 
 const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
-    console.log(token)
     const res = await AxiosBase.get(`teacherhub/question-bank/all-questions`,{
-        skill: skill,
-        topic: topic,
-        difficulty: difficulty,
-        type: type
-    },{
+        params:{
+            skill: skill == "All" ? null : skill,
+            topic: topic == "All" ? null : topic,
+            difficulty: difficulty == "All" ? null : difficulty,
+            type: type == "All" ? null : type
+        },
         headers: {
             authorization: `Bearer ${token}`
         }
     })
 
-    return res.data
+    return res.data.data
 }
 
 export {CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions}

@@ -13,8 +13,9 @@ import SelectQuestions from '../../components/Teacher/SelectQuestions';
 import SubheaderBut from '../../components/Teacher/SubheaderBut';
 import { IoIosMove } from "react-icons/io";
 import { ToggleStore } from '../../Stores/ToggleStore';
-import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion } from '../../APIS/Teacher/AssessmentAPI';
+import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
+import { UpdateOrder } from '../../APIS/Teacher/AssessmentAPI';
 
 
 function AddQuestions() {
@@ -28,11 +29,18 @@ function AddQuestions() {
     const order = ToggleStore((store) => store.Ordering)
 
 
-    const { questions, setQuestions, saveQuestions, swapQuestion } = useContext(QuestionContext);
-
-    const SaveQuestions = () => {
-        saveQuestions()
-        setReuseDialog(false);
+    const { questions, setQuestions, selectedQuestions, setSelectedQuestions, saveQuestions, swapQuestion, topicMap, skillMap } = useContext(QuestionContext);
+    console.log(skillMap)
+    const SaveQuestions = async() => {
+        try{
+            const addingQuestionIDS = selectedQuestions.map((question) => question._id)
+            const res = await AddReuseQuestion({assessmentId: assessmentName.assessmentId, questions: addingQuestionIDS})
+            console.log(res)
+            saveQuestions()
+            setReuseDialog(false);
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     const handleSubmitQuestions = () => {
@@ -43,7 +51,6 @@ function AddQuestions() {
         const getAllQuestions = async() => {
             try{
                 const res = await GetStoredQuestions({assessmentId: assessmentName.assessmentId})
-                console.log(res)
                 setQuestions(res)
             } catch(err) {
                 console.log(err)
@@ -113,6 +120,7 @@ function AddQuestions() {
     const deleteQuestion = async(id) => {
         try{
             const questionToDelete = questions[id]
+            console.log(questionToDelete)
             if(questionToDelete.reuse) {
                 const res = await DeleteReuseQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
             }
@@ -145,7 +153,7 @@ function AddQuestions() {
                 difficulty: difficulty,
                 points: point,
                 topic: topic,
-                reuse: false
+                reuse: reuse
             }
         }
         else if(type == "True/False") {
@@ -161,7 +169,7 @@ function AddQuestions() {
                 difficulty: difficulty,
                 points: point,
                 topic: topic,
-                reuse: false
+                reuse: reuse
             }
         }
         else {
@@ -175,13 +183,14 @@ function AddQuestions() {
                 difficulty: difficulty,
                 points: point,
                 topic: topic,
-                reuse: false
+                reuse: reuse
             }
         }
 
         try {
             if(reuse) {
                 const res = await UpdateReuseQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]}) 
+                updatedQuestions[index].reuse = false
                 console.log(res)
             }
             else {
@@ -203,23 +212,25 @@ function AddQuestions() {
         swapQuestion(id1, id2)
     }
 
-    const handleOrdering = () => {
+    const handleOrdering = async() => {
         const buttons = document.querySelectorAll('.QuestionsDisplay button');
         if(!order) {
             setOrder(true)
             buttons.forEach(button => {
                 button.disabled = true;
             });
+            console.log(questions)
         }
         else {
             setOrder(false)
-            const orderArray = questions.map((question)=>{
-                const obj = {
-                    id: question.question,
-                    reuse: question.reuse
-                }
-                return obj
-            })
+            const orderArray = questions.map((question)=>question._id)
+            console.log(orderArray)
+            try {
+                const res = await UpdateOrder({questions: orderArray, assessmentId: assessmentName.assessmentId})
+                console.log(res)
+            } catch(err) {
+                console.log(err)
+            }
             buttons.forEach(button => {
                 button.disabled = false;
             });
@@ -246,7 +257,7 @@ function AddQuestions() {
                             <div className='border-2 border-dotted border-slate-400'>
                                 <button className='w-24 h-24 flex flex-col items-center justify-center gap-1 border-2 border-white hover:border-DarkBlue hover:bg-LightBlue transition-colors duration-300' onClick={()=>setCreateQuestion("Short Answer")}>
                                     <img className='w-12 mix-blend-multiply' src={SAQuestion} alt=''/>
-                                    <p className='text-xs'>Short Question</p>
+                                    <p className='text-xs'>Short Answer</p>
                                 </button>
                             </div>
                             <div className='border-2 border-dotted border-slate-400'>
@@ -279,7 +290,7 @@ function AddQuestions() {
                                         <SelectQuestions/>
                                     </div>   
                                     <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Save</button>
+                                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Select</button>
                                     </div>            
                                 </div>
                             </div>
@@ -314,11 +325,11 @@ function AddQuestions() {
                         <div className='w-full ml-1'>
                             <div className='flex text-sm font-body w-full justify-between'>
                                 <h4 className='font-medium w-24'>Questions:</h4>
-                                <div className='w-40 flex justify-center'>10</div>
+                                <div className='w-40 flex justify-center'>{questions.length}</div>
                             </div>
                             <div className='flex text-sm mt-2 font-body justify-between'>
                                 <h4 className='font-medium w-24'>Total Marks:</h4>
-                                <div className='w-40 flex justify-center'>30</div>
+                                <div className='w-40 flex justify-center'>{questions.reduce((totalPoints, question) => totalPoints + question.points, 0)}</div>
                             </div>
                         </div>
 
@@ -326,7 +337,7 @@ function AddQuestions() {
 
                         <h3 className='font-medium text-sm font-body'>Skills Targetted</h3>
                         <div className='w-full flex flex-wrap pt-2 gap-2 font-medium'>
-                            {skills.map((skill, index) => (
+                            {skillMap.map((skill, index) => (
                                 <div key={index} className='w-auto h-8 bg-[#D9EBFF] text-xs p-2 rounded-lg'>
                                     {skill}
                                 </div>
@@ -338,7 +349,7 @@ function AddQuestions() {
                         <h3 className='font-medium text-sm font-body'>Topics Covered</h3>
 
                         <div className='mt-2'>
-                            <DoughnutGraph inputData={topics}/>
+                            <DoughnutGraph inputData={topicMap}/>
                         </div>
                     </div>
                 </div>
