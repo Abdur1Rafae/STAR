@@ -28,7 +28,7 @@ const OverallSummary = ({  }) => {
         </div>
         <FlipClockCountdown
         className='self-center'
-            to={"2024-03-18T23:55:00.635Z"}
+            to={"2024-12-18T23:55:00.635Z"}
             labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
             labelStyle={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color:'black' }}
             digitBlockStyle={{ width: 20, height: 30, fontSize: 30, backgroundColor:'white', color:'#2C6491', fontWeight:700 }}

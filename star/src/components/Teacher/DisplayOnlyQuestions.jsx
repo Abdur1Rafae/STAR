@@ -1,14 +1,13 @@
 import React from 'react'
 import { useState } from 'react';
 import { TbLayoutNavbarExpand, TbLayoutBottombarExpand } from "react-icons/tb";
-import { MdEdit, MdOutlineDeleteOutline } from "react-icons/md";
 import QuizImage from '../Student/question/QuizImage';
 import { SkillBox } from './StoredQuestion';
 import { DifficultyBox } from './StoredQuestion';
 import { PointBox } from './StoredQuestion';
 import { OptionBox } from './StoredQuestion';
 
-const DisplayOnlyQuestions = ({question, skill, difficulty, point, image, explanation, options}) => {
+const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, difficulty, point, image, explanation, options, isSelected}) => {
     const [display, setDisplay] = useState(false);
 
   return (
@@ -16,7 +15,7 @@ const DisplayOnlyQuestions = ({question, skill, difficulty, point, image, explan
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
-                    <input type="checkbox"/>
+                    <input type="checkbox" checked={isSelected}/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={point}/>
@@ -42,12 +41,28 @@ const DisplayOnlyQuestions = ({question, skill, difficulty, point, image, explan
                 </div>
             </div>
             <div className={`overflow-hidden flex flex-col w-full transition-all ease-out duration-500 ${display ? 'p-2' : 'p-0 opacity-0 pointer-events-none h-0'}`}>
-                {image !== null ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
-                <div className='flex flex-col gap-2 mt-2'>
-                    {options.map((option)=>{
-                        return <OptionBox option={option.text} isActive={option.isCorrect}/> 
-                    })}
-                </div>
+                {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
+                {
+                    type == "MCQ" ? 
+                    (
+                        <div className='flex flex-col gap-2 mt-2'>
+                            {options.map((option)=>{
+                                return <OptionBox option={option} isActive={correctOptions.includes(option)}/> 
+                            })}
+                        </div>
+                    )
+                    :
+                    type == "True/False" ?
+                    (
+                        <div className='flex flex-col gap-2 mt-2'>
+                            {options.map((option)=>{
+                                return <OptionBox option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
+                            })}
+                        </div>
+                    )
+                    :
+                    <></>
+                }
                 <p className='text-xs mt-4 font-medium'>Explanation</p>
                 <p className='text-xs'>{explanation}</p>
             </div>

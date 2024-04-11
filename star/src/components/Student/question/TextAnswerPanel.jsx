@@ -18,7 +18,7 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
     const answer = getSelectedResponse(question.number)
     setResponse(answer ? answer.selectedAnswer : '')
     setUserAnswer(answer ? answer.selectedAnswer : '')
-  }, [])
+  }, [question.number])
 
   useEffect(() => {
     setResponse(answer => {
@@ -27,7 +27,6 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
         type: question.type,
         selectedAnswer: answer ? answer : userAnswer
       };
-      console.log(updatedAnswer)
       updateResponse(question.number, updatedAnswer);
       return answer;
     });
@@ -58,7 +57,7 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
             </p>
             <div className='flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
               <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
-              <p className="text-gray-500 text-sm self-center"> {question?.point} marks</p>
+              <p className="text-gray-500 text-sm self-center"> {question?.points} marks</p>
             </div>
           </div>
         </div>

@@ -36,7 +36,7 @@ const ResultSummary = ({ correctAnswers, wrongAnswers, obtainedMarks, totalMarks
         <p className='text-sm pb-4'>Click to navigate to specific question</p>
       </div>
 
-      <div className="flex flex-wrap justify-between gap-[1px]">
+      <div className="flex flex-wrap justify-evenly gap-2">
         {questionNumbers.map((questionNumber) => (
           <button key={questionNumber.number} onClick={() => handleQuestionClick({ questionNumber: questionNumber.number })} className={`${questionNumber.status == 0 ? 'text-green-500' : 'text-red-500'} ${currentQuestion == questionNumber.number ? 'border-2 border-DarkBlue' : 'hover:border-2 hover:border-DarkBlue'} font-medium w-[30px] h-[30px] border rounded text-center sm:text-sm md:text-md bg-[#E7ECEF]`}>
             {questionNumber.number}

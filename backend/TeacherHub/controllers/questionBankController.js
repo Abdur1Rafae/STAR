@@ -1,27 +1,67 @@
-const validateFields = require('../util/library') 
 const conn = require('../dbconfig/dbcon')
-const Question = require('../models/Questions')
-const QuestionBank = require('../models/Question_Banks')
-const Assessment = require('../models/AssessmentManagement')
+const Question = require('../models/Question')
+const Assessment = require('../models/Assessment')
+const {upload, remove} = require('../util/library')
+const mongoose = require('mongoose')
 process.env.TZ ="Asia/Karachi"
 
+
+module.exports.updateOrder = async (req,res) => 
+{
+    try
+    {
+        const {assessmentId} = req.params
+        const { order } = req.body
+        console.log(order)
+
+        if(!(Array.isArray(order) && order.length > 0))
+        {return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: questions order' })}
+
+        const assessment = await Assessment.findById(assessmentId)
+    
+        if (!assessment) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}
+        if (!assessment.questionBank || assessment.questionBank.length === 0) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Question Bank Empty' })}
+        
+
+        const reorderedQuestionBank = order.map(id => 
+        {
+            return assessment.questionBank.find(item => item.question._id.equals(new mongoose.Types.ObjectId(id)))
+        })
+    
+        assessment.questionBank = reorderedQuestionBank
+        await assessment.save()
+
+        res.status(201).json({message: 'Questions reordered successfully'})
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to reorder questions' }) 
+    }
+}
 
 module.exports.addQuestionToBank = async (req,res) => 
 {
     try
     {
         const {assessmentId} = req.params
-        const {question} = req.body
+        let {question} = req.body
+        const teacherId = req.body.decodedToken.id
 
         const session = await conn.startSession()
+
+        const imagePath = upload(question.image)
+        question.image = imagePath
+        question.teacher = teacherId
 
         const insertId = await session.withTransaction(async () => 
         {
             const newQuestion = await Question.create([question], {session})
-            await Assessment.findByIdAndUpdate(
+            const updatedAssessment = await Assessment.findByIdAndUpdate(
                 assessmentId,
-                { $push: { 'questionBank.questions' : newQuestion } }
+                { $addToSet: { 'questionBank' : {question: newQuestion[0]._id} } }
             , {session})
+
+            if (!updatedAssessment) {throw new Error('Assessment not found')}
 
             return newQuestion[0]._id
         })
@@ -31,7 +71,8 @@ module.exports.addQuestionToBank = async (req,res) =>
     }
     catch (err) {
         console.log(err)
-        if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        if (err.name === 'ValidationError' || err.message === 'Invalid image data') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
+        else if (err.message === 'Assessment not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })} 
         else {res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to add question' })}   
     }
 }
@@ -42,8 +83,23 @@ module.exports.updateQuestionInBank = async (req,res) =>
         const {questionId} = req.params
         const {question} = req.body
 
-        await Question.findByIdAndUpdate(questionId, question, { new: true })
-        res.status(201).json({message: 'Question Updated Successfully'})
+        const imagePath = upload(question.image)
+        question.image = imagePath
+
+        const oldQuestion =  await Question.findOneAndUpdate
+        (
+            {_id : questionId}, 
+            question, 
+            { new: false }
+        )
+
+        if(oldQuestion)
+        {
+            remove(oldQuestion.image)
+            return res.status(201).json({message: 'Question Updated Successfully'})
+        }
+        else{ return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Question Not Found'})}
+        
     }
     catch (err) {
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
@@ -55,25 +111,31 @@ module.exports.removeQuestionFromBank = async (req,res) =>
     try
     {
         const {assessmentId, questionId} = req.params
+
         const session = await conn.startSession()
-
-        const removedQuestionId = await session.withTransaction(async () => 
+        await session.withTransaction(async () => 
         {
-
             const removedQuestion = await Question.findByIdAndDelete(questionId, {session})
-            await Assessment.findByIdAndUpdate(
+
+            if (!removedQuestion) {throw new Error('Question not found')}
+
+            remove(removedQuestion.image)
+
+            const updatedAssessment = await Assessment.findByIdAndUpdate(
                 assessmentId,
-                { $pull: { "questionBank.questions": questionId } }
+                { $pull: { questionBank: { question: questionId } } },
+                { new: false }
             , {session})
 
-            return removedQuestion._id
+            if (!updatedAssessment) {throw new Error('Assessment not found')}
         })
-
         session.endSession()
-    
-        res.status(201).json({message: 'Question Removed From Bank Successfully'})
+        
+        return res.status(201).json({message: 'Question Removed From Bank Successfully'}) 
     }
     catch (err) {
+        console.log(err)
+        if (err.message === 'Assessment not found' || err.message === 'Question not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })} 
         res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to remove question' })
     }
 }
@@ -83,8 +145,17 @@ module.exports.addReusedQuestionsToBank = async (req,res) =>
     try {
         const {assessmentId} = req.params
         const {reusedQuestions} = req.body
-        if(!(Array.isArray(reusedQuestions) && reusedQuestions.length > 0)){return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: Ids of reused questions' })}
-        await Assessment.findByIdAndUpdate(assessmentId, { $addToSet: { "questionBank.reusedQuestions" : reusedQuestions } })
+
+        if(!(Array.isArray(reusedQuestions) && reusedQuestions.length > 0))
+        {return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: Ids of reused questions' })}
+
+        const updatedAssessment = await Assessment.findByIdAndUpdate
+        (
+            assessmentId, 
+            { $addToSet: { 'questionBank': { $each: reusedQuestions.map(questionId => ({ question: questionId, reuse: true })) } } }
+        )
+        if (!updatedAssessment) {return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
+
         res.status(201).json({message: 'Question Added To Bank Successfully'})
     } 
     catch (error) {
@@ -96,21 +167,29 @@ module.exports.updateReusedQuestionInBank = async (req,res) =>
     try {
         const {assessmentId, questionId} = req.params
         const {question} = req.body
+        const teacherId = req.body.decodedToken.id
+
+        const imagePath = upload(question.image)
+        question.image = imagePath
+        question.teacher = teacherId
+
         const session = await conn.startSession()
         const insertId = await session.withTransaction(async () => 
         {
+            const assessment = await Assessment.findById(assessmentId).session(session)
+
+            if (!assessment) {throw new Error('Assessment not found')}
+
+            const reused = assessment.questionBank.find(item => item.question.equals(questionId))
+            if(!reused){throw new Error('Question not found')}
+            assessment.questionBank.pull({ question: questionId })
+            await assessment.save()
+
+            console.log(question)
 
             const newQuestion = await Question.create([question], {session})
-
-            await Assessment.findByIdAndUpdate(
-                assessmentId,
-                { $addToSet: { "questionBank.questions": newQuestion } }
-            , {session})
-
-            await Assessment.findByIdAndUpdate(
-                assessmentId,
-                { $pull: { "questionBank.reusedQuestions" : questionId } }
-            , {session})
+            assessment.questionBank.addToSet({ question: newQuestion[0]._id })
+            await assessment.save()
             
             return newQuestion[0]._id
         })
@@ -120,6 +199,7 @@ module.exports.updateReusedQuestionInBank = async (req,res) =>
     } 
     catch (err) {
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        else if (err.message === 'Assessment not found' || err.message === 'Question not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })} 
         else {res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update question' })}   
     }
 }
@@ -127,10 +207,20 @@ module.exports.removeReusedQuestionFromBank = async (req,res) =>
 { 
     try {
         const {assessmentId, questionId} = req.params
-        await Assessment.findByIdAndUpdate(assessmentId, { $pull: { "questionBank.reusedQuestions" : questionId } })
+
+        const assessment = await Assessment.findById(assessmentId)
+
+        if (!assessment) {throw new Error('Assessment not found')}
+
+        const reused = assessment.questionBank.find(item => item.question.equals(questionId))
+        if(!reused){throw new Error('Question not found')}
+        assessment.questionBank.pull({ question: questionId })
+        await assessment.save()
+
         res.status(201).json({message: 'Question Removed From Bank Successfully'})
     } 
-    catch (error) {
+    catch (err) {
+        if (err.message === 'Assessment not found' || err.message === 'Question not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })} 
         res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to remove question' })
     }
 }
@@ -139,24 +229,20 @@ module.exports.getAllBanks = async (req,res) =>
 {
     try 
     { 
-        const teacherId = req.body.decodedToken.email
+        const teacher = req.body.decodedToken.id
+
         const questionBanks = await Assessment.aggregate([
-            { $match: { teacherID: teacherId } },
+            { $match: { teacher: new mongoose.Types.ObjectId(teacher) } },
             {
                 $project: {
                     _id: 1,
                     title: 1,
                     updatedAt: 1,
-                    questionCount: 
-                    {
-                        $sum: [
-                            { $size: '$questionBank.questions' }, // Count of questions array
-                            { $size: '$questionBank.reusedQuestions' } // Count of reusedQuestions array
-                        ]
-                    }
+                    questionCount: { $cond: { if: { $isArray: '$questionBank' }, then: { $size: '$questionBank' }, else: 0 } } 
                 }
             }
-        ]);
+        ])
+
         res.status(201).json({data: questionBanks})
     }
     catch (err) {
@@ -170,20 +256,23 @@ module.exports.getBankQuestions = async (req,res) =>
     try
     {
         const {assessmentId} = req.params
+        
         const questionBank = await Assessment.findById(assessmentId)
-        .select('questionBank.questions questionBank.reusedQuestions')
+        .select('questionBank -_id')
         .populate({
-            path: 'questionBank.questions',
-            model: Question
-        })
-        .populate({
-            path: 'questionBank.reusedQuestions',
+            path: 'questionBank.question',
+            select: '-teacher -__v',
             model: Question
         })
 
-        if (!questionBank) {return res.status(404).json({ error: 'ER_NOT_FOUND', message: 'Question Bank Not Found' })}
+        if (!questionBank) {return res.status(201).json({data : []})}
 
-        res.status(201).json({data: questionBank})
+        const formattedData = questionBank.questionBank.map(item => ({
+            ...item.question.toObject(),
+            reuse: item.reuse
+          }))
+
+        res.status(201).json({data: formattedData})
 
     }
     catch (err) {
@@ -193,34 +282,19 @@ module.exports.getBankQuestions = async (req,res) =>
 }
 module.exports.getAllQuestions = async (req,res) => 
 {
-    const teacherId = req.body.decodedToken.email
     try
     {
-        const questions = await Assessment.aggregate([
-            { $match: { teacherID: teacherId } },
-            {
-                $project: {
-                    allQuestions: { $concatArrays: ["$questionBank.questions", "$questionBank.reusedQuestions"] }
-                }
-            },
-            {
-                $lookup: {
-                    from: "questions",
-                    localField: "allQuestions",
-                    foreignField: "_id",
-                    as: "allQuestions"
-                }
-            },
-            { $unwind: "$allQuestions" }, 
-            {
-                $group: {
-                    _id: "$allQuestions.topic",
-                    questions: { $push: "$allQuestions" }
-                }
-            },
-            { $project: { topic: '$_id', _id: 0, questions: 1 } }
-        ]);
-        
+        const teacher = req.body.decodedToken.id
+        const { skill, topic, difficulty, type } = req.query
+
+        const filters = {teacher: teacher}
+    
+        if (skill) filters.skill = skill
+        if (topic) filters.topic = topic
+        if (difficulty) filters.difficulty = difficulty
+        if (type) filters.type = type
+    
+        const questions = await Question.find(filters)
 
         res.status(201).json({data: questions})
 
@@ -228,5 +302,21 @@ module.exports.getAllQuestions = async (req,res) =>
     catch (err) {
         console.log(err)
         res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get all questions' })
+    }      
+}
+module.exports.getTopics = async (req,res) => 
+{
+    try
+    {
+        const teacher = req.body.decodedToken.id
+
+        const uniqueTopics = await Question.distinct('topic', { teacher })
+
+        res.status(201).json({data: uniqueTopics})
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get all topics' })
     }      
 }

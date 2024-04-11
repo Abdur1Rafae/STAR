@@ -2,7 +2,7 @@ import React from 'react';
 import ResultSummary from '../../components/Student/ResultSummary';
 import SubmitMCQPanel from '../../components/Student/question/SubmitMCQPanel';
 import QuestionDetail from '../../components/Student/QuestionDetails';
-
+import FeedbackCard from '../../components/Student/FeedbackCard';
 
 const QuizResultScreen = () => {
 
@@ -46,6 +46,8 @@ const QuizResultScreen = () => {
 
       <div className="md:w-1/3 bg-LightBlue drop-shadow-md">
         <QuestionDetail score= {score} difficulty = {difficulty} skillTargeted={skillTargeted} topic={topic}/>
+        <hr class="h-px mt-8 border-[1px] border-black mx-2"></hr>
+        <FeedbackCard/>
       </div>
 
       

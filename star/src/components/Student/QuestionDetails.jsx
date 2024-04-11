@@ -16,7 +16,7 @@ const QuestionDetails = ({ score, topic, difficulty, skillTargeted, currentQuest
 
   return (
     <div className="p-4">
-      <h2 className="text-lg font-bold font-body pb-4">Question Details</h2>
+      <h2 className="text-lg font-medium font-body pb-4">Question Details</h2>
       
       <div className="mb-4">
         <div className="mb-2">
@@ -45,18 +45,7 @@ const QuestionDetails = ({ score, topic, difficulty, skillTargeted, currentQuest
           </div>
         </div>
 
-        <hr class="h-px my-8 border-[1px] border-black"></hr>
 
-        <div>
-        <h2 className="text-l font-bold pb-4">Feedback</h2>
-
-        <p className='text-sm font-light'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            tincidunt, nisl eget vestibulum rhoncus, elit elit consectetur
-            lectus, quis consectetur nunc elit sed lorem. Donec euismod
-        </p>
-
-        </div>
       </div>
 
     

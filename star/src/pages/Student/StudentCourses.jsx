@@ -49,7 +49,8 @@ const StudentCourses = () => {
         <MenuBar name={"Maaz Shamim"} role={"Student"}/>
         <SubHeader isActive={"Courses"}/>
         {
-            classes.map((Sem)=>{
+            classes.length > 0 ?
+            (classes.map((Sem)=>{
                 return (
                     <div className='pageContainer overflow-auto rounded-lg'>
                         <h1 className='font-[300] mt-5 ml-4 font-body'>{Sem.semester}</h1>
@@ -65,7 +66,9 @@ const StudentCourses = () => {
                             </div>
                         </div>
                     </div>
-            )})
+            )}))
+            :
+            <p className='ml-4 mt-4'>Not enrolled in any classes yet.</p>
         }
     </div>
     )

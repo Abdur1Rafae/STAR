@@ -3,7 +3,7 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_ACCESS_TOKEN
 
 const GetAllClasses = async () => {
-    const res = await AxiosBase.get(`edumanage/class/my-classes`,{
+    const res = await AxiosBase.get(`teacherhub/class-management/my-classes`,{
         headers: {
             authorization: `Bearer ${token}`
         }
@@ -13,7 +13,7 @@ const GetAllClasses = async () => {
 };
 
 const AddClass = async({name}) => {
-    const res = await AxiosBase.post('edumanage/class/new-class',{
+    const res = await AxiosBase.post('teacherhub/class-management/new-class',{
         className: name
     },{
         headers: {
@@ -26,12 +26,9 @@ const AddClass = async({name}) => {
 
 const DeleteClass = async ({ id }) => {
     try {
-        const res = await AxiosBase.delete(`edumanage/class/delete-class`, {
+        const res = await AxiosBase.delete(`teacherhub/class-management/delete-class/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            },
-            data: {
-                classId: id
             }
         });        
 
@@ -42,9 +39,8 @@ const DeleteClass = async ({ id }) => {
 };
 
 const UpdateClass = async({id, name}) => {
-    const res = await AxiosBase.put('edumanage/class/update-class',{
+    const res = await AxiosBase.put(`teacherhub/class-management/update-class/${id}`,{
         className: name,
-        classId: id
     },{
         headers: {
             authorization: `Bearer ${token}`

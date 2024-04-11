@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Interface</title>
+    <style>
+        #container {
+            margin: 0px auto;
+            width: 500px;
+            height: 375px;
+            border: 10px #333 solid;
+            display: none; /* Hide container initially */
+        }
+
+        #videoElement {
+            width: 500px;
+            height: 375px;
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Interface</h1>
+  
+    <video id="webcam" width="640" height="480" autoplay style="display: none;"></video>
+    <canvas id="output" width="640" height="480" style="display: none;"></canvas>
+  
+    <!-- Container for video element -->
+    <div id="container">
+        <video autoplay="true" id="videoElement"></video>
+    </div>
+
+    <button onclick="tabHandler_startTest()">Start Test</button>
+    <button onclick="tabHandler_stopTest()">Stop Test</button>
+
+    <script src="main.js" type='module'></script>
+    <script src="feedHandler.js" type='module'></script>
+    <script src="tabHandler.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>  
+</body>
+</html>

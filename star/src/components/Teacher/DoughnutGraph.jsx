@@ -44,19 +44,19 @@ const borderColors = [
 
 
 export const data = ({ inputData }) => {
-    const values = inputData.map(item => item.value);
+  const values = Object.values(inputData);
 
-    return {
-        datasets: [
-            {
-                label: '# of Questions',
-                data: values,
-                backgroundColor: additionalColors,
-                borderColor: borderColors,
-                borderWidth: 1,
-            },
-        ]
-    };
+  return {
+    datasets: [
+      {
+        label: '# of Questions',
+        data: values,
+        backgroundColor: additionalColors,
+        borderColor: borderColors,
+        borderWidth: 1,
+      },
+    ]
+  };
 };
 
 const LegendList = ({labels}) => (
@@ -74,14 +74,14 @@ const LegendList = ({labels}) => (
   );
 
 export function DoughnutGraph({ inputData }) {
-    const labels = inputData.map(item => (item.name + " : " + item.value));
+  const labels = Object.entries(inputData).map(([key, value]) => (key + " : " + value));
     return (
         <div className='w-full flex flex-col items-center justify-center'>
             <div className='h-48 flex items-center justify-center mb-4'>
                 <Doughnut data={data({ inputData })} options={options}/>
                 <div className='absolute flex flex-col items-center mt-3'>
                     <p className=''>Total Value</p>
-                    <h4 className='text-2xl font-semibold'>72</h4>
+                    <h4 className='text-2xl font-semibold'>{Object.keys(inputData).length}</h4>
                 </div>
             </div>
             <LegendList labels={labels}/>

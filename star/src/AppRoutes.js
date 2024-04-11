@@ -15,9 +15,13 @@ import CreateNewAssessment from './pages/Teacher/CreateNewAssessment';
 import AddQuestions from './pages/Teacher/AddQuestions';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
 import Reports from './pages/Teacher/Reports.jsx';
-
+import Grading from './pages/Teacher/Grading.jsx';
+import QuizReports from './pages/Teacher/QuizReports.jsx';
 import Classes from './pages/Teacher/Classes.jsx';
 import OpenBank from './pages/Teacher/OpenBank.jsx';
+import { SectionProvider } from './Context/SectionsContext.js';
+import GradingTablePage from './pages/Teacher/GradingTablePage.jsx';
+import ClassesTablePage from './pages/Teacher/ClassesTablePage.jsx';
 
 const AppRoutes = () => {
   return (
@@ -34,13 +38,19 @@ const AppRoutes = () => {
               
             <Route path="/teacher/scheduled-assessments" element = {<ScheduledAssessment/>} />
             <Route path='/teacher/classes' element={<Classes/>}></Route>
+            <Route path='/teacher/classes/:classID' element={<ClassesTablePage/>}></Route>
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
-            <Route path='/teacher/scheduled-assessments/adding-questions' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
-            <Route path='/teacher/create-new-assessment' element={<CreateNewAssessment/>}></Route>
-            <Route path='/teacher/add-question' element = {<AddQuestions/>}></Route>
-            <Route path='/teacher/reports' element = {<Reports/>}></Route>
+            <Route path='/teacher/adding-questions/:assessmentId' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
+            <Route path='/teacher/create-new-assessment' element={<SectionProvider><CreateNewAssessment/></SectionProvider>}></Route>
+            <Route path='/teacher/reports' element = {<QuestionProvider><Reports/></QuestionProvider>}></Route>
+            <Route path='/teacher/grading/:assessmentName' element={<Grading/>}/>
+            <Route path='/teacher/quiz-reports'element={<QuizReports />}></Route>
+            <Route path='/teacher/grading-table'element={<GradingTablePage />}></Route>
+
+
+
          </Routes>
   )
 }

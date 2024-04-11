@@ -14,29 +14,29 @@ import CorrectTF from '../../components/Student/question/CorrectTF';
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
 
-  const quizStore = QuizStore();
+  const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
 
-  const navigation = quizStore.quizConfig.navigation
-  console.log(navigation)
-  const instantResponse = quizStore.quizConfig.instantResponse
+  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails } = QuizStore();
+
+  const {navigation, instantFeedback} = quizConfig
+
+  useEffect(()=> {
+    const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+    updateQuizDetails(storedQuizDetails)
+  }, [])
+
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)
-  
-
-  const { questions, currentQuestionIndex, } = quizStore;
 
   const getQuestion = ()=>{
     let question = questions[currentQuestionIndex];
-
-    if(!instantResponse) {
-      question.options = question.options.map(option => {
-        const { isCorrect, ...rest } = option;
-        return rest;
-      });
-    }
-
     return question
   }
+
+
+  // useEffect(()=> {
+  //   console.log(responses)
+  // }, [responses])
 
   const currentQuestion = getQuestion()
 
@@ -46,19 +46,18 @@ const QuizScreen = () => {
   };
 
   const handleNextQuestion = () => {
-    if(quizStore.currentQuestionIndex == quizStore.questions.length - 1) {
-
+    if(currentQuestionIndex == questions.length - 1) {
+      nextQuestion()
+      SetReachedLastQuestion(true)
     }
     else {
       setAnswerSubmit(false)
-      quizStore.nextQuestion()
+      nextQuestion()
     }
-
   };
 
   const handlePrevious = () => {
-    console.log(quizStore.responses)
-    quizStore.prevQuestion()
+    prevQuestion()
   };
 
   const handleAnswerDisplay = () => {
@@ -74,7 +73,7 @@ const QuizScreen = () => {
           <div className="flex justify-between mb-8">
           {
             currentQuestion.type === "MCQ" ? 
-              (instantResponse ?
+              (instantFeedback ?
                 (answerSubmitted ?
                   <CorrectMCQ
                     question={currentQuestion}
@@ -94,14 +93,14 @@ const QuizScreen = () => {
                 />
               )
               :
-              (questions[currentQuestionIndex].type === "SA" ? 
+              (questions[currentQuestionIndex].type === "Short Answer" ? 
                 <TextAnswerPanel
                   question={currentQuestion}
                   onOptionSelect={handleOptionSelect}
                   Flagged={currentQuestion.flagged}
                 />
                 :
-                (instantResponse ?
+                (instantFeedback ?
                   (answerSubmitted ?
                     <CorrectTF
                       question={currentQuestion}
@@ -136,20 +135,30 @@ const QuizScreen = () => {
 
             <div className="flex items-center space-y-0 space-x-4">
               {
-                instantResponse ? 
-                <>
-                {
-                  answerSubmitted ? 
-                  <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
-                  :
-                  <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
-                }
-                </> 
+                reachedLastQuestion ? 
+                <SubmitButton label="Submit" onClick={handleNextQuestion} active={true}/>
                 :
-                <>
-                  <SubmitButton label="Previous" onClick={navigation ? handlePrevious : ()=>{}} active={ navigation ? true : false} />
-                  <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
-                </>
+                (
+                  !navigation ? 
+                  (
+                    instantFeedback ? 
+                    <>
+                    {
+                      answerSubmitted ? 
+                      <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                      :
+                      <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
+                    }
+                    </>
+                    :
+                    <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                  ) 
+                  :
+                  <>
+                    <SubmitButton label="Previous" onClick={navigation ? handlePrevious : ()=>{}} active={ navigation ? true : false} />
+                    <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                  </>
+                )
               }
                 
             </div>

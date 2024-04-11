@@ -1,144 +1,183 @@
 const conn = require('../dbconfig/dbcon')
-const { ObjectId } = require('mongodb')
+const mongoose = require('mongoose')
 const {getAssessmentStatus, upload, remove} = require('../util/library')
-const Assessment = require('../models/AssessmentManagement')
-const Class = require('../models/ClassManagement')
+const Assessment = require('../models/Assessment')
+const Section = require('../models/Section')
 
 module.exports.createAssessment = async (req,res) => 
 {
-    const teacherID = req.body.decodedToken.email
-
-    var {title, description, participants, configurations, coverImage} = req.body
-
     try{
+        const teacher = req.body.decodedToken.id
+
+        var {title, description, participants, configurations, coverImage} = req.body
+
         const imagePath = upload(coverImage)
-        const newAssessment = await Assessment.create(
+
+        const session = await conn.startSession()
+        const insertedId = await session.withTransaction(async () => 
         {
-            teacherID, title, description, participants, configurations, coverImage : imagePath
+            
+            const newAssessment = await Assessment.create(
+            {
+                teacher, title, description, participants, configurations, coverImage : imagePath
+            })
+
+            const updatedSections = await Section.updateMany
+            (
+                { _id: { $in: participants } }, 
+                { $push: { assessments: newAssessment } } 
+            )
+
+            if(updatedSections.matchedCount != participants.length){throw new Error('Failed to add all sections')}
+
+            return newAssessment._id
+
         })
-        res.status(200).json({assessmentId: newAssessment._id, message: `Assessment Created Successfully`})  
+        session.endSession()
+    
+        res.status(200).json({assessmentId: insertedId, message: `Assessment Created Successfully`})  
     }
     catch(err){
-        console.log(err)
+        if (err.name === 'ValidationError' || err.message === 'Invalid image data' || err.message === 'Failed to add all sections') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create assessment'})
     }
 }
 module.exports.updateAssessment = async (req,res) => 
 { 
-    const teacherID = req.body.decodedToken.email
-
     try{
         const { assessmentId } = req.params
+
+        const teacherID = req.body.decodedToken.email
+
         var {title, description, participants, configurations, coverImage} = req.body
+
         const imagePath = upload(coverImage)
 
-        const oldAssessment = await Assessment.findOneAndUpdate(
-            {_id : assessmentId}, 
-            {teacherID, title, description, participants, configurations, coverImage : imagePath},
-            {new: false}
+        const session = await conn.startSession()
+        await session.withTransaction(async () => 
+        {
+
+            const oldAssessment = await Assessment.findOneAndUpdate
+            (
+                {_id : assessmentId}, 
+                {teacherID, title, description, participants, configurations, coverImage : imagePath},
+                {new: false}
             )
 
-        remove(oldAssessment.coverImage)
+            if(!oldAssessment){throw new Error('Assessment not found')}
+            
+            remove(oldAssessment.coverImage)
+
+            const oldParticipants = oldAssessment.participants.map(String)
+            const newParticipants = participants
+
+            const sectionsToRemove = oldParticipants.filter(sectionId => !newParticipants.includes(sectionId))
+            const sectionsToAdd = newParticipants.filter(sectionId => !oldParticipants.includes(sectionId))
+
+            const removedSections = await Section.updateMany({ _id: { $in: sectionsToRemove } }, { $pull: { assessments: assessmentId } })
+            const addedSections = await Section.updateMany({ _id: { $in: sectionsToAdd } }, { $addToSet: { assessments: assessmentId } })
+
+            if(removedSections.matchedCount != sectionsToRemove.length && addedSections.matchedCount != sectionsToAdd.length){throw new Error('Failed to update participants')}
+        })
+        session.endSession()
         return res.status(200).json({message: `Assessment Updated Successfully`})  
     }
     catch(err){
-        console.log(err)
+        if (err.name === 'ValidationError' || err.message === 'Failed to update participants') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to update assessment'})}
 }
 module.exports.deleteAssessment = async (req,res) => 
 {
     try{
         const { assessmentId } = req.params
-        await Assessment.findByIdAndDelete(assessmentId)
+
+        const session = await conn.startSession()
+        await session.withTransaction(async () => 
+        {
+            const deletedAssessment = await Assessment.findByIdAndDelete(assessmentId)
+
+            if(!deletedAssessment){throw new Error('Assessment not found')}
+
+            const updatedSections = await Section.updateMany
+            (
+                { _id: { $in: deletedAssessment.participants } }, 
+                { $pull: { assessments: deletedAssessment._id } } 
+            )
+
+            if(updatedSections.matchedCount != deletedAssessment.participants.length){throw new Error('Failed to update all sections')}
+
+            remove(deletedAssessment.coverImage)
+        })
+        session.endSession()
     
         return res.status(200).json({message: `Assessment Deleted Successfully`})  
     }
     catch(err){
-        console.log(err)
+        if (err.message === 'Failed to update all sections' || err.message === 'Assessment not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to delete assessment'})}
 }
 module.exports.getAssessmentDetails = async (req,res) => 
 { 
     try{
         var {assessmentId} = req.params
-        const assessment = await Assessment.aggregate([
-            { $match: { _id: new ObjectId(assessmentId) }  },
-            { $unwind: '$participants' },
-            {
-                $lookup: {
-                    from: 'classes',
-                    let: { sectionId: '$participants' },
-                    pipeline: [
-                        { $unwind: '$sections' },
-                        { $match: { $expr: { $eq: ['$sections._id', '$$sectionId'] } } },
-                        { $project: { _id: 0, sectionName: '$sections.sectionName'} }
-                    ],
-                    as: 'sectionInfo'
-                }
-            },
-            { $unwind: '$sectionInfo' },
-            {
-                $group: {
-                    _id: '$_id',
-                    title: { $first: '$title' },
-                    description: { $first: '$description' },
-                    configurations : { $first: '$configurations' },
-                    participants: { $addToSet: '$sectionInfo.sectionName' },
-                    coverImage: { $first: 'coverImage' },
-                }
-            }   
-        ])
 
-        return res.status(200).json({data: assessment})  
+        const assessmentDetails = await Assessment.findById(assessmentId)
+        .populate({
+            path: 'participants',
+            select: 'sectionName',
+        })
+        .select('-questionBank -createdAt -updatedAt -status -teacher -v')
+
+        if(!assessmentDetails){ res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
+
+        return res.status(200).json({data: assessmentDetails})  
     }
     catch(err){
-        console.log(err)
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get assessment details'})}
 }
 module.exports.getScheduledAssessments = async (req,res) => 
 {
-    const teacherID = req.body.decodedToken.email
-
     try
     {
+        const teacher = req.body.decodedToken.id
+
         const assessments = await Assessment.aggregate([
-            { $match: { teacherID }  },
-            { $match: { status: { $ne: "Published" }}  },
-            { $unwind: '$participants' },
+            {
+                $match: { teacher: new mongoose.Types.ObjectId(teacher) }
+            },
+            {
+                $match: { status: { $ne: "Published" } }
+            },
             {
                 $lookup: {
-                    from: 'classes',
-                    let: { sectionId: '$participants' },
-                    pipeline: [
-                        { $unwind: '$sections' },
-                        { $match: { $expr: { $eq: ['$sections._id', '$$sectionId'] } } },
-                        { $project: { _id: 0, sectionName: '$sections.sectionName', roster: { $size: '$sections.roster' } } }
-                    ],
-                    as: 'sectionInfo'
+                    from: "sections",
+                    localField: "participants",
+                    foreignField: "_id",
+                    as: "sections"
                 }
             },
-            { $unwind: '$sectionInfo' },
             {
-                $addFields:{
-                  questionCount: { $sum: 
-                    [
-                        { $size: { $ifNull: [ '$questionBank.questions', [] ] } }, 
-                        { $size: { $ifNull: [ '$questionBank.reusedQuestions', [] ] } }
-                    ]}
-                }
-             },
+                $unwind: "$sections"
+            },
             {
                 $group: {
-                    _id: '$_id',
-                    title: { $first: '$title' },
-                    openDate: { $first: '$configurations.openDate' },
-                    closeDate: { $first: '$configurations.closeDate' },
-                    duration: { $first: '$configurations.duration' },
-                    totalStudents: { $sum: '$sectionInfo.roster' },
-                    questions: {$first: '$questionCount'}
+                    _id: "$_id",
+                    title: { $first: "$title" },
+                    openDate: { $first: "$configurations.openDate" },
+                    closeDate: { $first: "$configurations.closeDate" },
+                    duration: { $first: "$configurations.duration" },
+                    totalQuestions: {
+                        $sum: {
+                            $size: { $ifNull: ["$questionBank.questions", []] },
+                            $size: { $ifNull: ["$questionBank.reusedQuestions", []] }
+                        }
+                    },
+                    totalStudents: { $sum: { $size: "$sections.roster" } }
                 }
-            }   
-        ])
+            }
+        ]);
+        
+        if(!assessments){return res.status(200).json({data: []})}
 
         const categorizedAssessments = assessments.map(assessment => {
             return {
@@ -150,18 +189,5 @@ module.exports.getScheduledAssessments = async (req,res) =>
         return res.status(200).json({data: categorizedAssessments})  
     }
     catch(err){
-        console.log(err)
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get scheduled assessments'})}
-}
-//TO BE IMPLEMENTED LATER
-module.exports.getPublishedAssessments = async (req,res) => 
-{
-    const teacherID = req.body.decodedToken.email
-
-    try{
-        return res.status(200).json({data: []})  
-    }
-    catch(err){
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get published assessments'})}
 }

@@ -1,15 +1,17 @@
+require('dotenv').config()
 const express = require('express')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const serviceRoutes = require('./routes/serviceRoutes')
-const adminRoutes = require('./routes/adminRoutes')
+const registryRoutes = require('./routes/registryRoutes')
+const sessionRoutes = require('./routes/sessionRoutes')
 const auth = require('./middleware/authMiddleware')
 require('dotenv').config()
 const cors = require('cors')
 
 const app = express()
 let corsAllow = {
-    origin: "http://localhost:3003",
+    origin: "http://localhost:3001",
     methods: "PUT, GET, POST, PATCH, DELETE, HEAD",
     credentials: true
 }
@@ -19,9 +21,12 @@ const PORT = 3000
 app.use(express.json())
 app.use(morgan('combined'))
 app.use(helmet())
-app.use('/admin', adminRoutes)
+
+app.use('/session', sessionRoutes)
+app.use('/registry', registryRoutes)
 app.use(auth)
 app.use(serviceRoutes)
+
 
 app.listen(PORT, () => 
 {
