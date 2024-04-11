@@ -29,8 +29,8 @@ function AddQuestions() {
     const order = ToggleStore((store) => store.Ordering)
 
 
-    const { questions, setQuestions, selectedQuestions, setSelectedQuestions, saveQuestions, swapQuestion, topicMap, skillMap } = useContext(QuestionContext);
-    console.log(skillMap)
+    const { questions, setQuestions, selectedQuestions, saveQuestions, swapQuestion, topicMap, skillMap } = useContext(QuestionContext);
+
     const SaveQuestions = async() => {
         try{
             const addingQuestionIDS = selectedQuestions.map((question) => question._id)

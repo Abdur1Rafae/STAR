@@ -103,6 +103,7 @@ const DeleteReuseQuestion = async({questionId, assessmentId}) => {
 }
 
 const UpdateOrder = async({questions, assessmentId}) => {
+    console.log(questions)
     const res = await AxiosBase.put(`teacherhub/question-bank/update-order/${assessmentId}`,{
         order: questions
     },{

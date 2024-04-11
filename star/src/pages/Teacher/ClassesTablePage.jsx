@@ -66,6 +66,7 @@ const ClassesTablePage = () => {
         <SideBar active={"Classes"} />
         <div className='h-fit w-full'>
           <Subheader name={"Classes"} />
+          <div className='md:p-4 p-2'>
           <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
             <div className='flex items-center self-start'>
               <BiChevronLeft className='text-3xl' />
@@ -101,7 +102,7 @@ const ClassesTablePage = () => {
               </button>
             </div>
           </div>
-          <div className='m-4'>
+          <div className='mt-4'>
             <LCSearchBar />
           </div>
           <LMTable
@@ -117,6 +118,7 @@ const ClassesTablePage = () => {
             columns={columns}
           />
           <AddStudentDialog isOpen={isAddingStudent} onClose={() => setIsAddingStudent(false)} onSave={handleAddStudent} />
+          </div>
         </div>
       </div>
     </div>

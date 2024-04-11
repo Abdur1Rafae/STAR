@@ -12,6 +12,7 @@ module.exports.updateOrder = async (req,res) =>
     {
         const {assessmentId} = req.params
         const { order } = req.body
+        console.log(order)
 
         if(!(Array.isArray(order) && order.length > 0))
         {return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: questions order' })}
@@ -20,10 +21,11 @@ module.exports.updateOrder = async (req,res) =>
     
         if (!assessment) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}
         if (!assessment.questionBank || assessment.questionBank.length === 0) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Question Bank Empty' })}
-    
+        
+
         const reorderedQuestionBank = order.map(id => 
         {
-          return assessment.questionBank.find(item => item.question._id === id)
+            return assessment.questionBank.find(item => item.question._id.equals(new mongoose.Types.ObjectId(id)))
         })
     
         assessment.questionBank = reorderedQuestionBank

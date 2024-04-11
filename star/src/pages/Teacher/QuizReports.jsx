@@ -25,9 +25,9 @@ const QuizReports = () => {
   
   const [selectedCategory, setSelectedCategory] = useState('');
   const columns = [
-    { title: "Assessment Title", key: "AssessmentTitle" },
+    { title: "Title", key: "AssessmentTitle" },
     { title: "Class", key: "Class" },
-    { title: "Date Generated", key: "DateGenerated" },
+    { title: "Date", key: "DateGenerated" },
     { title: "Responses", key: "Responses" },
     { title: "", key: "view"}
   ];
@@ -40,7 +40,7 @@ const QuizReports = () => {
          <SideBar active={"Live Monitoring"}/>
          <div className='h-fit w-full	'>
           <Subheader name={"Reports"}/>
-          <div className='flex m-4 gap-4'>
+          <div className='flex md:p-4 p-1 gap-4'>
               <LCSearchBar/>
               <CategoryFilter categories={['3452', '2343', '2342']}/>
           </div>

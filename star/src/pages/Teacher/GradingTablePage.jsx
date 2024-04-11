@@ -39,7 +39,7 @@ const GradingTablePage = () => {
          <SideBar active={"Grading"}/>
          <div className='w-full h-full'>
           <Subheader name={"Grading"}/>
-          <div className='p-4'>
+          <div className='md:p-4 p-1'>
             <div className='w-full bg-LightBlue flex p-2 items-center shadow-md'>
               <div className='flex items-center self-start'>
                   <BiChevronLeft className='text-3xl'/>
