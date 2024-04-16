@@ -15,7 +15,6 @@ const AddSection = async({name, classID}) => {
 }
 
 const DeleteSection = async ({ id }) => {
-    console.log(id)
     try {
         const res = await AxiosBase.delete(`teacherhub/class-management/delete-section/${id}`, {
             headers: {
@@ -30,7 +29,7 @@ const DeleteSection = async ({ id }) => {
 };
 
 const UpdateSection = async({id, name}) => {
-    const res = await AxiosBase.put(`teacherhub/class-management/new-section/${id}`,{
+    const res = await AxiosBase.put(`teacherhub/class-management/update-section/${id}`,{
         sectionName: name
     },{
         headers: {
@@ -41,5 +40,36 @@ const UpdateSection = async({id, name}) => {
     return res.data
 }
 
+const GetAllStudents = async({id}) => {
+    const res = await AxiosBase.get(`teacherhub/class-management/roster/${id}`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
 
-export {AddSection, DeleteSection, UpdateSection}
+    return res.data.data
+}
+
+const AddStudent = async({sectionId, student}) => {
+    const res = await AxiosBase.post(`teacherhub/class-management/add-students/${sectionId}`, {
+        students: [student]
+    }, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+    return res.data
+}
+
+const DeleteStudent = async({sectionId, studentId}) => {
+    const res = await AxiosBase.delete(`teacherhub/class-management/remove-student/${sectionId}/${studentId}`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+
+export {AddSection, DeleteSection, UpdateSection, GetAllStudents, AddStudent, DeleteStudent}

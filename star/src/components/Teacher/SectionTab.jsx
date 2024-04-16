@@ -3,10 +3,11 @@ import { MdOutlineGroups, MdOutlineDeleteOutline } from "react-icons/md";
 import { ClickOutsideFunc } from '../ClickOutsideFunc';
 import { AddSection, UpdateSection } from '../../APIS/Teacher/SectionAPI';
 
-const SectionTab = ({classID, section, onDelete}) => {
+const SectionTab = ({sectionID, classID, section, onDelete}) => {
     const [sectionName, setSectionName] = useState(section ?? "");
     const [newSection, setNewSection] = useState(section);
     const [isEditing, setIsEditing] = useState(section ? false : true);
+    const [sectionId, setSectionId] = useState(sectionID)
 
     async function handleKeyPress(event) {
         if(newSection !== "") {
@@ -14,14 +15,14 @@ const SectionTab = ({classID, section, onDelete}) => {
                 if(sectionName == "") {
                     try {
                         const res = await AddSection({classID: classID, name: newSection})
-                        section = res.sectionId
+                        setSectionId(res.sectionId)
                     } catch(err) {
                         console.log(err)
                     }
                 }
                 else {
                     try {
-                        const res = await UpdateSection({id:section.SectionID, name: newSection})
+                        const res = await UpdateSection({id:sectionId, name: newSection})
                     } catch(err) {
                         console.log(err)
                     }
@@ -66,7 +67,7 @@ const SectionTab = ({classID, section, onDelete}) => {
             </div>
         </div>
         <div className='flex'>
-            <button className='flex flex-col justify-center items-center mr-4 hover:text-DarkBlue'>
+            <button className='flex flex-col justify-center items-center mr-4 hover:text-DarkBlue' onClick={()=> {localStorage.setItem("SelectedSection", sectionName); window.location.assign(`classes/${sectionId}`)}}>
                 <MdOutlineGroups className='text-xl'/>
                 <p className='text-xs font-body'>Roster</p>
             </button>

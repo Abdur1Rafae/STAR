@@ -180,15 +180,12 @@ module.exports.updateReusedQuestionInBank = async (req,res) =>
 
             if (!assessment) {throw new Error('Assessment not found')}
 
-            const reused = assessment.questionBank.find(item => item.question.equals(questionId))
-            if(!reused){throw new Error('Question not found')}
-            assessment.questionBank.pull({ question: questionId })
-            await assessment.save()
-
-            console.log(question)
+            const reused = assessment.questionBank.findIndex(item => item.question.equals(questionId))
+            if(reused===-1){throw new Error('Question not found')}
 
             const newQuestion = await Question.create([question], {session})
-            assessment.questionBank.addToSet({ question: newQuestion[0]._id })
+            assessment.questionBank.set(reused, { question: newQuestion[0]._id, reuse: false })
+
             await assessment.save()
             
             return newQuestion[0]._id

@@ -89,7 +89,7 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
         <div className={`transition-all ease-out duration-500 ${display ? '' : 'opacity-0 pointer-events-none h-0'}`}>
             {
                 sections.map((sectionItem, index)=> {
-                    return <SectionTab key={`${index} ${sectionItem._id}`} classID={id} section={sectionItem.sectionName} onDelete={handleDeletingSection}/>
+                    return <SectionTab key={`${index} ${sectionItem._id}`} sectionID={sectionItem._id} classID={id} section={sectionItem.sectionName} onDelete={handleDeletingSection}/>
                 })
             }
             <div className='flex gap-2'>
