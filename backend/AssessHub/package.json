@@ -25,6 +25,7 @@
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
+    "library": "github:Maaz5hamim/Arete-Library",
     "moment-timezone": "^0.5.45",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.3",

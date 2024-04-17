@@ -1,9 +1,7 @@
 const conn = require('../dbconfig/dbcon')
-const Question = require('../models/Question')
-const Assessment = require('../models/Assessment')
+const {Question, Assessment} = require('library/index')
 const {upload, remove} = require('../util/library')
 const mongoose = require('mongoose')
-process.env.TZ ="Asia/Karachi"
 
 
 module.exports.updateOrder = async (req,res) => 
@@ -12,22 +10,28 @@ module.exports.updateOrder = async (req,res) =>
     {
         const {assessmentId} = req.params
         const { order } = req.body
-        console.log(order)
+        console.log('order: ' + order)
 
         if(!(Array.isArray(order) && order.length > 0))
         {return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: questions order' })}
 
         const assessment = await Assessment.findById(assessmentId)
     
-        if (!assessment) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}
-        if (!assessment.questionBank || assessment.questionBank.length === 0) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Question Bank Empty' })}
-        
+        if (!assessment) 
+        {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}
+
+        if (!assessment.questionBank || assessment.questionBank.length === 0) 
+        {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Question Bank Empty' })}
+
+        if(assessment.questionBank.length != order.length)
+        {return res.status(409).json({ error: "ER_CONFLICT", message: 'Discrepancy in provided arguements' })}
 
         const reorderedQuestionBank = order.map(id => 
         {
-            return assessment.questionBank.find(item => item.question._id.equals(new mongoose.Types.ObjectId(id)))
+            return assessment.questionBank.find(item => item.question.equals(new mongoose.Types.ObjectId(id)))
         })
     
+        console.log(reorderedQuestionBank)
         assessment.questionBank = reorderedQuestionBank
         await assessment.save()
 
@@ -47,12 +51,11 @@ module.exports.addQuestionToBank = async (req,res) =>
         let {question} = req.body
         const teacherId = req.body.decodedToken.id
 
-        const session = await conn.startSession()
-
         const imagePath = upload(question.image)
         question.image = imagePath
         question.teacher = teacherId
 
+        const session = await conn.startSession()
         const insertId = await session.withTransaction(async () => 
         {
             const newQuestion = await Question.create([question], {session})

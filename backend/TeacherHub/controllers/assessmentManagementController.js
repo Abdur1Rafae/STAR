@@ -1,8 +1,6 @@
 const conn = require('../dbconfig/dbcon')
-const mongoose = require('mongoose')
 const {getAssessmentStatus, upload, remove} = require('../util/library')
-const Assessment = require('../models/Assessment')
-const Section = require('../models/Section')
+const {Assessment, Section} = require('library/index')
 
 module.exports.createAssessment = async (req,res) => 
 {
@@ -18,19 +16,19 @@ module.exports.createAssessment = async (req,res) =>
         {
             
             const newAssessment = await Assessment.create(
-            {
+            [{
                 teacher, title, description, participants, configurations, coverImage : imagePath
-            })
+            }], {session})
 
             const updatedSections = await Section.updateMany
             (
                 { _id: { $in: participants } }, 
-                { $push: { assessments: newAssessment } } 
+                { $push: { assessments: newAssessment[0] } } 
             )
 
             if(updatedSections.matchedCount != participants.length){throw new Error('Failed to add all sections')}
 
-            return newAssessment._id
+            return newAssessment[0]._id
 
         })
         session.endSession()
@@ -61,7 +59,8 @@ module.exports.updateAssessment = async (req,res) =>
             (
                 {_id : assessmentId}, 
                 {teacherID, title, description, participants, configurations, coverImage : imagePath},
-                {new: false}
+                {new: false},
+                {session}
             )
 
             if(!oldAssessment){throw new Error('Assessment not found')}
@@ -74,8 +73,8 @@ module.exports.updateAssessment = async (req,res) =>
             const sectionsToRemove = oldParticipants.filter(sectionId => !newParticipants.includes(sectionId))
             const sectionsToAdd = newParticipants.filter(sectionId => !oldParticipants.includes(sectionId))
 
-            const removedSections = await Section.updateMany({ _id: { $in: sectionsToRemove } }, { $pull: { assessments: assessmentId } })
-            const addedSections = await Section.updateMany({ _id: { $in: sectionsToAdd } }, { $addToSet: { assessments: assessmentId } })
+            const removedSections = await Section.updateMany({ _id: { $in: sectionsToRemove } }, { $pull: { assessments: assessmentId } }, {session})
+            const addedSections = await Section.updateMany({ _id: { $in: sectionsToAdd } }, { $addToSet: { assessments: assessmentId } }, {session})
 
             if(removedSections.matchedCount != sectionsToRemove.length && addedSections.matchedCount != sectionsToAdd.length){throw new Error('Failed to update participants')}
         })
@@ -94,14 +93,15 @@ module.exports.deleteAssessment = async (req,res) =>
         const session = await conn.startSession()
         await session.withTransaction(async () => 
         {
-            const deletedAssessment = await Assessment.findByIdAndDelete(assessmentId)
+            const deletedAssessment = await Assessment.findByIdAndDelete(assessmentId, {session})
 
             if(!deletedAssessment){throw new Error('Assessment not found')}
 
             const updatedSections = await Section.updateMany
             (
                 { _id: { $in: deletedAssessment.participants } }, 
-                { $pull: { assessments: deletedAssessment._id } } 
+                { $pull: { assessments: deletedAssessment._id } },
+                {session}
             )
 
             if(updatedSections.matchedCount != deletedAssessment.participants.length){throw new Error('Failed to update all sections')}
@@ -116,78 +116,43 @@ module.exports.deleteAssessment = async (req,res) =>
         if (err.message === 'Failed to update all sections' || err.message === 'Assessment not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to delete assessment'})}
 }
-module.exports.getAssessmentDetails = async (req,res) => 
-{ 
-    try{
-        var {assessmentId} = req.params
-
-        const assessmentDetails = await Assessment.findById(assessmentId)
-        .populate({
-            path: 'participants',
-            select: 'sectionName',
-        })
-        .select('-questionBank -createdAt -updatedAt -status -teacher -v')
-
-        if(!assessmentDetails){ res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
-
-        return res.status(200).json({data: assessmentDetails})  
-    }
-    catch(err){
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get assessment details'})}
-}
 module.exports.getScheduledAssessments = async (req,res) => 
 {
     try
     {
         const teacher = req.body.decodedToken.id
 
-        const assessments = await Assessment.aggregate([
-            {
-                $match: { teacher: new mongoose.Types.ObjectId(teacher) }
-            },
-            {
-                $match: { status: { $ne: "Published" } }
-            },
-            {
-                $lookup: {
-                    from: "sections",
-                    localField: "participants",
-                    foreignField: "_id",
-                    as: "sections"
-                }
-            },
-            {
-                $unwind: "$sections"
-            },
-            {
-                $group: {
-                    _id: "$_id",
-                    title: { $first: "$title" },
-                    openDate: { $first: "$configurations.openDate" },
-                    closeDate: { $first: "$configurations.closeDate" },
-                    duration: { $first: "$configurations.duration" },
-                    totalQuestions: {
-                        $sum: {
-                            $size: { $ifNull: ["$questionBank.questions", []] },
-                            $size: { $ifNull: ["$questionBank.reusedQuestions", []] }
-                        }
-                    },
-                    totalStudents: { $sum: { $size: "$sections.roster" } }
-                }
-            }
-        ]);
+        const assessments = await Assessment.find({ teacher: teacher, status: { $ne: "Published" } })
+        .populate
+        ({
+            path: 'participants',
+            select: 'roster sectionName'
+        })
+        .populate
+        ({
+            path: 'questionBank.question',
+            select: 'points'
+        })
         
         if(!assessments){return res.status(200).json({data: []})}
 
         const categorizedAssessments = assessments.map(assessment => {
             return {
-                ...assessment,
-                catgeory: getAssessmentStatus(assessment) 
+                title: assessment.title,
+                description: assessment.description,
+                participants: assessment.participants.reduce((names, section) => names.concat(section.sectionName), []),
+                configurations: assessment.configurations,
+                coverImage: assessment.coverImage,
+                totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,
+                totalStudents: assessment.participants.reduce((total, section) => total + (section.roster ? section.roster.length : 0), 0),
+                totalMarks: assessment.questionBank.reduce((total, questionObj) => total + (questionObj.question ? questionObj.question.points : 0) , 0),
+                catgeory: getAssessmentStatus(assessment.configurations.openDate, assessment.configurations.closeDate),
             }
         })
 
         return res.status(200).json({data: categorizedAssessments})  
     }
     catch(err){
+        console.log(err)
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get scheduled assessments'})}
 }

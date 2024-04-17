@@ -8,29 +8,34 @@
     "extension": "",
     "files": [
         {
-            "date": 1712728107959,
-            "name": "/data/logs/redisinsight-2024-04-10.log.0",
-            "hash": "30a5dfc1db92a165b7f429c6d01cfa115410e710b67fc786c7dc21de18b6d1bf"
+            "date": 1712836571570,
+            "name": "/data/logs/redisinsight-2024-04-11.log.0",
+            "hash": "7276cb2d959b6a3b48cd1a5fee24390eb6658b9c8a4a0c9acdc839e4da77a789"
         },
         {
-            "date": 1712914038458,
+            "date": 1712921269409,
             "name": "/data/logs/redisinsight-2024-04-12.log.0",
-            "hash": "09bd2b7c473798a2b40022adb273ef6059deb73e208e292b93de3a38fd269590"
+            "hash": "0c3899d4a8b18248d7a6c22e10334031e478e7153033fcb9581c2413dadc9043"
         },
         {
-            "date": 1713241843169,
+            "date": 1713118025759,
+            "name": "/data/logs/redisinsight-2024-04-14.log.0",
+            "hash": "f9be754e1087e53561af29b5397386b9c38d9dba12c2bd25928f26f4c502e627"
+        },
+        {
+            "date": 1713205489183,
+            "name": "/data/logs/redisinsight-2024-04-15.log.0",
+            "hash": "51b4853ada319eaa7840db91f071bef7abefc5e14c06593a90b0afb9edcbab78"
+        },
+        {
+            "date": 1713309153568,
             "name": "/data/logs/redisinsight-2024-04-16.log.0",
-            "hash": "ccc50a9803273ca1643ebd4d2321974d1a504376e5d0bf7477c2a999c79b3bad"
+            "hash": "11c25706fa00c5e6d23ce075694adeb32dd4dc23c5653b5313f88682d368edf4"
         },
         {
-            "date": 1713325477232,
+            "date": 1713312766923,
             "name": "/data/logs/redisinsight-2024-04-17.log.0",
-            "hash": "576aad454a0e7356d3d1a7cd17755f0ea267c84aa14dc6c6fb6aee5ae68f98f0"
-        },
-        {
-            "date": 1713331559491,
-            "name": "/data/logs/redisinsight-2024-04-17.log.2024",
-            "hash": "76364b1d8067800b665f3231c90a232d09af5519825653b86729fd46afe4e251"
+            "hash": "52e1597bf30f65e95178fe868fe87888b8d1f2845e41a1c7d9066f8b07f79718"
         }
     ]
 }
