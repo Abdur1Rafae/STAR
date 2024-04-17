@@ -1,40 +1,83 @@
 const conn = require('../dbconfig/dbcon')
-const Assessment = require('../models/Assessment')
-const Class = require('../models/Class')
-const Question = require('../models/Question')
-const Student = require('../models/Student')
-const Section = require('../models/Section')
-const Teacher = require('../models/Teacher')
+const {Assessment, Question, Student, Response} = require('library/index')
 
-module.exports.getAssessmentQuestions = async (req,res) => 
+module.exports.beginAssessment = async (req,res) => 
 {
-    try
-    {
-        const {assessmentId} = req.params
+  try
+  {
+    //const student = req.body.decodedToken.id
+    const student = '6609c24b69f531c541e8b651'
+    const {assessmentId} = req.params
 
-        const questions = await Assessment.findById(assessmentId)
-        .select('questionBank.question -_id')
-        .populate({
-            path: 'questionBank.question',
-            select: '-teacher -__v',
-            model: Question
-        })
+    const response = await Response.findOneAndUpdate
+    (
+      { student, assessment: assessmentId },
+      { $setOnInsert: { student, assessment: assessmentId } },
+      { upsert: true, new: true }
+    )
 
-      if (!questions) {return res.status(201).json({data: []})}
+    const assessment = await Assessment.findById(assessmentId)
+    .select('questionBank.question -_id')
+    .populate
+    ({
+        path: 'questionBank.question',
+        select: '-teacher -__v',
+        model: Question
+    })
 
-      const formattedData = questions.questionBank.map(item => ({
-        ...item.question.toObject(),
-        reuse: item.reuse
-      }))
+    if (!assessment) {return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
 
-      res.status(201).json({data: formattedData})
+    const formattedData = assessment.questionBank.map(item => ({...item.question.toObject(),}))
 
-    }
-    catch (err) {
-        console.log(err)
-        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get questions' })
-    }   
+    res.status(201).json({responseId: response._id, questions: formattedData})
+
+  }
+  catch (err) {
+      console.log(err)
+      res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to launch questions' })
+  } 
 }
+module.exports.submitAssessment = async (req,res) => 
+{
+  try
+  {
+    //const student = req.body.decodedToken.id
+    const student = '6609c24b69f531c541e8b651'
+    const {responseId} = req.params
+    const {submission} = req.body
+
+    const session = await conn.startSession()
+    await session.withTransaction(async () => 
+    {
+
+      const response = {responses: submission, status: 'Submitted'}
+      const updatedResponse = await Response.findByIdAndUpdate(responseId, response, {session})
+
+      if (!updatedResponse) {throw new Error('Response not found')}
+
+      const assessmentId = updatedResponse.assessment
+
+      const updatedStudent = await Student.findByIdAndUpdate( 
+        student,
+        { $addToSet: { attemptedAssessments : assessmentId } }
+      , {session})
+
+      if (!updatedStudent) {throw new Error('Student not found')}
+
+    })
+    session.endSession()
+
+    res.status(201).json({message: 'Response recorded successfully'})
+
+  }
+  catch (err) {
+      console.log(err)
+      if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+      else if (err.message === 'Response not found' || err.message === 'Student not found') {return res.status(404).json({ error: 'ER_NOT_FOUND', message: err.message })} 
+      res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to save response' })
+  } 
+}
+
 module.exports.getUpcomingAssessments = async (req,res) => 
 {
     try{
@@ -63,7 +106,7 @@ module.exports.getUpcomingAssessments = async (req,res) =>
         ]
       })
 
-      const data = [];
+      const data = []
       assessments.enrolledSections.forEach(section => {
           section.assessments.forEach(assessment => {
               const assessmentData = 
@@ -74,8 +117,8 @@ module.exports.getUpcomingAssessments = async (req,res) =>
                 closeDate: assessment.configurations.closeDate,
                 duration: assessment.configurations.duration,
 
-              };
-              data.push(assessmentData);
+              }
+              data.push(assessmentData)
           })
       })
 
@@ -88,52 +131,53 @@ module.exports.getUpcomingAssessments = async (req,res) =>
 }
 module.exports.getOngoingAssessments = async (req,res) => 
 {
-    try
-    {
-      //const student = req.body.decodedToken.email
-      const student = '6609c05b69f531c541e366a0'
+  try
+  {
+    //const student = req.body.decodedToken.email
+    const student = '6609c24b69f531c541e8b651'
 
-      const assessments = await Student.findById(student)
-      .select('-name -erp -email -_id -__v') 
-      .populate
-      ({
-        path: 'enrolledSections',
-        select: '-_id class assessments', 
-        populate: 
-        [
-          {
-              path: 'class', 
-              select: '-_id className' 
-          },
-          {
-              path: 'assessments', 
-              select: '_id title description configurations coverImage',
-              match: 
-              { 
-                'configurations.openDate': { $lt: new Date() },
-                'configurations.closeDate': { $gt: new Date() }
+    const assessments = await Student.findById(student)
+    .select('-name -erp -email -_id -__v') 
+    .populate
+    ({
+      path: 'enrolledSections',
+      select: '-_id class assessments', 
+      populate: 
+      [
+        {
+            path: 'class', 
+            select: '-_id className' 
+        },
+        {
+            path: 'assessments', 
+            select: '_id title description configurations coverImage',
+            match: 
+            { 
+              'configurations.openDate': { $lt: new Date() },
+              'configurations.closeDate': { $gt: new Date() }
+            },
+            populate: 
+            [
+              {
+                path: 'teacher',
+                select: 'firstName lastName -_id'
               },
-              populate: 
-              [
-                {
-                  path: 'teacher',
-                  select: 'firstName lastName -_id'
-                },
-                {
-                  path: 'questionBank.question',
-                  select: 'points -_id'
-                }
-              ],
-              model: Assessment
-          },
-        ]
-      })
-
-      
-      const data = [];
-      assessments.enrolledSections.forEach(section => 
-      {
-          section.assessments.forEach(assessment => 
+              {
+                path: 'questionBank.question',
+                select: 'points -_id'
+              }
+            ],
+            model: Assessment
+        },
+      ]
+    })
+  
+    const data = []
+    assessments.enrolledSections.forEach(section => 
+    {
+        section.assessments.forEach(assessment => 
+          {
+            if(!assessments.attemptedAssessments.includes(assessment._id))
             {
               const assessmentData = 
               {
@@ -146,15 +190,16 @@ module.exports.getOngoingAssessments = async (req,res) =>
                 totalQuestions: assessment.questionBank.length,
                 coverImage: assessment.coverImage,
                 configurations:  assessment.configurations,
-              };
-              data.push(assessmentData);
-          })
-      })
+              }
+              data.push(assessmentData)
+            }
+        })
+    })
 
-      res.status(200).json({data: data})  
-    }
-    catch(err){
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get upcoming assessments'})
-    } 
+    res.status(200).json({data: data})  
+  }
+  catch(err){
+      console.log(err)
+      res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get upcoming assessments'})
+  } 
 }
