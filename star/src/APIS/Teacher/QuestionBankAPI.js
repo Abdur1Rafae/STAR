@@ -12,4 +12,14 @@ const GetAllQuestionBanks = async() => {
     return res.data.data
 }
 
-export {GetAllQuestionBanks}
+const GetQuestionsOfQB = async({id}) => {
+    const res = await AxiosBase.get(`/teacherhub/question-bank/questions/${id}`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+export {GetAllQuestionBanks, GetQuestionsOfQB}

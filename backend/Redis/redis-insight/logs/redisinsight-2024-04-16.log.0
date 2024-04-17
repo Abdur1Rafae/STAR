@@ -370,3 +370,4 @@
 4/16/2024, 4:30:45 AM | INFO | SettingsService | Getting application settings. | [object Object]
 4/16/2024, 4:30:45 AM | INFO | SettingsService | Succeed to get application settings. | [object Object]
 4/16/2024, 4:30:46 AM | INFO | TutorialsProvider | Updates available! Updating... | [object Object]
+4/16/2024, 6:56:16 AM | INFO |  | Signal SIGTERM received. Shutting down... | [object Object]

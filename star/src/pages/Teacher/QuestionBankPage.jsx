@@ -41,7 +41,7 @@ function QuestionBankPage() {
                     <div className='flex flex-wrap gap-8'>
                       {
                         questionBanks.map((qb)=> {
-                          return <QuestionBankCard Name={qb.title} date={qb.updatedAt} id={qb._id} count={qb.questionCount}/>
+                          return <QuestionBankCard onClick={()=>{window.location.assign(`/teacher/library/${qb.title}`); localStorage.setItem('QuestionBankID', qb._id)}} Name={qb.title} date={qb.updatedAt} id={qb._id} count={qb.questionCount}/>
                         })
                       }
                     </div>

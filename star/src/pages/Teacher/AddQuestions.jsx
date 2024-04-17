@@ -20,8 +20,6 @@ import { UpdateOrder } from '../../APIS/Teacher/AssessmentAPI';
 
 function AddQuestions() {
     const assessmentName = useParams()
-    const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
-    const skills = ["Problem Solving", "Logic Design", "Quantitative Analysis", "Critical Thinking"]
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
 

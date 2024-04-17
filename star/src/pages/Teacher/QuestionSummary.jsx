@@ -1,22 +1,8 @@
 import React, { useState , useContext } from 'react';
-import MenuBar from '../../components/MenuBar';
-import SubheaderBut from '../../components/Teacher/SubheaderBut.jsx';
-import { GoListOrdered } from "react-icons/go";
-import HorizontalNavigationTab from '../../components/navigations/HorizontalNavigationTab.jsx';
-import { StudentDonutGraph } from '../../components/Teacher/StudentDonut';
-import AvgScoreHighScoreCard from '../../components/Teacher/avgscorehighscorecard.jsx';
-import TimeTaken from '../../components/Student/assessment/TimeTaken.jsx';
-import QuestionDetails from '../../components/Student/QuestionDetails.jsx';
 import QuesAnswithHorBars from '../../components/Teacher/QuesAnswithHorBars.jsx';
 import { QuestionContext } from '../../Context/QuestionsContext';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
-
-import SideBar from '../../components/Teacher/SideBar.jsx';
-import { BiChevronDown, BiChevronLeft } from 'react-icons/bi'
-import { GrOverview } from "react-icons/gr";
-import { FaUsersViewfinder } from "react-icons/fa6";
-import { MdQueryStats } from "react-icons/md";
 
 const QuestionSummary = () => {
   const { questions , setQuestions, saveQuestions } = useContext(QuestionContext);
@@ -37,34 +23,32 @@ const QuestionSummary = () => {
 
   return (
     <div className='flex flex-col'>
-      <MenuBar name={"Maaz Shamim"} role={"Student"} />
-     
-        <div >
-          <div className='flex mx-2 p-4 w-full bg-LightBlue shadow-lg rounded-md items-center'>
-            <span className=' font-semibold '>Question: </span>
-            <select className="block w-fit md:mx-8 mx-1 px-4 md:px-16 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-black"  value={selectedQuestionIndex + 1}
-            onChange={handleSelectQuestion}>
-              {[...Array(questions.length).keys()].map((index) => (
-                <option key={index} value={index + 1}>{index + 1}</option>
-              ))}
-            </select>
-            <span className='text-DarkBlue font-bold'>  of {questions.length}</span>
-            <div className='flex items-center ml-auto gap-2'>
+      <div >
+        <div className='flex mt-2 p-2 w-full bg-LightBlue shadow-md rounded-md items-center'>
+          <span className=' font-semibold '>Question:&nbsp;</span>
+          <select className="px-4 border border-gray-300 rounded-md focus:outline-none focus:border-black"  value={selectedQuestionIndex + 1}
+          onChange={handleSelectQuestion}>
+            {[...Array(questions.length).keys()].map((index) => (
+              <option key={index} value={index + 1}>{index + 1}</option>
+            ))}
+          </select>
+          <span className='text-DarkBlue font-bold'>&nbsp; of {questions.length}</span>
+          <div className='flex items-center ml-auto gap-2'>
             <button className='bg-[#829FB6] rounded-tl-full rounded-bl-full px-4 py-2' onClick={handlePrevious}>
-            <IoIosArrowBack />
+              <IoIosArrowBack />
             </button>
             <button className='bg-[#829FB6] rounded-br-full rounded-tr-full px-4 py-2' onClick={handleNext}>
-            <IoIosArrowForward />
+              <IoIosArrowForward />
             </button>
-            </div>
-            
           </div>
-          <div className='bg-LightBlue shadow-lg rounded-md m-2'> 
-            <QuesAnswithHorBars question={questions[selectedQuestionIndex]} />
-          </div>
-         
-        </div>  
-      </div>
+          
+        </div>
+        <div className='bg-LightBlue shadow-lg rounded-md mt-2'> 
+          <QuesAnswithHorBars question={questions[selectedQuestionIndex]} />
+        </div>
+        
+      </div>  
+    </div>
   );
 };
 

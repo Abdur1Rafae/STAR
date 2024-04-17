@@ -74,6 +74,7 @@ const LegendList = ({labels}) => (
   );
 
 export function DoughnutGraph({ inputData }) {
+  console.log(inputData)
   const labels = Object.entries(inputData).map(([key, value]) => (key + " : " + value));
     return (
         <div className='w-full flex flex-col items-center justify-center'>

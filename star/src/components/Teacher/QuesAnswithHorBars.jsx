@@ -1,5 +1,4 @@
 import React from 'react';
-import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from '../Student/question/QuizImage';
 import HorizontalProgressBar from '../Student/course/HorizontalProgressBar';
 import TimeTaken from '../Student/assessment/TimeTaken';
@@ -15,7 +14,7 @@ const QuesAnswithHorBars = ({ question }) => {
   console.log(question);
 
   return (
-    <div className="flex-grow w-full mx-auto p-4">
+    <div className="flex-grow w-full p-4">
       <div className='flex gap-2 m-2 w-full'>
         <SkillBox skill={question.skill} />
         <DifficultyBox difficulty={question.difficulty} />
@@ -49,13 +48,13 @@ const QuesAnswithHorBars = ({ question }) => {
               >
                 <div
                   className={`w-full   h-10 rounded-md mr-2 flex items-center border border-black ${
-                    option.isCorrect ? 'bg-green-300 ' : ''
+                    question.correctOptions.includes(option) ? 'bg-green-300 ' : ''
                   }`}
                 >
                   <div className="relative start-5 inset-y-0 flex">
                     {String.fromCharCode(65 + index)}
                   </div>
-                  <div className='relative start-10 inset-y-0'>&nbsp;{option.text}</div>
+                  <div className='relative start-10 inset-y-0'>&nbsp;{option}</div>
                 </div>
                 <div className='w-1/3 ml-2'><HorizontalProgressBar Score='40' Color='#EC5491' /></div>
               </div>
