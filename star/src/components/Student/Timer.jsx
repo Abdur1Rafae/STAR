@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { TbClockOff } from "react-icons/tb";
 
-const Timer = ({ initialTime }) => {
-  const [remainingTime, setRemainingTime] = useState(initialTime);
+const Timer = () => {
   const [showTime, setShowTime] = useState(true)
+  const quizDetails = JSON.parse(localStorage.getItem('quizDetails'))
+  const closingTime = new Date(quizDetails.closeDate).getTime()
+  const [remainingTime, setRemainingTime] = useState(quizDetails.duration * 60);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -15,7 +17,7 @@ const Timer = ({ initialTime }) => {
   }, []);
 
   useEffect(() => {
-    if (remainingTime === 0) {
+    if (remainingTime === 0 || closingTime == Date.now()) {
       window.location.assign('/home');
     }
   }, [remainingTime]);

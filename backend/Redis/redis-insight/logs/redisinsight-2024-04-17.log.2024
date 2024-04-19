@@ -369,3 +369,4 @@
 4/17/2024, 5:26:00 AM | INFO | CommandsJsonProvider:redisearch | Successfully updated redisearch commands | [object Object]
 4/17/2024, 5:26:00 AM | INFO | SettingsService | Succeed to get application settings. | [object Object]
 4/17/2024, 5:26:00 AM | INFO | CommandsJsonProvider:main | Successfully updated main commands | [object Object]
+4/17/2024, 9:06:04 PM | INFO |  | Signal SIGTERM received. Shutting down... | [object Object]

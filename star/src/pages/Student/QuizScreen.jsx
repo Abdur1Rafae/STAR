@@ -16,13 +16,14 @@ const QuizScreen = () => {
 
   const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
 
-  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails } = QuizStore();
+  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback} = quizConfig
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     updateQuizDetails(storedQuizDetails)
+    createResponseObjects()
   }, [])
 
   
@@ -39,11 +40,6 @@ const QuizScreen = () => {
   // }, [responses])
 
   const currentQuestion = getQuestion()
-
-
-  const handleOptionSelect = (selectedOption) => {
-    // Logic to handle option selection
-  };
 
   const handleNextQuestion = () => {
     if(currentQuestionIndex == questions.length - 1) {
@@ -64,6 +60,11 @@ const QuizScreen = () => {
     setAnswerSubmit(true)
   }
 
+  const handleSubmission = async() => {
+    console.log("here")
+    await submitResponses()
+  }
+
   return (
     <div className='flex flex-col w-screen lg:w-full'>
       <MenuBar name={"Maaz Shamim"} role={"Student"}/>
@@ -81,14 +82,12 @@ const QuizScreen = () => {
                   :
                   <MCQPanel
                     question={currentQuestion}
-                    onOptionSelect={handleOptionSelect}
                     Flagged={currentQuestion.flagged}
                   />
                 )
                 :
                 <MCQPanel
                   question={currentQuestion}
-                  onOptionSelect={handleOptionSelect}
                   Flagged={currentQuestion.flagged}
                 />
               )
@@ -96,7 +95,6 @@ const QuizScreen = () => {
               (questions[currentQuestionIndex].type === "Short Answer" ? 
                 <TextAnswerPanel
                   question={currentQuestion}
-                  onOptionSelect={handleOptionSelect}
                   Flagged={currentQuestion.flagged}
                 />
                 :
@@ -108,14 +106,12 @@ const QuizScreen = () => {
                     :
                     <TrueFalse
                       question={currentQuestion}
-                      onOptionSelect={handleOptionSelect}
                       Flagged={currentQuestion.flagged}
                     />
                   )
                   :
                   <TrueFalse
                     question={currentQuestion}
-                    onOptionSelect={handleOptionSelect}
                     Flagged={currentQuestion.flagged}
                   />
                 )
@@ -136,7 +132,7 @@ const QuizScreen = () => {
             <div className="flex items-center space-y-0 space-x-4">
               {
                 reachedLastQuestion ? 
-                <SubmitButton label="Submit" onClick={handleNextQuestion} active={true}/>
+                <SubmitButton label="Submit" onClick={handleSubmission} active={true}/>
                 :
                 (
                   !navigation ? 

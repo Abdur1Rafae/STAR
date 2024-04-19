@@ -24,13 +24,26 @@ const GetUpcomingAssessments = async () => {
 };
 
 const GetAssessmentQuestions = async(id) => {
-    const res = await AxiosBase.get(`assesshub/assessment/assessment-questions/${id}`,{
+    const res = await AxiosBase.get(`/assesshub/assessment/begin-assessment/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
         }
     })
 
-    return res.data.data;
+    return res.data;
 }
 
-export {GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions}
+const SubmitAssessment = async({responses}) => {
+    const id = localStorage.getItem('responseId')
+    const res = await AxiosBase.post(`/assesshub/assessment/submit-response/${id}`,{
+        submission: responses
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data;
+}
+
+export {GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment}

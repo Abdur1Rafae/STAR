@@ -5,10 +5,11 @@ import FlagButton from '../../button/FlagButton';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizStore from '../../../Stores/QuizStore';
 
-const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
+const TrueFalsePanel = ({ question, Flagged}) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isFlagged, setIsFlagged] = useState(Flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
+  const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
   const filterQuestions = QuizStore(store=> store.filterQuestions)
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
@@ -16,19 +17,19 @@ const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
   const [response, setResponse] = useState(null)
 
   useEffect(()=> {
-    const answer = getSelectedResponse(question.number)
-    setResponse(answer ? answer.selectedAnswer : null)
-    setSelectedOption(answer ? answer.selectedAnswer : null)
-  }, [question.number])
+    const answer = getSelectedResponse(questionNumber)
+    setResponse(answer ? answer.answer[0] : null)
+    setSelectedOption(answer ? answer.answer[0] : null)
+    setIsFlagged(question.flagged)
+  }, [question])
 
   useEffect(() => {
     setResponse(answer => {
       const updatedAnswer = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: answer ? answer : selectedOption
+        questionId: question._id,
+        answer: [answer ? answer : selectedOption]
       };
-      updateResponse(question.number, updatedAnswer);
+      updateResponse(questionNumber, updatedAnswer);
       return answer;
     });
   }, [selectedOption]);
@@ -36,7 +37,6 @@ const TrueFalsePanel = ({ question, onOptionSelect, Flagged}) => {
   const handleAnswerSelect = (answer) => {
     setSelectedOption(answer);
     setResponse(answer)
-    onOptionSelect(answer);
   };
 
   const handleToggleFlag = () => {
