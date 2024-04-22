@@ -1,6 +1,6 @@
 import React, { useState , useContext } from 'react';
-import QuesAnswithHorBars from '../../components/Teacher/QuesAnswithHorBars.jsx';
-import { QuestionContext } from '../../Context/QuestionsContext';
+import QuesAnswithHorBars from './QuesAnswithHorBars.jsx';
+import { QuestionContext } from '../../Context/QuestionsContext.js';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 

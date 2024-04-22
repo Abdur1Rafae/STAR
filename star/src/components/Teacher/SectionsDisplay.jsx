@@ -5,7 +5,8 @@ const SectionsDisplay = ({classID, sectionID, section}) => {
     const {selectedSections, toggleSection} = useContext(SectionContext)
     const currSection = {
         _id: sectionID,
-        name: section
+        name: section,
+        class: classID
     }
   return (
     <button onClick={()=>toggleSection(currSection)} className='w-full h-12 border-[1px] border-black p-2 bg-LightBlue flex justify-between mt-2'>

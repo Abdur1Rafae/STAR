@@ -7,8 +7,8 @@ import { GrOverview } from "react-icons/gr";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import { MdQueryStats } from "react-icons/md";
 import ReportsOverview from '../../components/Teacher/ReportsOverview'
-import QuestionSummary from './QuestionSummary'
-import IndividualReport from './IndividualReport'
+import QuestionSummary from '../../components/Teacher/QuestionSummary'
+import IndividualReport from '../../components/Teacher/IndividualReport'
 
 const Reports = () => {
     const [tab, setTab] = useState('Overview')

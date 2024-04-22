@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom';
 import { AddStudent, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
 import SubmitButton from '../../components/button/SubmitButton';
 
-const ClassesTablePage = () => {
+const Roster = () => {
   const sectionId = useParams('sectionID')
   const [isEditing, setIsEditing] = useState(false);
   const [editedClassName, setEditedClassName] = useState('');
@@ -26,7 +26,7 @@ const ClassesTablePage = () => {
 
   const columns = [
     { title: "Name", key: "name" },
-    { title: "Student ID", key: "erp" },
+    { title: "ID", key: "erp" },
     { title: "Email", key: "email" },
     { title: "Action", key: "action" },
   ];
@@ -98,7 +98,7 @@ const ClassesTablePage = () => {
   }
 
   return (
-    <div className='w-full h-full font-body border border-black'>
+    <div className='flex flex-col h-screen'>
       <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"} />
       <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
         <SideBar active={"Classes"} />
@@ -148,7 +148,6 @@ const ClassesTablePage = () => {
               ...student,
               action: (
                 <ActionBox
-                  onClickEdit={() => handleEditStudent(index, student)}
                   onClickDelete={() => handleDeleteStudent(index)}
                 />
               ),
@@ -197,4 +196,4 @@ const EditingStudentDialogBox = ({isOpen, oldName, oldEmail, oldErp, onSave, onC
   );
 }
 
-export default ClassesTablePage;
+export default Roster;

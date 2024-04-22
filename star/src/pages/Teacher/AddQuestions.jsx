@@ -242,7 +242,7 @@ function AddQuestions() {
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
-                <SubheaderBut name={"Add Questions"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
+                <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
                 <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>

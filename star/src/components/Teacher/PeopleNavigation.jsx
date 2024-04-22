@@ -15,7 +15,7 @@ const PeopleNavigation = ({ peopleinfo, activePerson, onPersonClick }) => {
         </div>
         <div className='border border-gray-300 my-4 mx-2'></div>
       </div>
-      <div className='h-16'>
+      <div className=''>
         {peopleinfo.map((person, index) => (
           <PeopleTabTile
             key={index}

@@ -403,7 +403,7 @@ function CreateNewAssessment() {
          <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
                <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
                   <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between z-50'>
-                     <h3 className='my-auto ml-2'>Select Questions to add</h3>
+                     <h3 className='my-auto ml-2'>Select Sections</h3>
                      <button className='mr-2' onClick={()=>setSelectSectionsDialog(false)}><MdClose className='text-lg'/></button>
                   </div>
                   <div className='overflow-y-auto no-scrollbar'>

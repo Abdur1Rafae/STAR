@@ -8,17 +8,23 @@ import MonitorButton from '../button/MonitorButton';
 import GradeButton from '../button/GradeButton';
 import EditButton from '../button/EditButton';
 import Asssessment from '../Assessment.png'
+import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 
-const AssessmentCard = ({ status }) => {
+const AssessmentCard = ({ assessment }) => {
     let buttonComponent, statusColor, statusTextColor;
 
-    switch (status) {
+    const handleMonitorClick = () => {
+        localStorage.setItem('MonitorAssessment', JSON.stringify(assessment))
+        window.location.assign("/teacher/live-monitoring")
+    }
+
+    switch (assessment.catgeory) {
         case 'In Progress':
-            buttonComponent = <MonitorButton label="Monitor" onClick={()=>{window.location.assign("/teacher/live-monitoring")}}/>;
+            buttonComponent = <MonitorButton label="Monitor" onClick={handleMonitorClick}/>;
             statusColor = 'border-MonitorYellow';
             statusTextColor = 'text-MonitorYellow';
             break;
-        case 'Requires Grading':
+        case 'Requires Review':
             buttonComponent = <GradeButton label="Grade" />;
             statusColor = 'border-DeleteRed';
             statusTextColor = 'text-DeleteRed';
@@ -36,38 +42,42 @@ const AssessmentCard = ({ status }) => {
             break;
     }
 
+    const OpenDate = DDMMMMYYYY_HHMM({date: new Date(assessment.configurations.openDate)});
+
+    const CloseDate = DDMMMMYYYY_HHMM({date: new Date(assessment.configurations.closeDate)});
+
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>
             <img className="w-full h-32 rounded-lg" src={Asssessment} alt="" />
             <div className='flex mt-2 items-center'>
-                <h3 className={`text-md font-medium text-DarkBlue ml-2`}>Monthly Test</h3>
-                <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{status}</div>
+                <h3 className={`text-md font-medium text-DarkBlue ml-2`}>{assessment.title}</h3>
+                <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.catgeory}</div>
             </div>
             <hr className="px-8 mt-2 border border-#5F6368 m-2"></hr>
             <div className='columns-2 ml-2'>
                 <div className='flex items-center'>
                     <MdOndemandVideo color="#5F6368" className='text-sm' />
-                    <p className='text-[9px] p-1'>22:00 15 January 2023</p>
+                    <p className='text-[9px] p-1'>{OpenDate}</p>
                 </div>
                 <div className='flex items-center'>
                     <FaHourglassEnd color="#5F6368" className='text-xs'/>
-                    <p className='text-[9px] p-1'>22:00 15 January 2023</p>
+                    <p className='text-[9px] p-1'>{CloseDate}</p>
                 </div>
             </div>
             <div className='columns-2 ml-2'>
                 <div className='flex items-center'>
                     <FaClock size={14} color="#5F6368" className='text-xs'/>
-                    <p className='text-[9px] p-1'>20 Minutes</p>
+                    <p className='text-[9px] p-1'>{assessment.configurations.duration} Minutes</p>
                 </div>
                 <div className='flex items-center'>
                     <BsCardChecklist color="#5F6368" className='text-sm'/>
-                    <p className='text-[9px] p-1'>20 Questions</p>
+                    <p className='text-[9px] p-1'>{assessment.totalQuestions} Questions</p>
                 </div>
             </div>
             <div className='columns-2 ml-2'>
                 <div className='flex items-center'>
                     <IoIosPeople color="#5F6368" className='text-sm'/>
-                    <p className='text-[9px] p-1'>100 Participants</p>
+                    <p className='text-[9px] p-1'>{assessment.totalStudents} Participants</p>
                 </div>
             </div>
             <div className='flex justify-end pr-2'>

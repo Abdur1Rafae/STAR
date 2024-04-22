@@ -1,12 +1,13 @@
 import AssessmentCard from '../../components/Teacher/AssessmentCard';
 import CategoryFilter from '../../components/Teacher/CategoryFilter';
-import React ,{ useState }from 'react';
+import React ,{ useState, useEffect }from 'react';
 import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
+import { GetAssessments } from '../../APIS/Teacher/AssessmentAPI';
 
 function ScheduledAssessment() {
-    const total_assessment = 4;
+    const [assessments, setAssessments] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('');
     const classes = ['All', 'Technology', 'Science', 'Art', 'Sports'];
     const statuses = ['All', 'In Progress', 'Requires Grading', 'Not Started'];
@@ -14,6 +15,16 @@ function ScheduledAssessment() {
     const handleSelectCategory = (category) => {
         setSelectedCategory(category);
     };
+
+    useEffect(()=> {
+        const getAssessments = async() => {
+            const res = await GetAssessments();
+            setAssessments(res)
+            console.log(res)
+        }
+
+        getAssessments()
+    }, [])
   return (
     <div className='flex flex-col h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
@@ -25,7 +36,7 @@ function ScheduledAssessment() {
                     <div className='md:flex items-center justify-between'>
                         <div className='flex items-center font-body'>
                             <h1 className='sm:text-xl md:text-2xl font-medium border-r-2 border-black pr-2'>All Assessments </h1>
-                            <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{total_assessment} in total</p>
+                            <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{assessments.length} in total</p>
                         </div>
                         <div className= 'flex gap-4 mt-4 md:mt-0'>
                             <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Filter by:</p>
@@ -44,10 +55,11 @@ function ScheduledAssessment() {
                         </div>
                     </div>
                     <div className='flex flex-wrap gap-6'>
-                        <AssessmentCard status="In Progress" />
-                        <AssessmentCard status="Requires Grading" />
-                        <AssessmentCard status="Not Started" />
-                        <AssessmentCard status="In Progress" />
+                        {
+                            assessments.map((assessment)=> {
+                                return <AssessmentCard status="In Progress" assessment={assessment} />
+                            })
+                        }
                     </div>
                 </div>
             </div>

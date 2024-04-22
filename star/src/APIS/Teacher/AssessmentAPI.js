@@ -2,6 +2,16 @@ import { AxiosBase } from '../BaseUrl';
 
 const token = process.env.REACT_APP_ACCESS_TOKEN
 
+const GetAssessments = async() => {
+    const res = await AxiosBase.get('teacherhub/assessment-management/scheduled-assessments', {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
 const CreateAssessment = async({name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
     instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
     const res = await AxiosBase.post('teacherhub/assessment-management/new-assessment',{
@@ -141,4 +151,45 @@ const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
     return res.data.data
 }
 
-export {CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions}
+const MonitorAssessment = async({id}) => {
+    console.log(id)
+    const res = await AxiosBase.get(`assesshub/monitor/monitor-assessment/6613875b0c0e21848981ad7e`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
+    instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
+    const res = await AxiosBase.post(`teacherhub/assessment-management/update-assessment/${id}`,{
+        title: name,
+        description: description,
+        participants : sections,
+        configurations : 
+        {
+            openDate: openDate,
+            duration: duration,
+            closeDate: closeDate,
+            adaptiveTesting: adaptiveTesting,
+            monitoring: monitoring,
+            instantFeedback: instantFeedback,
+            navigation: navigation,
+            releaseGrades: releaseGrades,
+            viewSubmission: viewSubmission,
+            randomizeQuestions: randomizeQuestions,
+            randomizeAnswers: randomizeAnswers,
+            finalScore: finalScore
+        }
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+export {GetAssessments, CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions, MonitorAssessment, UpdateAssessment}

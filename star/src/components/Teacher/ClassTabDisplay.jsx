@@ -6,6 +6,7 @@ const ClassTabDisplay = ({id, name, onDelete, classSections}) => {
     const [display, setDisplay] = useState(false);
 
     const [sections, setSections] = useState(classSections ? classSections: [])
+    console.log(sections)
 
 
   return (
