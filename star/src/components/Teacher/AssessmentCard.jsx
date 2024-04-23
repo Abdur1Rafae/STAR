@@ -18,6 +18,12 @@ const AssessmentCard = ({ assessment }) => {
         window.location.assign("/teacher/live-monitoring")
     }
 
+    const handleGradeClick = () => {
+        localStorage.setItem('GradeAssessment', JSON.stringify(assessment))
+        window.location.assign("/teacher/grading-table")
+    }
+
+
     switch (assessment.catgeory) {
         case 'In Progress':
             buttonComponent = <MonitorButton label="Monitor" onClick={handleMonitorClick}/>;
@@ -25,7 +31,7 @@ const AssessmentCard = ({ assessment }) => {
             statusTextColor = 'text-MonitorYellow';
             break;
         case 'Requires Review':
-            buttonComponent = <GradeButton label="Grade" />;
+            buttonComponent = <GradeButton label="Grade" onClick={handleGradeClick}/>;
             statusColor = 'border-DeleteRed';
             statusTextColor = 'text-DeleteRed';
             break;

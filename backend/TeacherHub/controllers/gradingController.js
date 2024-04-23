@@ -104,6 +104,7 @@ module.exports.gradeResponse = async (req,res) =>
     {
       const {submissionId, responseId} = req.params
       const {score, feedback} = req.body
+      console.log(req.body)
 
       if(score == null){return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: score' })}
 
@@ -118,7 +119,9 @@ module.exports.gradeResponse = async (req,res) =>
       const oldScore = responseToUpdate.score
       responseToUpdate.score = score
       responseToUpdate.feedback = feedback
-      submission.totalScore += score - oldScore
+      if( oldScore>0 ) {
+        submission.totalScore += score-oldScore
+      }
 
       await submission.save()
 

@@ -37,13 +37,13 @@ const AppRoutes = () => {
             <Route path="/quiz-instructions" element = {<QuizInstructions/>} />
               
               
-            <Route path="/teacher/scheduled-assessments" element = {<ScheduledAssessment/>} />
+            <Route path="/teacher/home" element = {<ScheduledAssessment/>} />
             <Route path='/teacher/classes' element={<Classes/>}></Route>
             <Route path='/teacher/classes/:sectionID' element={<Roster/>}></Route>
             <Route path='/teacher/library' element={<QuestionBankPage/>}></Route>
             <Route path='/teacher/live-monitoring' element={<LiveMonitoring/>}></Route>
             <Route path='/teacher/library/:questionBank' element={<OpenBank/>}></Route>
-            <Route path='/teacher/adding-questions/:assessmentId' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
+            <Route path='/teacher/questions-set/:assessmentId' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
             <Route path='/teacher/create-new-assessment' element={<SectionProvider><CreateNewAssessment/></SectionProvider>}></Route>
             <Route path='/teacher/edit-assessment' element={<SectionProvider><EditAssessmentDetails/></SectionProvider>}></Route>
             <Route path='/teacher/reports/:assessmentName' element = {<QuestionProvider><Reports/></QuestionProvider>}></Route>

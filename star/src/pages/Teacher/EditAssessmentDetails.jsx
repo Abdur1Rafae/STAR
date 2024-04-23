@@ -46,7 +46,7 @@ function EditAssessmentDetails() {
             try {
             const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
             monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-            window.location.assign(`/teacher/updating-questions/${data.assessmentId}`)
+            window.location.assign(`/teacher/questions-set/${data.assessmentId}`)
             } catch(err) {
             console.log(err)
             }

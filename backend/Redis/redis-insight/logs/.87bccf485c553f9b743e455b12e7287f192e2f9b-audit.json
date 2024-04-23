@@ -8,11 +8,6 @@
     "extension": "",
     "files": [
         {
-            "date": 1713205489142,
-            "name": "/data/logs/redisinsight-errors-2024-04-15.log.0",
-            "hash": "63fee178e94e25575a3ab25867d21beac3bd945e5cf47aa3e9b16e96af96b448"
-        },
-        {
             "date": 1713415128868,
             "name": "/data/logs/redisinsight-errors-2024-04-18.log.0",
             "hash": "9e7cdfd5b983dc0253af9ad38ac9b1242f1c3d19b7afd0c332b63f39cde4ee2f"
@@ -21,6 +16,11 @@
             "date": 1713765851291,
             "name": "/data/logs/redisinsight-errors-2024-04-22.log.0",
             "hash": "3d9cd4447fb0abb9887568dc60774784617ac223179f38f31640916f7e6c2b2d"
+        },
+        {
+            "date": 1713850784936,
+            "name": "/data/logs/redisinsight-errors-2024-04-23.log.0",
+            "hash": "02b175ca5cf3d018b76d6fb0317615b211ddf8fe808664387cc288b96afed810"
         }
     ]
 }

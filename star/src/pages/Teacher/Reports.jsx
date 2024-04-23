@@ -24,7 +24,7 @@ const Reports = () => {
                 <div className='w-auto h-full lg:p-4 md:p-2'>
                     <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
                         <div className='flex items-center self-start'>
-                            <BiChevronLeft className='text-3xl'/>
+                            <button onClick={()=>{window.location.assign('/teacher/reports')}}><BiChevronLeft className='text-3xl'/></button>
                             <h4 className='font-semibold'>Monthly Test</h4>
                         </div>
                         <div className='flex items-center gap-2 sm:flex-row flex-col'>

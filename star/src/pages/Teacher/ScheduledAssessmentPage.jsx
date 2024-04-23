@@ -29,7 +29,7 @@ function ScheduledAssessment() {
     <div className='flex flex-col h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
-            <SideBar active={"Schedule"}/>
+            <SideBar active={"Home"}/>
             <div className='w-full flex flex-col'>
                 <SubheaderBut name={"Scheduled Assessments"} button={"New"}/>
                 <div className='p-4 md:pl-8 md:pt-8 flex flex-col gap-4 overflow-hidden'>

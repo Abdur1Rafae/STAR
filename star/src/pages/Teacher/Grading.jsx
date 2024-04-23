@@ -1,12 +1,78 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import { BiChevronLeft } from 'react-icons/bi'
-import SubmitButton from '../../components/button/SubmitButton'
+import { GetAssessmentResponses, GradeResponse } from '../../APIS/Teacher/GradingAPI'
+import { useParams } from 'react-router-dom'
 
 const Grading = () => {
-    const numbers = [1, 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    const assessmentTitle = useParams('assessmentName')
+    const question = JSON.parse(localStorage.getItem('Response'))
+    const [responses, setResponses] = useState([])
+    const [responseIndex, setResponseIndex] = useState(0)
+    const [selectedResponse, setSelectedResponse] = useState(responses[responseIndex])
+    const [score, setScore] = useState(selectedResponse ? selectedResponse.score ? selectedResponse.score : 0 : 0);
+    const [feedback, setFeedback] = useState(selectedResponse ? selectedResponse.feedback ? selectedResponse.feedback : '' : '')
+
+    const handleScore = (event) => {
+        let newValue = parseInt(event.target.value, 10);
+        if(isNaN(newValue)) {
+            setScore(0)
+        }
+        else {
+            newValue = Math.max(Math.min(newValue, question.points), -1);
+            setScore(newValue);
+        }
+    };
+
+    const handleResponseSubmission = async() => {
+        try {
+            const SubmitGrade = await GradeResponse({submissionId: selectedResponse.submissionId, responseId: selectedResponse.responseId, score: score, feedback: feedback})
+            console.log(SubmitGrade)
+            console.log(responseIndex == question.totalResponses - 1)
+            if(responseIndex == question.totalResponses - 1) {
+                window.location.assign('/teacher/grading-table')
+            }
+            else {
+                setResponseIndex(responseIndex + 1)
+                setSelectedResponse(responses[responseIndex + 1]);
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(()=> {
+        const GetResponses = async()=>{
+            try{
+                const res = await GetAssessmentResponses({id:question._id})
+                setResponses(res)
+            } catch(err) {
+                console.log(err)
+            }
+        }
+
+        GetResponses()
+    }, [])
+
+    useEffect(()=> {
+        setSelectedResponse(responses[0])
+        console.log(responses[0])
+    }, [responses])
+
+    useEffect(()=> {
+        setScore(selectedResponse ? selectedResponse.score ? selectedResponse.score : 0 : 0)
+        setFeedback(selectedResponse ? selectedResponse.feedback ? selectedResponse.feedback : '' : '')
+    }, [selectedResponse])
+
+    const handleChange = (event) => {
+        const selectedIndex = parseInt(event.target.value, 10) - 1;
+        console.log(selectedIndex)
+        setResponseIndex(selectedIndex);
+        setSelectedResponse(responses[selectedIndex]);
+    };
+
   return (
     <div className='flex flex-col h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
@@ -17,8 +83,8 @@ const Grading = () => {
                 <div className='w-auto h-full lg:p-4 p-2'>
                     <div className='w-full bg-LightBlue flex p-2 items-center shadow-md'>
                         <div className='flex items-center self-start'>
-                            <BiChevronLeft className='text-3xl'/>
-                            <h4 className='font-semibold'>Monthly Test</h4>
+                            <button onClick={()=>{window.location.assign('/teacher/grading-table')}}><BiChevronLeft className='text-3xl'/></button>
+                            <h4 className='font-semibold'>{assessmentTitle.assessmentName} / Question {question.num}</h4>
                         </div>
                     </div>
                     <div className='flex md:flex-row flex-col w-full gap-4'>
@@ -28,7 +94,7 @@ const Grading = () => {
                                     <h3 className='font-semibold'>Question</h3>
                                 </div>
                                 <div className='p-4'>
-                                    <p className='text-sm'>In a programming context, what is the key difference between a stack and a queue, and when would you choose to use one over the other in a specific algorithm or application?</p>
+                                    <p className='text-sm'>{question.question}</p>
                                 </div>
                             </div>
                             <div className='border-[1px] border-black'>
@@ -36,17 +102,21 @@ const Grading = () => {
                                     <h3 className='font-semibold'>Response</h3>
                                     <div className='flex gap-2 text-sm items-center'>
                                         <p>#</p>
-                                        <select name="res" className='bg-LightBlue w-12'>
-                                            <option value={1} className='text-green-400'>1</option>
-                                            <option value={2}>2</option>
-                                            <option value={3}>3</option>
-                                            <option value={4}>4</option>
+                                        <select 
+                                            name="res" 
+                                            className='bg-LightBlue w-12' 
+                                            value={responseIndex + 1} 
+                                            onChange={(e) => {handleChange(e)}}
+                                        >
+                                            {Array.from({ length: question.totalResponses }, (_, index) => (
+                                                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                            ))}
                                         </select>
-                                        <p>/ 25</p>
+                                        <p>/ {question.totalResponses}</p>
                                     </div>
                                 </div>
                                 <div className=''>
-                                    <p className='p-4 text-sm'>In programming, a stack and a queue are both data structures that organize and manage elements. The key difference lies in their principles of access and removal. A stack follows the Last In, First Out (LIFO) principle, where the last element added is the first one to be removed. On the other hand, a queue adheres to the First In, First Out (FIFO) principle, meaning the first element added is the first to be removed.</p>
+                                    <p className='p-4 text-sm'>{selectedResponse ? selectedResponse.answer[0] : ''}</p>
                                 </div>
                             </div>
                         </div>
@@ -58,16 +128,16 @@ const Grading = () => {
                                 <div className='flex justify-between items-center'>
                                     <h3 className='font-medium text-sm'>Score</h3>
                                     <div className='flex gap-2'>
-                                        <input type='number' className='border-[1px] border-black w-16 h-6'></input>
-                                        <p className='text-sm'>out of 4</p>
+                                        <input type='number' onChange={handleScore} value={score} className='border-[1px] border-black w-16 h-6'></input>
+                                        <p className='text-sm'>out of {question.points}</p>
                                     </div>
                                 </div>
                                 <div className='mt-4'>
                                     <h3 className='font-medium text-sm'>Feedback</h3>
-                                    <textarea type="text" className='resize-none p-1 w-full h-48 border-[1px] border-black text-xs'/> 
+                                    <textarea type="text" value={feedback} onChange={(e)=>{setFeedback(e.target.value)}} className='resize-none p-1 w-full h-48 border-[1px] border-black text-xs'/> 
                                 </div>
                                 <div className='flex gap-4 mt-4 justify-center items-center md:mt-0 h-6 w-full'>
-                                    <button
+                                    <button onClick={handleResponseSubmission}
                                         className={`font-body font-medium flex items-center text-sm pl-2 gap-2 active:shadow-lg relative h-6 ${true ? 'bg-DarkBlue text-white' : 'bg-gray-200 text-black' } w-fit px-3 rounded focus:outline-none focus:shadow-outline`}
                                         >
                                             Save & Next

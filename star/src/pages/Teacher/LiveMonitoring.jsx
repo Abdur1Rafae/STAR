@@ -64,7 +64,7 @@ function LiveMonitoring() {
     setActiveCount(activeStudent);
     setFlaggedCount(flaggedStudent);
     setTotalCount(totalCount)
-}, [stats, selectedSection, selectedStatus]);
+}, [stats, selectedSection]);
 
   const handleSelectSection = (category) => {
     setSelectedSection(category);

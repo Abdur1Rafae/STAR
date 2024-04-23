@@ -20,8 +20,8 @@ const PeopleNavigation = ({ peopleinfo, activePerson, onPersonClick }) => {
           <PeopleTabTile
             key={index}
             singlepersoninfo={person}
-            active={person.name === activePerson.name} // Set active to true if person matches the activePerson
-            onClick={() => onPersonClick(person)} // Pass the onClick handler to handle click event
+            active={person.name === activePerson.name}
+            onClick={() => onPersonClick(person)}
           />
         ))}
       </div>
