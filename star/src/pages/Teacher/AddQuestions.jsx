@@ -19,6 +19,7 @@ import { UpdateOrder } from '../../APIS/Teacher/AssessmentAPI';
 
 
 function AddQuestions() {
+    const [loading, setLoading] = useState(true)
     const assessmentName = useParams()
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);

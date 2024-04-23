@@ -21,11 +21,11 @@ const Reports = () => {
             <SideBar active={"Reports"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Reports"}/>
-                <div className='w-auto h-full lg:p-4 md:p-2'>
+                <div className='p-2 flex overflow-hidden flex-col'>
                     <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
                         <div className='flex items-center self-start'>
                             <button onClick={()=>{window.location.assign('/teacher/reports')}}><BiChevronLeft className='text-3xl'/></button>
-                            <h4 className='font-semibold'>Monthly Test</h4>
+                            <h4 className='font-semibold'>Monthly Tes ergew iernf fieuwr int</h4>
                         </div>
                         <div className='flex items-center gap-2 sm:flex-row flex-col'>
                             <button onClick={()=>setTab("Overview")} className={`flex ${tab == "Overview" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>

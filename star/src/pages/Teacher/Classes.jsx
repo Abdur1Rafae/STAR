@@ -6,8 +6,10 @@ import ClassTab from '../../components/Teacher/ClassTab'
 import { DeleteClass, GetAllClasses } from '../../APIS/Teacher/ClassAPI'
 import SubmitButton from '../../components/button/SubmitButton'
 import { AddClass } from '../../APIS/Teacher/ClassAPI'
+import Loader from '../../components/Loader'
 
 const Classes = () => {
+  const [loading, setLoading] = useState(true)
   const [classes, setClasses] = useState([]) 
   const [newClass, setNewClass] = useState('')
   const [isCreatingClass, setCreatingClass] = useState(false)
@@ -32,7 +34,10 @@ const Classes = () => {
     const FetchClasses = async() => {
       try {
         const res = await GetAllClasses()
-        setClasses(res.data)
+        setTimeout(() => {
+          setClasses(res.data)
+          setLoading(false);
+        }, 1000);
       } catch(err) {
         console.log(err)
       }
@@ -59,8 +64,11 @@ const Classes = () => {
             <SideBar active={"Classes"}/>
             <div className='w-full flex flex-col'>
                 <SubheaderBut name={"Classes"} button={"New"} onClick={showDialogBox}/>
-                <div className='p-4 md:pl-8 md:pt-8 flex flex-col gap-4 overflow-auto'>
+                <div className={`p-4 md:pl-8 md:pt-8 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
                   {
+                    loading ?
+                    <Loader/>
+                    :
                     classes.map((item, index) => (
                       <ClassTab key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{handleDeletingClass(index, item._id)}} />
                     ))

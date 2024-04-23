@@ -12,8 +12,10 @@ import { IoIosAddCircle } from "react-icons/io";
 import { useParams } from 'react-router-dom';
 import { AddStudent, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
 import SubmitButton from '../../components/button/SubmitButton';
+import Loader from '../../components/Loader';
 
 const Roster = () => {
+  const [loading, setLoading] = useState(true)
   const sectionId = useParams('sectionID')
   const [isEditing, setIsEditing] = useState(false);
   const [editedClassName, setEditedClassName] = useState('');
@@ -35,7 +37,10 @@ const Roster = () => {
     const GetStudents = async() => {
       try{
         const res = await GetAllStudents({id: sectionId.sectionID})
-        setStudents(res)
+        setTimeout(() => {
+          setStudents(res)
+          setLoading(false);
+        }, 1000);
       } catch(err) {
         console.log(err)
       }
@@ -102,65 +107,71 @@ const Roster = () => {
       <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"} />
       <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
         <SideBar active={"Classes"} />
-        <div className='h-fit w-full'>
+        <div className='w-full flex flex-col'>
           <Subheader name={"Classes"} />
-          <div className='md:p-4 p-2'>
-          <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
-            <div className='flex items-center self-start'>
-              <BiChevronLeft className='text-3xl' />
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedClassName}
-                  className='border border-black w-40'
-                  onChange={(e) => setEditedClassName(e.target.value)}
+          <div className={`p-2 md:pl-4 md:pt-4 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
+            {
+              loading ? 
+              <Loader/>
+              :
+              <>
+                <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
+                  <div className='flex items-center self-start'>
+                    <button onClick={()=>{window.location.assign('/teacher/classes')}}><BiChevronLeft className='text-3xl' /></button>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={editedClassName}
+                        className='border border-black w-40'
+                        onChange={(e) => setEditedClassName(e.target.value)}
+                      />
+                    ) : (
+                      <h4 className='font-semibold'>{selectedClass}</h4>
+                    )}
+                    {!isEditing && <MdOutlineModeEdit className='ml-2' onClick={() => {
+                      setIsEditing(true);
+                      setPreviousClassName(selectedClass);
+                    }} />}
+                    {isEditing && (
+                      <>
+                        <button className='text-sm bg-DarkBlue text-white rounded-md m-2 py-1 px-2' onClick={handleEditClassName}>Save</button>
+                        <button className='text-sm bg-DarkBlue text-white rounded-md py-1 px-2' onClick={cancelEditClassName}>Cancel</button>
+                      </>
+                    )}
+                  </div>
+                  <div className='flex items-center gap-2 sm:flex-row flex-col'>
+                    <button className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md'>
+                      <MdOutlineDelete size={21} />
+                      Delete
+                    </button>
+                    <button className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md' onClick={() => setIsAddingStudent(true)}>
+                      <IoIosAddCircle size={21} />
+                      Add Student
+                    </button>
+                  </div>
+                </div>
+                <div className='mt-4'>
+                  <LCSearchBar />
+                </div>
+                <LMTable
+                  data={students.map((student, index) => ({
+                    ...student,
+                    action: (
+                      <ActionBox
+                        onClickDelete={() => handleDeleteStudent(index)}
+                      />
+                    ),
+                  }))}
+                  columns={columns}
                 />
-              ) : (
-                <h4 className='font-semibold'>{selectedClass}</h4>
-              )}
-              {!isEditing && <MdOutlineModeEdit className='ml-2' onClick={() => {
-                setIsEditing(true);
-                setPreviousClassName(selectedClass);
-              }} />}
-              {isEditing && (
-                <>
-                  <button className='text-sm bg-DarkBlue text-white rounded-md m-2 py-1 px-2' onClick={handleEditClassName}>Save</button>
-                  <button className='text-sm bg-DarkBlue text-white rounded-md py-1 px-2' onClick={cancelEditClassName}>Cancel</button>
-                </>
-              )}
-            </div>
-            <div className='flex items-center gap-2 sm:flex-row flex-col'>
-              <button className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md'>
-                <MdOutlineDelete size={21} />
-                Delete
-              </button>
-              <button className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md' onClick={() => setIsAddingStudent(true)}>
-                <IoIosAddCircle size={21} />
-                Add Student
-              </button>
-            </div>
-          </div>
-          <div className='mt-4'>
-            <LCSearchBar />
-          </div>
-          <LMTable
-            data={students.map((student, index) => ({
-              ...student,
-              action: (
-                <ActionBox
-                  onClickDelete={() => handleDeleteStudent(index)}
-                />
-              ),
-            }))}
-            columns={columns}
-          />
-          <AddStudentDialog isOpen={isAddingStudent} onClose={() => setIsAddingStudent(false)} onSave={handleAddStudent} />
-          {
-            isEditingStudent ?
-            <EditingStudentDialogBox isOpen={isEditingStudent} onClose={()=> setIsEditingStudent(false)} oldName={selectedStudent.name} oldEmail={selectedStudent.email} oldErp={selectedStudent.erp} onSave={handleEditStudentSave}/>
-            : ''
-          }
-          
+                <AddStudentDialog isOpen={isAddingStudent} onClose={() => setIsAddingStudent(false)} onSave={handleAddStudent} />
+                {
+                  isEditingStudent ?
+                  <EditingStudentDialogBox isOpen={isEditingStudent} onClose={()=> setIsEditingStudent(false)} oldName={selectedStudent.name} oldEmail={selectedStudent.email} oldErp={selectedStudent.erp} onSave={handleEditStudentSave}/>
+                  : ''
+                }
+              </>
+            }
           </div>
         </div>
       </div>

@@ -38,17 +38,17 @@ const IndividualReport = () => {
 
 
   return (
-        <div className='w-full'>
-          <button onClick={() => setShowStudents(!showStudents)} className="w-full block md:hidden h-16 mb-2 border-DarkBlue border-2 rounded">
+        <div className='w-full flex-wrap'>
+          <button onClick={() => setShowStudents(!showStudents)} className="w-full block lg:hidden h-16 mb-2 border-DarkBlue border-2 rounded">
             <PeopleTabTile singlepersoninfo={activePerson}/>
           </button>
 
-          <div className='flex flex-col md:flex-row justify-between gap-4 mt-4'>
-            <div className='hidden w-4/12 md:flex bg-LightBlue shadow-md rounded-md'>
+          <div className='flex flex-col lg:flex-row justify-between gap-4 mt-4'>
+            <div className='hidden w-4/12 lg:flex bg-LightBlue shadow-md rounded-md'>
               <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
             </div>
-            <div className='w-full flex flex-col-reverse md:flex-col gap-4'>
-              <div className='w-full flex md:flex-row flex-col gap-4 justify-between'>
+            <div className='w-full flex flex-col-reverse lg:flex-col gap-4'>
+              <div className='w-full flex lg:flex-row flex-col gap-4 justify-between'>
                 <div className='w-full flex flex-col gap-4'>
                   <div className='rounded'>
                     <PastCurScore/>
@@ -61,7 +61,7 @@ const IndividualReport = () => {
                   <QuizSkilEval/>
                 </div>
               </div>
-              <div className='shadow-md rounded flex md:flex-row flex-col-reverse justify-between gap-4'>
+              <div className='shadow-md rounded flex lg:flex-row flex-col-reverse justify-between gap-4'>
                 <div className='w-full'>
                   <SubmitMCQPanel question={questions[0]}
                     currentQuestion={0}
