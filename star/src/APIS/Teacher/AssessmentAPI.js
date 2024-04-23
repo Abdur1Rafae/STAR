@@ -192,4 +192,14 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
     return res.data
 }
 
-export {GetAssessments, CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions, MonitorAssessment, UpdateAssessment}
+const GetAllTopics = async() => {
+    const res = await AxiosBase.get(`teacherhub/question-bank/all-topics`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+export {GetAllTopics, GetAssessments, CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions, MonitorAssessment, UpdateAssessment}

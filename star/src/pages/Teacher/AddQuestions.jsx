@@ -44,6 +44,7 @@ function AddQuestions() {
 
     const handleSubmitQuestions = () => {
         console.log(questions)
+        window.location.assign('/teacher/home')
     }  
     
     useEffect(()=> {

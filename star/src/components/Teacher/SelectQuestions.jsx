@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useContext} from 'react'
 import SkillFilter from './SkillFilter'
 import DifficultyFilter from './DifficultyFilter'
+import CategoryFilter from './CategoryFilter'
 import TypeFilter from './TypeFilter'
 import DisplayOnlyQuestions from './DisplayOnlyQuestions'
 import { QuestionContext } from '../../Context/QuestionsContext'
-import { GetReuseQuestions } from '../../APIS/Teacher/AssessmentAPI'
+import { GetReuseQuestions, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI'
+import TopicFilter from './TopicFilter'
 
 const SelectQuestions = () => {
   const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
@@ -13,6 +15,7 @@ const SelectQuestions = () => {
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedType, setSelectedType] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
+  const [topicList, setTopicList] = useState([])
 
   useEffect(() => {
     const GetQuestions = async() => {
@@ -27,6 +30,20 @@ const SelectQuestions = () => {
 
     GetQuestions()
   }, [selectedTopic, selectedSkill, selectedLevel, selectedType]);
+
+  useEffect(()=>{
+    const GetTopics = async() => {
+      try {
+        const res = await GetAllTopics()
+        setTopicList(res)
+        console.log(res)
+      } catch(err) {
+        console.log(err)
+      }
+    }
+
+    GetTopics()
+  }, [])
 
   const handleAddQuestion = (question) => {
     const exists = selectedQuestions.findIndex(item => item._id === question._id);
@@ -53,7 +70,7 @@ const SelectQuestions = () => {
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Topic:&nbsp;</p>
-                <DifficultyFilter selectedLevel={selectedLevel} setSelectLevel={setSelectedLevel}/> 
+                <TopicFilter topics={topicList} selectedTopic={selectedTopic} setSelectTopic={setSelectedTopic}/> 
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Type:&nbsp;</p>

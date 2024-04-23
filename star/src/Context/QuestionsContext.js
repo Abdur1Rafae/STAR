@@ -66,7 +66,6 @@ export const QuestionProvider = ({ children }) => {
     });
     setTopicMap(newTopicMap);
     setSkillMap(skillsArray)
-    console.log(skillsArray)
   }, [questions]);
 
   const updateQuestion = ({ index, updatedQuestion }) => {
