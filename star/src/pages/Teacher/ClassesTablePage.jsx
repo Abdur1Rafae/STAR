@@ -12,10 +12,19 @@ import { IoIosAddCircle } from "react-icons/io";
 import { useParams } from 'react-router-dom';
 import { AddStudent, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
 import SubmitButton from '../../components/button/SubmitButton';
+import { UpdateClass } from '../../APIS/Teacher/ClassAPI';
+import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
+
+
 
 const ClassesTablePage = () => {
-  const sectionId = useParams('sectionID')
+  const sectionId  = useParams();
+  const section = localStorage.getItem('SelectedSection');
+  console.log(section)
+  const [className, setClassName] = useState(section);
+  const [newClass, setNewClass] = useState(section);
   const [isEditing, setIsEditing] = useState(false);
+
   const [editedClassName, setEditedClassName] = useState('');
   const [selectedClass, setSelectedClass] = useState(localStorage.getItem('SelectedSection'));
   const [previousClassName, setPreviousClassName] = useState('');
@@ -23,6 +32,25 @@ const ClassesTablePage = () => {
   const [isEditingStudent, setIsEditingStudent] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [students, setStudents] = useState([]);
+
+
+  async function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        try {
+            const res = await UpdateClass({id: sectionId.sectionID, name: newClass})
+            setClassName(newClass);
+            setIsEditing(false);
+        } catch(err) {
+            console.log(err)
+        }
+    }
+}
+
+
+let saveClassName = ClickOutsideFunc(()=>{
+  setIsEditing(false);
+})
+
 
   const columns = [
     { title: "Name", key: "name" },
@@ -43,17 +71,6 @@ const ClassesTablePage = () => {
 
     GetStudents()
   }, [])
-
-  const handleEditClassName = () => {
-    console.log('Class name edited:', editedClassName);
-    setSelectedClass(editedClassName);
-    setIsEditing(false);
-  };
-
-  const cancelEditClassName = () => {
-    setIsEditing(false);
-    setEditedClassName(previousClassName);
-  };
 
   const handleAddStudent = async(student) => {
     try {
@@ -108,26 +125,31 @@ const ClassesTablePage = () => {
           <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
             <div className='flex items-center self-start'>
               <BiChevronLeft className='text-3xl' />
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedClassName}
-                  className='border border-black w-40'
-                  onChange={(e) => setEditedClassName(e.target.value)}
-                />
-              ) : (
-                <h4 className='font-semibold'>{selectedClass}</h4>
-              )}
-              {!isEditing && <MdOutlineModeEdit className='ml-2' onClick={() => {
-                setIsEditing(true);
-                setPreviousClassName(selectedClass);
-              }} />}
-              {isEditing && (
-                <>
-                  <button className='text-sm bg-DarkBlue text-white rounded-md m-2 py-1 px-2' onClick={handleEditClassName}>Save</button>
-                  <button className='text-sm bg-DarkBlue text-white rounded-md py-1 px-2' onClick={cancelEditClassName}>Cancel</button>
-                </>
-              )}
+              <div ref={saveClassName} className='flex'>
+                {
+                    isEditing ? 
+                    (
+                        <>                       
+                            <input 
+                                autoFocus
+                                placeholder='Class'
+                                type='text' 
+                                value={newClass} 
+                                onChange={(e) => setNewClass(e.target.value)} 
+                                className='text-sm md:text-md ml-2 bg-LightBlue border-none outline-none'
+                                onKeyDown={handleKeyPress}
+                            />
+                        </>
+
+                    ) 
+                    : 
+                    (
+                        <>
+                            <button onClick={() => setIsEditing(true)}><h1 className='text-sm md:text-md ml-2 font-body text-DarkBlue hover:underline'>{className}</h1></button>
+                        </>
+                    )
+                }
+            </div>
             </div>
             <div className='flex items-center gap-2 sm:flex-row flex-col'>
               <button className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md'>
