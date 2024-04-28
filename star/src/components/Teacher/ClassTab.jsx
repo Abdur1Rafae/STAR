@@ -6,12 +6,14 @@ import { FaAngleDown } from "react-icons/fa";
 import { ClickOutsideFunc } from '../ClickOutsideFunc';
 import { UpdateClass } from '../../APIS/Teacher/ClassAPI';
 import { DeleteSection } from '../../APIS/Teacher/SectionAPI';
+import ConfirmationBox from '../ConfirmationBox';
 
 const ClassTab = ({id, name, onDelete, classSections}) => {
     const [className, setClassName] = useState(name);
     const [newClass, setNewClass] = useState(name);
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(name ? false : true);
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
     const [sections, setSections] = useState(classSections ? classSections: [])
 
@@ -94,9 +96,15 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
             }
             <div className='flex gap-2'>
                 <AddSection onClick={handleAddingSection}/>
-                <DeleteClass onClick={onDelete}/>
+                <DeleteClass onClick={()=>{setDeleteConfirmation(true)}}/>
             </div>
         </div>
+        {
+            deleteConfirmation ? 
+            <ConfirmationBox message={`Confirm to delete class: ${name}`} onConfirm={onDelete} onCancel={()=>{setDeleteConfirmation(false)}}/>
+            : 
+            ''
+        }
     </div>
   )
 }

@@ -41,6 +41,7 @@ const QuizInstructions = () => {
       localStorage.setItem('responseId', res.responseId)
       const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
       const questionSet = [...res.questions]
+      console.log(questionSet)
       if(storedQuizDetails.quizConfig.randomizeQuestions) {
         for (let i = questionSet.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -100,6 +101,9 @@ const QuizInstructions = () => {
           <div>
             <h2 className="font-bold mb-4">Instructions:</h2>
             <ul className="list-disc pl-6">
+              <li className="mb-2 text-lg">
+                The assessment will be <strong>submitted if student tries to refresh or leave the page</strong>
+              </li>
               {instructions.map((instruction, index) => (
                 <li key={index} className="mb-2">
                   {instruction}

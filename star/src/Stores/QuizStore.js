@@ -61,7 +61,17 @@ const QuizStore = create((set) => ({
 
   getResponseByQuestionNumber: (questionNumber) => {
     const state = QuizStore.getState();
-    return state.responses[questionNumber];
+    if(state.quizConfig.instantFeedback) {
+      const question = state.questions[questionNumber];
+      return {
+          ...state.responses[questionNumber],
+          correctOptions: question ? question.correctOptions : [],
+          isTrue: question.isTrue
+      };
+    }
+    else {
+      return state.responses[questionNumber]
+    }
   },
 
   randomizeQuestions: () => {
@@ -83,18 +93,24 @@ const QuizStore = create((set) => ({
     questions: newQuestions
   }),
 
-  createResponseObjects: () => {
+  createResponseObjects: (responses) => {
     set((state) =>{
-    const emptyResponses = []
-    state.questions.forEach((question) => {
-      const response = {
-        questionId: question._id,
-        answer: [],
-        responseTime: 0
+      if(responses == null || responses.length == 0) {
+        const emptyResponses = []
+        state.questions.forEach((question) => {
+          const response = {
+            questionId: question._id,
+            answer: [],
+            responseTime: 0
+          }
+          emptyResponses.push(response)
+        })
+        return {...state, responses: emptyResponses}
       }
-      emptyResponses.push(response)
-    })
-    return {...state, responses: emptyResponses}
+      else {
+        return {...state, responses: responses}
+      }
+    
   })},
 
   setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
@@ -134,7 +150,6 @@ const QuizStore = create((set) => ({
    
 
   initializeQuestionStartTime: () => {
-    console.log("Current timestamp:", Date.now());
     return {
       currentQuestionStartTime: Date.now()
     };
@@ -234,6 +249,11 @@ const QuizStore = create((set) => ({
       const res = async() => {
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})
+          const submissionObj = {
+            assessmentId: state.id,
+            submit: true
+          }
+          localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
           console.log(sub)
         } catch(err) {
           console.log(err)

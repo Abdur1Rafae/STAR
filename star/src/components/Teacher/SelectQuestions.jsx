@@ -8,14 +8,14 @@ import { QuestionContext } from '../../Context/QuestionsContext'
 import { GetReuseQuestions, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI'
 import TopicFilter from './TopicFilter'
 
-const SelectQuestions = () => {
+const SelectQuestions = ({topics}) => {
   const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
   const { selectedQuestions, setSelectedQuestions } = useContext(QuestionContext);
   const [selectedSkill, setSelectedSkill] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedType, setSelectedType] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
-  const [topicList, setTopicList] = useState([])
+  const [topicList, setTopicList] = useState(topics)
 
   useEffect(() => {
     const GetQuestions = async() => {
@@ -30,20 +30,6 @@ const SelectQuestions = () => {
 
     GetQuestions()
   }, [selectedTopic, selectedSkill, selectedLevel, selectedType]);
-
-  useEffect(()=>{
-    const GetTopics = async() => {
-      try {
-        const res = await GetAllTopics()
-        setTopicList(res)
-        console.log(res)
-      } catch(err) {
-        console.log(err)
-      }
-    }
-
-    GetTopics()
-  }, [])
 
   const handleAddQuestion = (question) => {
     const exists = selectedQuestions.findIndex(item => item._id === question._id);

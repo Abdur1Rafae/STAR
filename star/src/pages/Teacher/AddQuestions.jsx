@@ -15,7 +15,7 @@ import { IoIosMove } from "react-icons/io";
 import { ToggleStore } from '../../Stores/ToggleStore';
 import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
-import { UpdateOrder } from '../../APIS/Teacher/AssessmentAPI';
+import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
 
 
 function AddQuestions() {
@@ -23,7 +23,7 @@ function AddQuestions() {
     const assessmentName = useParams()
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
-
+    const [topicList, setTopicList] = useState([])
     const setOrder = ToggleStore((store) => store.setOrder)
     const order = ToggleStore((store) => store.Ordering)
 
@@ -59,6 +59,20 @@ function AddQuestions() {
         }
 
         getAllQuestions() 
+    }, [])
+
+    useEffect(()=>{
+        const GetTopics = async() => {
+            try {
+                const res = await GetAllTopics()
+                setTopicList(res)
+                console.log(res)
+            } catch(err) {
+            console.log(err)
+            }
+        }
+
+        GetTopics()
     }, [])
 
     const saveQuestionHandler = async(id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
@@ -287,7 +301,7 @@ function AddQuestions() {
                                 </div>
                                 <div className='overflow-y-auto no-scrollbar'>
                                     <div className='h-full flex flex-col gap-4'>
-                                        <SelectQuestions/>
+                                        <SelectQuestions topics={topicList}/>
                                     </div>   
                                     <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
                                         <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Select</button>
@@ -303,6 +317,7 @@ function AddQuestions() {
                                     type={creatingQuestion}
                                     closeHandler={handleCloseQuestionCreator}
                                     savingHandler={saveQuestionHandler}
+                                    topicList={topicList}
                                 />
                             )
                         }

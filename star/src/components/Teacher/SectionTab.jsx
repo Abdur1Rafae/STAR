@@ -2,12 +2,14 @@ import React, {useState} from 'react'
 import { MdOutlineGroups, MdOutlineDeleteOutline } from "react-icons/md";
 import { ClickOutsideFunc } from '../ClickOutsideFunc';
 import { AddSection, UpdateSection } from '../../APIS/Teacher/SectionAPI';
+import ConfirmationBox from '../ConfirmationBox';
 
 const SectionTab = ({sectionID, classID, section, onDelete}) => {
     const [sectionName, setSectionName] = useState(section ?? "");
     const [newSection, setNewSection] = useState(section);
     const [isEditing, setIsEditing] = useState(section ? false : true);
     const [sectionId, setSectionId] = useState(sectionID)
+    const [deleteSection, setDeleteSection] = useState(false)
 
     async function handleKeyPress(event) {
         if(newSection !== "") {
@@ -71,11 +73,17 @@ const SectionTab = ({sectionID, classID, section, onDelete}) => {
                 <MdOutlineGroups className='text-xl'/>
                 <p className='text-xs font-body'>Roster</p>
             </button>
-            <button className='flex flex-col justify-center items-center hover:text-red-600' onClick={()=>onDelete(section.SectionID)}>
+            <button className='flex flex-col justify-center items-center hover:text-red-600' onClick={()=>{setDeleteSection(true)}}>
                 <MdOutlineDeleteOutline className='text-xl'/>
                 <p className='text-xs font-body'>Delete</p>
             </button>
         </div>
+        {
+            deleteSection ? 
+            <ConfirmationBox message={`Confirm to delete class: ${section}`} onConfirm={()=>onDelete(section.SectionID)} onCancel={()=>{setDeleteSection(false)}}/>
+            : 
+            ''
+        }
     </div>
   )
 }

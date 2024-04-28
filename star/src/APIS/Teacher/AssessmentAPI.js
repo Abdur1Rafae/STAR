@@ -43,8 +43,10 @@ const CreateAssessment = async({name, description, sections, image, openDate, cl
 }
 
 const AddQuestion = async({assessmentId, question}) => {
+    const transformedQuestion = {...question}
+    delete transformedQuestion['options']
     const res = await AxiosBase.post(`teacherhub/question-bank/add-question/${assessmentId}`,{
-        question: question,
+        question: transformedQuestion,
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -164,7 +166,7 @@ const MonitorAssessment = async({id}) => {
 
 const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
     instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
-    const res = await AxiosBase.post(`teacherhub/assessment-management/update-assessment/${id}`,{
+    const res = await AxiosBase.put(`teacherhub/assessment-management/update-assessment/${id}`,{
         title: name,
         description: description,
         participants : sections,

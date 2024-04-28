@@ -23,6 +23,11 @@ const AssessmentCard = ({ assessment }) => {
         window.location.assign("/teacher/grading-table")
     }
 
+    const handleEditClick = () => {
+        localStorage.setItem('EditAssessment', JSON.stringify(assessment))
+        window.location.assign("/teacher/edit-assessment")
+    }
+
 
     switch (assessment.catgeory) {
         case 'In Progress':
@@ -36,7 +41,7 @@ const AssessmentCard = ({ assessment }) => {
             statusTextColor = 'text-DeleteRed';
             break;
         case 'Not Started':
-            buttonComponent = <EditButton label="Edit" />;
+            buttonComponent = <EditButton label="Edit" onClick={handleEditClick}/>;
             statusColor = 'border-DarkBlue';
             statusTextColor = 'text-DarkBlue';
 

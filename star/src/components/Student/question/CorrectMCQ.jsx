@@ -5,33 +5,38 @@ import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
 
 const CorrectMCQ = ({ question }) => {
-    const [selectedOption, setSelectedOption] = useState([])
-    const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
-    const [correctAnswersMarked, setCAM] = useState([]);
-    const [correctAnswersMissed, setCAMissed] = useState([]);
+  const [selectedOption, setSelectedOption] = useState({})
+  const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
+  const [correctAnswersMarked, setCAM] = useState([]);
+  const [correctAnswersMissed, setCAMissed] = useState([]);
+    
+  const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
 
-    useEffect(()=> {
-      const answer = getSelectedResponse(question.number)
-      setSelectedOption(answer ? answer.selectedAnswer : [])
-    }, [question.number])
+  useEffect(()=> {
+    const answer = getSelectedResponse(questionNumber)
+    setSelectedOption(answer ? answer : {})
+    console.log(answer)
+  }, [question])
 
-    useEffect(()=> {
-        let userSelectedCorrectAnswers = [];
-        let correctAnswersNotSelected = [];
-        question.options.forEach(option => {
-            const isCorrect = option.isCorrect;
-            const isSelected = selectedOption.includes(option.text);
-
-            if (isSelected && isCorrect) {
-                userSelectedCorrectAnswers.push(option.text);
-            } else if (!isSelected && isCorrect) {
-                correctAnswersNotSelected.push(option.text);
-            }
-        });
-        setCAM(userSelectedCorrectAnswers)
-        setCAMissed(correctAnswersNotSelected)
-    }, [selectedOption])
+  useEffect(()=> {
+    let userSelectedCorrectAnswers = [];
+    let correctAnswersNotSelected = [];
+    if(selectedOption.answer) {
+      question.options.forEach(option => {
+        const isCorrect = selectedOption.correctOptions.includes(option);
+        const isSelected = selectedOption.answer.includes(option);
+  
+        if (isSelected && isCorrect) {
+          userSelectedCorrectAnswers.push(option);
+        } else if (!isSelected && isCorrect) {
+          correctAnswersNotSelected.push(option);
+        }
+      });
+      setCAM(userSelectedCorrectAnswers)
+      setCAMissed(correctAnswersNotSelected)
+    }
+  }, [selectedOption])
 
 
   return (
@@ -70,13 +75,13 @@ const CorrectMCQ = ({ question }) => {
             >
               <div
                 className={`min-h-10 rounded-md flex items-center gap-4  ${
-                  correctAnswersMarked.includes(option.text) || correctAnswersMissed.includes(option.text) ? 'bg-emerald-300' : 'bg-rose-300'
+                  correctAnswersMarked.includes(option) || correctAnswersMissed.includes(option) ? 'bg-emerald-300' : 'bg-rose-300'
                 } border-[1px] border-black`}
               >
                 <div className="ml-4">
-                {selectedOption.includes(option.text) ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
+                {(selectedOption.answer && selectedOption.answer.includes(option)) ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
 
-                <div className=''>{option.text}</div>
+                <div className=''>{option}</div>
               </div>
             </div>
           ))}

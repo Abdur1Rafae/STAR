@@ -6,7 +6,7 @@ import SASetup from './SASetup';
 import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
 
-const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
+const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || 'Problem Solving');
     const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || 'Medium')
     const [newQuestion, setNewQuestion] = useState(question);
@@ -55,7 +55,18 @@ const QuestionCreator = ({type, topic, questionID, savingHandler, closeHandler, 
             <div className='flex gap-2 flex-wrap'>
                 <div className='flex flex-col md:flex-row items-center'>
                     <p className='text-xs'>Topic :&nbsp;</p>
-                    <input value={topicName} onChange={(e)=> setTopicName(e.target.value)} type='text' className='text-xs bg-LightBlue border-black border-[1px] w-44 h-6 rounded-md p-2'/>
+                    <input 
+                        value={topicName} 
+                        onChange={(e) => setTopicName(e.target.value)} 
+                        list="Topics" 
+                        type='text' 
+                        className='text-xs bg-LightBlue border-black border-[1px] w-44 h-6 rounded-md p-2'
+                    />
+                    <datalist id="Topics">
+                        {topicList.map((topic) => (
+                            <option key={topic} value={topic} />
+                        ))}
+                    </datalist>
                 </div>
                 <div className='flex flex-col md:flex-row items-center'>
                     <p className='text-xs'>Points :&nbsp;</p>

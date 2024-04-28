@@ -17,7 +17,7 @@ import { UpdateAssessment } from '../../APIS/Teacher/AssessmentAPI';
 
 
 function EditAssessmentDetails() {
-    const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')) || {})
+    const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')
     const [assessmentName, setName] = useState(assessment.title ?? '');
     const [description, setDesc] = useState(assessment.description ?? '')
@@ -37,18 +37,41 @@ function EditAssessmentDetails() {
     const [showFinalScore, setShowFinalScore] = useState(assessment.configurations ? assessment.configurations.finalScore : true);
     const [adaptiveTesting, setAdaptiveTesting] = useState(assessment.configurations ? assessment.configurations.adaptiveTesting : false);
     const [candidateMonitoring, setCandidateMonitoring] = useState(assessment.configurations ? assessment.configurations.monitoring : false);
+    const [error, setError] = useState('')
+
+    useEffect(()=>{
+        console.log(assessment)
+    }, [assessment])
 
     const handleSubmission = ()=> {
+        if(assessmentName == '') {
+            setError('Set Assessment Name')
+            return
+        }
+        if(datetime == '') {
+            setError('Set Start Date')
+            return
+        }
+        if(hour == 0 && mins == 0) {
+            setError('Set Assessment Duration')
+            return
+        }
+        if(closedatetime == '') {
+            setError('Set Close Date')
+            return
+        }
+        setError('')
         const sectionIDs = sections.map(section=> section._id)
         const durationInMins = hour * 60 + mins
 
         const res = async() => {
             try {
-            const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
-            monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-            window.location.assign(`/teacher/questions-set/${data.assessmentId}`)
+                console.log(assessmentId, assessmentName, sectionIDs)
+                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
+                monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
+                window.location.assign(`/teacher/questions-set/${data.assessmentId}`)
             } catch(err) {
-            console.log(err)
+                console.log(err)
             }
         }
 
@@ -174,13 +197,14 @@ function EditAssessmentDetails() {
 
 
     return (
-    <div className=' w-full h-full font-body  border border-black '>
+    <div className='flex flex-col h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Live Monitoring"}/>
-            <div className='h-fit	'>
-            <Subheader name={"Create New Assessment"}/>
-            <div className='flex md:flex-row flex-col justify-center items-center sm:h-96 md:h-64 m-4 border border-black bg-[#F4F9FD]'>
+            <div className='w-full flex flex-col'>
+            <Subheader name={"Edit Assessment"}/>
+            <div className={`p-4 flex gap-4 overflow-hidden flex-col`}>
+            <div className='flex md:flex-row flex-col justify-center items-center sm:h-96 md:h-64 border border-black bg-LightBlue'>
                 <div className='md:w-2/3 w-full'>
                     <h2 className='ml-4 mt-2 text-sm font-semibold'>Assessment Title</h2>
                     <input value={assessmentName} onChange={(e)=>setName(e.target.value)} className='px-2 font-sans h-10 w-4/5 ml-4 mr-8 mt-2 mb-4 border border-black rounded' />
@@ -201,7 +225,7 @@ function EditAssessmentDetails() {
                         </button>
                         {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={image} alt="Uploaded Image" className='w-24 h-24'/>
+                            <img src={image} alt="Uploaded Image" className='w-36 h-36'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>
@@ -214,8 +238,8 @@ function EditAssessmentDetails() {
                 </div>
             </div>
 
-            <div className='w-auto flex md:flex-row flex-col m-4 gap-4'>
-                <div className='w-full md:w-2/3  border border-black bg-[#F4F9FD] p-2' >
+            <div className='flex md:flex-row flex-col mt-2 gap-4'>
+                <div className='w-full lg:w-2/3  border border-black bg-LightBlue p-2' >
                     <h2 className='text-sm font-semibold '>Assessment Detail</h2>
 
                     <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
@@ -238,38 +262,40 @@ function EditAssessmentDetails() {
 
                     <div className='flex md:flex-row flex-col mt-4 items-center justify-around'>
                         <div className='flex flex-col items-center'>
-                        <h2 className='mt-2 text-xs md:text-sm font-semibold'>Duration</h2>
-                        <div className='flex items-center'>
-                            <p className='text-sm mt-1'>Hours</p>
-                            <input value={hour} onKeyDown={(event) => {
-                                if (isNaN(event.key) && event.key !== 'Backspace') {
-                                    event.preventDefault();
-                                }
-                            }} onChange={handleHourChange} type="number" max={2} min={0} maxLength={1}
-                            className='ml-2 w-8 text-sm mt-2 border border-black rounded' />
-                            <p className='text-sm mt-1 ml-4'>Mins</p>
-                            <input value={mins} onKeyDown={(event) => {
-                                if (isNaN(event.key) && event.key !== 'Backspace') {
-                                    event.preventDefault();
-                                }
-                            }} onChange={handleMinuteChange} type='number' max={60} min={0}  maxLength={2}
-                            className='ml-2 w-8 text-sm mt-2 border border-black rounded' />
+                            <h2 className='mt-2 text-xs md:text-sm font-semibold'>Duration</h2>
+                            <div className='flex items-center'>
+                                <p className='text-sm mt-1'>Hours</p>
+                                <input value={hour} onKeyDown={(event) => {
+                                    if (isNaN(event.key) && event.key !== 'Backspace') {
+                                        event.preventDefault();
+                                    }
+                                }} onChange={handleHourChange} type="number" max={2} min={0} maxLength={1}
+                                className='ml-2 w-8 text-sm mt-2 border border-black rounded p-1' />
+                                <p className='text-sm mt-1 ml-4'>Mins</p>
+                                <input value={mins} onKeyDown={(event) => {
+                                    if (isNaN(event.key) && event.key !== 'Backspace') {
+                                        event.preventDefault();
+                                    }
+                                }} onChange={handleMinuteChange} type='number' max={60} min={0}  maxLength={2}
+                                className='ml-2 w-8 text-sm mt-2 border border-black rounded p-1' />
+                            </div>
                         </div>
-                        </div>
-                        <div className='flex flex-col items-center'>
-                        <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
-                        <input type='datetime-local' value={datetime || ''} onChange={handleOpenTimingChange} className='mt-2 w-44 border border-black rounded text-xs'/> 
-                        </div>
-                        <div className='flex flex-col items-center'>
-                        <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>
-                            Close Date & Time &nbsp; <BsInfoCircle/>
-                        </h2>
-                        <input type='datetime-local' value={closedatetime|| ''} onChange={handleCloseTimingChange} className='mt-2 w-44 border border-black rounded text-xs'/>
+                        <div>
+                            <div className='flex flex-col items-center'>
+                                <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
+                                <input type='datetime-local' value={datetime || ''} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
+                            </div>
+                            <div className='flex flex-col items-center'>
+                                <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>
+                                    Close Date & Time &nbsp; <BsInfoCircle/>
+                                </h2>
+                                <input type='datetime-local' value={closedatetime|| ''} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className='p-2 md:w-1/3 border border-black bg-[#F4F9FD]'>
+                <div className='p-2 md:w-1/3 border border-black bg-LightBlue'>
                     <div className='flex gap-2'>
                         <MdPublish className='' size={23}/>
                         <div className='flex flex-col'>
@@ -326,7 +352,7 @@ function EditAssessmentDetails() {
                     </div>
                 </div>
             </div>
-            <div className='h-full w-auto m-4 border border-black bg-LightBlue p-2 '>
+            <div className='h-full mt-2 border border-black bg-LightBlue p-2 '>
                 <h2 className='text-sm font-semibold '>Configurations</h2>
                 <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
                 <div className='flex md:flex-row flex-col gap-4 items-start'>
@@ -394,8 +420,9 @@ function EditAssessmentDetails() {
                     </div>
                 </div>
             </div>
-            <div className='flex justify-center mb-8'>
+            <div className='flex flex-col items-center justify-center mb-8'>
                 <SubmitButton label = "Save and Update Questions" active={true} onClick={handleSubmission}/>
+                <p className='text-red-500'>{error}</p>
             </div>
             </div>
             {
@@ -422,7 +449,7 @@ function EditAssessmentDetails() {
                 </div>
             </div>
             }
-
+        </div>
         </div>
         
     </div>
