@@ -7,12 +7,12 @@ module.exports.beginAssessment = async (req,res) =>
   {
     //const student = req.body.decodedToken.id
     const student = '6609c24b69f531c541e8b651'
-    const {assessmentId} = req.params
+    const {assessmentId, sectionId} = req.params
 
     const response = await Response.findOneAndUpdate
     (
       { student, assessment: assessmentId },
-      { $setOnInsert: { student, assessment: assessmentId } },
+      { $setOnInsert: { student, assessment: assessmentId, section: sectionId } },
       { upsert: true, new: true }
     )
 
@@ -27,7 +27,11 @@ module.exports.beginAssessment = async (req,res) =>
 
     if (!assessment) {return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
 
-    const formattedData = assessment.questionBank.map(item => ({...item.question.toObject(),}))
+    const formattedData = assessment.questionBank.map( (item, index) => 
+      ({
+          ...item.question.toObject(),
+          number: index + 1
+      }))
 
     res.status(201).json({responseId: response._id, questions: formattedData})
 
