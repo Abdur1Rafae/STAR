@@ -369,3 +369,4 @@
 4/28/2024, 6:00:10 AM | INFO | LocalFeaturesConfigRepository | Getting features config entity | [object Object]
 4/28/2024, 6:00:10 AM | INFO | SettingsService | Getting application settings. | [object Object]
 4/28/2024, 6:00:10 AM | INFO | SettingsService | Succeed to get application settings. | [object Object]
+4/28/2024, 4:26:27 PM | INFO |  | Signal SIGTERM received. Shutting down... | [object Object]

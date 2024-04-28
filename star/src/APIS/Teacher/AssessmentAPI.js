@@ -56,9 +56,8 @@ const AddQuestion = async({assessmentId, question}) => {
     return res.data
 }
 
-const UpdateQuestion = async({question}) => {
-    console.log(question)
-    const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${question._id}`,{
+const UpdateQuestion = async({id, question}) => {
+    const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${id}/${question._id}`,{
         question: question,
     },{
         headers: {

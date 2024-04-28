@@ -30,6 +30,19 @@ export const ReportProvider = ({ children }) => {
         setTopicList(topics)
     }, [assessmentQuestion])
 
+    useEffect(()=> {
+        if(selectedSection == 'All') {
+            Object.keys(topicList).map(key => {
+                topicList[key].map((question)=> {
+                    participants.map((section)=> {
+                        
+                    })
+                })
+    
+            });
+        }
+    }, [topicList, selectedSection])
+
     useEffect(()=>{
         const newSections = []
         let totalStudentsCount = 0
