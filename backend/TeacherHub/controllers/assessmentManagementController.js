@@ -1,6 +1,6 @@
 const conn = require('../dbconfig/dbcon')
 const {getAssessmentStatus, upload, remove} = require('../util/library')
-const {Assessment, Section} = require('library/index')
+const {Assessment, Section, Class} = require('library/index')
 
 module.exports.createAssessment = async (req,res) => 
 {
@@ -14,10 +14,17 @@ module.exports.createAssessment = async (req,res) =>
         const session = await conn.startSession()
         const insertedId = await session.withTransaction(async () => 
         {
+            const sections = await Section.find({ _id: { $in: participants } }, { class: 1 }).session(session)
+    
+            const uniqueClasses = new Set(sections.map(section => section.class.toString()))
+            if (uniqueClasses.size !== 1) {throw new Error('Sections belong to different classes')}
+
+            const classId = [...uniqueClasses][0];
+            const classInfo = await Class.findById(classId, { className: 1 }).session(session)
             
             const newAssessment = await Assessment.create(
             [{
-                teacher, title, description, participants, configurations, coverImage : imagePath
+                teacher, class: classInfo.className, title, description, participants, configurations, coverImage : imagePath
             }], {session})
 
             const updatedSections = await Section.updateMany
@@ -36,7 +43,7 @@ module.exports.createAssessment = async (req,res) =>
         res.status(200).json({assessmentId: insertedId, message: `Assessment Created Successfully`})  
     }
     catch(err){
-        if (err.name === 'ValidationError' || err.message === 'Invalid image data' || err.message === 'Failed to add all sections') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
+        if (err.name === 'ValidationError' || err.message === 'Invalid image data' || err.message === 'Failed to add all sections' || err.message === 'Sections belong to different classes') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create assessment'})
     }
 }
@@ -126,27 +133,29 @@ module.exports.getScheduledAssessments = async (req,res) =>
         .populate
         ({
             path: 'participants',
-            select: 'roster sectionName'
+            select: 'roster class sectionName',
         })
         .populate
         ({
             path: 'questionBank.question',
             select: 'points'
         })
-        
+
         if(!assessments){return res.status(200).json({data: []})}
 
         const categorizedAssessments = assessments.map(assessment => {
             return {
+                _id: assessment._id,
                 title: assessment.title,
                 description: assessment.description,
+                className:  assessment.class,
                 participants: assessment.participants.reduce((names, section) => names.concat(section.sectionName), []),
                 configurations: assessment.configurations,
                 coverImage: assessment.coverImage,
                 totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,
                 totalStudents: assessment.participants.reduce((total, section) => total + (section.roster ? section.roster.length : 0), 0),
                 totalMarks: assessment.questionBank.reduce((total, questionObj) => total + (questionObj.question ? questionObj.question.points : 0) , 0),
-                catgeory: getAssessmentStatus(assessment.configurations.openDate, assessment.configurations.closeDate),
+                category: getAssessmentStatus(assessment.configurations.openDate, assessment.configurations.closeDate),
             }
         })
 
