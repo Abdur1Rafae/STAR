@@ -29,7 +29,7 @@ const AssessmentCard = ({ assessment }) => {
     }
 
 
-    switch (assessment.catgeory) {
+    switch (assessment.category) {
         case 'In Progress':
             buttonComponent = <MonitorButton label="Monitor" onClick={handleMonitorClick}/>;
             statusColor = 'border-MonitorYellow';
@@ -62,7 +62,7 @@ const AssessmentCard = ({ assessment }) => {
             <img className="w-full h-32 rounded-lg" src={Asssessment} alt="" />
             <div className='flex mt-2 items-center'>
                 <h3 className={`text-md font-medium text-DarkBlue ml-2`}>{assessment.title}</h3>
-                <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.catgeory}</div>
+                <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.category}</div>
             </div>
             <hr className="px-8 mt-2 border border-#5F6368 m-2"></hr>
             <div className='columns-2 ml-2'>

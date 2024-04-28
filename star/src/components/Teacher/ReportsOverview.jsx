@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { StudentDonutGraph } from './StudentDonut'
 import { BiChevronDown } from 'react-icons/bi'
 import CircularProgressBar from '../Student/course/CircularProgressBar'
@@ -8,12 +8,14 @@ import { TiGroup } from 'react-icons/ti'
 import { FcQuestions } from 'react-icons/fc'
 import { LuAlarmClock } from 'react-icons/lu'
 import { PolarChart } from './PolarChart'
+import { ReportContent } from '../../Context/ReportContext'
 
 const ReportsOverview = () => {
+    const {totalMarks, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants,  questionCount, selectedSection, sections, setSelectedSection} = useContext(ReportContent)
     const [extendPerformers, setExtendPerformers] = useState(true)
     const [extendAbsentees, setExtendAbsentees] = useState(false)
     const [extendRA, setExtendRA] = useState(false)
-
+    const [selectSections, setSelectSections] = useState(false)
     const data = [{name: 'Top Performers', value: 17},{name: 'Absentees', value: 6},{name: 'Requires Attention', value: 12}]
 
     const handleExtendPerformerSection = ()=>{
@@ -37,11 +39,29 @@ const ReportsOverview = () => {
     <>
         <div className='md:flex w-full gap-2 lg:gap-4 hidden'>
             <div className='mt-4 w-1/2 flex flex-col gap-4'>
+                <button onClick={()=>{setSelectSections((prev)=>!prev)}} className='bg-LightBlue border-[1px] border-black w-full h-10 px-4 text-slate-400'>
+                    <div className='w-full flex items-center justify-between'>
+                        <h4 className='font-medium text-sm'>Sections: </h4>
+                        <p>{selectedSection}</p>
+                        <BiChevronDown className='text-3xl'/>
+                    </div>
+                </button>
+                {
+                    selectSections &&
+                    <div className='w-full min-h-24 max-h-36 bg-LightBlue overflow-y-auto'>
+                        <button onClick={()=>{setSelectedSection("All"); setSelectSections(false)}} className='block p-2 text-lg font-body hover:bg-DarkBlue hover:text-white transition-all duration-150 ease-in-out w-full'>All</button>
+                        {
+                            sections.map((section)=>{
+                                return <button onClick={()=>{setSelectedSection(section); setSelectSections(false)}} className='block p-2 text-lg font-body hover:bg-DarkBlue hover:text-white transition-all duration-150 ease-in-out w-full'>{section}</button>
+                            })
+                        }   
+                    </div>
+                }
                 <div className='bg-LightBlue w-full flex lg:justify-between shadow-md pr-4 py-2'>
-                    <AssessmentInfo/>
+                    <AssessmentInfo avg={(avgScore/totalMarks * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2'>
-                    <AvgHighestScore/>
+                    <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2 flex'>
                     <TopicUnderStanding/>
@@ -113,18 +133,29 @@ const ReportsOverview = () => {
         </div>
         <div className='flex flex-col w-full gap-4 md:hidden'>
             <div className='mt-4 w-full flex flex-col gap-4'>
-                <button className='bg-LightBlue border-[1px] border-black w-full h-10 px-4 text-slate-400'>
+                <button onClick={()=>{setSelectSections((prev)=>!prev)}} className='bg-LightBlue border-[1px] border-black w-full h-10 px-4 text-slate-400'>
                     <div className='w-full flex items-center justify-between'>
                         <h4 className='font-medium text-sm'>Sections: </h4>
-                        <p></p>
+                        <p>{selectedSection}</p>
                         <BiChevronDown className='text-3xl'/>
                     </div>
                 </button>
+                {
+                    selectSections &&
+                    <div className='w-full min-h-24 max-h-36 bg-LightBlue overflow-y-auto'>
+                        <button onClick={()=>{setSelectedSection("All"); setSelectSections(false)}} className='block p-2 text-lg font-body hover:bg-DarkBlue hover:text-white transition-all duration-150 ease-in-out w-full'>All</button>
+                        {
+                            sections.map((section)=>{
+                                return <button onClick={()=>{setSelectedSection(section); setSelectSections(false)}} className='block p-2 text-lg font-body hover:bg-DarkBlue hover:text-white transition-all duration-150 ease-in-out w-full'>{section}</button>
+                            })
+                        }   
+                    </div>
+                }
                 <div className='bg-LightBlue w-full flex lg:justify-between shadow-md pr-4 py-2'>
-                    <AssessmentInfo/>
+                    <AssessmentInfo avg={(avgScore/totalMarks * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2'>
-                    <AvgHighestScore/>
+                    <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>
                 </div>
                 <div className='w-full bg-LightBlue shadow-md p-4'>
                     <StudentDonutGraph inputData={data}/>
@@ -232,7 +263,7 @@ const IncorrectQuestion = () => {
     )
 }
 
-const AvgHighestScore = ()=>{
+const AvgHighestScore = ({totalScore, avgScore, highestScore, data})=>{
     return (
         <>
             <div className='h-24 flex justify-between mt-2'>
@@ -241,32 +272,32 @@ const AvgHighestScore = ()=>{
                     <div className='w-28 h-28 rounded-lg flex flex-col'>
                         <h3 className='text-xs font-medium self-center'>Average Score</h3>
                         <div className='h-16 flex flex-col'>
-                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>24</h3>
-                            <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of 40</h3>
+                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{avgScore}</h3>
+                            <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>
                         </div>
                     </div>
                     <div className='separator h-20 border-[1px] border-black self-center'></div>
                     <div className='w-28 h-16 rounded-lg flex flex-col'>
                         <h3 className='text-xs font-medium self-center'>Highest Score</h3>
                         <div className='h-16 flex flex-col'>
-                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>36</h3>
-                            <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of 40</h3>
+                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{highestScore}</h3>
+                            <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>
                         </div>
                     </div>
                 </div>
             </div>
-            <BarChart/>
+            <BarChart inputData={data}/>
         </>
     )
 }
 
-const AssessmentInfo = () => {
+const AssessmentInfo = ({avg, participants, questionCount, avgResponseTime}) => {
     return (
         <>
             <div className='w-48 lg:ml-8'>
-                <GaugeGraph percentage={60}/>
+                <GaugeGraph percentage={avg}/>
                 <div className='absolute flex flex-col items-center -mt-20 ml-16'>
-                    <h4 className='text-3xl font-bold font-sans'>60%</h4>
+                    <h4 className='text-3xl font-bold font-sans'>{avg}%</h4>
                     <p className='text-sm'>Average</p>
                 </div>
             </div>
@@ -276,7 +307,7 @@ const AssessmentInfo = () => {
                         <TiGroup/>
                         <p>Participants</p>
                     </div>
-                    <p>65</p>
+                    <p>{participants}</p>
                 </div>
                 <hr className='border-b-2 border-black'></hr>
                 <div className='flex w-full justify-between items-center'>
@@ -284,7 +315,7 @@ const AssessmentInfo = () => {
                         <FcQuestions/>
                         <p>Questions</p>
                     </div>
-                    <p>20</p>
+                    <p>{questionCount}</p>
                 </div>
                 <hr className='border-b-2 border-black'></hr>
                 <div className='flex w-full justify-between items-center'>
@@ -292,7 +323,7 @@ const AssessmentInfo = () => {
                         <LuAlarmClock/>
                         <p>Avg. Time</p>
                     </div>
-                    <p>00:29:54</p>
+                    <p>{avgResponseTime}</p>
                 </div>
             </div>
         </>

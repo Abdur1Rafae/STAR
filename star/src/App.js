@@ -28,6 +28,7 @@ import EditAssessmentDetails from './pages/Teacher/EditAssessmentDetails.jsx';
 import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
+import { ReportProvider } from './Context/ReportContext.js';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -51,7 +52,7 @@ const router = createBrowserRouter(
             <Route path='teacher/questions-set/:assessmentId' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
             <Route path='teacher/create-new-assessment' element={<SectionProvider><CreateNewAssessment/></SectionProvider>}></Route>
             <Route path='teacher/edit-assessment' element={<SectionProvider><EditAssessmentDetails/></SectionProvider>}></Route>
-            <Route path='teacher/reports/:assessmentName' element = {<QuestionProvider><Reports/></QuestionProvider>}></Route>
+            <Route path='teacher/reports/:assessmentName' element = {<ReportProvider><QuestionProvider><Reports/></QuestionProvider></ReportProvider>}></Route>
             <Route path='teacher/grading/:assessmentName' element={<Grading/>}/>
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>

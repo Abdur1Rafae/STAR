@@ -41,20 +41,44 @@ export const options = {
     }
 };
 
-const labels = ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'];
+const labels = ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%'];
 
-export const data = {
+const data = (inputData) => {
+  return({
   labels,
   datasets: [
     {
-      data: [23, 34, 84, 78 , 83, 45, 98, 64, 76, 23],
+      data: Object.values(inputData),
       backgroundColor: 'rgba(44, 100, 145, 1)',
       barThickness: 10,
       borderRadius: 10
-    }
-  ],
+    }]
+  })
 };
 
-export function BarChart() {
-  return <Bar options={options} data={data} height={150} />;
+function categorizeAndCount(array) {
+  const counts = {
+    '0-10': 0,
+    '10-20': 0,
+    '20-30': 0,
+    '30-40': 0,
+    '40-50': 0,
+    '50-60': 0,
+    '60-70': 0,
+    '70-80': 0,
+    '80-90': 0,
+    '90-100': 0
+  };
+
+  array.forEach(number => {
+    const range = Math.floor(number / 10) * 10;
+    counts[`${range}-${range + 10}`]++;
+  });
+
+  return counts;
+}
+
+export function BarChart({inputData}) {
+  const transformedData = categorizeAndCount(inputData)
+  return <Bar options={options} data={data(transformedData)} height={150} />;
 }

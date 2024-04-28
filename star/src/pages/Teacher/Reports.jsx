@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
@@ -9,9 +9,26 @@ import { MdQueryStats } from "react-icons/md";
 import ReportsOverview from '../../components/Teacher/ReportsOverview'
 import QuestionSummary from '../../components/Teacher/QuestionSummary'
 import IndividualReport from '../../components/Teacher/IndividualReport'
+import { GetReportsOverview } from '../../APIS/Teacher/ReportAPI'
 
 const Reports = () => {
     const [tab, setTab] = useState('Overview')
+    const reportId = localStorage.getItem('ReportId')
+
+    useEffect(()=>{
+        const GetOverview = async() => {
+            try {
+                const res = await GetReportsOverview({id:reportId});
+                localStorage.setItem('ReportQuestionBank', JSON.stringify(res.questionBank))
+                localStorage.setItem('ReportParticipants', JSON.stringify(res.summary.participants))
+                localStorage.setItem('ReportAsgMarks', res.totalMarks)
+            } catch(err) {
+                console.log(err)
+            }
+        }
+
+        GetOverview()
+    }, [])
     
 
   return (
@@ -21,7 +38,7 @@ const Reports = () => {
             <SideBar active={"Reports"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Reports"}/>
-                <div className='p-2 flex overflow-hidden flex-col'>
+                <div className='p-2 md:p-4 flex overflow-hidden flex-col'>
                     <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
                         <div className='flex items-center self-start'>
                             <button onClick={()=>{window.location.assign('/teacher/reports')}}><BiChevronLeft className='text-3xl'/></button>

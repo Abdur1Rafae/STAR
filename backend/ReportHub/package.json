@@ -4,6 +4,7 @@
   "description": "Reporting Service for Teachers and Students",
   "main": "app.js",
   "scripts": {
+    "dev": "nodemon -L app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

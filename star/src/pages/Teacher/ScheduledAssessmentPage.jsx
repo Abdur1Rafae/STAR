@@ -70,8 +70,8 @@ function ScheduledAssessment() {
                             </div>
                             <div className='flex flex-wrap gap-6'>
                                 {
-                                    assessments.map((assessment)=> {
-                                        return <AssessmentCard status="In Progress" assessment={assessment} />
+                                    assessments.map((assessment, index)=> {
+                                        return <AssessmentCard key={assessment._id} assessment={assessment} />
                                     })
                                 }
                             </div>
