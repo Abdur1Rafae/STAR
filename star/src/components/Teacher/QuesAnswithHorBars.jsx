@@ -1,9 +1,7 @@
 import React from 'react';
 import QuizImage from '../Student/question/QuizImage';
 import HorizontalProgressBar from '../Student/course/HorizontalProgressBar';
-import TimeTaken from '../Student/assessment/TimeTaken';
-import AvgScoreHighScoreCard from './avgscorehighscorecard';
-import { StudentDonutGraph }  from './StudentDonut';
+
 import { SkillBox } from './StoredQuestion';
 import { DifficultyBox } from './StoredQuestion';
 import { PointBox } from './StoredQuestion';
@@ -11,7 +9,6 @@ import { PointBox } from './StoredQuestion';
 const data = [{ name: 'Top Performers', value: 17 }, { name: 'Absentees', value: 6 }, { name: 'Requires Attention', value: 12 }];
 
 const QuesAnswithHorBars = ({ question }) => {
-  console.log(question);
 
   return (
     <div className="flex-grow w-full p-4">
@@ -26,18 +23,7 @@ const QuesAnswithHorBars = ({ question }) => {
           <p className="text-md">{question?.question}</p>
         </div>
       </div>
-      <div className='md:flex gap-4 items-center md:h-36 my-8'>
-        <div className='md:w-1/3'>
-          <AvgScoreHighScoreCard />
-        </div>
-        <div className='md:w-1/3'>
-          <TimeTaken />
-        </div>
-        <div className=' md:w-1/2  relative'>
-          <StudentDonutGraph inputData={data} />
-        </div>
-      </div>
-
+      
       <div className=' md:flex justify-around gap-4'>
         <div className="options flex-grow ">
           {question?.options &&

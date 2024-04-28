@@ -6,7 +6,6 @@ import QuizStore from '../../Stores/QuizStore';
 
 const LiveQuiz = ({assessment}) => {
     const date = new Date(assessment.configurations.closeDate);
-    console.log(assessment.configurations.closeDate)
     const quizStore = QuizStore()
 
     const updateQuizDetails = QuizStore(store => store.updateQuizDetails)
@@ -45,7 +44,6 @@ const LiveQuiz = ({assessment}) => {
             } 
 
         }
-        console.log(quizDetails.quizConfig)
         localStorage.setItem('quizDetails', JSON.stringify(quizDetails));
         window.location.assign('/quiz-instructions')
     }

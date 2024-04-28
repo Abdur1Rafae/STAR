@@ -18,7 +18,6 @@ const MCQPanel = ({ question }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(()=> {
-    console.log(questionNumber)
     const answer = getSelectedResponse(questionNumber)
     console.log(answer)
     setResponse(answer)
