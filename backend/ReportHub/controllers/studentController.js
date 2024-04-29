@@ -6,10 +6,10 @@ function skillBreakDown(skills, response)
     response.forEach(response => 
     {
         if (!skills[response.questionId.skill]) {
-            skills[response.questionId.skill] = { total: 0, score: 0 }
+            skills[response.questionId.skill] = { total: 0, correct: 0 }
         }
-        skills[response.questionId.skill].total += response.questionId.points
-        skills[response.questionId.skill].score += response.score
+        skills[response.questionId.skill].total++
+        if(response.score === response.questionId.points){skills[response.questionId.skill].correct++}
     })
 
     return skills
@@ -105,7 +105,7 @@ module.exports.getClassOverview = async (req,res) =>
             responses.push(assessmentData);
         }
 
-        res.status(201).json({responses, skills})
+        res.status(201).json({assessmentHistory: responses, skillsBreakDown:skills})
 
     }
     catch(err)
@@ -135,77 +135,25 @@ module.exports.getAssessmentReport = async (req,res) =>
             select: 'topic skill points -_id'
         })
 
-        let previousScore = response.previousScore
-        let previousTotal = response.previousTotal
-
-        if(!previousScore)
-        {
-            const student = response.student
-            const section = response.section
-            const assessment = response.assessment
-
-            previousAssessment = await Response.aggregate
-            ([
-                {
-                  $match: 
-                  {
-                    section: new mongoose.Types.ObjectId(section),
-                    student: new mongoose.Types.ObjectId(student),
-                    assessment: { $ne: new mongoose.Types.ObjectId(assessment) }
-                  }
-                },
-                {
-                  $lookup: 
-                  {
-                    from: "assessments",
-                    localField: "assessment",
-                    foreignField: "_id",
-                    pipeline:[{$project: {status: 1, 'totalMarks': 1}}],
-                    as: "assessment"
-                  }
-                },
-                {$unwind: '$assessment'},
-                {
-                  $match: {
-                    _id: { $lt: new mongoose.Types.ObjectId(assessment)},
-                    "assessment.status": "Published"
-                  }
-                },
-                {
-                  $project: {
-                    totalScore: '$totalScore',
-                    totalMarks: '$assessment.totalMarks'
-                  }
-                }
-              ]);
-           
-            previousScore = previousAssessment.length > 0 ? previousAssessment[0].totalScore : null
-            previousTotal = previousAssessment.length > 0 ? previousAssessment[0].totalMarks : null
-
-            response.previousScore = previousScore
-            response.previousTotal = previousTotal
-            response.save()      
-        }
-
-        const formattedData =
+        const report =
         {
             duration: response.assessment.configurations.duration,
             submiittedAt: response.submittedAt,
             createdAt: response.createdAt,
-            previousScore: response.previousScore,
-            previousTotal: response.previousTotal,
             responses: response.responses.map( item => 
-                ({
-                    topic: item.questionId.topic,
-                    skill: item.questionId.skill,
-                    points: item.questionId.points,
-                    earned: item.score
-                }))
-
-
+            {
+                    const question =  
+                    {
+                        topic: item.questionId.topic,
+                        skill: item.questionId.skill,
+                        correct: 0
+                    }
+                    if(item.score === item.questionId.points){question.correct = 1}
+                    return question
+            })
         }
 
-        res.status(201).json({data: formattedData})
+        res.status(201).json(report)
 
     }
     catch(err)
@@ -230,7 +178,7 @@ module.exports.getAssessmentSubmission = async (req,res) =>
             model: Assessment
         })
 
-        if (!response) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}
+        if (!response) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Response not found' })}
 
         if(response.assessment.configurations.viewSubmission === false){return res.status(405).json({ message: 'Not allowed to view submission' })}
 
@@ -241,12 +189,20 @@ module.exports.getAssessmentSubmission = async (req,res) =>
             select: '-teacher -__v '
         })
 
-        res.status(201).json({data: response})
+        const submission = response.responses.map( item => 
+        {
+            let isCorrect = false
+            if(item.score === item.questionId.points) {isCorrect = true}
+            return {isCorrect, ...item.toObject()}
+
+        })
+
+        res.status(201).json({submission})
 
     }
     catch(err)
     {
         console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to generate question report'})
+        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get submission'})
     }
 }

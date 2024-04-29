@@ -100,98 +100,111 @@ function generateReport(assessmentId)
           ]
         const questionPipeline = 
         [
-            {
-              $match: {assessment}
+          {
+            $match: { assessment },
+          },
+          {
+            $project: {
+              section: 1,
+              responses: 1,
+              _id: 0,
             },
-            {
-              $project: {section: 1,responses: 1,_id: 0}
+          },
+          { $unwind: "$responses" },
+          {
+            $lookup: {
+              from: "questions",
+              localField: "responses.questionId",
+              foreignField: "_id",
+              pipeline: [{ $project: { points: 1 } }],
+              as: "question",
             },
-            { $unwind: "$responses" },
-            {
-              $lookup: 
-              {
-                from: "questions",
-                localField: "responses.questionId",
-                foreignField: "_id",
-                pipeline: [{ $project: { points: 1 } }],
-                as:  "question",
+          },
+          { $unwind: "$question" },
+          {
+            $group: {
+              _id: {
+                section: "$section",
+                question: "$question._id",
               },
-            },
-            { $unwind: "$question" },
-            {
-              $group: 
-              {
-               _id: { section: "$section", question: "$question._id" },
-                questions: {
-                  $push: {
-                    question: "$question._id",
-                    totalResponses: { $sum: 1 },
-                    totalSkipped: {
-                      $sum: {
-                        $cond: [
-                          {
-                            $or: [
-                              {
-                                $eq: [
-                                  "$responses.answer",
-                                  null,
-                                ],
-                              },
-                              {
-                                $eq: [
-                                  {
-                                    $size:
-                                      "$responses.answer",
-                                  },
-                                  0,
-                                ],
-                              },
-                            ],
-                          },
-                          1,
-                          0,
-                        ],
-                      },
+              questions: {
+                $push: {
+                  question: "$question._id",
+                  totalResponses: { $sum: 1 },
+                  totalSkipped: {
+                    $sum: {
+                      $cond: [
+                        {
+                          $or: [
+                            {
+                              $eq: [
+                                "$responses.answer",
+                                null,
+                              ],
+                            },
+                            {
+                              $eq: [
+                                {
+                                  $size:
+                                    "$responses.answer",
+                                },
+                                0,
+                              ],
+                            },
+                          ],
+                        },
+                        1,
+                        0,
+                      ],
                     },
-                    totalCorrect: {
-                      $sum: {
-                        $cond: [
-                          {
-                            $eq: [
-                              "$responses.score",
-                              "$question.points",
-                            ],
-                          },
-                          1,
-                          0,
-                        ],
-                      },
+                  },
+                  totalCorrect: {
+                    $sum: {
+                      $cond: [
+                        {
+                          $eq: [
+                            "$responses.score",
+                            "$question.points",
+                          ],
+                        },
+                        1,
+                        0,
+                      ],
                     },
-                    averageResponseTime: {
-                      $avg: "$responses.responseTime",
-                    },
-                    highestScore: {
-                      $max: "$responses.score",
-                    },
-                    averageScore: {
-                      $avg: "$responses.score",
-                    },
+                  },
+                  averageResponseTime: {
+                    $avg: "$responses.responseTime",
+                  },
+                  highestScore: {
+                    $max: "$responses.score",
+                  },
+                  averageScore: {
+                    $avg: "$responses.score",
                   },
                 },
               },
             },
-            {
-              $group: 
+          },
+          {
+            $group: {
+              _id: "$_id.section",
+              questions: 
               {
-                _id: "$_id.section",
-                questions: 
-                {
-                  $push: {$first: "$questions"}
-                }
-              }
-            }
-          ]
-
+                $push: 
+                {  
+                  question: {$first: "$questions.question"},
+                  totalResponses: { $sum: '$questions.totalResponses' },
+                  totalSkipped: { $sum: '$questions.totalSkipped' },
+                  totalCorrect: { $sum: '$questions.totalCorrect' },
+                  averageResponseTime: { $avg: '$questions.averageResponseTime' },
+                  highestScore: { $max: '$questions.highestScore' },
+                  averageScore: { $avg: '$questions.averageScore' }
+                },
+              },
+            },
+          },
+        ]
+        
         const participantSummary = Assessment.aggregate(participantPipeline)
         const questionSummary =  Response.aggregate(questionPipeline)
 
@@ -228,10 +241,12 @@ function generateReport(assessmentId)
 async function scheduleReportGeneration()
 {
     const now = new Date()
-    const assessments = await Assessment.find
+
+    let assessments = await Assessment.find
     ({
-        'configurations.closeDate': { $lt: now },
-        status: { $ne: "Published" } 
+      'configurations.closeDate': { $lt: now },
+       status: { $ne: "Published" },
+      'configurations.releaseGrade': true
     })
 
     assessments.forEach(async (assessment) => 
@@ -250,7 +265,7 @@ async function scheduleReportGeneration()
     return assessments.length
 }
 
-cron.schedule('*/13 * * * *', async () => 
+cron.schedule('*/25 * * * *', async () => 
 {
     console.log('Running assessment check...');
     try 
@@ -363,3 +378,4 @@ cron.schedule('*/13 * * * *', async () =>
             }
         ]
 */
+
