@@ -29,16 +29,8 @@ const QuestionSummary = () => {
   return (
     <div className='flex flex-col'>
       <div >
-        <div className='flex mt-2 p-2 w-full bg-LightBlue shadow-md rounded-md items-center'>
-          <span className=' font-semibold '>Question:&nbsp;</span>
-          <select className="px-4 border border-gray-300 rounded-md focus:outline-none focus:border-black"  value={selectedQuestionIndex + 1}
-          onChange={handleSelectQuestion}>
-            {[...Array(questions.length).keys()].map((index) => (
-              <option key={index} value={index + 1}>{index + 1}</option>
-            ))}
-          </select>
-          <span className='text-DarkBlue font-bold'>&nbsp; of {questions.length}</span>
-          <div className='flex items-center ml-auto gap-2'>
+        <div className='flex mt-2 p-2 w-full   items-center'>
+            <div className='flex items-center ml-auto gap-2'>
             <button className='bg-[#829FB6] rounded-tl-full rounded-bl-full px-4 py-2' onClick={handlePrevious}>
               <IoIosArrowBack />
             </button>

@@ -17,7 +17,7 @@ const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
       <div className=''>
         {questions.map((question, index) => (
           <QuestionTabTile
-            key= {index}
+            index= {index}
             singlequestioninfo= {question } // {question}
             active={question === activeQuestion} // Set active to true if person matches the activePerson
             onClick={() => onQuestionClick(question)} // Pass the onClick handler to handle click event
