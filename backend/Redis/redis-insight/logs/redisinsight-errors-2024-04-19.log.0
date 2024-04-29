@@ -1,4 +1,0 @@
-4/19/2024, 6:32:30 PM | ERROR | GlobalNotificationProvider | Unable to download or parse notifications json. maxContentLength size of -1 exceeded | [object Object]
-4/19/2024, 6:32:31 PM | ERROR | GlobalNotificationProvider | Unable to sync notifications with remote | [object Object]
-4/19/2024, 7:26:21 PM | ERROR | GlobalNotificationProvider | Unable to download or parse notifications json. connect ECONNREFUSED 20.207.73.82:443 | [object Object]
-4/19/2024, 7:26:21 PM | ERROR | GlobalNotificationProvider | Unable to sync notifications with remote | [object Object]

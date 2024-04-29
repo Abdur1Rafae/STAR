@@ -1,24 +1,23 @@
 import React, { useState , useContext } from 'react';
-import LCSearchBar from './LCSearchBar';
-import { CiFilter } from "react-icons/ci";
+import { DDMMM_HHMM } from '../../Utils/DateFunctions';
 
 const PeopleTabTile = ({ singlepersoninfo, active , onClick}) => {
-  const textColor = singlepersoninfo.percentage > 60 ? 'text-[#70FF71]' : 'text-[#FF6058]';
+  const textColor = singlepersoninfo?.percentage > 60 ? 'text-[#70FF71]' : 'text-[#FF6058]';
 
   return (
-    <div className={`h-full ${active ? 'bg-DarkBlue text-white' : 'bg-transparent'} m-2 rounded-md`} onClick={onClick}>
+    <button className={`w-full text-left h-full ${active ? 'bg-DarkBlue text-white' : 'bg-transparent'} rounded-md`} onClick={()=>onClick(singlepersoninfo)}>
       <div className='flex items-center w-full justify-between p-2'>
         <div className='text-sm font-medium'>
-          {singlepersoninfo.name} - {singlepersoninfo.erp}
+          {singlepersoninfo?.name} - {singlepersoninfo?.erp}
           <div className='text-xs font-light'>
-            21:59 December 23, 2023
+            {DDMMM_HHMM(singlepersoninfo?.response?.submittedAt)}
           </div>
         </div>
         <div className={`text-xl font-semibold ${textColor}`}>
-          {singlepersoninfo.percentage}%
+          {singlepersoninfo?.percentage}%
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

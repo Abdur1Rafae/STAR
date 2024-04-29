@@ -19,7 +19,7 @@ const GetReportsOverview = async({id}) => {
         }
     }) 
 
-    return res.data.data
+    return res.data
 }
 
 const GetResponses = async({id}) => {
@@ -29,7 +29,8 @@ const GetResponses = async({id}) => {
         }
     }) 
 
-    return res.data.data
+
+    return res.data
 }
 
 

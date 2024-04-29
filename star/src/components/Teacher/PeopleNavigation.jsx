@@ -4,7 +4,6 @@ import { CiFilter } from "react-icons/ci";
 import PeopleTabTile from './PeopleTabTile';
 
 const PeopleNavigation = ({ peopleinfo, activePerson, onPersonClick }) => {
-  console.log(peopleinfo.length)
  
   return (
     <div className='h-full'>
@@ -15,13 +14,13 @@ const PeopleNavigation = ({ peopleinfo, activePerson, onPersonClick }) => {
         </div>
         <div className='border border-gray-300 my-4 mx-2'></div>
       </div>
-      <div className=''>
+      <div className='p-2'>
         {peopleinfo.map((person, index) => (
           <PeopleTabTile
             key={index}
             singlepersoninfo={person}
-            active={person.name === activePerson.name}
-            onClick={() => onPersonClick(person)}
+            active={person.erp === activePerson.erp}
+            onClick={onPersonClick}
           />
         ))}
       </div>

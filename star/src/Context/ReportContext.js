@@ -15,7 +15,154 @@ export const ReportProvider = ({ children }) => {
     const [highestScore, setHighestScore] = useState(0)
     const [scoreDistribution, setScoreDistribution] = useState([])
     const [topicList, setTopicList] = useState({})
-    const [topicDistribution, setTopicDistribution] = useState({})
+    const [topicDistribution, setTopicDistribution] = useState(JSON.parse(localStorage.getItem('TopicDistribution')) || [])
+    const [incorrectQuestion, setInCorrectQuestion] = useState(JSON.parse(localStorage.getItem('MostIncorrectQuestion')) ||{})
+    const [topPerformers, setTopPerformers] = useState([])
+    const [absentees, setAbsentees] = useState([])
+    const [requireAttention, setRequireAttention] = useState([])
+    const [studentData, setStudentData] = useState([])
+
+    useEffect(()=> {
+        const topPerformingstudents = []
+        const absentstudents = []
+        const requireAttentionstudents = []
+        if(selectedSection == 'All') {
+            participants.map((section) => {
+                section.students.map((student) => {
+                    if(student.response) {
+                        const percentage = Math.round(student.response.totalScore / totalMarks * 100)
+                        console.log(percentage)
+                        if(percentage > 90) {
+                            topPerformingstudents.push({
+                                name: student.name,
+                                section: section.sectionName,
+                                score: percentage,
+                                erp: student.erp,
+                                response: student.response
+                            })
+                        }
+                        else if(percentage < 60) {
+                            requireAttentionstudents.push({
+                                name: student.name,
+                                section: section.sectionName,
+                                score: percentage,
+                                erp: student.erp,
+                                response: student.response
+                            })
+                        }   
+                    }
+                    else {
+                        absentstudents.push({
+                            name: student.name,
+                            section: section.sectionName,
+                            score: 0,
+                            erp: student.erp,
+                            response: student.response
+                        })
+                    }
+                })
+            })
+
+            setTopPerformers(topPerformingstudents)
+            setAbsentees(absentstudents)
+            setRequireAttention(requireAttentionstudents)
+        }
+        else{
+            participants.map((section) => {
+                if(section.sectionName == selectedSection) {
+                    section.students.map((student) => {
+                        if(student.response) {
+                            const percentage = Math.round(student.response.totalScore / totalMarks * 100)
+                            console.log(percentage)
+                            if(percentage > 90) {
+                                topPerformingstudents.push({
+                                    name: student.name,
+                                    section: section.sectionName,
+                                    score: percentage,
+                                    erp: student.erp,
+                                    response: student.response
+                                })
+                            }
+                            else if(percentage < 60) {
+                                requireAttentionstudents.push({
+                                    name: student.name,
+                                    section: section.sectionName,
+                                    score: percentage,
+                                    erp: student.erp,
+                                    response: student.response
+                                })
+                            }   
+                        }
+                        else {
+                            absentstudents.push({
+                                name: student.name,
+                                section: section.sectionName,
+                                score: 0,
+                                erp: student.erp,
+                                response: student.response
+                            })
+                        }
+                    })
+    
+                    setTopPerformers(topPerformingstudents)
+                    setAbsentees(absentstudents)
+                    setRequireAttention(requireAttentionstudents)
+                }    
+            })
+        }
+    }, [selectedSection])
+    
+    useEffect(()=> {
+        if(selectedSection == 'All') {
+            setTopicDistribution(JSON.parse(localStorage.getItem('TopicDistribution')))
+            const question = JSON.parse(localStorage.getItem('MostIncorrectQuestion'))
+            let incorrectQuestion =  []
+            assessmentQuestion.map((ques)=>{
+                if(question.question == ques._id) {
+                    incorrectQuestion.push({
+                        question: ques.question,
+                        type: ques.type,
+                        options: ques.options,
+                        correctOptions: ques.correctOptions,
+                        image: ques.image,
+                        isTrue: ques.isTrue || false,
+                        percentage: Math.round(question.totalIncorrect / question.totalResponses * 100)
+                    });
+                }
+            })
+
+            setInCorrectQuestion(incorrectQuestion)
+        }
+        else {
+            participants.map((section)=> {
+                if(section.sectionName == selectedSection) {
+                    setTopicDistribution(section.topicBreakDown)
+                    setInCorrectQuestion(section.mostIncorrectQuestion)
+                    const question = section.mostIncorrectQuestion
+                    let incorrectQuestion =  []
+                    assessmentQuestion.map((ques)=>{
+                        if(question.question == ques._id) {
+                            incorrectQuestion.push({
+                                question: ques.question,
+                                type: ques.type,
+                                options: ques.options,
+                                correctOptions: ques.correctOptions,
+                                image: ques.image,
+                                isTrue: ques.isTrue || false,
+                                percentage: Math.round(question.totalIncorrect / question.totalResponses * 100)
+                            });
+                        }
+                    })
+
+                    setInCorrectQuestion(incorrectQuestion)
+                }
+            })
+        }
+    }, [selectedSection])
+
+    useEffect(()=> {
+        console.log(participants)
+    }, [participants])
 
     useEffect(()=> {
         const topics = {};
@@ -129,7 +276,7 @@ export const ReportProvider = ({ children }) => {
     const questionCount = assessmentQuestion.length
 
     return (
-        <ReportContent.Provider value={{scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
+        <ReportContent.Provider value={{topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
             {children}
         </ReportContent.Provider>
     )

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
 import PeopleNavigation from '../../components/Teacher/PeopleNavigation';
 import PastCurScore from '../../components/Student/assessment/PastCurScore';
@@ -8,8 +8,12 @@ import { QuestionContext } from '../../Context/QuestionsContext';
 import SubmitMCQPanel from '../../components/Student/question/SubmitMCQPanel';
 import ResultSummary from '../../components/Student/ResultSummary';
 import PeopleTabTile from '../../components/Teacher/PeopleTabTile';
+import { ReportContent } from '../../Context/ReportContext';
+import _ from 'lodash';
+import { GetResponses } from '../../APIS/Teacher/ReportAPI';
 
 const IndividualReport = () => {
+  const { topPerformers, requireAttention, selectedSection } = useContext(ReportContent)
   const [showStudents, setShowStudents] = useState(false); 
   
   const correctAnswers = 5;
@@ -21,19 +25,46 @@ const IndividualReport = () => {
 
   const { questions } = useContext(QuestionContext);
 
-  const peopleinfo = [
-    {name: 'Maaz Shamim', erp: 22222, percentage: 75},
-    {name: 'Ali', erp: 22223, percentage: 80},
-    {name: 'Muhammad Maaz Arasalan Batla', erp: 22224, percentage: 50},
-    {name: 'Hassaan Ahmed Saeed', erp: 22225, percentage: 70},
-    {name: 'Muhammad Abdur Rafae', erp: 22225, percentage: 70},
-    {name: 'Alik', erp: 22225, percentage: 70},
-  ];
-  const [activePerson, setActivePerson] = useState(peopleinfo[0]);
+  const [peopleinfo, setPeopleInfo] = useState([]);
+
+  useEffect(()=>{
+    const students = []
+    topPerformers.map((student) => {
+      students.push({
+        name: student.name, 
+        percentage: student.score,
+        erp: student.erp,
+        response: student.response
+      })
+    })
+    requireAttention.map((student) => {
+      students.push({
+        name: student.name, 
+        percentage: student.score,
+        erp: student.erp,
+        response: student.response
+      })
+    })
+    setPeopleInfo(students)
+  }, [selectedSection])
+  const [activePerson, setActivePerson] = useState(peopleinfo[0] || {});
+
+  const debouncedApiCall = (response) => _.debounce(async() => {
+    try {
+      const res = await GetResponses({ id: response});
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('API call debounced');
+  }, 500);
 
   const handlePersonClick = (person) => {
     setActivePerson(person);
     setShowStudents(false)
+
+    const debouncedFunction = debouncedApiCall(person.response._id);
+    debouncedFunction();
   };
 
 

@@ -34,15 +34,15 @@ const options = {
   },
 };
 
-export function PolarChart({ inputData }) {
-  const values = inputData.map(item => item.value);
+export function PolarChart({inputData}) {
+  const values = inputData.map(item => item.percentage * 100);
 
   const data = {
     datasets: [
       {
         label: 'Score',
         data: values,
-        backgroundColor: backgroundColor.slice(0, inputData.length), // Adjusting to match length of inputData
+        backgroundColor: backgroundColor.slice(0, inputData.length),
         borderWidth: 1,
       },
     ]
@@ -65,9 +65,9 @@ export function PolarChart({ inputData }) {
                 <div className="w-[8px] h-[8px] rounded-full"
                   style={{ backgroundColor: backgroundColor[index % backgroundColor.length] }}
                 ></div>
-                <h4 className='flex justify-center'>{item.name}</h4>
+                <h4 className='flex justify-center'>{item._id}</h4>
               </div>
-              <h4 className='w-1/2 flex justify-center items-center'>{item.value}%</h4>
+              <h4 className='w-1/2 flex justify-center items-center'>{item.percentage * 100}%</h4>
             </div>
           ))
         }
