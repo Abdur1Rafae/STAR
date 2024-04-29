@@ -1,9 +1,8 @@
 const conn = require('../dbconfig/dbcon')
 const bcrypt = require('bcrypt')
 const Joi = require('joi')
-const Student = require('library/models/Student')
-const Teacher = require('library/models/Teacher')
-const {sendMail} = require('../util/Mail/mail')
+const {Teacher, Student} = require('library/index')
+// const {sendMail} = require('../util/Mail/mail')
 
 const USER_SCHEMA = Joi.object
 ({

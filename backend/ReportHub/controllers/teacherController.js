@@ -183,7 +183,7 @@ module.exports.getReportOverview= async (req,res) =>
                       _id: "$_id.section",
                       breakdown: {
                         $push: {
-                          topic: "$_id.topic",
+                          _id: "$_id.topic",
                           percentage: "$percentage",
                         },
                       },
