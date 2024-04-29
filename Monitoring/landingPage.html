@@ -1,43 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Interface</title>
-    <style>
-        #container {
-            margin: 0px auto;
-            width: 500px;
-            height: 375px;
-            border: 10px #333 solid;
-            display: none; /* Hide container initially */
-        }
-
-        #videoElement {
-            width: 500px;
-            height: 375px;
-            background-color: #666;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Instructions</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Test Interface</h1>
-  
-    <video id="webcam" width="640" height="480" autoplay style="display: none;"></video>
-    <canvas id="output" width="640" height="480" style="display: none;"></canvas>
-  
-    <!-- Container for video element -->
-    <div id="container">
-        <video autoplay="true" id="videoElement"></video>
+  <div class="container">
+    <div class="instructions">
+      <h2>Test Instructions</h2>
+      <p>Please follow the instructions below before starting the test:</p>
+      <ul>
+        <li>Sit in a well-lit area.</li>
+        <li>Place your device approximately 2 feet away from you.</li>
+        <li>Position your device so your face is centered in the frame.</li>
+        <!-- Add more instructions as needed -->
+      </ul>
+      <button id="startButton">Start Test</button>
     </div>
+    <div class="camera-feed">
+      <h2>Your View</h2>
+      <video id="webcam" width="640" height="480" autoplay></video>
+    </div>
+  </div>
 
-    <button onclick="tabHandler_startTest()">Start Test</button>
-    <button onclick="tabHandler_stopTest()">Stop Test</button>
-
-    <script src="main.js" type='module'></script>
-    <script src="feedHandler.js" type='module'></script>
-    <script src="tabHandler.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>  
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
+  <script src="script.js" type="module"></script>
+  <script src="start.js" type="module"></script> 
 </body>
 </html>

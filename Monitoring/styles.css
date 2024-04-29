@@ -1,0 +1,13 @@
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .instructions {
+    width: 45%;
+  }
+  
+  .camera-feed {
+    width: 45%;
+  }  

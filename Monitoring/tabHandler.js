@@ -6,13 +6,13 @@ const tabHandler_switchDurationThreshold = 7 * 1000;
 let tabHandler_violations = {};
 let tabHandler_warningTimer; // Timer for warning
 
-function tabHandler_startTest() {
+function startTabMonitoring() {
     // For starting the test
     tabHandler_resetCounts();
     tabHandler_addEventListeners();
 }
 
-function tabHandler_stopTest() {
+function stopTabMonitoring() {
     // For stopping the test
     clearTimeout(tabHandler_warningTimer); // Clearing warning timer if it's running
     tabHandler_removeEventListeners();
@@ -89,15 +89,6 @@ function tabHandler_raiseWarning(violation) {
 // This function is to be used to send all violations committed by the candidate
 function tabHandler_sendViolationsToTeacher() {
     console.log("Sending violations to teacher:");
-}
-
-// Start and stop monitoring for tab handling
-function startTabMonitoring() {
-    tabHandler_startTest();
-}
-
-function stopTabMonitoring() {
-    tabHandler_stopTest();
 }
 
 export { startTabMonitoring, stopTabMonitoring };

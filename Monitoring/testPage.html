@@ -7,17 +7,18 @@
 </head>
 <body>
   <!-- Video and canvas elements for displaying webcam feed and drawing detections -->
-  <video id="webcam" width="640" height="480" autoplay style="display: block;"></video>
+  <video id="webcam" width="640" height="480" autoplay style="display: none;"></video>
   <canvas id="output" width="640" height="480" style="display: none;"></canvas>
 
-  <!-- Buttons to start and stop monitoring -->
-  <button id="startButton">Start Monitoring</button>
-  <button id="stopButton">Stop Monitoring</button>
+  <!-- Button to submit test and stop monitoring -->
+  <button id="stopButton">Submit</button>
 
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
   <script src="comprehensiveModule.js" type="module"></script>
   <script src="tabHandler.js" type="module"></script>
-  <script src="main.js" type="module"></script>
+  <script src="stop.js" type="module"></script>
 </body>
 </html>
