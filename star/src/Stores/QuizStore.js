@@ -234,6 +234,11 @@ const QuizStore = create((set) => ({
   submitResponses: () => {
     set((state) => {
       const nextState = {...state}
+      const submissionObj = {
+        assessmentId: state.id,
+        submit: true
+      }
+      localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
       const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
       const responseIndex = state.currentQuestionIndex;
       if (responseIndex !== -1) {
@@ -251,11 +256,6 @@ const QuizStore = create((set) => ({
       const res = async() => {
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})
-          const submissionObj = {
-            assessmentId: state.id,
-            submit: true
-          }
-          localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
           console.log(sub)
         } catch(err) {
           console.log(err)

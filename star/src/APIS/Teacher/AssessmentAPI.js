@@ -163,8 +163,8 @@ const MonitorAssessment = async({id}) => {
     return res.data.data
 }
 
-const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
-    instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
+const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
+    console.log("here")
     const res = await AxiosBase.put(`teacherhub/assessment-management/update-assessment/${id}`,{
         title: name,
         description: description,
@@ -189,6 +189,8 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
             authorization: `Bearer ${token}`
         }
     })
+
+    console.log(res)
 
     return res.data
 }

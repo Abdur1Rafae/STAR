@@ -26,8 +26,8 @@ function EditAssessmentDetails() {
     const [hour, setHour] = useState(0)
     const [mins, setMins] = useState(30)
 
-    const [datetime, setDatetime] = useState(assessment.configurations ? assessment.configurations.openDate : '')
-    const [closedatetime, setCloseDatetime] = useState(assessment.configurations ? assessment.configurations.closeDate : '')
+    const [datetime, setDatetime] = useState(new Date(assessment.configurations.openDate).toISOString().slice(0, 16))
+    const [closedatetime, setCloseDatetime] = useState(new Date(assessment.configurations.closeDate).toISOString().slice(0, 16))
     const [publishImmediately, setPublishOption] = useState(assessment.configurations ? assessment.configurations.releaseGrades : false);
     const [viewSubmissions, setViewSubmissions] = useState(assessment.configurations ? assessment.configurations.viewSubmission : false);
     const [randomizeQuestions, setRandomizeQuestions] = useState(assessment.configurations ? assessment.configurations.randomizeQuestions : false);
@@ -39,9 +39,34 @@ function EditAssessmentDetails() {
     const [candidateMonitoring, setCandidateMonitoring] = useState(assessment.configurations ? assessment.configurations.monitoring : false);
     const [error, setError] = useState('')
 
-    useEffect(()=>{
-        console.log(assessment)
-    }, [assessment])
+    // useEffect(()=>{
+    //     console.log(assessment)
+    // }, [assessment])
+
+    useEffect(()=> {
+        console.log(closedatetime)
+    }, [closedatetime])
+
+    useEffect(()=> {
+        if(assessment.configurations.duration > 120) {
+            setHour(2)
+            const minutes = assessment.configurations.duration - 120;
+            setMins(minutes)
+        }
+        else if(assessment.configurations.duration == 120) {
+            setHour(2)
+            setMins(0)
+        }
+        else if(assessment.configurations.duration > 60) {
+            setHour(1)
+            const minutes = assessment.configurations.duration - 60;
+            setMins(minutes)
+        }
+        else {
+            setHour(0)
+            setMins(assessment.configurations.duration)
+        }
+    }, [])
 
     const handleSubmission = ()=> {
         if(assessmentName == '') {
@@ -66,10 +91,8 @@ function EditAssessmentDetails() {
 
         const res = async() => {
             try {
-                console.log(assessmentId, assessmentName, sectionIDs)
-                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
-                monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-                window.location.assign(`/teacher/questions-set/${data.assessmentId}`)
+                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
+                window.location.assign(`/teacher/questions-set/${assessmentId}`)
             } catch(err) {
                 console.log(err)
             }
@@ -197,7 +220,7 @@ function EditAssessmentDetails() {
 
 
     return (
-    <div className='flex flex-col h-full'>
+    <div className='flex flex-col h-full font-body'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Live Monitoring"}/>
@@ -277,19 +300,19 @@ function EditAssessmentDetails() {
                                         event.preventDefault();
                                     }
                                 }} onChange={handleMinuteChange} type='number' max={60} min={0}  maxLength={2}
-                                className='ml-2 w-8 text-sm mt-2 border border-black rounded p-1' />
+                                className='ml-2 w-12 text-sm mt-2 border border-black rounded p-1' />
                             </div>
                         </div>
                         <div>
                             <div className='flex flex-col items-center'>
                                 <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
-                                <input type='datetime-local' value={datetime || ''} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
+                                <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
                             </div>
                             <div className='flex flex-col items-center'>
                                 <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>
                                     Close Date & Time &nbsp; <BsInfoCircle/>
                                 </h2>
-                                <input type='datetime-local' value={closedatetime|| ''} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
+                                <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
                             </div>
                         </div>
                     </div>

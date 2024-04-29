@@ -60,38 +60,41 @@ export const options = {
   
 };
 
-const labels = ['Operating System', 'History of Computers' , 'Number Systems' , 'Turing Maching'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      data: [28, 56, 49, 75, 81, 59, 73],
-      borderColor: (context) => {
-        const value = context.dataset.data[context.dataIndex];
-        if (value < 40) {
-          return '#FA938E';
-        } else if (value >= 40 && value < 70) {
-          return '#FBD377';
-        } else {
-          return '#6AE87D';
-        }
-      },
-      backgroundColor: (context) => {
-        const value = context.dataset.data[context.dataIndex];
-        if (value < 40) {
-          return '#FA938E';
-        } else if (value >= 40 && value < 70) {
-          return '#FBD377';
-        } else {
-          return '#6AE87D';
-        }
-      },
-      borderRadius: 15,
-    },
-  ],
+export const generateChartData = (dataObj) => {
+  const labels = Object.keys(dataObj);
+  const datasets = [{
+    data: labels.map(label => {
+      const value = dataObj[label];
+      return Math.round((value.totalCorrect / value.count) * 100);
+    }),
+    borderColor: labels.map(label => {
+      const value = dataObj[label];
+      const data = Math.round((value.totalCorrect / value.count) * 100);
+      if (data < 40) {
+        return '#FA938E';
+      } else if (data >= 40 && data < 70) {
+        return '#FBD377';
+      } else {
+        return '#6AE87D';
+      }
+    }),
+    backgroundColor: labels.map(label => {
+      const value = dataObj[label];
+      const data = Math.round((value.totalCorrect / value.count) * 100);
+      if (data < 40) {
+        return '#FA938E';
+      } else if (data >= 40 && data < 70) {
+        return '#FBD377';
+      } else {
+        return '#6AE87D';
+      }
+    }),
+    borderRadius: 15,
+  }];
+  
+  return { labels, datasets };
 };
 
-export default function HorizontalBarChart() {
-  return <Bar className='font-body' options={options} data={data} />;
+export default function HorizontalBarChart({inputData}) {
+  return <Bar className='font-body' options={options} data={generateChartData(inputData)} />;
 }

@@ -16,7 +16,9 @@ const StudentDashboard = () => {
             try{
                 const res = await GetOngoingAssessments()
                 SetLiveAssessments(res)
-                console.log(res)
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
             } catch(err) {
                 console.log(err)
             }
@@ -33,9 +35,6 @@ const StudentDashboard = () => {
 
         GetLiveAssessments()
         GetAssessments()
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
     }, [])
     
     return (

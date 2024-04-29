@@ -48,7 +48,7 @@ const LiveQuiz = ({assessment}) => {
         window.location.assign('/quiz-instructions')
     }
   return (
-    <button className='flex border-2 border-grey rounded-lg transition-all duration-200 text-left hover:scale-105' onClick={handleClick}>
+    <button className='font-body flex border-2 border-grey rounded-lg transition-all duration-200 text-left hover:scale-105' onClick={handleClick}>
         <img src='./liveQuiz.png' className='h-[120px] self-center'></img>
         <div className='infoContainer ml-2 mr-2 flex flex-col justify-between w-[200px] h-full'>
             <h1 className='font-[700] text-md mt-1'>{assessment.title}</h1>

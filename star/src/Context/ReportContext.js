@@ -21,7 +21,8 @@ export const ReportProvider = ({ children }) => {
     const [absentees, setAbsentees] = useState([])
     const [requireAttention, setRequireAttention] = useState([])
     const [studentData, setStudentData] = useState([])
-
+    const [questionIndex, setQuestionIndex] = useState(0)
+    
     useEffect(()=> {
         const topPerformingstudents = []
         const absentstudents = []
@@ -276,7 +277,7 @@ export const ReportProvider = ({ children }) => {
     const questionCount = assessmentQuestion.length
 
     return (
-        <ReportContent.Provider value={{topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
+        <ReportContent.Provider value={{questionIndex, setQuestionIndex, topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
             {children}
         </ReportContent.Provider>
     )

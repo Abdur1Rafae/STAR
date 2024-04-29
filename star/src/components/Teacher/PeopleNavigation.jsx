@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import LCSearchBar from './LCSearchBar';
 import { CiFilter } from "react-icons/ci";
 import PeopleTabTile from './PeopleTabTile';

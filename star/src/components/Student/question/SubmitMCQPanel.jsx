@@ -1,8 +1,10 @@
 import React from 'react';
+import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import SubmitButton from '../../button/SubmitButton';
 
 const SubmitMCQPanel = ({ question  , isexplanation = true}) => {
+  console.log(question)
 
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">

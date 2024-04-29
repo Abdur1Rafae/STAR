@@ -10,8 +10,10 @@ import ReportsOverview from '../../components/Teacher/ReportsOverview'
 import QuestionSummary from '../../components/Teacher/QuestionSummary'
 import IndividualReport from '../../components/Teacher/IndividualReport'
 import { GetReportsOverview } from '../../APIS/Teacher/ReportAPI'
+import Loader from '../../components/Loader'
 
 const Reports = () => {
+    const [loading, setLoading] = useState(true)
     const [tab, setTab] = useState('Overview')
     const reportId = localStorage.getItem('ReportId')
 
@@ -25,6 +27,9 @@ const Reports = () => {
                 localStorage.setItem('TopicDistribution', JSON.stringify(res.topicBreakDown))
                 localStorage.setItem('MostIncorrectQuestion', JSON.stringify(res.mostIncorrectQuestion))
                 localStorage.setItem('ReportAsgMarks', res.totalMarks)
+                setTimeout(() => {
+                    setLoading(false)
+                }, 1000);
             } catch(err) {
                 console.log(err)
             }
@@ -41,35 +46,42 @@ const Reports = () => {
             <SideBar active={"Reports"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Reports"}/>
-                <div className='p-2 md:p-4 flex overflow-hidden flex-col'>
-                    <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
-                        <div className='flex items-center self-start'>
-                            <button onClick={()=>{window.location.assign('/teacher/reports')}}><BiChevronLeft className='text-3xl'/></button>
-                            <h4 className='font-semibold'>Monthly Tes ergew iernf fieuwr int</h4>
-                        </div>
-                        <div className='flex items-center gap-2 sm:flex-row flex-col'>
-                            <button onClick={()=>setTab("Overview")} className={`flex ${tab == "Overview" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
-                                <GrOverview/>
-                                Overview
-                            </button>
-                            <button onClick={()=>setTab("Individual Performance")} className={`flex ${tab == "Individual Performance" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
-                                <FaUsersViewfinder/>
-                                Individual Performance
-                            </button>
-                            <button onClick={()=>setTab("Questions Summary")} className={`flex ${tab == "Questions Summary" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
-                                <MdQueryStats/>
-                                Questions Summary
-                            </button>
-                        </div>
-                    </div>
+                <div className={`p-2 md:p-4 flex overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
                     {
-                        tab == "Overview" ?
-                        <ReportsOverview/>
+                        loading ? 
+                        <Loader/>
                         :
-                        tab == "Individual Performance" ?
-                        <IndividualReport/>
-                        :
-                        <QuestionSummary/>
+                        <>
+                            <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
+                            <div className='flex items-center self-start'>
+                                <button onClick={()=>{window.location.assign('/teacher/reports')}}><BiChevronLeft className='text-3xl'/></button>
+                                <h4 className='font-semibold'>Monthly Tes ergew iernf fieuwr int</h4>
+                            </div>
+                            <div className='flex items-center gap-2 sm:flex-row flex-col'>
+                                <button onClick={()=>setTab("Overview")} className={`flex ${tab == "Overview" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
+                                    <GrOverview/>
+                                    Overview
+                                </button>
+                                <button onClick={()=>setTab("Individual Performance")} className={`flex ${tab == "Individual Performance" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
+                                    <FaUsersViewfinder/>
+                                    Individual Performance
+                                </button>
+                                <button onClick={()=>setTab("Questions Summary")} className={`flex ${tab == "Questions Summary" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
+                                    <MdQueryStats/>
+                                    Questions Summary
+                                </button>
+                            </div>
+                            </div>
+                            {
+                                tab == "Overview" ?
+                                <ReportsOverview/>
+                                :
+                                tab == "Individual Performance" ?
+                                <IndividualReport/>
+                                :
+                                <QuestionSummary/>
+                            }
+                        </>
                     }
                 </div>
             </div>

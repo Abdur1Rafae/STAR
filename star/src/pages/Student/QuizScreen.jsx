@@ -26,7 +26,10 @@ const QuizScreen = () => {
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
+    console.log(prevSubmission)
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
+      localStorage.removeItem('responseId')
+      localStorage.removeItem('SuccessSubmit')
       window.location.assign('/quiz-submitted')
     }
     updateQuizDetails(storedQuizDetails)
@@ -45,6 +48,7 @@ const QuizScreen = () => {
   
     const handleBeforeUnload = (event) => {
       if (!submittingQuiz) {
+        console.log("here")
         saveData();
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
       }
@@ -88,9 +92,11 @@ const QuizScreen = () => {
 
   const handleSubmission = async() => {
     try {
-      const res = await submitResponses()
       setSubmittingQuiz(true)
-      localStorage.setItem('SuccessSubmit', null)
+      const res = await submitResponses()
+      localStorage.removeItem('SuccessSubmit')
+      localStorage.removeItem('quizDetails')
+      localStorage.removeItem('responseId')
       window.location.assign('/quiz-submitted')
     } catch(err) {
       console.log(err)
