@@ -131,3 +131,24 @@ module.exports.gradeResponse = async (req,res) =>
         res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to grade response' }) 
     }
 }
+module.exports.publish = async (req,res) => 
+{
+    try
+    {
+        const {assessmentId} = req.params
+
+        const updatedAssessment = await Assessment.findByIdAndUpdate(
+          assessmentId,
+          { $set: { status: "Reviewed", "configurations.releaseGrade": true } },
+          { new: true }
+        )
+
+        if (!updatedAssessment) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}    
+
+        res.status(201).json({message: 'Assessment published successfully'})
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to publish assessment' }) 
+    }
+}

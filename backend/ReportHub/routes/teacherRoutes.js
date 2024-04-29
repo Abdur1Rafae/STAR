@@ -4,6 +4,7 @@ const controller = require('../controllers/teacherController')
 
 router.get('/reports', controller.getAllReports)
 router.get('/overview/:assessmentId', controller.getReportOverview)
+router.get('/question-summary/:assessmentId', controller.getQuestionSummary)
 router.get('/individual-response/:responseId', controller.getIndividualResponse)
 
 
