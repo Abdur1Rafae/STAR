@@ -10,20 +10,56 @@ import { ToggleStore } from '../../Stores/ToggleStore';
 import QuizStore from '../../Stores/QuizStore';
 import CorrectMCQ from '../../components/Student/question/CorrectMCQ';
 import CorrectTF from '../../components/Student/question/CorrectTF';
+import ConfirmationBox from '../../components/ConfirmationBox';
 
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
+  const [submittingQuiz, setSubmittingQuiz] = useState(false)
+  const [submitConfirmBox, setSubmitConfirmBox] = useState(false)
 
   const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
 
-  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails } = QuizStore();
+  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback} = quizConfig
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+    const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
+    console.log(prevSubmission)
+    if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
+      localStorage.removeItem('responseId')
+      localStorage.removeItem('SuccessSubmit')
+      window.location.assign('/quiz-submitted')
+    }
     updateQuizDetails(storedQuizDetails)
+    console.log(storedQuizDetails)
+    createResponseObjects([])
   }, [])
+
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await submitResponses();
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    const handleBeforeUnload = (event) => {
+      if (!submittingQuiz) {
+        console.log("here")
+        saveData();
+        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [responses, submittingQuiz]);
 
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)
@@ -33,17 +69,7 @@ const QuizScreen = () => {
     return question
   }
 
-
-  // useEffect(()=> {
-  //   console.log(responses)
-  // }, [responses])
-
   const currentQuestion = getQuestion()
-
-
-  const handleOptionSelect = (selectedOption) => {
-    // Logic to handle option selection
-  };
 
   const handleNextQuestion = () => {
     if(currentQuestionIndex == questions.length - 1) {
@@ -64,12 +90,25 @@ const QuizScreen = () => {
     setAnswerSubmit(true)
   }
 
+  const handleSubmission = async() => {
+    try {
+      setSubmittingQuiz(true)
+      const res = await submitResponses()
+      localStorage.removeItem('SuccessSubmit')
+      localStorage.removeItem('quizDetails')
+      localStorage.removeItem('responseId')
+      window.location.assign('/quiz-submitted')
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className='flex flex-col w-screen lg:w-full'>
       <MenuBar name={"Maaz Shamim"} role={"Student"}/>
       <QuizSubheader/>
       <div className="">
-        <div className="quiz-screen p-4 w-full">
+        <div className="quiz-screen p-2 md:p-4 w-full">
           <div className="flex justify-between mb-8">
           {
             currentQuestion.type === "MCQ" ? 
@@ -81,14 +120,12 @@ const QuizScreen = () => {
                   :
                   <MCQPanel
                     question={currentQuestion}
-                    onOptionSelect={handleOptionSelect}
                     Flagged={currentQuestion.flagged}
                   />
                 )
                 :
                 <MCQPanel
                   question={currentQuestion}
-                  onOptionSelect={handleOptionSelect}
                   Flagged={currentQuestion.flagged}
                 />
               )
@@ -96,7 +133,6 @@ const QuizScreen = () => {
               (questions[currentQuestionIndex].type === "Short Answer" ? 
                 <TextAnswerPanel
                   question={currentQuestion}
-                  onOptionSelect={handleOptionSelect}
                   Flagged={currentQuestion.flagged}
                 />
                 :
@@ -108,14 +144,12 @@ const QuizScreen = () => {
                     :
                     <TrueFalse
                       question={currentQuestion}
-                      onOptionSelect={handleOptionSelect}
                       Flagged={currentQuestion.flagged}
                     />
                   )
                   :
                   <TrueFalse
                     question={currentQuestion}
-                    onOptionSelect={handleOptionSelect}
                     Flagged={currentQuestion.flagged}
                   />
                 )
@@ -126,7 +160,7 @@ const QuizScreen = () => {
 
           
 
-          <div className={`fixed sm:w-full h-12 border-black border-t-[1px] border-r-[1px] bottom-0 left-0 right-0 bg-white p-4 flex justify-between items-center`}>
+          <div className={`fixed sm:w-full h-12 border-black border-t-[1px] bottom-0 left-0 right-0 bg-white p-4 flex justify-between items-center`}>
             <div className="mb-0">
               <p className="text-md md:text-lg font-semibold">
                 Question {currentQuestionIndex + 1} out of {questions.length}
@@ -136,7 +170,7 @@ const QuizScreen = () => {
             <div className="flex items-center space-y-0 space-x-4">
               {
                 reachedLastQuestion ? 
-                <SubmitButton label="Submit" onClick={handleNextQuestion} active={true}/>
+                <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
                 :
                 (
                   !navigation ? 
@@ -176,6 +210,12 @@ const QuizScreen = () => {
               )}
             </div>
           </div> : ''
+        }
+        {
+          submitConfirmBox ? 
+          <ConfirmationBox message={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
+          : 
+          ''
         }
       </div>
     </div>

@@ -3,8 +3,8 @@ import { FcClock } from "react-icons/fc";
 
 const TimeTaken = () => {
   return (
-    <div className='justify-around flex-grow bg-LightBlue h-20 flex p-2 items-center shadow-md'>
-        <FcClock className='text-6xl'/>
+    <div className='w-full h-full justify-around flex-grow flex p-2 items-center'>
+        <FcClock size={64}/>
         <div className='flex flex-col justify-center items-center'>
             <h3 className='font-semibold font-body text-xl'>00:22:45</h3>
             <p className='text-sm font-body'>Total Time Taken</p>

@@ -6,17 +6,26 @@ import ClassTab from '../../components/Teacher/ClassTab'
 import { DeleteClass, GetAllClasses } from '../../APIS/Teacher/ClassAPI'
 import SubmitButton from '../../components/button/SubmitButton'
 import { AddClass } from '../../APIS/Teacher/ClassAPI'
+import Loader from '../../components/Loader'
+import { MdClose } from 'react-icons/md'
 
 const Classes = () => {
+  const [loading, setLoading] = useState(true)
   const [classes, setClasses] = useState([]) 
   const [newClass, setNewClass] = useState('')
   const [isCreatingClass, setCreatingClass] = useState(false)
+  const [error, setError] = useState('')
 
   const showDialogBox = () => {
     setCreatingClass(true)
   }
 
   const handleAddingClass = async () => {
+    if(newClass == '') {
+      setError('Class Name cannot be empty')
+      return;
+    }
+    setError('')
     try {
       const res = await AddClass({ name: newClass });
       let updatedClasses = [...classes, { ClassID: res.classId, ClassName: newClass, Sections: null }];
@@ -32,7 +41,10 @@ const Classes = () => {
     const FetchClasses = async() => {
       try {
         const res = await GetAllClasses()
-        setClasses(res.data)
+        setTimeout(() => {
+          setClasses(res.data)
+          setLoading(false);
+        }, 1000);
       } catch(err) {
         console.log(err)
       }
@@ -59,8 +71,11 @@ const Classes = () => {
             <SideBar active={"Classes"}/>
             <div className='w-full flex flex-col'>
                 <SubheaderBut name={"Classes"} button={"New"} onClick={showDialogBox}/>
-                <div className='p-4 md:pl-8 md:pt-8 flex flex-col gap-4 overflow-auto'>
+                <div className={`p-4 md:pl-8 md:pt-8 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
                   {
+                    loading ?
+                    <Loader/>
+                    :
                     classes.map((item, index) => (
                       <ClassTab key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{handleDeletingClass(index, item._id)}} />
                     ))
@@ -70,9 +85,13 @@ const Classes = () => {
             {
               isCreatingClass &&
               <div className='absolute top-32 right-4 w-52 h-32 bg-LightBlue border-[1px] border-black rounded-md p-2 flex flex-col justify-around items-center'>
-                <h3 className='font-body'>Enter Class Name</h3>
-                <input type='text' className='rounded-md h-8 px-2' onChange={(e)=> setNewClass(e.target.value)}></input>
+                <div className='flex justify-between w-full'>
+                  <h3 className='font-body'>Enter Class Name</h3>
+                  <button onClick={()=>{setCreatingClass(false)}}><MdClose className='self-center'/></button>
+                </div>
+                <input autoFocus type='text' className='rounded-md h-8 px-2 border-[1px]' onChange={(e)=> setNewClass(e.target.value)}></input>
                 <SubmitButton active={true} label={"Create"} onClick={handleAddingClass}/>
+                <p className='text-xs text-red-500'>{error}</p>
               </div> 
             }
         </div>

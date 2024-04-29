@@ -5,31 +5,41 @@ import { GrRadialSelected } from "react-icons/gr";
 import QuizStore from '../../../Stores/QuizStore';
 
 const CorrectTF = ({ question }) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState({});
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
   const [correctAnswersMarked, setCAM] = useState([]);
   const [correctAnswersMissed, setCAMissed] = useState([]);
+  const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
 
   useEffect(()=> {
-      const answer = getSelectedResponse(question.number)
-      setSelectedOption(answer ? answer.selectedAnswer : [])
+      const answer = getSelectedResponse(questionNumber)
+      setSelectedOption(answer ? answer : {})
   }, [])
 
   useEffect(()=> {
-      let userSelectedCorrectAnswers = [];
-      let correctAnswersNotSelected = [];
-      question.options.forEach(option => {
-          const isCorrect = option.isCorrect;
-          const isSelected = selectedOption == option.text;
-          if (isSelected && isCorrect) {
-              userSelectedCorrectAnswers.push(option.text);
-          } else if (!isSelected && isCorrect) {
-              correctAnswersNotSelected.push(option.text);
-          }
-      });
+    let userSelectedCorrectAnswers = [];
+    let correctAnswersNotSelected = [];
+    if(selectedOption.isTrue) {
+      if(selectedOption.isTrue) {
+        if(selectedOption.answer.includes("True")){
+          userSelectedCorrectAnswers.push('True')
+        }
+        else {
+          correctAnswersNotSelected.push("True")
+        }
+      }
+      else {
+        if(selectedOption.answer.includes("False")){
+          userSelectedCorrectAnswers.push('False')
+        }
+        else {
+          correctAnswersNotSelected.push("False")
+        }
+      }
       setCAM(userSelectedCorrectAnswers)
       setCAMissed(correctAnswersNotSelected)
+    }
   }, [selectedOption])
 
   return (
@@ -65,7 +75,7 @@ const CorrectTF = ({ question }) => {
               correctAnswersMarked.includes("True") || correctAnswersMissed.includes("True") ? 'bg-emerald-300' : 'bg-rose-300'
             }`}
           >
-            {selectedOption === "True" ?<GrRadialSelected className='ml-4'/> : ""}   
+            {(selectedOption.answer && selectedOption.answer.includes("True")) ?<GrRadialSelected className='ml-4'/> : ""}   
             <p className='ml-4'>True</p>
           </div>
         </div>
@@ -76,7 +86,7 @@ const CorrectTF = ({ question }) => {
                 correctAnswersMarked.includes("False") || correctAnswersMissed.includes("False") ? 'bg-emerald-300' : 'bg-rose-300'
             }`}
           >
-            {selectedOption === "False" ?<GrRadialSelected className='ml-4'/> : ""}   
+            {(selectedOption.answer && selectedOption.answer.includes("False")) ?<GrRadialSelected className='ml-4'/> : ""}   
             <p className='ml-4'>False</p>
           </div>
         </div>

@@ -1,25 +1,27 @@
-import React, { useState } from "react";
-import CategoryFilter from '../../components/Teacher/CategoryFilter';
+import React, { useState, useEffect } from "react";
+import { DDMMM_HHMM } from "../../Utils/DateFunctions";
 
-const LMTable = ({ data, columns , sections, skills}) => {
-  const [selectedCategory, setSelectedCategory] = useState('');
+const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'All', onClick}) => {
+  const [filteredData, setFilteredData] = useState(data)
 
-  const handleSelectCategory = (category) => {
-    setSelectedCategory(category);
+  useEffect(() => {
+    const filteredResult = data.filter(item => {
+      const sectionMatch = selectedSection === 'All' || item.sectionName === selectedSection;
+      const statusMatch = selectedStatus === 'All' || !selectedStatus || item.status === selectedStatus;
+      return sectionMatch && statusMatch;
+    });
+    setFilteredData(filteredResult);
+  }, [data, selectedSection, selectedStatus]);
+
+  const handleClick = (data) => {
+    const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
+    localStorage.setItem('Response', JSON.stringify(data))
+    window.location.assign(`/teacher/grading/${assessment.title}`)
   }
   
+  
   return (
-    <div className="w-full md:w-11/12 p-2 md:p-0 md:mx-2">
-      <div className="flex mt-6 font-sans gap-4">
-        {sections && <div className="flex">
-          <p>Sections :&nbsp;</p>
-          <CategoryFilter categoryName="All" categories={sections} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory}/>
-        </div>}
-        {skills && <div className="flex">
-          <p>Status :&nbsp;</p>
-          <CategoryFilter categoryName="All" categories={skills} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory}/>
-        </div>}
-      </div>
+    <div className="w-full md:w-11/12 py-2 md:p-0 md:mx-2">
       <div>
         <table className='w-full text-sm md:text-base border-separate border-spacing-y-2'>
           <thead>
@@ -33,11 +35,14 @@ const LMTable = ({ data, columns , sections, skills}) => {
           </thead>
 
           <tbody>
-            {data.map((row, rowIndex) => (
-              <tr key={rowIndex} className='text-center shadow-md bg-LightBlue'>
+            {filteredData.map((row, rowIndex) => (
+              <tr key={rowIndex} onClick={onClick ? ()=>handleClick(row) : ()=>{}} className={`text-center shadow-md bg-LightBlue ${onClick ? 'hover:cursor-pointer' : ''}`}>
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex} className='px-1 py-3 text-xs md:text-sm border-black border-y-[1px]'>
-                    {row[column.key]}
+                  <td key={colIndex} className='px-1 py-2 text-xs md:text-sm border-black border-y-[1px]'>
+                    { column.key == "startTime" || column.key == "submitTime" ? 
+                      DDMMM_HHMM(row[column.key]) :
+                      row[column.key]
+                    }
                   </td>
                 ))}
               </tr>

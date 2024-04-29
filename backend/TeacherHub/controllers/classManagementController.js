@@ -1,9 +1,6 @@
 const conn = require('../dbconfig/dbcon')
 const Joi = require('joi')
-const Class = require('../models/Class')
-const Teacher = require('../models/Teacher')
-const Section = require('../models/Section')
-const Student = require('../models/Student')
+const {Teacher, Section, Student, Class} = require('library/index')
 
 module.exports.createClass = async (req,res) => 
 {
@@ -14,12 +11,12 @@ module.exports.createClass = async (req,res) =>
         const session = await conn.startSession()
         const insertId = await session.withTransaction(async () => 
         {
-            const newClass = await Class.create({className, teacher})
-            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $push: { classes: newClass } }, { new: false })
+            const newClass = await Class.create([{className, teacher}], {session})
+            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $push: { classes: newClass[0] } }, { new: false }, {session})
 
             if(!updatedTeacher){throw new Error('Teacher not found')}
 
-            return newClass._id
+            return newClass[0]._id
         })
         session.endSession()
 
@@ -39,10 +36,10 @@ module.exports.deleteClass = async (req,res) =>
         const session = await conn.startSession()
         await session.withTransaction(async () => 
         {
-            const deletedClass = await Class.findByIdAndDelete(classId)
+            const deletedClass = await Class.findByIdAndDelete(classId, {session})
             if(!deletedClass){throw new Error('Class not found')}
 
-            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $pull: { classes: classId } }, { new: false })
+            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $pull: { classes: classId } }, { new: false }, {session})
             if(!updatedTeacher){throw new Error('Teacher not found')}
         })
         session.endSession()
@@ -72,6 +69,7 @@ module.exports.updateClass = async (req,res) =>
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update class'})
     }
 }
+
 module.exports.createSection = async (req,res) => 
 {
     try{
@@ -81,12 +79,12 @@ module.exports.createSection = async (req,res) =>
         const session = await conn.startSession()
         const insertId = await session.withTransaction(async () => 
         {
-            const newSection = await Section.create({sectionName, class: classId})
-            const updatedClass = await Class.findByIdAndUpdate(classId, { $push: { sections: newSection } }, { new: false })
+            const newSection = await Section.create([{sectionName, class: classId}], {session})
+            const updatedClass = await Class.findByIdAndUpdate(classId, { $push: { sections: newSection[0] } }, { new: false }, {session})
 
             if(!updatedClass){throw new Error('Class not found')}
 
-            return newSection._id
+            return newSection[0]._id
         })
         session.endSession()
 
@@ -105,12 +103,11 @@ module.exports.deleteSection = async (req,res) =>
         const session = await conn.startSession()
         await session.withTransaction(async () => 
         {
-
-            const deletedSection = await Section.findByIdAndDelete(sectionId)
+            const deletedSection = await Section.findByIdAndDelete(sectionId, {session})
             if(!deletedSection){throw new Error('Section not found')}
 
             const classId = deletedSection.class
-            const updatedClass = await Class.findByIdAndUpdate( classId,{ $pull: { sections: sectionId } }, { new: false })
+            const updatedClass = await Class.findByIdAndUpdate( classId,{ $pull: { sections: sectionId } }, { new: false }, {session})
             if(!updatedClass){throw new Error('Class not found')}
 
         })
@@ -140,6 +137,7 @@ module.exports.updateSection = async (req,res) =>
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update section'})
     }
 }
+
 module.exports.addStudentsToSection = async (req,res) => 
 {
     const {students} = req.body
@@ -239,6 +237,7 @@ module.exports.removeStudentFromSection = async (req,res) =>
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to remove student from section'})
     }
 }
+
 module.exports.getRoster = async (req,res) => 
 {
     try{

@@ -6,7 +6,7 @@ router.put('/update-order/:assessmentId', controller.updateOrder)
 router.get('/all-topics', controller.getTopics)
 
 router.post('/add-question/:assessmentId', controller.addQuestionToBank)
-router.put('/update-question/:questionId', controller.updateQuestionInBank)
+router.put('/update-question/:assessmentId/:questionId', controller.updateQuestionInBank)
 router.delete('/delete-question/:assessmentId/:questionId', controller.removeQuestionFromBank)
 
 router.post('/add-reused-questions/:assessmentId', controller.addReusedQuestionsToBank)

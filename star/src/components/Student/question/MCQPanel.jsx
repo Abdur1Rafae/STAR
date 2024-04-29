@@ -5,32 +5,31 @@ import FlagButton from '../../button/FlagButton';
 import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
 
-const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
-  const [isFlagged, setIsFlagged] = useState(Flagged);
+const MCQPanel = ({ question }) => {
+  const [isFlagged, setIsFlagged] = useState(question.flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const filterQuestions = QuizStore(store=> store.filterQuestions)
+  const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
   const updateResponse = QuizStore(store=>store.updateResponse)
   const [selectedOption, setSelectedOption] = useState([]);
   const [response, setResponse] = useState(null)
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(()=> {
-    console.log(question.number)
-    const answer = getSelectedResponse(question.number)
+    const answer = getSelectedResponse(questionNumber)
     setResponse(answer)
-    setSelectedOption(answer ? answer.selectedAnswer : [])
-  }, [question.number])
+    setSelectedOption(answer ? answer.answer : [])
+    setIsFlagged(question.flagged)
+  }, [question])
 
   useEffect(() => {
     setResponse(answer => {
       const updatedAnswer = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: answer ? answer.selectedAnswer : selectedOption
+        questionId: question._id,
+        answer: answer ? answer.answer : selectedOption
       };
-      updateResponse(question.number, updatedAnswer);
+      updateResponse(questionNumber, updatedAnswer);
       return answer;
     });
   }, [selectedOption]);
@@ -43,27 +42,23 @@ const MCQPanel = ({ question, onOptionSelect, Flagged }) => {
       updatedOptions.splice(index, 1);
       setSelectedOption(updatedOptions);
       const updatedResponse = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: updatedOptions
+        questionId: question._id,
+        answer: updatedOptions
       };
       setResponse(updatedResponse)
     } else {
       setSelectedOption([...selectedOption, option]);
       const updatedResponse = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: [...selectedOption, option]
+        questionId: question._id,
+        answer: [...selectedOption, option]
       };
       setResponse(updatedResponse)
     }
-
-    onOptionSelect(option);
   };
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
-    flagQuestion()
+    flagQuestion(questionNumber)
     filterQuestions()
   };
 

@@ -2,6 +2,16 @@ import { AxiosBase } from '../BaseUrl';
 
 const token = process.env.REACT_APP_ACCESS_TOKEN
 
+const GetAssessments = async() => {
+    const res = await AxiosBase.get('teacherhub/assessment-management/scheduled-assessments', {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
 const CreateAssessment = async({name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
     instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
     const res = await AxiosBase.post('teacherhub/assessment-management/new-assessment',{
@@ -33,8 +43,10 @@ const CreateAssessment = async({name, description, sections, image, openDate, cl
 }
 
 const AddQuestion = async({assessmentId, question}) => {
+    const transformedQuestion = {...question}
+    delete transformedQuestion['options']
     const res = await AxiosBase.post(`teacherhub/question-bank/add-question/${assessmentId}`,{
-        question: question,
+        question: transformedQuestion,
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -44,9 +56,8 @@ const AddQuestion = async({assessmentId, question}) => {
     return res.data
 }
 
-const UpdateQuestion = async({question}) => {
-    console.log(question)
-    const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${question._id}`,{
+const UpdateQuestion = async({id, question}) => {
+    const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${id}/${question._id}`,{
         question: question,
     },{
         headers: {
@@ -141,4 +152,57 @@ const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
     return res.data.data
 }
 
-export {CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions}
+const MonitorAssessment = async({id}) => {
+    console.log(id)
+    const res = await AxiosBase.get(`assesshub/monitor/monitor-assessment/6613875b0c0e21848981ad7e`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
+    console.log("here")
+    const res = await AxiosBase.put(`teacherhub/assessment-management/update-assessment/${id}`,{
+        title: name,
+        description: description,
+        participants : sections,
+        configurations : 
+        {
+            openDate: openDate,
+            duration: duration,
+            closeDate: closeDate,
+            adaptiveTesting: adaptiveTesting,
+            monitoring: monitoring,
+            instantFeedback: instantFeedback,
+            navigation: navigation,
+            releaseGrades: releaseGrades,
+            viewSubmission: viewSubmission,
+            randomizeQuestions: randomizeQuestions,
+            randomizeAnswers: randomizeAnswers,
+            finalScore: finalScore
+        }
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    console.log(res)
+
+    return res.data
+}
+
+const GetAllTopics = async() => {
+    const res = await AxiosBase.get(`teacherhub/question-bank/all-topics`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+export {GetAllTopics, GetAssessments, CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions, MonitorAssessment, UpdateAssessment}

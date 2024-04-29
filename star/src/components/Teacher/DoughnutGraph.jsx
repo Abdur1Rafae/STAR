@@ -80,7 +80,7 @@ export function DoughnutGraph({ inputData }) {
             <div className='h-48 flex items-center justify-center mb-4'>
                 <Doughnut data={data({ inputData })} options={options}/>
                 <div className='absolute flex flex-col items-center mt-3'>
-                    <p className=''>Total Value</p>
+                    <p className=''>Total Topics</p>
                     <h4 className='text-2xl font-semibold'>{Object.keys(inputData).length}</h4>
                 </div>
             </div>

@@ -37,8 +37,33 @@ const QuizInstructions = () => {
 
   const handleBeginAssessment = async() => {
     try {
-      const res = await GetAssessmentQuestions(quizStore.id)
-      localStorage.setItem('questions', JSON.stringify(res));
+      const res = await GetAssessmentQuestions({id: quizStore.id, sectionId: quizStore.sectionId})
+      localStorage.setItem('responseId', res.responseId)
+      const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+      const questionSet = [...res.questions]
+      console.log(questionSet)
+      if(storedQuizDetails.quizConfig.randomizeQuestions) {
+        for (let i = questionSet.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [questionSet[i], questionSet[j]] = [questionSet[j], questionSet[i]];
+        }
+      }
+
+      if(storedQuizDetails.quizConfig.randomizeAnswers) {
+        const shuffledQuestionSet = questionSet.map((question) => {
+          const options = [...question.options]; 
+          for (let i = options.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [options[i], options[j]] = [options[j], options[i]];
+          }
+          return { ...question, options };
+        });
+        localStorage.setItem('questions', JSON.stringify(shuffledQuestionSet));
+      }
+      else {
+        localStorage.setItem('questions', JSON.stringify(questionSet));
+      }
+      
       window.location.assign('/quiz')
     }
     catch (error) {
@@ -76,6 +101,9 @@ const QuizInstructions = () => {
           <div>
             <h2 className="font-bold mb-4">Instructions:</h2>
             <ul className="list-disc pl-6">
+              <li className="mb-2 text-lg">
+                The assessment will be <strong>submitted if student tries to refresh or leave the page</strong>
+              </li>
               {instructions.map((instruction, index) => (
                 <li key={index} className="mb-2">
                   {instruction}

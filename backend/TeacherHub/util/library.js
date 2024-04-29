@@ -42,12 +42,10 @@ function remove(imagePath)
     })
 }
 
-function getAssessmentStatus(assessment) 
+function getAssessmentStatus(openDate, closeDate) 
 {
     const currentDate = new Date()
-    const openDate = new Date(assessment.openDate)
-    const closeDate = new Date(assessment.closeDate)
-
+    
     // If the current date is before the open date, the assessment is not started
     if (currentDate < openDate) {
         return "Not Started"

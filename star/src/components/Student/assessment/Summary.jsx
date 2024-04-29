@@ -12,7 +12,8 @@ const Summary = () => {
         <AssessmentDetiails/>
         <div className='md:flex gap-4 w-full flex-wrap'>
             <div className='flex md:flex-row flex-col flex-col-reverse w-full h-auto flex-wrap gap-4 mb-4 md:mb-0'>
-                <TimeTaken/>
+                <div className='bg-LightBlue shadow-md rounded-lg'>
+                <TimeTaken/></div>
                 <AssessmentResults/>
                 <PastCurScore/>
             </div>

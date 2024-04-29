@@ -4,30 +4,30 @@ import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
 import QuizStore from '../../../Stores/QuizStore';
 
-const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
+const TextAnswerPanel = ({ question, Flagged }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [isFlagged, setIsFlagged] = useState(Flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const filter = QuizStore(store=> store.filterQuestions)
+  const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
   const updateResponse = QuizStore(store=>store.updateResponse)
   const [response, setResponse] = useState(null)
 
   useEffect(()=> {
-    const answer = getSelectedResponse(question.number)
-    setResponse(answer ? answer.selectedAnswer : '')
-    setUserAnswer(answer ? answer.selectedAnswer : '')
-  }, [question.number])
+    const answer = getSelectedResponse(questionNumber)
+    setResponse(answer ? answer.answer[0] : '')
+    setUserAnswer(answer ? answer.answer[0] : '')
+  }, [question])
 
   useEffect(() => {
     setResponse(answer => {
       const updatedAnswer = {
-        number: question.number,
-        type: question.type,
-        selectedAnswer: answer ? answer : userAnswer
+        questionId: question._id,
+        answer: [answer ? answer : userAnswer]
       };
-      updateResponse(question.number, updatedAnswer);
+      updateResponse(questionNumber, updatedAnswer);
       return answer;
     });
   }, [userAnswer]);
@@ -36,15 +36,10 @@ const TextAnswerPanel = ({ question, onAnswerSubmit, Flagged }) => {
     setUserAnswer(event.target.value);
   };
 
-  const handleAnswerSubmit = () => {
-    onAnswerSubmit(userAnswer);
-  };
-
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
     flagQuestion()
     filter()
-    // Add logic to handle flag toggling (you can pass this information to the parent component if needed)
   };
 
   return (

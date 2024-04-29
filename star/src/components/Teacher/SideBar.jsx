@@ -8,11 +8,11 @@ import { ToggleStore } from '../../Stores/ToggleStore';
 const SideBar = ({active}) => {
     const showNav = ToggleStore((store)=> store.TeacherSidebar)
   return (
-    <div className={`overflow-hidden order-[2] md:order-first md:sticky md:top-0 md:max-w-[60px] md:h-screen md:border-r-[1px] bg-LightBlue w-full transition-height ease-out duration-500 ${showNav ? 'h-28' : 'h-0'} border-b-[1px] border-black flex items-center justify-center font-body`}>
+    <div className={`overflow-hidden order-[2] md:order-first md:sticky md:top-0 md:min-w-[60px] md:max-w-[60px] md:h-screen md:border-r-[1px] bg-LightBlue w-full transition-height ease-out duration-500 ${showNav ? 'h-28' : 'h-0'} border-black flex items-center justify-center font-body`}>
         <div className={`flex flex-row md:flex-col gap-8 items-center md:mb-8`}>
-            <button className={`w-11/12 flex flex-col items-center p-2 ${active == "Schedule" ? 'bg-DarkBlue rounded-lg drop-shadow-md text-white' : ''}`} onClick={()=>{window.location.assign('/teacher/scheduled-assessments')}}>
+            <button className={`w-11/12 flex flex-col items-center p-2 ${active == "Home" ? 'bg-DarkBlue rounded-lg drop-shadow-md text-white' : ''}`} onClick={()=>{window.location.assign('/teacher/home')}}>
                 <FaRegCalendarAlt className='text-2xl'/>
-                <p className='text-xs'>Schedule</p>
+                <p className='text-xs'>Home</p>
             </button>
             <button className={`w-11/12 flex flex-col items-center p-2 ${active == "Classes" ? 'bg-DarkBlue rounded-lg drop-shadow-md text-white' : ''}`} onClick={()=>{window.location.assign('/teacher/classes')}}>
                 <LiaChalkboardTeacherSolid className='text-2xl'/>

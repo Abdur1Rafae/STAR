@@ -1,18 +1,21 @@
 import React, {useState, useEffect, useContext} from 'react'
 import SkillFilter from './SkillFilter'
 import DifficultyFilter from './DifficultyFilter'
+import CategoryFilter from './CategoryFilter'
 import TypeFilter from './TypeFilter'
 import DisplayOnlyQuestions from './DisplayOnlyQuestions'
 import { QuestionContext } from '../../Context/QuestionsContext'
-import { GetReuseQuestions } from '../../APIS/Teacher/AssessmentAPI'
+import { GetReuseQuestions, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI'
+import TopicFilter from './TopicFilter'
 
-const SelectQuestions = () => {
+const SelectQuestions = ({topics}) => {
   const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
   const { selectedQuestions, setSelectedQuestions } = useContext(QuestionContext);
   const [selectedSkill, setSelectedSkill] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedType, setSelectedType] = useState(null)
   const [selectedTopic, setSelectedTopic] = useState(null)
+  const [topicList, setTopicList] = useState(topics)
 
   useEffect(() => {
     const GetQuestions = async() => {
@@ -53,7 +56,7 @@ const SelectQuestions = () => {
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Topic:&nbsp;</p>
-                <DifficultyFilter selectedLevel={selectedLevel} setSelectLevel={setSelectedLevel}/> 
+                <TopicFilter topics={topicList} selectedTopic={selectedTopic} setSelectTopic={setSelectedTopic}/> 
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Type:&nbsp;</p>

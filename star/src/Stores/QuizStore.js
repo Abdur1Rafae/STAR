@@ -1,7 +1,9 @@
 import {create} from 'zustand';
+import { SubmitAssessment } from '../APIS/Student/AssessmentAPI';
 
 const QuizStore = create((set) => ({
   id: '',
+  sectionId: '',
   title : '',
   teacher: '',
   duration: 0,
@@ -30,6 +32,7 @@ const QuizStore = create((set) => ({
   updateQuizDetails: (details) => set((state) => {
     return {
     ...state,
+    sectionId: details.sectionId,
     title: details.title,
     teacher: details.teacher,
     duration: details.duration,
@@ -46,29 +49,71 @@ const QuizStore = create((set) => ({
   })),
 
   updateResponse: (questionNumber, updatedResponse) => set((state) => {
-    const index = state.responses.findIndex(response => response.number === questionNumber)
+    const index = questionNumber
 
     if (index !== -1) {
-        return {
-          responses: state.responses.map((response, i) => 
-            i === index ? updatedResponse : response
-          )
-        };
-    }
-
-    return {
-        responses: [...state.responses, updatedResponse]
-    };
+      const updatedResponses = [...state.responses];
+      updatedResponses[index] = {
+        ...updatedResponses[index],
+        answer: updatedResponse.answer
+      };
+      return { responses: updatedResponses };
+    } 
   }),
 
   getResponseByQuestionNumber: (questionNumber) => {
     const state = QuizStore.getState();
-    return state.responses.find(response => response.number === questionNumber);
+    if(state.quizConfig.instantFeedback) {
+      const question = state.questions[questionNumber];
+      return {
+          ...state.responses[questionNumber],
+          correctOptions: question ? question.correctOptions : [],
+          isTrue: question.isTrue
+      };
+    }
+    else {
+      return state.responses[questionNumber]
+    }
+  },
+
+  randomizeQuestions: () => {
+    set((state) => {
+      const questionSet = [...state.questions];
+      for (let i = questionSet.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questionSet[i], questionSet[j]] = [questionSet[j], questionSet[i]];
+      }
+      return { ...state, questions: questionSet };
+    });
+  },
+
+  randomizeOptions: () => {
+
   },
 
   setQuestions: (newQuestions) => set({
     questions: newQuestions
   }),
+
+  createResponseObjects: (responses) => {
+    set((state) =>{
+      if(responses == null || responses.length == 0) {
+        const emptyResponses = []
+        state.questions.forEach((question) => {
+          const response = {
+            questionId: question._id,
+            answer: [],
+            responseTime: 0
+          }
+          emptyResponses.push(response)
+        })
+        return {...state, responses: emptyResponses}
+      }
+      else {
+        return {...state, responses: responses}
+      }
+    
+  })},
 
   setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
 
@@ -80,46 +125,64 @@ const QuizStore = create((set) => ({
 
   nextQuestion: () => {
     set((state) => {
-       let nextState = { ...state };
-   
-       if (state.quizConfig.navigation == false) {
-         const elapsedTime = (Date.now() - state.currentQuestionStartTime)/1000;
-         console.log(state.currentQuestionStartTime)
-         console.log(elapsedTime);
-         const responseIndex = state.responses.findIndex(response => response.number === state.currentQuestionIndex + 1);
-         if (responseIndex !== -1) {
-           const updatedResponse = { ...state.responses[responseIndex], elapsedTime: elapsedTime };
-           nextState.responses = [
-             ...state.responses.slice(0, responseIndex),
-             updatedResponse,
-             ...state.responses.slice(responseIndex + 1)
-           ];
-         }
-       }
-   
-       const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
-       const nextQuestionStartTime = Date.now();
-       nextState = { ...nextState, currentQuestionIndex: nextIndex, currentQuestionStartTime: nextQuestionStartTime };
-   
-       return nextState;
+      let nextState = { ...state };
+
+      const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+      const responseIndex = state.currentQuestionIndex;
+      if (responseIndex !== -1) {
+        const existingResponse = state.responses[responseIndex];
+        const updatedResponse = {
+            ...existingResponse,
+            responseTime: existingResponse.responseTime + elapsedTime
+        };
+        nextState.responses = [
+            ...state.responses.slice(0, responseIndex),
+            updatedResponse,
+            ...state.responses.slice(responseIndex + 1)
+        ];
+      }
+    
+      const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
+      const nextQuestionStartTime = Date.now();
+      nextState = { ...nextState, currentQuestionIndex: nextIndex, currentQuestionStartTime: nextQuestionStartTime };
+
+      return nextState;
     });
-   },
+  },
    
 
-   initializeQuestionStartTime: () => {
-    console.log("Current timestamp:", Date.now());
+  initializeQuestionStartTime: () => {
     return {
       currentQuestionStartTime: Date.now()
     };
-   },
+  },
 
   prevQuestion: () => {
     set((state) => {
       if(state.currentQuestionIndex == 0) {
         return state
       }
+      let nextState = { ...state };
+      const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+      const responseIndex = state.currentQuestionIndex;
+      if (responseIndex !== -1) {
+        const existingResponse = state.responses[responseIndex];
+        const updatedResponse = {
+            ...existingResponse,
+            responseTime: existingResponse.responseTime + elapsedTime
+        };
+        nextState.responses = [
+            ...state.responses.slice(0, responseIndex),
+            updatedResponse,
+            ...state.responses.slice(responseIndex + 1)
+        ];
+      }
+    
       const prevIndex = (state.currentQuestionIndex - 1) % state.questions.length;
-      return { ...state, currentQuestionIndex: prevIndex };
+      const nextQuestionStartTime = Date.now();
+      nextState = { ...nextState, currentQuestionIndex: prevIndex, currentQuestionStartTime: nextQuestionStartTime };
+
+      return nextState;
     });
   },
 
@@ -135,36 +198,97 @@ const QuizStore = create((set) => ({
     });
   },
    
-  flagQuestion: () => {
+  flagQuestion: (number) => {
     set((state) => {
-        const updatedQuestions = state.questions.map((question, index) => {
-          if (index === state.currentQuestionIndex) {
-            return { ...question, flagged: !question.flagged };
-          }
-          return question;
-        });
-        return { ...state, questions: updatedQuestions };
+      const updatedQuestions = state.questions.map((question, index) => {
+        if (index == number) {
+          return { ...question, flagged: !question.flagged };
+        }
+        return question;
+      });
+      return { ...state, questions: updatedQuestions };
     });
   },
-   
 
   filterQuestions: () => {
     set((state) => {
       let filteredQuestions = [];
       if (state.filter === 'all') {
-        filteredQuestions = [...state.questions];
+        filteredQuestions = state.questions.map((_, index) => index);
       } else if (state.filter === 'flagged') {
-        filteredQuestions = state.questions.filter((question) => question.flagged);
+        filteredQuestions = state.questions.reduce((acc, question, index) => {
+          if (question.flagged) acc.push(index);
+          return acc;
+        }, []);
       } else if (state.filter === 'unanswered') {
-        filteredQuestions = state.questions.filter((question) => question.unanswered);
+        filteredQuestions = state.questions.reduce((acc, question, index) => {
+          if (question.unanswered) acc.push(index);
+          return acc;
+        }, []);
       }
       return { ...state, filteredQuestions };
     });
   },
+  
+
+  submitResponses: () => {
+    set((state) => {
+      const nextState = {...state}
+      const submissionObj = {
+        assessmentId: state.id,
+        submit: true
+      }
+      localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
+      const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+      const responseIndex = state.currentQuestionIndex;
+      if (responseIndex !== -1) {
+        const existingResponse = state.responses[responseIndex];
+        const updatedResponse = {
+            ...existingResponse,
+            responseTime: existingResponse.responseTime + elapsedTime
+        };
+        nextState.responses = [
+            ...state.responses.slice(0, responseIndex),
+            updatedResponse,
+            ...state.responses.slice(responseIndex + 1)
+        ];
+      }
+      const res = async() => {
+        try {
+          const sub = await SubmitAssessment({responses: nextState.responses})
+          console.log(sub)
+        } catch(err) {
+          console.log(err)
+        }
+      }
+
+      res()
+      return state;
+    })
+  },
 
   selectQuestionFromFiltered: (number) => {
     set((state) => {
-      return { ...state, currentQuestionIndex: number - 1 };
+      let nextState = { ...state };
+      const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+      const responseIndex = state.currentQuestionIndex
+      if (responseIndex !== -1) {
+        const existingResponse = state.responses[responseIndex];
+        const updatedResponse = {
+            ...existingResponse,
+            responseTime: existingResponse.responseTime + elapsedTime
+        };
+        nextState.responses = [
+            ...state.responses.slice(0, responseIndex),
+            updatedResponse,
+            ...state.responses.slice(responseIndex + 1)
+        ];
+      }
+
+      const nextQuestionStartTime = Date.now();
+      nextState = { ...nextState, currentQuestionIndex: number, currentQuestionStartTime: nextQuestionStartTime };
+
+      return nextState;
     });
   }
 }));

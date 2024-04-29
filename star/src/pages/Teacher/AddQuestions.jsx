@@ -15,16 +15,15 @@ import { IoIosMove } from "react-icons/io";
 import { ToggleStore } from '../../Stores/ToggleStore';
 import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
-import { UpdateOrder } from '../../APIS/Teacher/AssessmentAPI';
+import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
 
 
 function AddQuestions() {
+    const [loading, setLoading] = useState(true)
     const assessmentName = useParams()
-    const [topics, setTopics] = useState([{name: "Differentiation", value: 8}, {name: "Integration", value: 5}, {name: "History of Computers", value: 12}])
-    const skills = ["Problem Solving", "Logic Design", "Quantitative Analysis", "Critical Thinking"]
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
-
+    const [topicList, setTopicList] = useState([])
     const setOrder = ToggleStore((store) => store.setOrder)
     const order = ToggleStore((store) => store.Ordering)
 
@@ -45,6 +44,7 @@ function AddQuestions() {
 
     const handleSubmitQuestions = () => {
         console.log(questions)
+        window.location.assign('/teacher/home')
     }  
     
     useEffect(()=> {
@@ -59,6 +59,20 @@ function AddQuestions() {
         }
 
         getAllQuestions() 
+    }, [])
+
+    useEffect(()=>{
+        const GetTopics = async() => {
+            try {
+                const res = await GetAllTopics()
+                setTopicList(res)
+                console.log(res)
+            } catch(err) {
+            console.log(err)
+            }
+        }
+
+        GetTopics()
     }, [])
 
     const saveQuestionHandler = async(id, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue) => {
@@ -139,6 +153,7 @@ function AddQuestions() {
     };
 
     const updateQuestion = async(index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue, reuse) => {
+        console.log("here")
         const updatedQuestions = [...questions];
         if(type == "MCQ") {
             updatedQuestions[index] = {
@@ -194,7 +209,7 @@ function AddQuestions() {
                 console.log(res)
             }
             else {
-                const res = await UpdateQuestion({question: updatedQuestions[index]}) 
+                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]}) 
                 console.log(res)
             }
             setQuestions(updatedQuestions);
@@ -244,7 +259,7 @@ function AddQuestions() {
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
-                <SubheaderBut name={"Add Questions"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
+                <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
                 <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>
@@ -287,7 +302,7 @@ function AddQuestions() {
                                 </div>
                                 <div className='overflow-y-auto no-scrollbar'>
                                     <div className='h-full flex flex-col gap-4'>
-                                        <SelectQuestions/>
+                                        <SelectQuestions topics={topicList}/>
                                     </div>   
                                     <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
                                         <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Select</button>
@@ -303,6 +318,7 @@ function AddQuestions() {
                                     type={creatingQuestion}
                                     closeHandler={handleCloseQuestionCreator}
                                     savingHandler={saveQuestionHandler}
+                                    topicList={topicList}
                                 />
                             )
                         }
@@ -313,7 +329,7 @@ function AddQuestions() {
                                 return (
                                     <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
-                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>
                                 )
                             })
