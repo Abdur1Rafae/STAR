@@ -3,6 +3,7 @@ import { SubmitAssessment } from '../APIS/Student/AssessmentAPI';
 
 const QuizStore = create((set) => ({
   id: '',
+  sectionId: '',
   title : '',
   teacher: '',
   duration: 0,
@@ -31,6 +32,7 @@ const QuizStore = create((set) => ({
   updateQuizDetails: (details) => set((state) => {
     return {
     ...state,
+    sectionId: details.sectionId,
     title: details.title,
     teacher: details.teacher,
     duration: details.duration,

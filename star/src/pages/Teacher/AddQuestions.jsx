@@ -192,7 +192,7 @@ function AddQuestions() {
                 console.log(res)
             }
             else {
-                const res = await UpdateQuestion({question: updatedQuestions[index]}) 
+                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]}) 
                 console.log(res)
             }
             setQuestions(updatedQuestions);
