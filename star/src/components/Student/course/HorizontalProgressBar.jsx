@@ -8,8 +8,8 @@ const HorizontalProgressBar = ({Skill, Score, Color}) => {
       </div>
       <div className="w-full bg-gray-200 h-4 dark:bg-gray-700 flex gap-2">
         <div className={`h-4 rounded-r-md`} style={{ width: `${Score}%`, background: `${Color}`}}></div>
-        <h2 className='text-xs font-medium'>{Score}%</h2>
       </div>
+      <h2 className='text-xs font-medium'>{Score}%</h2>
     </div>
   )
 }

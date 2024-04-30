@@ -6,7 +6,7 @@ const PeopleTabTile = ({ singlepersoninfo, active , onClick}) => {
 
   return (
     <button className={`w-full text-left h-full ${active ? 'bg-DarkBlue text-white' : 'bg-transparent'} rounded-md`} onClick={()=>onClick(singlepersoninfo)}>
-      <div className='flex items-center w-full justify-between p-2'>
+      <div className='flex items-center gap-2 w-full justify-between p-2'>
         <div className='text-sm font-medium'>
           {singlepersoninfo?.name} - {singlepersoninfo?.erp}
           <div className='text-xs font-light'>

@@ -33,6 +33,17 @@ const GetResponses = async({id}) => {
     return res.data
 }
 
+const GetQuestionStats = async({id}) => {
+    const res = await AxiosBase.get(`/reporthub/teacher/question-summary/${id}`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }) 
 
 
-export {GetAllReports, GetReportsOverview, GetResponses}
+    return res.data
+}
+
+
+
+export {GetAllReports, GetReportsOverview, GetResponses, GetQuestionStats}

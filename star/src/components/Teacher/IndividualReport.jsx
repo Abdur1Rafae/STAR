@@ -40,7 +40,7 @@ const IndividualReport = () => {
       })
     })
     setPeopleInfo(students)
-  }, [selectedSection])
+  }, [selectedSection, topPerformers, requireAttention])
 
   const [activePerson, setActivePerson] = useState({});
 
@@ -122,9 +122,12 @@ const IndividualReport = () => {
 
   return (
         <div className='w-full flex-wrap'>
-          <button onClick={() => setShowStudents(!showStudents)} className="w-full block lg:hidden h-16 mb-2 border-DarkBlue border-2 rounded">
+          <button onClick={() => setShowStudents(!showStudents)} className="w-full block lg:hidden h-16 mb-2 border-DarkBlue border-2 rounded mt-4 ">
             <PeopleTabTile singlepersoninfo={activePerson} onClick={()=>{}}/>
           </button>
+          <div className={`lg:hidden w-full overflow-y-scroll ${showStudents ? 'h-52' : 'h-0'} transition-all duration-200 ease-in-out bg-LightBlue shadow-md rounded-md`}>
+            <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
+          </div>
 
           {
             loading ?
@@ -161,7 +164,7 @@ const IndividualReport = () => {
                     responses={activeStudenData.responses}/>                   
                 </div>
               </div>
-              {
+              {/* {
                 showStudents &&
                 <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
                     <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
@@ -176,7 +179,7 @@ const IndividualReport = () => {
                         </div>
                     </div>
                 </div>
-              }
+              } */}
             </div>
           </div>
           }

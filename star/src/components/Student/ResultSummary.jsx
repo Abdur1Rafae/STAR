@@ -57,7 +57,7 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
         </div>
       </div>
 
-      <hr class="h-px my-4 border-[1px] border-black"></hr>
+      <hr className="h-px my-4 border-[1px] border-black"></hr>
       
       <div className="">
         <h3 className="text-lg font-bold font-body">Questions</h3>
