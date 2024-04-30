@@ -12,7 +12,7 @@ const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
           <LCSearchBar  placeholder="Search" />
           <CiFilter size={28} />
         </div>
-        <div className='border border-gray-300 my-4 mx-2'></div>
+        <div className='border border-gray-300 mx-2 my-2'></div>
       </div>
       <div className=''>
         {questions.map((question, index) => (
