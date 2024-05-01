@@ -369,3 +369,4 @@
 5/1/2024, 6:27:32 PM | INFO | CommandsJsonProvider:redisgears | Successfully updated redisgears commands | [object Object]
 5/1/2024, 6:27:33 PM | INFO | CommandsJsonProvider:redisearch | Successfully updated redisearch commands | [object Object]
 5/1/2024, 6:27:34 PM | INFO | CommandsJsonProvider:triggers_and_functions | Successfully updated triggers_and_functions commands | [object Object]
+5/1/2024, 6:42:09 PM | INFO |  | Signal SIGTERM received. Shutting down... | [object Object]

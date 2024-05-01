@@ -160,7 +160,7 @@ module.exports.getAssessmentReport = async (req,res) =>
         const report =
         {
             duration: response.assessment.configurations.duration,
-            submiittedAt: response.submittedAt,
+            submittedAt: response.submittedAt,
             createdAt: response.createdAt,
             responses: response.responses.map( item => 
             {
