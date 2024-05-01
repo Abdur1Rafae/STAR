@@ -1,12 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import QuestionTabTile from './QuestionTabTile';
 import { ReportContent } from '../../Context/ReportContext';
 
 const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
   const {allQuestionPercent} = useContext(ReportContent)
+  const [QuestionSetup, setQuestionSetup] = useState([])
+
+  useEffect(()=>{
+    setQuestionSetup(allQuestionPercent)
+  }, [allQuestionPercent])
+
   const findPercent = (id) =>{
     const foundQuestion = allQuestionPercent.find(item => item.question === id);
-    return Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100;
+    return Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100
   }
   return (
     <div className='h-52'>
@@ -19,7 +25,7 @@ const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
             singlequestioninfo= {question }
             active={question === activeQuestion} 
             onClick={() => onQuestionClick(question)}
-            percent={findPercent(question._id)}
+            percent={QuestionSetup.length > 0 ? findPercent(question._id): 0}
           />
         ))}
       </div>

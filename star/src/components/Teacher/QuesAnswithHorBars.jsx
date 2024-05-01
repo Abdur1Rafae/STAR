@@ -48,14 +48,14 @@ const QuesAnswithHorBars = ({ index, question }) => {
                 className={`max-md:text-xs flex items-center p-2 mb-2 bg-transparent transition duration-300`}
               >
                 <div
-                  className={`w-full   h-10 rounded-md mr-2 flex items-center border border-black ${
+                  className={`w-full min-h-10 rounded-md mr-2 flex items-center border border-black ${
                     question.correctOptions.includes(option) ? 'bg-green-300 ' : ''
                   }`}
                 >
-                  <div className="relative start-5 inset-y-0 flex">
+                  <div className="ml-2">
                     {String.fromCharCode(65 + index)}
                   </div>
-                  <div className='relative start-10 inset-y-0'>&nbsp;{option}</div>
+                  <div className='ml-4 '>&nbsp;{option}</div>
                 </div>
                 <div className='w-1/3 ml-2'><HorizontalProgressBar Score={options && options.length > 0 && findIndexByProperty(option)!=-1 ? Math.round(options[findIndexByProperty(option)].count/questionStats.totalResponses * 100): 0} Color='#EC5491' /></div>
               </div>
@@ -74,7 +74,7 @@ const QuesAnswithHorBars = ({ index, question }) => {
                 className={`max-md:text-xs flex items-center p-2 mb-2 bg-transparent transition duration-300`}
               >
                 <div
-                  className={`w-full   h-10 rounded-md mr-2 flex items-center border border-black ${
+                  className={`w-full h-10 rounded-md mr-2 flex items-center border border-black ${
                     question.isTrue ? 'bg-green-300 ' : ''
                   }`}
                 >

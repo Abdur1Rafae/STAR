@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { MdClose } from 'react-icons/md';
 import PeopleNavigation from '../../components/Teacher/PeopleNavigation';
 import PastCurScore from '../../components/Student/assessment/PastCurScore';
 import HorizontalBarChart from '../../components/Teacher/HorizontalBarChart';
 import QuizSkilEval from '../../components/Student/assessment/QuizSkilEval';
-import ResultSummary from '../../components/Student/ResultSummary';
+import ResultSummary from './ResultSummary';
 import PeopleTabTile from '../../components/Teacher/PeopleTabTile';
 import { ReportContent } from '../../Context/ReportContext';
 import _ from 'lodash';
@@ -109,7 +108,6 @@ const IndividualReport = () => {
   }, 500);
 
   const handlePersonClick = (person) => {
-    console.log("here")
     setActivePerson(person);
     setShowStudents(false)
 

@@ -26,7 +26,6 @@ export const ReportProvider = ({ children }) => {
     const [allQuestionPercent, setAllQuestionPercent] = useState([])
 
     useEffect(()=>{
-        let stats = []
         if(questionData.length > 0){
             if(selectedSection == 'All') {
                 const compiledData = [];
@@ -50,8 +49,6 @@ export const ReportProvider = ({ children }) => {
                         }
                     });
                 });
-
-                console.log(compiledData);
                 setAllQuestionPercent(compiledData)
             }
             else {
@@ -71,12 +68,10 @@ export const ReportProvider = ({ children }) => {
                         });
                     }
                 });
-
-                console.log(compiledData);
                 setAllQuestionPercent(compiledData)
             }
         }
-    }, [selectedSection])
+    }, [selectedSection, questionData])
 
     useEffect(()=>{
         let stats ={}

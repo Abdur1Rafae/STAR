@@ -47,4 +47,14 @@ const SubmitAssessment = async({responses}) => {
     return res;
 }
 
-export {GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment}
+const GetAssessmentSummary = async({id}) => {
+    const res = await AxiosBase.get(`reporthub/student/classes/assessment-report/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data;
+}
+
+export {GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary}

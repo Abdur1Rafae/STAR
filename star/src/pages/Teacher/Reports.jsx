@@ -49,7 +49,7 @@ const Reports = () => {
             <SideBar active={"Reports"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Reports"}/>
-                <div className={`p-2 flex overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
+                <div className={`p-2 flex overflow-hidden ${loading ? 'h-screen flex-row justify-center items-center' : 'flex-col'}`}>
                     {
                         loading ? 
                         <Loader/>

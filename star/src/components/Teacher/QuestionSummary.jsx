@@ -18,7 +18,7 @@ const QuestionSummary = () => {
 
   const findPercent = (id) =>{
     const foundQuestion = allQuestionPercent.find(item => item.question === id);
-    return Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100;
+    return foundQuestion != undefined ? Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100 : 0;
   }
 
   useEffect(()=>{
