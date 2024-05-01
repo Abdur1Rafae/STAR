@@ -171,7 +171,7 @@ module.exports.getAssessmentReport = async (req,res) =>
                         correct: 0
                     }
                     if(item.score === item.questionId.points){question.correct = 1}
-                    else if(item.answer.length === 0 || item.answer === null){question.correct = 1}
+                    else if(item.answer.length === 0 || item.answer === null){question.correct = -1}
                     return question
             })
         }
