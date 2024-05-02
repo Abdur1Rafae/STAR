@@ -37,7 +37,7 @@ const QuizInstructions = () => {
 
   const handleBeginAssessment = async() => {
     try {
-      const res = await GetAssessmentQuestions(quizStore.id)
+      const res = await GetAssessmentQuestions({id: quizStore.id, sectionId: quizStore.sectionId})
       localStorage.setItem('responseId', res.responseId)
       const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
       const questionSet = [...res.questions]

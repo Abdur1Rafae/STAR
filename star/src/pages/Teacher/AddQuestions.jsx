@@ -118,7 +118,6 @@ function AddQuestions() {
     const deleteQuestion = async(id) => {
         try{
             const questionToDelete = questions[id]
-            console.log(questionToDelete)
             if(questionToDelete.reuse) {
                 const res = await DeleteReuseQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
             }
@@ -192,7 +191,7 @@ function AddQuestions() {
                 console.log(res)
             }
             else {
-                const res = await UpdateQuestion({question: updatedQuestions[index]}) 
+                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]}) 
                 console.log(res)
             }
             setQuestions(updatedQuestions);
@@ -311,7 +310,7 @@ function AddQuestions() {
                                 return (
                                     <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
-                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>
                                 )
                             })

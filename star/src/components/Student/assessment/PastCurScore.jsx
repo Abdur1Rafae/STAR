@@ -1,20 +1,16 @@
 import React from 'react'
 import { AiOutlineBarChart } from "react-icons/ai";
 
-const PastCurScore = () => {
-    let CurrentScore = 36;
-    let totalScore = 40;
-    let PreviousScore = 30;
-    let PrevTotalScore = 35;
+const PastCurScore = ({CurrentScore, totalScore, PrevTotalScore, PreviousScore}) => {
 
-    let improvement = 20;
+    const improvement = PrevTotalScore != null ?  Math.round(((CurrentScore - PreviousScore) / (totalScore - PrevTotalScore)) * 100) : '-'
   return (
     <div className='flex-grow w-full md:mb-0 bg-LightBlue h-28 flex p-2 items-center justify-around shadow-md'>
         <div className='w-24 h-20 flex flex-col'>
             <h3 className='text-xs font-medium self-center'>Previous Score</h3>
             <div className='h-12 mt-2 flex flex-col justify-end'>
-                <h3 className='text-xl font-body font-semibold mt-2 self-center'>{PreviousScore}</h3>
-                <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {PrevTotalScore}</h3>
+                <h3 className='text-xl font-body font-semibold mt-2 self-center'>{PreviousScore ?? '-'}</h3>
+                <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {PrevTotalScore ?? '-'}</h3>
             </div>
         </div>
         <div className='h-16 border-black border-[1px]'></div>

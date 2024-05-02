@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CircularProgressBar = ({percentage, width}) => {
+const CircularProgressBar = ({percentage, width, flip}) => {
 
     const calculateDashOffset = (percentage) => {
         const time = ((percentage+3)/100) * 60
@@ -21,7 +21,7 @@ const CircularProgressBar = ({percentage, width}) => {
             </circle>
 
             <circle
-                className={`${percentage>=50 ? (percentage>=80 ? 'text-green-500' : 'text-yellow-500') : 'text-red-500'} progress-ring__circle stroke-current`}
+                className={`${!flip ? (percentage>=50 ? (percentage>=80 ? 'text-green-500' : 'text-yellow-500') : 'text-red-500') : (percentage>=50 ? (percentage>=80 ? 'text-red-500' : 'text-yellow-500') : 'text-green-500')} progress-ring__circle stroke-current`}
                 strokeWidth= {width}
                 strokeLinecap="round"
                 cx="50"

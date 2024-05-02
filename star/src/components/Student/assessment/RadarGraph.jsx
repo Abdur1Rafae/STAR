@@ -43,18 +43,21 @@ export const options = {
 };
 
 
-export const data = {
-    labels: ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 6'],
-    datasets: [
-    {
-        data: [7, 9, 8, 8, 6, 5],
-        backgroundColor: 'rgba(197, 216, 109, 0.5)',
+export const generateChartData = (dataObj) => {
+    const labels = Object.keys(dataObj);
+    const datasets = [{
+        data: labels.map(label => {
+            const value = dataObj[label];
+            return Math.round((value.correct / value.totalCount) * 100);
+        }),
         borderColor: 'rgba(44, 100, 145, 1)',
+        backgroundColor: 'rgba(197, 216, 109, 0.5)',
         borderWidth: 1,
-    },
-    ],
+    }];
+
+    return { labels, datasets };
 };
 
-export function RadarGraph() {
-  return <Radar data={data} options={options}/>;
+export function RadarGraph({inputData}) {
+  return <Radar data={generateChartData(inputData)} options={options}/>;
 }

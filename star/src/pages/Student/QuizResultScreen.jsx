@@ -1,5 +1,5 @@
 import React from 'react';      
-import ResultSummary from '../../components/Student/ResultSummary';
+import ResultSummary from '../../components/Student/StudentResultSummary';
 import SubmitMCQPanel from '../../components/Student/question/SubmitMCQPanel';
 import QuestionDetail from '../../components/Student/QuestionDetails';
 import FeedbackCard from '../../components/Student/FeedbackCard';

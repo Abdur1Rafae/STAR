@@ -3,7 +3,7 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_STUDENT_TOKEN
 
 const GetEnrolledClasses = async () => {
-    const res = await AxiosBase.get(`edumanage/class/enrolled-classes`,{
+    const res = await AxiosBase.get(`reporthub/student/classes`,{
         headers: {
             authorization: `Bearer ${token}`
         }
@@ -12,4 +12,14 @@ const GetEnrolledClasses = async () => {
     return res.data.data;
 };
 
-export {GetEnrolledClasses}
+const GetClassOverview = async ({id}) => {
+    const res = await AxiosBase.get(`reporthub/student/classes/overview/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data;
+};
+
+export {GetEnrolledClasses, GetClassOverview}

@@ -141,7 +141,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
     .populate
     ({
       path: 'enrolledSections',
-      select: '-_id class assessments', 
+      select: '_id class assessments', 
       populate: 
       [
         {
@@ -181,7 +181,8 @@ module.exports.getOngoingAssessments = async (req,res) =>
             {
               const assessmentData = 
               {
-                id : assessment._id,
+                sectionId: section._id,
+                assessmentId : assessment._id,
                 title: assessment.title,
                 description : assessment.description,
                 teacher: assessment.teacher.firstName + " " + assessment.teacher.lastName,

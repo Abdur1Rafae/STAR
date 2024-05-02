@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MenuBar from '../../components/MenuBar'
 import SubHeader from '../../components/Student/SubHeader'
 import QuizTitleBar from '../../components/Student/assessment/QuizTitleBar'
@@ -9,7 +9,7 @@ import { ToggleStore } from '../../Stores/ToggleStore'
 
 const AssessmentInfo = () => {
   let showTab = ToggleStore((store)=> store.QuizResultTab)
-
+  
   return (
     <div className='flex flex-col'>
         <MenuBar name={"Maaz Shamim"} role={"Student"}/>

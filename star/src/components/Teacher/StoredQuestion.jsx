@@ -6,7 +6,7 @@ import QuizImage from '../Student/question/QuizImage';
 import QuestionCreator from './QuestionCreator';
 import { ToggleStore } from '../../Stores/ToggleStore';
 
-const StoredQuestion = ({type,topic, id, handleDrag, question, skill, difficulty, points, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue, reuse}) => {
+const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill, difficulty, points, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue, reuse}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const Ordering = ToggleStore((store)=> store.Ordering)
@@ -47,7 +47,7 @@ const StoredQuestion = ({type,topic, id, handleDrag, question, skill, difficulty
                 {
                     isEditing ?
                     <>
-                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} type={type} questionID={id} topic={topic} correctOptions={correctOptions} skill={skill} difficultyLevel={difficulty} points={points} question={question} explanation={explanation} options={options} image={image} isTrue={isTrue} reuse={reuse}/>
+                        <QuestionCreator savingHandler={savingHandler} closeHandler={()=>setIsEditing(false)} topicList={topicList} type={type} questionID={id} topic={topic} correctOptions={correctOptions} skill={skill} difficultyLevel={difficulty} points={points} question={question} explanation={explanation} options={options} image={image} isTrue={isTrue} reuse={reuse}/>
                     </>
                     :
                     <>

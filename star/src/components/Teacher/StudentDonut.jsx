@@ -8,9 +8,9 @@ const options = {
 }
 
 const additionalColors = [
-    'rgba(255,96,88,1)',
     'rgba(71,163,237,1)',
-    'rgba(255,129,0,1)'
+    'rgba(255,129,0,1)',
+    'rgba(255,96,88,1)',
   ];
   
   
@@ -54,12 +54,13 @@ const LegendList = ({labels}) => (
 
 export function StudentDonutGraph({ inputData }) {
     const labels = inputData.map(item => (item.name));
+    const total = inputData.map(obj => obj.value).reduce((acc, currentValue) => acc + currentValue, 0);
     return (
         <div className='w-full flex justify-center items-center h-full gap-8'>
             <div className='h-48 flex items-center justify-center mb-4'>
                 <Doughnut data={data({ inputData })} options={options}/>
                 <div className='absolute flex flex-col items-center mt-3'>
-                    <h4 className='text-2xl font-semibold text-DarkBlue'>72</h4>
+                    <h4 className='text-2xl font-semibold text-DarkBlue'>{total}</h4>
                     <p className='text-slate-400'>Students</p>
                 </div>
             </div>

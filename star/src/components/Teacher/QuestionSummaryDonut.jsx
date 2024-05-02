@@ -42,7 +42,7 @@ export const data = ({ inputData }) => {
 
 const LegendList = ({labels , values}) => (
 
-    <div className='mt-2 flex md:flex-col flex-row flex-wrap gap-4 h-full justify-center'>
+    <div className='mt-2 mr-2 flex flex-col gap-4 h-full justify-center'>
       {labels.map((label, index) => (
         <div key={index} className="flex items-center">
           <div
@@ -56,18 +56,17 @@ const LegendList = ({labels , values}) => (
     </div>
   );
 
-export function QuestionDonutGraph({ inputData }) {
+export function QuestionDonutGraph({ inputData, totalResponses }) {
     const labels = inputData.map(item => (item.name));
     const values = inputData.map(item => (item.value));
-    console.log(values)
     const sum = inputData.reduce((total, item) => total + item.value, 0);
 
     return (
-        <div className='w-full flex justify-center items-center h-full gap-8'>
+        <div className='w-full flex justify-around items-center h-full'>
             <div className='h-48 flex items-center justify-center mb-4'>
                 <Doughnut data={data({ inputData })} options={options}/>
                 <div className='absolute flex flex-col items-center mt-3'>
-                    <h4 className='text-2xl font-semibold text-DarkBlue'>{sum}</h4>
+                    <h4 className='text-2xl font-semibold text-DarkBlue'>{totalResponses}</h4>
                     <p className='text-xs text-slate-400 '>Total Attempts</p>
                 </div>
             </div>
