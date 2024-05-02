@@ -1,7 +1,7 @@
-import { startMonitoring} from './comprehensiveModule.js';
-import { startTabMonitoring} from './tabHandler.js';
+// import { startMonitoring} from './comprehensiveModule.js';
+// import { startTabMonitoring} from './tabHandler.js';
 
-document.getElementById('startButton').addEventListener('click', () => {
-  startMonitoring();
-  startTabMonitoring();
-});
+// document.getElementById('startButton').addEventListener('click', () => {
+//   startMonitoring();
+//   startTabMonitoring();
+// });

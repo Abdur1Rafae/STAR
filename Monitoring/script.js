@@ -1,4 +1,9 @@
-let intialPersonID;
+let initialPersonID;
+
+// Function to start the camera and detect the student when the page loads
+window.addEventListener('DOMContentLoaded', () => {
+  startCameraAndDetection();
+});
 
 async function startCameraAndDetection() {
     const videoElement = document.getElementById('webcam');
@@ -37,11 +42,6 @@ async function faceDetectorCreator() {
   return detector;
 }
 
-// Function to start the camera and detect the student when the page loads
-window.addEventListener('DOMContentLoaded', () => {
-  startCameraAndDetection();
-});
-
 // Function to detect the student
 async function detectStudent(videoElement, detector) {
 const estimationConfig = {flipHorizontal: false};
@@ -49,22 +49,22 @@ console.log(detector)
 const faces = await detector.estimateFaces(videoElement, estimationConfig);
 
 // If a face is detected, alert the student
-if (faces.length = 1) {
+if (faces.length === 1) {
   alert('You have been detected as the student. Click "Start Test" to begin.');
+
+  console.log(faces);
+
+  initialPersonID = faces;
+  
+  localStorage.setItem('PersonId', JSON.stringify(initialPersonID))
+  
+  document.getElementById('startButton').addEventListener('click', function() {
+    window.location.href = 'testPage.html';
+  });
 } else {
   // If no face is detected, continue detecting
   setTimeout(async () => {
     await detectStudent(videoElement, detector);
-  }, 1000);
+  }, 2000);
 }
-
-console.log(faces);
-
-intialPersonID = faces;
-
-document.getElementById('startButton').addEventListener('click', function() {
-  window.location.href = 'testPage.html';
-});
 }
-
-export { intialPersonID, faceDetectorCreator };

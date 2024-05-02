@@ -1,4 +1,4 @@
-import { intialPersonID,faceDetectorCreator } from "./script.js";
+import { startTabMonitoring} from './tabHandler.js';
 
 let stream;
 let model;
@@ -7,12 +7,30 @@ let canvasElement;
 let monitoring = false;
 let lastPersonDetectedTime = null;
 let lastNoPersonDetectedTime = null;
+const screenShot = null;
 let warnings = {};
 
+window.addEventListener('DOMContentLoaded', () => {
+  startMonitoring();
+  startTabMonitoring();
+});
+
+function captureScreenshot() {
+
+  const ctx = canvasElement.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+  // Create an image element to hold the screenshot
+  const img = new Image();
+  img.src = canvas.toDataURL('image/png');
+  
+  return img;
+}
+
 // Function to generate and log warnings
-function generateWarning(violation, duration, timeStamp) {
+function generateWarning(violation, duration, timeStamp, screenShot) {
   if (!warnings[violation]) {
-    warnings[violation] = { raised: false, count: 0, totalDuration: 0, timeStamps: [] };
+    warnings[violation] = { raised: false, count: 0, totalDuration: 0, timeStamps: [], screenshots: [] };
   }
 
   if (!warnings[violation].raised) {
@@ -20,6 +38,7 @@ function generateWarning(violation, duration, timeStamp) {
     warnings[violation].count++;
     warnings[violation].totalDuration += duration;
     warnings[violation].timeStamps.push(timeStamp);
+    warnings[violation].screenshots.push(screenShot); 
     alert(`Warning: ${violation} in front of the screen!`);
   }
   else {
@@ -29,16 +48,47 @@ function generateWarning(violation, duration, timeStamp) {
   }
 }
 
+
+async function faceDetectorCreator() {
+  const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+  const detectorConfig = {
+  runtime: 'mediapipe',
+  solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
+};
+const detector = await faceDetection.createDetector(model, detectorConfig);
+return detector;
+}
+
+function arraysAreDifferent(arr1, arr2) {
+  // Check if arrays have different lengths
+  if (arr1.length !== arr2.length) {
+      return true;
+  }
+
+  // Check if any elements are different
+  for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+          return true;
+      }
+  }
+
+  // If arrays have the same length and all elements are the same, they are not different
+  return false;
+}
+
 // Function to detect objects or persons
 async function detectObjectsOrPersons() {
 
-  detector = faceDetectorCreator();
+  const detector = await faceDetectorCreator();
   const estimationConfig = {flipHorizontal: false};
   const faces = await detector.estimateFaces(videoElement, estimationConfig);
   
-  if (faces != intialPersonID && faces.length == 1) {
+  let initialPersonID = JSON.parse(localStorage.getItem('PersonId'))
+
+  if (arraysAreDifferent(faces,initialPersonID) && faces.length == 1) {
     const timeStamp = Date.now();
-    generateWarning('Someone other than the student detected',0,timeStamp)
+    screenShot = captureScreenshot();
+    generateWarning('Someone other than the student detected',0,timeStamp, screenShot)
   }
   else{}
 
@@ -59,7 +109,8 @@ async function detectObjectsOrPersons() {
         }
         const endTime = Date.now();
         const duration = (endTime - startTime) / 1000; // Convert to seconds
-        generateWarning(`${prediction.class} detected`, duration,startTime);
+        screenShot = captureScreenshot();
+        generateWarning(`${prediction.class} detected`, duration,startTime, screenShot);
         lastPersonDetectedTime = endTime;
       }
     }
@@ -70,7 +121,8 @@ async function detectObjectsOrPersons() {
   if (personCount === 0) {
     if (lastPersonDetectedTime !== null) {
       const duration = (currentTime - lastPersonDetectedTime) / 1000; // Convert to seconds
-      generateWarning('No person detected', duration, currentTime);
+      screenShot = captureScreenshot();
+      generateWarning('No person detected', duration, currentTime, screenShot);
       lastPersonDetectedTime = null;
     }
     if (lastNoPersonDetectedTime === null) {
@@ -78,14 +130,16 @@ async function detectObjectsOrPersons() {
     }
   } else if (personCount > 1) {
     const duration = (currentTime - lastPersonDetectedTime) / 1000; // Convert to seconds
-    generateWarning('More than one person detected', duration, currentTime);
+    screenShot = captureScreenshot();
+    generateWarning('More than one person detected', duration, currentTime, screenShot);
     lastPersonDetectedTime = currentTime;
     lastNoPersonDetectedTime = null;
   } else {
     lastPersonDetectedTime = currentTime;
     if (lastNoPersonDetectedTime !== null) {
+      screenShot = captureScreenshot();
       const duration = (currentTime - lastNoPersonDetectedTime) / 1000; // Convert to seconds
-      generateWarning('No person detected', duration, currentTime);
+      generateWarning('No person detected', duration, currentTime, screenShot);
       lastNoPersonDetectedTime = null;
     }
   }
