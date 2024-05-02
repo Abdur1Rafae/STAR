@@ -43,10 +43,12 @@ const CreateAssessment = async({name, description, sections, image, openDate, cl
 }
 
 const AddQuestion = async({assessmentId, question}) => {
-    const transformedQuestion = {...question}
-    delete transformedQuestion['options']
+    if(question.type == "True/False") {
+        question.options = ["True", "False"]
+    }
+    console.log(question)
     const res = await AxiosBase.post(`teacherhub/question-bank/add-question/${assessmentId}`,{
-        question: transformedQuestion,
+        question: question,
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -114,7 +116,6 @@ const DeleteReuseQuestion = async({questionId, assessmentId}) => {
 }
 
 const UpdateOrder = async({questions, assessmentId}) => {
-    console.log(questions)
     const res = await AxiosBase.put(`teacherhub/question-bank/update-order/${assessmentId}`,{
         order: questions
     },{
@@ -164,7 +165,6 @@ const MonitorAssessment = async({id}) => {
 }
 
 const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
-    console.log("here")
     const res = await AxiosBase.put(`teacherhub/assessment-management/update-assessment/${id}`,{
         title: name,
         description: description,
@@ -190,7 +190,6 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
         }
     })
 
-    console.log(res)
 
     return res.data
 }

@@ -134,7 +134,6 @@ function AddQuestions() {
     const deleteQuestion = async(id) => {
         try{
             const questionToDelete = questions[id]
-            console.log(questionToDelete)
             if(questionToDelete.reuse) {
                 const res = await DeleteReuseQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
             }
@@ -153,7 +152,6 @@ function AddQuestions() {
     };
 
     const updateQuestion = async(index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue, reuse) => {
-        console.log("here")
         const updatedQuestions = [...questions];
         if(type == "MCQ") {
             updatedQuestions[index] = {
