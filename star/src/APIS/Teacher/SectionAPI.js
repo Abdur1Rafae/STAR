@@ -61,6 +61,17 @@ const AddStudent = async({sectionId, student}) => {
     return res.data
 }
 
+const AddStudents = async({sectionId, students}) => {
+    const res = await AxiosBase.post(`teacherhub/class-management/add-students/${sectionId}`, {
+        students: students
+    }, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+    return res.data
+}
+
 const DeleteStudent = async({sectionId, studentId}) => {
     const res = await AxiosBase.delete(`teacherhub/class-management/remove-student/${sectionId}/${studentId}`, {
         headers: {
@@ -72,4 +83,4 @@ const DeleteStudent = async({sectionId, studentId}) => {
 }
 
 
-export {AddSection, DeleteSection, UpdateSection, GetAllStudents, AddStudent, DeleteStudent}
+export {AddSection, AddStudents, DeleteSection, UpdateSection, GetAllStudents, AddStudent, DeleteStudent}

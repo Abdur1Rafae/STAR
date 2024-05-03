@@ -21,6 +21,7 @@
     "react-router-prompt": "^0.7.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "zustand": "^4.5.2"
   },
   "scripts": {

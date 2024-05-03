@@ -29,10 +29,14 @@ import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
 import { ReportProvider } from './Context/ReportContext.js';
+import Login from './pages/AuthenticationPages/Login.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root/>}>
+            <Route path='login'element={<Login/>}></Route>
+
+
             <Route path='home' element = {<StudentDashboard/>} />
             <Route path="manage-account" element = {<AccountManagerPage/>} />
             <Route path="quiz" element = {<QuizScreen />} />

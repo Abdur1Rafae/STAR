@@ -26,10 +26,10 @@ import EditAssessmentDetails from './pages/Teacher/EditAssessmentDetails.jsx';
 import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
-
 const AppRoutes = () => {
   return (
         <Route path="/" element={<Root/>}>
+
             <Route path='home' element = {<StudentDashboard/>} />
             <Route path="manage-account" element = {<AccountManagerPage/>} />
             <Route path="quiz" element = {<QuizScreen />} />
