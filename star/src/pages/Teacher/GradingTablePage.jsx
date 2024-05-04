@@ -6,10 +6,15 @@ import { BiChevronLeft } from 'react-icons/bi'
 import LMTable from '../../components/Teacher/LMTable'
 import { GetAssessmentSummary } from '../../APIS/Teacher/GradingAPI'
 import Loader from '../../components/Loader'
+import { GrOverview } from "react-icons/gr";
+import { FaUsersViewfinder } from "react-icons/fa6";
+import ViewBox from '../../components/Teacher/ViewBox'
 
 const GradingTablePage = () => {
   const [loading, setLoading] = useState(true)
   const [gradingData, setGradingData] = useState([])
+  
+  const [tab, setTab] = useState('Questions')
   const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
 
   useEffect(()=>{
@@ -40,6 +45,20 @@ const GradingTablePage = () => {
     { title: "Responses", key: "totalResponses" },
     { title: "Marked Responses", key: "totalGraded"}
   ];
+
+  const flagColumns = [
+    {title: "Serial No.", key: "num"},
+    {title: "Name", key: "name"},
+    {title: "ERP", key: "erp"},
+    {title: "Violations Count", key: "count"},
+    { title: "", key: "view"}
+  ]
+
+  const handleFlagClick = (id) => {
+
+  }
+
+  const flaggedData = [{num:1, name: "Abdur Rafae", erp:"22828", count:5, view:<ViewBox onClick={()=>handleFlagClick()}/>}]
   
   
   return (
@@ -55,13 +74,31 @@ const GradingTablePage = () => {
               <Loader/>
               :
               <>
-                <div className='w-full bg-LightBlue flex p-2 items-center shadow-md'>
-                  <div className='flex items-center self-start'>
-                    <button onClick={()=>{window.location.assign('/teacher/home')}}><BiChevronLeft className='text-3xl'/></button>
-                    <h4 className='font-semibold'>{assessment.title}</h4>
+                <div className='w-full bg-LightBlue flex p-2 items-center justify-between shadow-md'>
+                  <div className='w-full flex justify-between items-center self-start'>
+                    <div className='flex items-center self-start'>
+                      <button onClick={()=>{window.location.assign('/teacher/home')}}><BiChevronLeft className='text-3xl'/></button>
+                      <h4 className='font-semibold'>{assessment.title}</h4>
+                    </div>
                   </div>
-                </div>
+                  <div className='flex gap-4 items-center self-end'>
+                      <button onClick={()=>setTab("Questions")} className={`flex ${tab == "Questions" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
+                          <GrOverview/>
+                          <p>Questions</p>
+                      </button>
+                      <button onClick={()=>setTab("Flaggings")} className={`flex ${tab == "Flaggings" ? 'bg-DarkBlue text-white' : ''} active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md`}>
+                          <FaUsersViewfinder/>
+                          <p>Flaggings</p>
+                      </button>
+                  </div>
+              </div>
+              {
+                tab == "Questions" ? 
                 <LMTable data={gradingData} columns = {columns} onClick={true}/>
+                :
+                <LMTable data={flaggedData} columns = {flagColumns} onClick={false}/>
+
+              }
               </>
             }
           </div>
