@@ -127,25 +127,64 @@ const ReportsOverview = () => {
                 </div>
                 <div className='w-full bg-LightBlue shadow-md p-4'>
                     <StudentDonutGraph inputData={data}/>
-                    <div className='max-h-64 overflow-y-auto flex gap-2'>
-                        <button className='w-full my-auto' onClick={()=>{handleExtendPerformerSection()}}>
-                            <p className='p-2 border-[1px] rounded-full border-[#47A3ED] font-semibold text-xs text-[#47A3ED]'>Top Performer</p>
+                    <div className='h-10 flex gap-2'>
+                        <button className={`w-full p-1 border-[1px] rounded-full text-xs ${extendPerformers ? 'bg-[#47A3ED] text-white' : 'border-[#47A3ED] text-[#47A3ED]'} transition-all duration-300 ease-in-out`} onClick={()=>{handleExtendPerformerSection()}}>
+                            <p>Top Performer</p>
                         </button>
-                        <button className='w-full my-auto' onClick={()=>{handleExtendAbsenteesSection()}}>
-                            <p className='p-2 border-[1px] rounded-full border-[#FF8100] font-semibold text-xs text-[#FF8100]'>Absentees</p>
+                        <button className={`w-full p-1 border-[1px] rounded-full text-xs ${extendAbsentees ? 'bg-[#FF8100] text-white' : 'border-[#FF8100] text-[#FF8100]'} transition-all duration-300 ease-in-out`} onClick={()=>{handleExtendAbsenteesSection()}}>
+                            <p>Absentees</p>
                         </button>
-                        <button className='w-full my-auto' onClick={()=>{handleExtendRASection()}}>
-                            <p className='p-2 border-[1px] rounded-full border-[#E14942] font-semibold text-xs text-[#E14942]'>Requires Attention</p>
+                        <button className={`w-full p-1 border-[1px] rounded-full text-xs ${extendRA ? 'bg-[#E14942] text-white' : ' border-[#E14942] text-[#E14942]'} transition-all duration-300 ease-in-out`} onClick={()=>{handleExtendRASection()}}>
+                            <p>Requires Attention</p>
                         </button>
                     </div>
-                    <div className={`${extendPerformers ? 'max-h-48 overflow-y-auto' : 'h-0 hidden'} space-y-2`}>
-                        <div className='flex justify-between items-center border-black'>
-                            <div>
-                                <p className='text-sm font-medium'>Maaz Shamim - 22792</p>
-                                <p className='text-xs'>Section: 4536</p>
-                            </div>
-                            <h4 className='text-[#3EAF3F]'>95%</h4>
-                        </div>
+                    <div className={`${extendPerformers || extendAbsentees || extendRA ? 'max-h-48 overflow-y-auto no-scrollbar' : 'h-0 hidden'} space-y-2 mt-2 border-[1px] border-black p-2`}>
+                        {
+                            extendPerformers ? 
+                            (
+                                topPerformers.map((student) => {
+                                    return (
+                                        <div className='flex justify-between items-center border-black'>
+                                            <div>
+                                                <p className='text-sm font-medium'>{student.name} - {student.erp}</p>
+                                                <p className='text-xs'>Section: {student.section}</p>
+                                            </div>
+                                            <h4 className='text-[#3EAF3F]'>{student.score}%</h4>
+                                        </div>
+                                    )
+                                })
+                            )
+                            :
+                            extendAbsentees ?
+                            (
+                                absentees.map((student) => {
+                                    return (
+                                        <div className='flex justify-between items-center border-black'>
+                                            <div>
+                                                <p className='text-sm font-medium'>{student.name} - {student.erp}</p>
+                                                <p className='text-xs'>Section: {student.section}</p>
+                                            </div>
+                                            <h4 className='text-slate-400'>{student.score}%</h4>
+                                        </div>
+                                    )
+                                })
+                            )
+                            :
+                            (
+                                requireAttention.map((student) => {
+                                    return (
+                                        <div className='flex justify-between items-center border-black'>
+                                            <div>
+                                                <p className='text-sm font-medium'>{student.name} - {student.erp}</p>
+                                                <p className='text-xs'>Section: {student.section}</p>
+                                            </div>
+                                            <h4 className='text-red-500'>{student.score}%</h4>
+                                        </div>
+                                    )
+                                })
+                            )
+                        }
+                        
                     </div>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2 flex'>

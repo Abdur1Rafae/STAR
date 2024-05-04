@@ -18,7 +18,6 @@ export const SectionProvider = ({children}) => {
                 setSelectedSections([...selectedSections, section]);
             } else {
                 setSelectedSections([section]);
-                console.log("here")
             }
         }
     };

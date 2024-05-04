@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const QuestionDetails = ({ score, topic, difficulty, skillTargeted, currentQuestion, totalQuestions }) => {
+const QuestionDetails = ({ score, topic, difficulty, skillTargeted, totalScore }) => {
 
   const difficultyClasses = {
     Easy: 'text-green-500',
@@ -24,7 +24,7 @@ const QuestionDetails = ({ score, topic, difficulty, skillTargeted, currentQuest
             <div className='mt-2 w-full'>
               <div className='flex text-xs font-body w-full'>
                   <h4 className='font-medium w-32 md:w-24'>Score:</h4>
-                  <div className='w-full flex justify-center'>{score} out of 10</div>
+                  <div className='w-full flex justify-center'>{score} out of {totalScore}</div>
               </div>
 
               <div className='flex text-xs mt-2  font-body'>

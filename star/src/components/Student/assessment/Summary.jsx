@@ -27,8 +27,8 @@ const Summary = () => {
         const res = await GetAssessmentSummary({id: assessmentInfo.id})
         setDuration(res.duration)
         setResponses(res.responses)
-        setSubmissionTime(DDMMMMYYYY_HHMM(res.submiittedAt))
-        setResponseTime(calculateTimeDifference(res.createdAt, res.submiittedAt))
+        setSubmissionTime(DDMMMMYYYY_HHMM(res.submittedAt))
+        setResponseTime(calculateTimeDifference(res.createdAt, res.submittedAt))
         console.log(res)
       } catch(err) {
         console.log(err)
@@ -71,6 +71,8 @@ const Summary = () => {
       setSkillMap(skillMap);
       setTopicMap(topicMap);
       setTotalCorrect(totalCorrect);
+      localStorage.setItem('totalCorrect', totalCorrect)
+      localStorage.setItem('totalWrong', responses.length - (totalCorrect))
       setTotalSkipped(totalSkipped);
     }
   }, [responses])

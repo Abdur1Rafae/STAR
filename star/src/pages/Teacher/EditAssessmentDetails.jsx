@@ -14,10 +14,13 @@ import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
 import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { UpdateAssessment } from '../../APIS/Teacher/AssessmentAPI';
+import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 
 
 function EditAssessmentDetails() {
     const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
+    const [editingOpenDate, setEditingOpenDate] = useState(false)
+    const [editingCloseDate, setEditingCloseDate] = useState(false)
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')
     const [assessmentName, setName] = useState(assessment.title ?? '');
     const [description, setDesc] = useState(assessment.description ?? '')
@@ -26,8 +29,10 @@ function EditAssessmentDetails() {
     const [hour, setHour] = useState(0)
     const [mins, setMins] = useState(30)
 
-    const [datetime, setDatetime] = useState(new Date(assessment.configurations.openDate).toISOString().slice(0, 16))
-    const [closedatetime, setCloseDatetime] = useState(new Date(assessment.configurations.closeDate).toISOString().slice(0, 16))
+
+    const [datetime, setDatetime] = useState(assessment.configurations.openDate);
+    const [closedatetime, setCloseDatetime] = useState(assessment.configurations.closeDate);
+
     const [publishImmediately, setPublishOption] = useState(assessment.configurations ? assessment.configurations.releaseGrades : false);
     const [viewSubmissions, setViewSubmissions] = useState(assessment.configurations ? assessment.configurations.viewSubmission : false);
     const [randomizeQuestions, setRandomizeQuestions] = useState(assessment.configurations ? assessment.configurations.randomizeQuestions : false);
@@ -38,14 +43,6 @@ function EditAssessmentDetails() {
     const [adaptiveTesting, setAdaptiveTesting] = useState(assessment.configurations ? assessment.configurations.adaptiveTesting : false);
     const [candidateMonitoring, setCandidateMonitoring] = useState(assessment.configurations ? assessment.configurations.monitoring : false);
     const [error, setError] = useState('')
-
-    // useEffect(()=>{
-    //     console.log(assessment)
-    // }, [assessment])
-
-    useEffect(()=> {
-        console.log(closedatetime)
-    }, [closedatetime])
 
     useEffect(()=> {
         if(assessment.configurations.duration > 120) {
@@ -112,11 +109,10 @@ function EditAssessmentDetails() {
     useEffect(() => {
         if (!datetime) return;
 
-        const selectedDate = new Date(datetime);
-        const minDate = new Date(selectedDate);
+        const minDate = new Date(datetime);
 
-        minDate.setHours(minDate.getHours() + hour);
-        minDate.setMinutes(minDate.getMinutes() + mins);
+        minDate.setHours(minDate.getHours() + (isNaN(hour) ? 0: hour));
+        minDate.setMinutes(minDate.getMinutes() + (isNaN(mins) ? 0 : mins));
 
         const year = minDate.getFullYear();
         const month = String(minDate.getMonth() + 1).padStart(2, '0');
@@ -125,6 +121,7 @@ function EditAssessmentDetails() {
         const minutes = String(minDate.getMinutes()).padStart(2, '0');
 
         const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+        console.log(formattedDate, hour, mins)
         setCloseDatetime(formattedDate);
     }, [datetime, hour, mins]);
 
@@ -305,14 +302,27 @@ function EditAssessmentDetails() {
                         </div>
                         <div>
                             <div className='flex flex-col items-center'>
-                                <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
-                                <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
+                            <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
+                                {
+                                    editingOpenDate ? 
+                                    <>
+                                        <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
+                                    </>
+                                    :
+                                    <button onClick={()=>setEditingOpenDate(true)}><p className='text-DarkBlue hover:underline'>{DDMMMMYYYY_HHMM({date: datetime})}</p></button>
+                                }
+                                
                             </div>
                             <div className='flex flex-col items-center'>
-                                <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>
-                                    Close Date & Time &nbsp; <BsInfoCircle/>
-                                </h2>
-                                <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
+                                <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>Close Date & Time</h2>
+                                {
+                                    editingCloseDate ? 
+                                    <>
+                                         <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
+                                    </>
+                                    :
+                                    <button onClick={()=>setEditingCloseDate(true)}><p className='text-DarkBlue hover:underline'>{DDMMMMYYYY_HHMM({date: closedatetime})}</p></button>
+                                }
                             </div>
                         </div>
                     </div>

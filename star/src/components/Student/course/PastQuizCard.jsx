@@ -21,7 +21,7 @@ const PastQuizCard = ({id, previousScore, prevTotalScore, Name, Date, AchievedSc
         <div className='flex'>
             <div className='bg-LightBlue rounded-lg w-16 h-16'>
                 <div className='h-16 flex flex-col'>
-                    <h3 className='text-lg text-DarkBlue font-body font-semibold mt-2 self-center'>{AchievedScore}</h3>
+                    <h3 className={`text-lg text-DarkBlue font-body font-semibold mt-2 self-center`}>{AchievedScore == 'pending'  ? '!' : AchievedScore}</h3>
                     <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>
                 </div>
             </div>

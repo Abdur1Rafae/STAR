@@ -33,14 +33,15 @@ const QuizCountImp = ({totalCount, attempts, improvement}) => {
                 <AiOutlineBarChart  className='text-DarkBlue'/>
                 <p className='text-xs ml-[1px]'>Achieved</p>
             </div>
-            <div className='flex'>
+            <div className='flex items-center'>
                 {
-                    improvement ?
                     improvement > 0 ?
-                    <FaArrowTrendUp className={`self-center text-lg text-green-500 mr-2`}/> :
-                    <FaArrowTrendDown className={`self-center text-lg text-red-500 mr-2`}/>
+                    <FaArrowTrendUp className={`self-center text-lg text-green-500 mr-2`}/> 
                     :
-                    <p className='self-center text-lg text-DarkBlue mr-2'>-</p>
+                    improvement == 0 ?
+                    ''
+                    :
+                    <FaArrowTrendDown className={`self-center text-lg text-red-500 mr-2`}/>
                 }
                 <h1 className={`text-DarkBlue text-xl md:text-3xl ${improvement>0 ? 'text-green-500' : 'text-red-500'}`}>{improvement} %</h1>
             </div>

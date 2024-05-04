@@ -23,6 +23,7 @@ const CourseInfo = () => {
   const [graphData, setGraphData] = useState([])
   const [skillsData, setSkillsData] = useState([])
   const [improvement, setImprovement] = useState(0)
+  const [upcomingAssessment, setUpcomingAssessment] = useState({})
 
   useEffect(()=> {
     const GetInfo = async() => {
@@ -30,8 +31,20 @@ const CourseInfo = () => {
         const res = await GetClassOverview({id: classInfo._id})
         console.log(res)
         setTimeout(() => {
-          setPassAssessments(res.assessmentHistory)
+          const pastAsg = []
+          let upcomingAsg = {}
+          res.assessmentHistory.map((assessment) => {
+            if(assessment.status == "Upcoming") {
+              upcomingAsg = assessment
+            }
+            else {
+              pastAsg.push(assessment)
+            }
+          })
+          setUpcomingAssessment(upcomingAsg)
+          setPassAssessments(pastAsg)
           setSkillsData(res.skillsBreakDown)
+
           setLoading(false)
         }, 500);
       } catch(err) {
@@ -56,7 +69,7 @@ const CourseInfo = () => {
       pastAssessments.map((assessment) => {
         if(assessment.responseId) {
           attemptCount++;
-          if(assessment.totalScore) {
+          if(assessment.status == "Published") {
             totalMarked++;
             totalScore += assessment.totalScore;
             if(Math.round(assessment.totalScore/assessment.totalMarks * 100) > Math.round(highestScore/corresTotalScore * 100) || (highestScore == 0 && corresTotalScore == 0)){
@@ -71,7 +84,7 @@ const CourseInfo = () => {
           title: ddmmyy(assessment.submitted),
           value: assessment.totalScore ? Math.round(assessment.totalScore / assessment.totalMarks * 100) : 0
         }
-        if((assessment.responseId && assessment.totalScore) || (!assessment.responseId && !assessment.totalScore)) {
+        if(assessment.status == "Absent" || assessment.status == "Published") {
           data.push(obj)
         }
       })
