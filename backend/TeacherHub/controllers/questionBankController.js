@@ -1,6 +1,6 @@
 const conn = require('../dbconfig/dbcon')
 const {Question, Assessment} = require('library/index')
-const {upload, remove} = require('../util/library')
+const remove = require('../util/remove')
 const mongoose = require('mongoose')
 
 
@@ -49,8 +49,6 @@ module.exports.addQuestionToBank = async (req,res) =>
         let {question} = req.body
         const teacherId = req.body.decodedToken.id
 
-        const imagePath = upload(question.image)
-        question.image = imagePath
         question.teacher = teacherId
 
         const session = await conn.startSession()
@@ -87,9 +85,6 @@ module.exports.updateQuestionInBank = async (req,res) =>
         const {assessmentId, questionId} = req.params
         const {question} = req.body
 
-        const imagePath = upload(question.image)
-        question.image = imagePath
-
         const oldQuestion =  await Question.findOneAndUpdate
         (
             {_id : questionId}, 
@@ -99,7 +94,6 @@ module.exports.updateQuestionInBank = async (req,res) =>
 
         if(oldQuestion)
         {
-            remove(oldQuestion.image)
             if(oldQuestion.points != question.points){await Assessment.findByIdAndUpdate(assessmentId, { $inc: { totalMarks: question.points - oldQuestion.points } })}
             return res.status(201).json({message: 'Question Updated Successfully'})
         }
@@ -156,11 +150,28 @@ module.exports.addReusedQuestionsToBank = async (req,res) =>
 
         if(!(Array.isArray(reusedQuestions) && reusedQuestions.length > 0))
         {return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: Ids of reused questions' })}
+        
+        const result = await Question.aggregate
+        ([
+            {
+                $match: { _id: { $in: reusedQuestions.map(id => new mongoose.Types.ObjectId(id)) }}
+            },
+            {
+                $project: {_id: 0, points: 1}
+            },
+            {
+                $group: 
+                {_id: null, totalPoints: { $sum: '$points' } }
+            }
+        ])
 
         const updatedAssessment = await Assessment.findByIdAndUpdate
         (
             assessmentId, 
-            { $addToSet: { 'questionBank': { $each: reusedQuestions.map(questionId => ({ question: questionId, reuse: true })) } } }
+            { 
+                $addToSet: { 'questionBank': { $each: reusedQuestions.map(questionId => ({ question: questionId, reuse: true })) } },
+                $inc: { totalMarks: result[0].totalPoints } 
+            }
         )
         if (!updatedAssessment) {return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
 
