@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
-import SubmitButton from '../../components/button/SubmitButton';
-import MenuBar from '../../components/MenuBar';
-import SubHeader from '../../components/Student/SubHeader';
+import SubmitButton from '../components/button/SubmitButton';
+import MenuBar from '../components/MenuBar';
+import SubHeader from '../components/Student/SubHeader';
 import Webcam from 'react-webcam';
-
 import '@mediapipe/face_detection';
 import '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';

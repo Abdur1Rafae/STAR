@@ -5,7 +5,7 @@ import ProfilePic from '../ProfilePic.jpg'
 
 function TestPage() {
   const webcamRef = useRef(null);
-  const [webImageDescriptor, setWebImageDescriptor] = useState(null);
+  const [faceRef, setFaceRef] = useState(null);
   const [matchedResult, setMatchedResult] = useState(null);
 
   useEffect(() => {
@@ -22,9 +22,9 @@ function TestPage() {
   }, []);
 
   const loadImageAndExtractDescriptor = async () => {
-    const facesToCheck = await faceapi.fetchImage(ProfilePic)
-    let facesToCheckAiData = await faceapi.detectAllFaces(facesToCheck).withFaceLandmarks().withFaceDescriptors()
-    setWebImageDescriptor(facesToCheckAiData)
+    const storedFace = await faceapi.fetchImage(ProfilePic)
+    let storedFaceAiData = await faceapi.detectAllFaces(storedFace).withFaceLandmarks().withFaceDescriptors()
+    setFaceRef(storedFaceAiData)
   };
 
   const captureScreenshot = async () => {
@@ -33,12 +33,14 @@ function TestPage() {
       const image = new Image();
       image.src = imageSrc;
       image.onload = async () => {
-        const faces = await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
+        const faceUrl = await faceapi.fetchImage(imageSrc)
+        let faces = await faceapi.detectAllFaces(faceUrl).withFaceLandmarks().withFaceDescriptors();
+        faces = faceapi.resizeResults(faces, faceUrl)
         console.log('tried detecting')
-        if (faces.length > 0 && webImageDescriptor) {
+        if (faces.length > 0 && faceRef) {
           console.log("captured face")
           const descriptor = faces[0].descriptor;
-          const faceMatcher = new faceapi.FaceMatcher(webImageDescriptor);
+          const faceMatcher = new faceapi.FaceMatcher(faceRef);
           const bestMatch = faceMatcher.findBestMatch(descriptor);
           console.log(bestMatch.toString())
           setMatchedResult(bestMatch.toString());
@@ -51,6 +53,7 @@ function TestPage() {
     <div className="myapp">
       <h1>Face Detection</h1>
       <div className="appvide">
+        <img src={ProfilePic}></img>
         <Webcam
           ref={webcamRef}
           screenshotFormat="image/jpeg"
