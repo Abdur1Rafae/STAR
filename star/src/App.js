@@ -61,6 +61,7 @@ const router = createBrowserRouter(
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>
             <Route path='teacher/view-flags' element={<ViewFlags/>}></Route>
+            <Route path='/recognise-face' element={<TestPage/>}></Route>
         
          </Route>
   )

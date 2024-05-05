@@ -64,7 +64,7 @@ const QuizInstructions = () => {
         localStorage.setItem('questions', JSON.stringify(questionSet));
       }
       
-      window.location.assign('/capture-face')
+      window.location.assign('/quiz')
     }
     catch (error) {
       console.log(error)
