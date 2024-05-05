@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MenuBar from '../../components/MenuBar';
 import { VscLayersActive } from "react-icons/vsc";
 import SubmitButton from '../../components/button/SubmitButton';
 
 const QuizSubmission = () => {
+  useEffect(()=>{
+    localStorage.removeItem('quizDetails')
+    localStorage.removeItem('responseId')
+  }, [])
   return (
     <div className='flex flex-col w-screen lg:w-full'>
         <MenuBar name={"Maaz Shamim"} role={"Student"}/>

@@ -32,6 +32,7 @@ import { ReportProvider } from './Context/ReportContext.js';
 import TestPage from './pages/TestPage.jsx';
 import CaptureScreen from './pages/Student/CaptureScreen.jsx';
 import ViewFlags from './pages/Teacher/ViewFlags.jsx';
+import ObjectDetection from './pages/ObjectDetection.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,6 +62,8 @@ const router = createBrowserRouter(
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>
             <Route path='teacher/view-flags' element={<ViewFlags/>}></Route>
+            <Route path='/recognise-face' element={<TestPage/>}></Route>
+            <Route path='/object-detection' element={<ObjectDetection/>}></Route>
         
          </Route>
   )
