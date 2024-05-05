@@ -24,7 +24,7 @@ const QuizTitleBar = ({Course_Name, assessment_Name}) => {
     <div className='w-full bg-LightBlue drop-shadow-md flex flex-col md:flex-row md:justify-between'>
         <div className='self-center justify-center md:h-auto h-12 flex flex-col w-full md:w-1/2 md:mt-0 mt-2'>
             <div className='flex items-center'>
-              <button onClick={()=>{window.location.assign('/courses')}}><MdOutlineArrowBackIos className='text-2xl self-center'/></button>
+              <button onClick={()=>{window.history.back()}}><MdOutlineArrowBackIos className='text-2xl self-center'/></button>
               <div className='flex flex-col'>
                 <h1 className="ml-4 font-medium text-md font-body">{assessment_Name}</h1>
               </div>

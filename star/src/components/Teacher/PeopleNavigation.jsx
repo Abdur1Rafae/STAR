@@ -4,10 +4,10 @@ import PeopleTabTile from './PeopleTabTile';
 const PeopleNavigation = ({ peopleinfo, activePerson, onPersonClick }) => {
  
   return (
-    <div className='h-full'>
+    <div className='h-full w-full'>
       <div className='sticky top-0 bg-LightBlue'>
       </div>
-      <div className='p-2'>
+      <div className='p-2 w-full'>
         {peopleinfo.map((person, index) => (
           <PeopleTabTile
             key={index}

@@ -64,7 +64,6 @@ export function StudentDonutGraph({ inputData }) {
                     <p className='text-slate-400'>Students</p>
                 </div>
             </div>
-            <LegendList labels={labels}/>
         </div>
     )
 }

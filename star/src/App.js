@@ -29,6 +29,10 @@ import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
 import { ReportProvider } from './Context/ReportContext.js';
+import TestPage from './pages/TestPage.jsx';
+import CaptureScreen from './pages/Student/CaptureScreen.jsx';
+import ViewFlags from './pages/Teacher/ViewFlags.jsx';
+import ObjectDetection from './pages/ObjectDetection.jsx';
 import LandingPage from './pages/LandingPages/landingpage.jsx';
 import Login from './pages/AuthenticationPages/Login.jsx';
 
@@ -49,6 +53,7 @@ const router = createBrowserRouter(
             <Route path="quiz-result" element = {<QuizResultScreen/>} />
             <Route path="quiz-instructions" element = {<QuizInstructions/>} />
             <Route path='quiz-submitted' element={<QuizSubmission/>}/>
+            <Route path='/capture-face' element={<CaptureScreen/>}></Route>
               
             <Route path="teacher/home" element = {<ScheduledAssessment/>} />
             <Route path='teacher/classes' element={<Classes/>}></Route>
@@ -63,9 +68,10 @@ const router = createBrowserRouter(
             <Route path='teacher/grading/:assessmentName' element={<Grading/>}/>
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>
-
-
-
+            <Route path='teacher/view-flags' element={<ViewFlags/>}></Route>
+            <Route path='/recognise-face' element={<TestPage/>}></Route>
+            <Route path='/object-detection' element={<ObjectDetection/>}></Route>
+        
          </Route>
   )
 );

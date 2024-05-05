@@ -2,14 +2,10 @@ import React from 'react'
 import { FaHourglassEnd } from "react-icons/fa";
 import { FaClock } from "react-icons/fa";
 import { FaCircleArrowRight } from "react-icons/fa6";
-import QuizStore from '../../Stores/QuizStore';
 
 const LiveQuiz = ({assessment}) => {
     const date = new Date(assessment.configurations.closeDate);
-    const quizStore = QuizStore()
 
-    const updateQuizDetails = QuizStore(store => store.updateQuizDetails)
-    const setTitle = QuizStore(store => store.setTitle)
 
     const formattedDate = new Intl.DateTimeFormat('en-GB', {
         timeZone: 'UTC',

@@ -11,6 +11,7 @@ import QuizStore from '../../Stores/QuizStore';
 import CorrectMCQ from '../../components/Student/question/CorrectMCQ';
 import CorrectTF from '../../components/Student/question/CorrectTF';
 import ConfirmationBox from '../../components/ConfirmationBox';
+import CorrectSA from '../../components/Student/question/CorrectSA';
 
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
@@ -22,6 +23,7 @@ const QuizScreen = () => {
   const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback} = quizConfig
+  
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
@@ -37,29 +39,29 @@ const QuizScreen = () => {
     createResponseObjects([])
   }, [])
 
-  useEffect(() => {
-    const saveData = async () => {
-      try {
-        await submitResponses();
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  // useEffect(() => {
+  //   const saveData = async () => {
+  //     try {
+  //       await submitResponses();
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
   
-    const handleBeforeUnload = (event) => {
-      if (!submittingQuiz) {
-        console.log("here")
-        saveData();
-        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-      }
-    };
+  //   const handleBeforeUnload = (event) => {
+  //     if (!submittingQuiz) {
+  //       console.log("here")
+  //       saveData();
+  //       event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+  //     }
+  //   };
   
-    window.addEventListener('beforeunload', handleBeforeUnload);
+  //   window.addEventListener('beforeunload', handleBeforeUnload);
   
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [responses, submittingQuiz]);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleBeforeUnload);
+  //   };
+  // }, [responses, submittingQuiz]);
 
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)
@@ -95,8 +97,6 @@ const QuizScreen = () => {
       setSubmittingQuiz(true)
       const res = await submitResponses()
       localStorage.removeItem('SuccessSubmit')
-      localStorage.removeItem('quizDetails')
-      localStorage.removeItem('responseId')
       window.location.assign('/quiz-submitted')
     } catch(err) {
       console.log(err)
@@ -131,10 +131,23 @@ const QuizScreen = () => {
               )
               :
               (questions[currentQuestionIndex].type === "Short Answer" ? 
-                <TextAnswerPanel
-                  question={currentQuestion}
-                  Flagged={currentQuestion.flagged}
-                />
+                (
+                  instantFeedback ? 
+                  (
+                    answerSubmitted ?
+                      <CorrectSA question={currentQuestion}/>
+                      :
+                      <TextAnswerPanel
+                      question={currentQuestion}
+                      Flagged={currentQuestion.flagged}
+                    />
+                  )
+                  :
+                    <TextAnswerPanel
+                      question={currentQuestion}
+                      Flagged={currentQuestion.flagged}
+                    />
+                )
                 :
                 (instantFeedback ?
                   (answerSubmitted ?
