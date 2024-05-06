@@ -32,10 +32,17 @@ import { ReportProvider } from './Context/ReportContext.js';
 import CaptureScreen from './pages/Student/CaptureScreen.jsx';
 import ViewFlags from './pages/Teacher/ViewFlags.jsx';
 import ObjectDetection from './pages/ObjectDetection.jsx';
+import LandingPage from './pages/LandingPages/landingpage.jsx';
+import Login from './pages/AuthenticationPages/Login.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root/>}>
+            <Route path=''element={<LandingPage/>}></Route>
+
+            <Route path='login'element={<Login/>}></Route>
+
+
             <Route path='home' element = {<StudentDashboard/>} />
             <Route path="manage-account" element = {<AccountManagerPage/>} />
             <Route path="quiz" element = {<QuizScreen />} />
