@@ -215,6 +215,21 @@ function EditAssessmentDetails() {
         console.log(formattedDate);
     };
 
+    const handleNavigationDecision = () => {
+        if(!allowNavigation) {
+            setAllowInstantFeedback(false)
+        }
+        setAllowNavigation((prev) => !prev)
+    }
+
+    const handleInstantFeedbackDecision = () =>{
+        if(!allowInstantFeedback) {
+            setAllowNavigation(false)
+        }
+
+        setAllowInstantFeedback((prev) => !prev)
+    }
+
 
     return (
     <div className='flex flex-col h-full font-body'>
@@ -406,7 +421,7 @@ function EditAssessmentDetails() {
                         <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
                         </div>
                         <div class="flex items-center my-4">
-                        <input checked={allowNavigation} onChange={()=>setAllowNavigation((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                         <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
                         </div>
                     </div>
@@ -420,7 +435,7 @@ function EditAssessmentDetails() {
                         </div>
                         </div>
                         <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={()=>{setAllowInstantFeedback((prev)=>!prev); setAllowNavigation(allowInstantFeedback)}} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                         <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
                         </div>
                         <div class="flex items-center my-4">

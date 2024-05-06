@@ -29,7 +29,6 @@ import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
 import { ReportProvider } from './Context/ReportContext.js';
-import TestPage from './pages/TestPage.jsx';
 import CaptureScreen from './pages/Student/CaptureScreen.jsx';
 import ViewFlags from './pages/Teacher/ViewFlags.jsx';
 import ObjectDetection from './pages/ObjectDetection.jsx';
@@ -62,7 +61,6 @@ const router = createBrowserRouter(
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>
             <Route path='teacher/view-flags' element={<ViewFlags/>}></Route>
-            <Route path='/recognise-face' element={<TestPage/>}></Route>
             <Route path='/object-detection' element={<ObjectDetection/>}></Route>
         
          </Route>
@@ -71,11 +69,8 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-
-    <StrictMode>
     <RouterProvider router={router} />
-    </StrictMode>
-);
+  );
 };
 
 export default App;

@@ -19,7 +19,7 @@ const MCQPanel = ({ question }) => {
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
     setResponse(answer)
-    setSelectedOption(answer ? answer.answer : [])
+    setSelectedOption(answer.answer ? answer.answer : [])
     setIsFlagged(question.flagged)
   }, [question])
 
@@ -27,7 +27,7 @@ const MCQPanel = ({ question }) => {
     setResponse(answer => {
       const updatedAnswer = {
         questionId: question._id,
-        answer: answer ? answer.answer : selectedOption
+        answer: answer.answer ? answer.answer : selectedOption
       };
       updateResponse(questionNumber, updatedAnswer);
       return answer;
