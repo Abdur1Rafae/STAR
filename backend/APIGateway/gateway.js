@@ -7,7 +7,6 @@ const registryRoutes = require('./routes/registryRoutes')
 const sessionRoutes = require('./routes/sessionRoutes')
 const auth = require('./middleware/authMiddleware')
 
-
 const app = express()
 const PORT = 3000
 

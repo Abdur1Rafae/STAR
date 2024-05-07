@@ -154,7 +154,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
                 title: assessment.title,
                 description: assessment.description,
                 className:  assessment.class,
-                participants: assessment.participants.reduce((names, section) => names.concat({_id: section._id, sectionName: section.sectionName}), []),
+                participants: assessment.participants.reduce((names, section) => names.concat({_id: section._id, name: section.sectionName}), []),
                 configurations: assessment.configurations,
                 coverImage: assessment.coverImage,
                 totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,

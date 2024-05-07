@@ -26,7 +26,7 @@ app.listen(PORT, () =>
           protocol: "http",
           host: HOST,
           port: PORT,
-          enabled : true
+          enabled : true,
       }
   }).then((response) => 
   {

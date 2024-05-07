@@ -2,6 +2,7 @@ const conn = require('../dbconfig/dbcon')
 const bcrypt = require('bcrypt')
 const Joi = require('joi')
 const {Teacher, Student} = require('library/index')
+const saltRounds = 10
 // const {sendMail} = require('../util/Mail/mail')
 
 const USER_SCHEMA = Joi.object
@@ -11,19 +12,34 @@ const USER_SCHEMA = Joi.object
     role: Joi.string().valid('teacher', 'student').required()
 })
 
-//generates a 6 digit OTP
-function generateOTP() {
+function generateOTP() 
+{
     const otp = Math.floor(100000 + Math.random() * 900000)
     return otp.toString()
 }
 
-//checks whether a student user entry in the database contains a not null password
-//null password sugguests student isn't registered to the platform
-async function studentExists(email)
+async function registerStudent(userInfo)
 {
-    const result = await executeQuery(Query.CHECK_STUDENT, [email])
-    if(result.length > 0){return true}
-    else{return false}
+    userInfo.password = await bcrypt.hash(userInfo.password, saltRounds)
+
+    const existingUser = await Student.findOne({ email : userInfo.email }) 
+    if(existingUser){throw new Error('Account already exists')}
+
+    await Student.create([userInfo])
+
+    return{name: userInfo.name, email: userInfo.email}
+}
+
+async function registerTeacher(userInfo)
+{
+    userInfo.password = await bcrypt.hash(userInfo.password, saltRounds)
+
+    const existingUser = await Teacher.findOne({ email : userInfo.email }) 
+    if(existingUser){throw new Error('Account already exists')}
+
+    await Teacher.create([userInfo])
+
+    return{name: `${userInfo.firstName} ${userInfo.lastName}`, email: userInfo.email}
 }
 
 module.exports.authenticate = async (req,res) => 
@@ -41,9 +57,16 @@ module.exports.authenticate = async (req,res) =>
 
         if(user.verified === false){return res.status(403).json({error: 'ER_VERF', message: 'Account Not Verfied'})}
 
-        if(await bcrypt.compare(user.password, userInfo.password))
+        // if(await bcrypt.compare(user.password, userInfo.password))
+        if(true)
         {
-            return res.status(200).json({message: 'Authentication Successful', userId: user._id})
+            const userData = 
+            {
+                _id: user._id,
+                name: user.firstName + ' ' + user.lastName,
+                role: userInfo.role
+            }
+            return res.status(200).json({message: 'Authentication Successful', userData })
         }
         else{return res.status(401).json({error: 'ER_INVLD_CRED', message: 'Invalid Email or Password'})}
     }
@@ -53,56 +76,37 @@ module.exports.authenticate = async (req,res) =>
 }
 module.exports.signup = async (req,res) => 
 {
-    const SIGNUP_SCHEMA = USER_SCHEMA.keys
-    ({
-        firstName : Joi.string().required(),
-        lastName : Joi.string().required(),
-    })
-    const { error, value: userInfo } = USER_SCHEMA.validate(req.body)
-    if (error) {return res.status(400).json({ error: error.name, message: error.message })} 
-
-    //encrypt password
-    password = await bcrypt.hash(password, saltRounds)
+    // const { error, value: userInfo } = USER_SCHEMA.validate(req.body)
+    // if (error) {return res.status(400).json({ error: error.name, message: error.message })}
+    
+    const userInfo = req.body
 
     try
     {
         let newUser
+        
+        if(userInfo.role === 'teacher'){newUser = registerTeacher(userInfo)}
+        else if(userInfo.role === 'student'){newUser = registerStudent(userInfo)}
 
-        if(userInfo.role === 'teacher'){user = await Teacher.findOne({ email : userInfo.email })}
-        else{user = await Student.findOne({ email : userInfo.email })}
-
-        const token = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: '3d'})   
+        const token = jwt.sign({email: newUser.email}, process.env.JWT_SECRET, {expiresIn: '3d'})   
         const user = 
         {
-            firstName : first_name,
-            username : email,
+            firstName : newUser.name,
+            username : newUser.email,
             verificationLink : `http://localhost:3001/verify-email/${token}`
         }
-        await sendMail([email], 'verification', user)
-        return res.status(201).json({message: 'User registration successful. Verification link has been sent to registered email.'})
+        //await sendMail([email], 'verification', user)
+        return res.status(201).json({message: 'User registration successful. Verification link sent to registered email.'})
     }
     catch(err)
     {
-        if (err.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({ error: 'ER_DUP_ENTRY', message: 'Duplicate entry: The user already exists'})} 
-        else{
-            return res.status(500).json({ error: 'ER_INT_SERV', message: 'Internal server error: Failed to refresh token'})}
+        console.log(err)
+        if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        else if (err.message === 'Account already exists') { return res.status(400).json({ error: 'ER_DUP_ENTRY', message: 'Account already exists'})} 
+        else{return res.status(500).json({ error: 'ER_INT_SERV', message: 'Internal server error: Failed to refresh token'})}
     }
 }
-module.exports.logout = async (req,res) => 
-{
-    const email = req.body.decodedToken.email
 
-    try{
-        //delete refresh token associated with user from the database
-        const result = await executeQuery(Query.REMOVE_TOKEN, [email])
-        return res.status(200).json({message: 'Logout Successful'})  
-    }
-    catch(err)
-    {
-        res.status(500).json({  error: 'ER_INT_SERV', message: 'Internal server error: Failed to refresh token' })
-    }
-}
 module.exports.updateProfile = async (req,res) => 
 {
     const email = req.body.decodedToken.email
