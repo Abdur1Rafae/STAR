@@ -36,9 +36,9 @@ const QuizScreen = () => {
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
 
-  // useEffect(()=>{
-  //   console.log(tabSwitch)
-  // }, [tabSwitch])
+  useEffect(()=>{
+    console.log(tabSwitch)
+  }, [tabSwitch])
 
   useEffect(() => {
     if (webcamRef.current && webcamRef.current.video) {
@@ -134,7 +134,7 @@ const QuizScreen = () => {
   useEffect(() => {
     let switchStartTime = null;
     const handleWindowFocus = () => {
-      document.title = 'Your Application Title';
+      document.title = 'Arete Assessment';
       if (switchStartTime) {
         const switchEndTime = new Date();
         const switchDuration = switchEndTime - switchStartTime;
@@ -147,8 +147,8 @@ const QuizScreen = () => {
     };
 
     const handleWindowBlur = () => {
-      document.title = 'Hello';
-      switchStartTime = new Date(); // Store switch start time
+      document.title = 'Warning!';
+      switchStartTime = new Date();
     };
 
     window.addEventListener('focus', handleWindowFocus);

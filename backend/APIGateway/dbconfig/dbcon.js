@@ -1,5 +1,5 @@
 const redis = require('redis')
-const HOST = 'localhost'
+const HOST = 'arete-redis-service'
 const PORT = 6379
 
 const client = redis.createClient({

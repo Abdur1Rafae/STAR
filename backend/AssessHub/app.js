@@ -17,17 +17,18 @@ app.use('/monitor', monitoringRoutes)
 app.listen(PORT, () => 
 {
   axios({
-      method: 'POST',
-      url: 'http://localhost:3000/registry/register',
-      headers: {'Content-Type': 'application/json'},
-      data: 
-      {
-          serviceName: "assesshub",
-          protocol: "http",
-          host: HOST,
-          port: PORT,
-          enabled : true
-      }
+    method: 'POST',
+    url: 'http://arete-backend-gateway:3000/registry/register',
+    headers: {'Content-Type': 'application/json'},
+    data: 
+    {
+        serviceName: "assesshub",
+        protocol: "http",
+        host: HOST,
+        port: PORT,
+        enabled : true,
+        url: `http://arete-backend-assesshub:${PORT}`
+    }
   }).then((response) => 
   {
     console.log(response.data.message)

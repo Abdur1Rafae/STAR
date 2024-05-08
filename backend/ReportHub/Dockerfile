@@ -1,5 +1,10 @@
 FROM node:latest
 
+ENV mongo_password=value
+ENV mongo_username=value
+ENV mongo_cluster=value
+ENV mongo_database=value
+
 RUN npm install -g nodemon
 
 WORKDIR /app
