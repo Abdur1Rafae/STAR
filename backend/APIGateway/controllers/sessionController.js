@@ -10,9 +10,9 @@ const REFRESH_TOKEN_EXPIRATION = '1y'
 const AUTHENTICATION_SERVICE = 'userguardian'
 const SESSION_HASH_KEY = 'SESSION_ID'
 
-function createAccessToken(id, sessionId)
+function createAccessToken(user, sessionId)
 {
-    return jwt.sign({id, sessionId}, process.env.JWT_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRATION})   
+    return jwt.sign({id: user._id, role: user.role, name: user.name, sessionId}, process.env.JWT_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRATION})   
 }
 
 async function createSession(id)
@@ -55,18 +55,19 @@ module.exports.login = async (req,res) =>
     try{
         const response = await authenticateUser(user)
 
-        if ( response.status === 200 && response.data.userId ) 
+        if ( response.status === 200 && response.data.userData ) 
         {
-            const userId = response.data.userId;
-            const sessionId = await createSession(userId)
-            const accessToken = createAccessToken(userId, sessionId)
-            return res.status(200).json({message: 'Login Successful', id : userId, accessToken})  
+            let user = response.data.userData;
+            const sessionId = await createSession(user)
+            const accessToken = createAccessToken(user, sessionId)
+            user.accessToken = accessToken
+            return res.status(200).json({message: 'Login Successful', user})  
         } 
         else {return res.status(response.status).json({ error: response.data.error, message: response.data.message })}
     }
     catch(err){
-        if(err.message === 'Internal Server Error'){return res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to authenticate user'})}
-        else {return res.status(500).json(err.response.data)}
+        console.log(err)
+        return res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to authenticate user'})
     }
 }
 module.exports.refresh = async (req, res) => 

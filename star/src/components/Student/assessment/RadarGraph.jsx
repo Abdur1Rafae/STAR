@@ -47,8 +47,8 @@ export const generateChartData = (dataObj) => {
     const labels = Object.keys(dataObj);
     const datasets = [{
         data: labels.map(label => {
-        const value = dataObj[label];
-        return Math.round((value.correct / value.totalCount) * 100);
+            const value = dataObj[label];
+            return Math.round((value.correct / value.totalCount) * 100);
         }),
         borderColor: 'rgba(44, 100, 145, 1)',
         backgroundColor: 'rgba(197, 216, 109, 0.5)',

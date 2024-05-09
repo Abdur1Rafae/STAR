@@ -20,8 +20,162 @@ export const ReportProvider = ({ children }) => {
     const [topPerformers, setTopPerformers] = useState([])
     const [absentees, setAbsentees] = useState([])
     const [requireAttention, setRequireAttention] = useState([])
-    const [studentData, setStudentData] = useState([])
+    const [questionData, setQuestionData] = useState([])
     const [questionIndex, setQuestionIndex] = useState(0)
+    const [questionStats, setQuestionStats] = useState({})
+    const [allQuestionPercent, setAllQuestionPercent] = useState([])
+
+    useEffect(()=>{
+        if(questionData.length > 0){
+            if(selectedSection == 'All') {
+                const compiledData = [];
+
+                questionData.forEach((section, sectionIndex) => {
+                    section.questions.forEach((question, questionIndex) => {
+                        const existingQuestionIndex = compiledData.findIndex(item => item.question === question.question);
+                        
+                        if (existingQuestionIndex !== -1) {
+                            compiledData[existingQuestionIndex].totalResponses += question.totalResponses;
+                            compiledData[existingQuestionIndex].totalCorrect += question.totalCorrect;
+                        } else {
+                            const newData = {
+                                question: question.question,
+                                totalResponses: 0,
+                                totalCorrect: 0
+                            };
+                            newData.totalResponses = question.totalResponses;
+                            newData.totalCorrect = question.totalCorrect;
+                            compiledData.push(newData);
+                        }
+                    });
+                });
+                setAllQuestionPercent(compiledData)
+            }
+            else {
+                const compiledData = [];
+
+                questionData.forEach((section, sectionIndex) => {
+                    if(section.section == selectedSection) {
+                        section.questions.forEach((question, questionIndex) => {
+                            const newData = {
+                                question: question.question,
+                                totalResponses: 0,
+                                totalCorrect: 0
+                            };
+                            newData.totalResponses = question.totalResponses;
+                            newData.totalCorrect = question.totalCorrect;
+                            compiledData.push(newData);
+                        });
+                    }
+                });
+                setAllQuestionPercent(compiledData)
+            }
+        }
+    }, [selectedSection, questionData])
+
+    useEffect(()=>{
+        let stats ={}
+        if(questionData.length > 0){
+            if(selectedSection == 'All') {
+                let totalResponses = 0;
+                let totalSkipped = 0
+                let correctResponses = 0;
+                let avgResponseTime = 0;
+                let options = []
+                let highestScore = 0
+                let avgScore = 0
+                let totalScore =0
+                questionData.map((section)=>{
+                    const qId = assessmentQuestion[questionIndex]._id
+                    totalScore = assessmentQuestion[questionIndex].points
+                    
+                    section.questions.map((question)=>{
+                        if(question.question == qId) {
+                            totalResponses += question.totalResponses
+                            totalSkipped += question.totalSkipped
+                            correctResponses += question.totalCorrect
+                            avgResponseTime += question.averageResponseTime
+                            if(highestScore < question.highestScore){
+                                highestScore = question.highestScore
+                            }
+                            avgScore += question.averageScore
+                            options = options.concat(question.optionsBreakDown)
+                        }
+                    })
+                })
+                avgResponseTime = (avgResponseTime/questionData.length)
+                avgScore = Math.round(avgScore/questionData.length)
+
+                const countMap = new Map();
+
+                options.forEach(item => {
+                    const { option, count } = item;
+                    if (countMap.has(option)) {
+                        countMap.set(option, countMap.get(option) + count);
+                    } else {
+                        countMap.set(option, count);
+                    }
+                });
+
+                const mergedArray = Array.from(countMap, ([option, count]) => ({ option, count }));
+                stats = {
+                    totalResponses: totalResponses,
+                    totalSkipped: totalSkipped,
+                    totalCorrect: correctResponses,
+                    highestScore: highestScore,
+                    avgScore: avgScore,
+                    avgResponseTime: secondsToHMS(avgResponseTime),
+                    options: mergedArray,
+                    totalScore: totalScore
+                }
+                setQuestionStats(stats)
+            }
+            else {
+                let totalResponses = 0;
+                let totalSkipped = 0
+                let correctResponses = 0;
+                let avgResponseTime = 0;
+                let options = []
+                let highestScore = 0
+                let avgScore = 0
+                let totalScore =0
+                questionData.map((section)=>{
+                    const qId = assessmentQuestion[questionIndex]._id
+                    totalScore = assessmentQuestion[questionIndex].points
+                    if(section.section == selectedSection) {
+                        section.questions.map((question)=>{
+                            if(question.question == qId) {
+                                totalResponses += question.totalResponses
+                                totalSkipped += question.totalSkipped
+                                correctResponses += question.totalCorrect
+                                avgResponseTime += question.averageResponseTime
+                                if(highestScore < question.highestScore){
+                                    highestScore = question.highestScore
+                                }
+                                avgScore += question.averageScore
+                                options = question.optionsBreakDown
+                            }
+                            
+                        })
+                    }        
+                })
+                avgResponseTime = (avgResponseTime/questionData.length)
+                avgScore = Math.round(avgScore/questionData.length)
+
+                stats = {
+                    totalResponses: totalResponses,
+                    totalSkipped: totalSkipped,
+                    totalCorrect: correctResponses,
+                    highestScore: highestScore,
+                    avgScore: avgScore,
+                    avgResponseTime: secondsToHMS(avgResponseTime),
+                    options: options,
+                    totalScore: totalScore
+                }
+                setQuestionStats(stats)
+            }
+        }
+    }, [questionIndex, selectedSection, questionData])
     
     useEffect(()=> {
         const topPerformingstudents = []
@@ -32,7 +186,6 @@ export const ReportProvider = ({ children }) => {
                 section.students.map((student) => {
                     if(student.response) {
                         const percentage = Math.round(student.response.totalScore / totalMarks * 100)
-                        console.log(percentage)
                         if(percentage > 90) {
                             topPerformingstudents.push({
                                 name: student.name,
@@ -74,7 +227,6 @@ export const ReportProvider = ({ children }) => {
                     section.students.map((student) => {
                         if(student.response) {
                             const percentage = Math.round(student.response.totalScore / totalMarks * 100)
-                            console.log(percentage)
                             if(percentage > 90) {
                                 topPerformingstudents.push({
                                     name: student.name,
@@ -162,10 +314,6 @@ export const ReportProvider = ({ children }) => {
     }, [selectedSection])
 
     useEffect(()=> {
-        console.log(participants)
-    }, [participants])
-
-    useEffect(()=> {
         const topics = {};
         
         assessmentQuestion.forEach(question => {
@@ -177,19 +325,6 @@ export const ReportProvider = ({ children }) => {
         });
         setTopicList(topics)
     }, [assessmentQuestion])
-
-    useEffect(()=> {
-        if(selectedSection == 'All') {
-            Object.keys(topicList).map(key => {
-                topicList[key].map((question)=> {
-                    participants.map((section)=> {
-                        
-                    })
-                })
-    
-            });
-        }
-    }, [topicList, selectedSection])
 
     useEffect(()=>{
         const newSections = []
@@ -277,7 +412,7 @@ export const ReportProvider = ({ children }) => {
     const questionCount = assessmentQuestion.length
 
     return (
-        <ReportContent.Provider value={{questionIndex, setQuestionIndex, topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
+        <ReportContent.Provider value={{allQuestionPercent, questionStats, questionData, setQuestionData, questionIndex, setQuestionIndex, topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
             {children}
         </ReportContent.Provider>
     )

@@ -91,9 +91,12 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
                 setError('Question needs to be asigned a topic.')
                 return
             }
-            if(newPoints < 1){
+            if(newPoints < 1 || !newPoints){
                 setError('Invalid points')
                 return
+            }
+            else {
+                console.log("here", newPoints)
             }
             if(newQuestion == ''){
                 setError('Empty Question cannot be saved.')
@@ -105,8 +108,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
             }
             setError('')
             try {
-                console.log(newOptions)
-                savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, newPoints, topicName, type, newCorrectOptions, isCorrect, reuse)
+                savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName, type, newCorrectOptions, isCorrect, reuse)
                 closeHandler()
             } catch(err) {
                 console.log(err)

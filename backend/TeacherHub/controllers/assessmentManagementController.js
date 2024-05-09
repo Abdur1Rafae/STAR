@@ -1,6 +1,17 @@
 const conn = require('../dbconfig/dbcon')
-const {getAssessmentStatus, upload, remove} = require('../util/library')
 const {Assessment, Section, Class} = require('library/index')
+const remove = require('../util/remove')
+
+function getAssessmentStatus(openDate, closeDate) 
+{
+    const currentDate = new Date()
+    
+    if (currentDate < openDate) {return "Not Started"}
+
+    if (currentDate < closeDate && openDate < currentDate) {return "In Progress"}
+
+    return "Requires Review"
+}
 
 module.exports.createAssessment = async (req,res) => 
 {
@@ -8,8 +19,6 @@ module.exports.createAssessment = async (req,res) =>
         const teacher = req.body.decodedToken.id
 
         var {title, description, participants, configurations, coverImage} = req.body
-
-        const imagePath = upload(coverImage)
 
         const session = await conn.startSession()
         const insertedId = await session.withTransaction(async () => 
@@ -24,7 +33,7 @@ module.exports.createAssessment = async (req,res) =>
             
             const newAssessment = await Assessment.create(
             [{
-                teacher, class: classInfo.className, title, description, participants, configurations, coverImage : imagePath
+                teacher, class: classInfo.className, title, description, participants, configurations, coverImage
             }], {session})
 
             const updatedSections = await Section.updateMany
@@ -56,8 +65,6 @@ module.exports.updateAssessment = async (req,res) =>
 
         var {title, description, participants, configurations, coverImage} = req.body
 
-        const imagePath = upload(coverImage)
-
         const session = await conn.startSession()
         await session.withTransaction(async () => 
         {
@@ -65,14 +72,12 @@ module.exports.updateAssessment = async (req,res) =>
             const oldAssessment = await Assessment.findOneAndUpdate
             (
                 {_id : assessmentId}, 
-                {teacherID, title, description, participants, configurations, coverImage : imagePath},
+                {teacherID, title, description, participants, configurations, coverImage},
                 {new: false},
                 {session}
             )
 
             if(!oldAssessment){throw new Error('Assessment not found')}
-            
-            remove(oldAssessment.coverImage)
 
             const oldParticipants = oldAssessment.participants.map(String)
             const newParticipants = participants
@@ -149,7 +154,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
                 title: assessment.title,
                 description: assessment.description,
                 className:  assessment.class,
-                participants: assessment.participants.reduce((names, section) => names.concat(section.sectionName), []),
+                participants: assessment.participants.reduce((names, section) => names.concat({_id: section._id, name: section.sectionName}), []),
                 configurations: assessment.configurations,
                 coverImage: assessment.coverImage,
                 totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,

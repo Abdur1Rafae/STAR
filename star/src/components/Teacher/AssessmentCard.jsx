@@ -53,9 +53,9 @@ const AssessmentCard = ({ assessment }) => {
             break;
     }
 
-    const OpenDate = DDMMMMYYYY_HHMM({date: new Date(assessment.configurations.openDate)});
+    const OpenDate = DDMMMMYYYY_HHMM({date: assessment.configurations.openDate});
 
-    const CloseDate = DDMMMMYYYY_HHMM({date: new Date(assessment.configurations.closeDate)});
+    const CloseDate = DDMMMMYYYY_HHMM({date: assessment.configurations.closeDate});
 
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>

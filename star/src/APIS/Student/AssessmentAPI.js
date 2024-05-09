@@ -3,6 +3,7 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_STUDENT_TOKEN
 
 const GetOngoingAssessments = async () => {
+    const token = localStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/ongoing-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -13,6 +14,7 @@ const GetOngoingAssessments = async () => {
 };
 
 const GetUpcomingAssessments = async () => {
+    const token = localStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/upcoming-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -23,7 +25,7 @@ const GetUpcomingAssessments = async () => {
 };
 
 const GetAssessmentQuestions = async({id, sectionId}) => {
-    console.log(id, sectionId)
+    const token = localStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/begin-assessment/${sectionId}/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -36,6 +38,7 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
 
 const SubmitAssessment = async({responses}) => {
     const id = localStorage.getItem('responseId')
+    const token = localStorage.getItem('token')
     const res = await AxiosBase.post(`assesshub/assessment/submit-response/${id}`,{
         submission: responses
     },{
@@ -47,4 +50,26 @@ const SubmitAssessment = async({responses}) => {
     return res;
 }
 
-export {GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment}
+const GetAssessmentSummary = async({id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.get(`reporthub/student/classes/assessment-report/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data;
+}
+
+const GetSubmission = async({id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.get(`reporthub/student/classes/assessment-submission/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data;
+}
+
+export {GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary}

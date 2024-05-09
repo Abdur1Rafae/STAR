@@ -1,5 +1,9 @@
 FROM node:latest
 
+ENV JWT_SECRET=value
+
+ENV JWT_REFRESH_SECRET=value
+
 RUN npm install -g nodemon
 
 WORKDIR /app

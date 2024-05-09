@@ -68,7 +68,7 @@ module.exports.getClassOverview = async (req,res) =>
         .populate(
             {
                 path: 'assessments',
-                select: 'title status totalMarks',
+                select: 'title status totalMarks configurations.openData configurations.closeDate configurations.duration',
                 model: Assessment
             }
         ) 
@@ -80,26 +80,48 @@ module.exports.getClassOverview = async (req,res) =>
         {
             const assessmentData = {}
 
-            const response = await Response.findOne
-            ({
-                assessment: new mongoose.Types.ObjectId(assessment._id),
-                student: new mongoose.Types.ObjectId(student)
-            })
-            .select('responses.questionId responses.score totalScore submittedAt')
-            .populate({
-                path: 'responses.questionId',
-                select: '-_id points skill'
-            })
-
             assessmentData.title = assessment.title
             assessmentData.totalMarks = assessment.totalMarks
-            assessmentData.submitted = response? response.submittedAt:null
 
-            if(response && assessment.status === 'Published')
+
+
+            if(assessment.configurations.closeDate < new Date())
             {
-                assessmentData.responseId = response._id
-                assessmentData.totalScore = response.totalScore
-                skills = skillBreakDown(skills, response.responses)
+                const response = await Response.findOne
+                ({
+                    assessment: new mongoose.Types.ObjectId(assessment._id),
+                    student: new mongoose.Types.ObjectId(student)
+                })
+                .select('responses.questionId responses.score totalScore submittedAt')
+                .populate({
+                    path: 'responses.questionId',
+                    select: '-_id points skill'
+                })
+
+                if(response)
+                {
+                    if(assessment.status === 'Published')
+                    {
+                        assessmentData.status = 'Published'
+                        assessmentData.responseId = response._id
+                        assessmentData.submitted = response.submittedAt
+                        assessmentData.totalScore = response.totalScore
+                        skills = skillBreakDown(skills, response.responses)
+                    }
+                    else
+                    {
+                        assessmentData.status = 'Under Review'
+                        assessmentData.submitted = response.submittedAt
+                    }
+                }
+                else{assessmentData.status = 'Absent'}
+            }
+            else if(assessment.configurations.openDate > new Date())
+            {
+                assessmentData.status = 'Not Started'
+                assessmentData.openDate = assessment.configurations.openDate
+                assessment.closeDate = assessment.configurations.closeDate
+                assessment.duration = assessment.configurations.duration
             }
 
             responses.push(assessmentData);
@@ -123,7 +145,7 @@ module.exports.getAssessmentReport = async (req,res) =>
         const {responseId} = req.params
 
         const response = await Response.findById(responseId)
-        .select('responses createdAt submittedAt previousScore previousTotal') 
+        .select('responses createdAt submittedAt') 
         .populate
         ({
             path: 'assessment',
@@ -138,7 +160,7 @@ module.exports.getAssessmentReport = async (req,res) =>
         const report =
         {
             duration: response.assessment.configurations.duration,
-            submiittedAt: response.submittedAt,
+            submittedAt: response.submittedAt,
             createdAt: response.createdAt,
             responses: response.responses.map( item => 
             {
@@ -149,6 +171,7 @@ module.exports.getAssessmentReport = async (req,res) =>
                         correct: 0
                     }
                     if(item.score === item.questionId.points){question.correct = 1}
+                    else if(item.answer.length === 0 || item.answer === null){question.correct = -1}
                     return question
             })
         }

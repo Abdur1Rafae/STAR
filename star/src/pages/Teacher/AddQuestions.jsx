@@ -134,7 +134,6 @@ function AddQuestions() {
     const deleteQuestion = async(id) => {
         try{
             const questionToDelete = questions[id]
-            console.log(questionToDelete)
             if(questionToDelete.reuse) {
                 const res = await DeleteReuseQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
             }
@@ -153,7 +152,6 @@ function AddQuestions() {
     };
 
     const updateQuestion = async(index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue, reuse) => {
-        console.log("here")
         const updatedQuestions = [...questions];
         if(type == "MCQ") {
             updatedQuestions[index] = {
@@ -260,7 +258,7 @@ function AddQuestions() {
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
-                <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-4'>
+                <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-1 md:p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>
                             <div className='border-2 border-dotted border-slate-400'>
@@ -327,7 +325,7 @@ function AddQuestions() {
                             questions.length > 0 ?
                             questions.map((question, index)=> {
                                 return (
-                                    <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
+                                    <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-1 md:p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
                                         <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>

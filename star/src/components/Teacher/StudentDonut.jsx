@@ -8,9 +8,9 @@ const options = {
 }
 
 const additionalColors = [
-    'rgba(255,96,88,1)',
     'rgba(71,163,237,1)',
-    'rgba(255,129,0,1)'
+    'rgba(255,129,0,1)',
+    'rgba(255,96,88,1)',
   ];
   
   
@@ -64,7 +64,6 @@ export function StudentDonutGraph({ inputData }) {
                     <p className='text-slate-400'>Students</p>
                 </div>
             </div>
-            <LegendList labels={labels}/>
         </div>
     )
 }

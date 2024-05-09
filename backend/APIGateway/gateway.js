@@ -11,11 +11,11 @@ const cors = require('cors')
 
 const app = express()
 let corsAllow = {
-    origin: "http://localhost:3001",
+    origin: "*",
     methods: "PUT, GET, POST, PATCH, DELETE, HEAD",
     credentials: true
 }
-app.use(cors(corsAllow))
+app.use(cors("*"))
 const PORT = 3000
 
 app.use(express.json())

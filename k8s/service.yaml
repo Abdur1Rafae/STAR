@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: arete-backend-teacherhub
+spec:
+  selector:
+    app: teacherhub-app
+  ports:
+    - protocol: TCP
+      port: 3002
+      targetPort: 3002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arete-backend-reporthub
+spec:
+  selector:
+    app: reporthub-app
+  ports:
+    - protocol: TCP
+      port: 3004
+      targetPort: 3004
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arete-backend-assesshub
+spec:
+  selector:
+    app: assesshub-app
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arete-frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend-app
+  ports:
+    - protocol: TCP
+      port: 3100
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arete-backend-userguardian
+spec:
+  selector:
+    app: userguardian-app
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+
+
+

@@ -3,6 +3,8 @@ const express = require('express')
 const morgan = require("morgan")
 const axios = require('axios')
 const path = require('path')
+
+const uploadRoutes = require('./routes/uploadRoute')
 const questionBankRoutes = require('./routes/questionBankRoutes')
 const classManagementRoutes = require('./routes/classManagementRoutes')
 const assessmentManagementRoutes = require('./routes/assessmentManagementRoutes')
@@ -14,27 +16,29 @@ const HOST = 'localhost'
 
 app.use(express.json())
 app.use(morgan('combined'))
+
+app.use('/upload-image', uploadRoutes)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/question-bank', questionBankRoutes)
 app.use('/class-management', classManagementRoutes)
 app.use('/assessment-management', assessmentManagementRoutes)
 app.use('/grade', gradingRoutes)
 
-
 app.listen(PORT, () => 
 {
   axios({
-      method: 'POST',
-      url: 'http://localhost:3000/registry/register',
-      headers: {'Content-Type': 'application/json'},
-      data: 
-      {
-          serviceName: "teacherhub",
-          protocol: "http",
-          host: HOST,
-          port: PORT,
-          enabled : true
-      }
+    method: 'POST',
+    url: 'http://arete-backend-gateway:3000/registry/register',
+    headers: {'Content-Type': 'application/json'},
+    data: 
+    {
+        serviceName: "teacherhub",
+        protocol: "http",
+        host: HOST,
+        port: PORT,
+        enabled : true,
+        url: `http://arete-backend-teacherhub:${PORT}/`
+    }
   }).then((response) => 
   {
     console.log(response.data.message)
