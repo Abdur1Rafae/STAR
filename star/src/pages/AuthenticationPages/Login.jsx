@@ -17,7 +17,8 @@ const Login = () => {
          role: isTeacherMode ? 'teacher' : 'student'
       });
       if (response.status == 200) {
-        localStorage.setItem('token', response.data.accessToken)
+        localStorage.setItem('token', response.data.user.accessToken)
+        localStorage.setItem('userDetails', response.data.user)
         if(response.data.role == 'student') {
          window.location.assign('/home')
         }

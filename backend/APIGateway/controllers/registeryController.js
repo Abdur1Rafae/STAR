@@ -49,25 +49,25 @@ module.exports.manage = async (req,res) =>
 }
 module.exports.register = async (req,res) => 
 {
-    const schema = CONFIG_SCHEMA.keys({enabled: Joi.boolean().required()})
+    //const schema = CONFIG_SCHEMA.keys({enabled: Joi.boolean().required()})
 
-    const { error, value: config } = schema.validate(req.body)
-    if (error) {return res.status(400).json({ error: error.name, message: error.message })} 
-
+    //const { error, value: config } = schema.validate(req.body)
+    //if (error) {return res.status(400).json({ error: error.name, message: error.message })} 
+    const {url, serviceName, enabled} = req.body
     try{
-        config.url = config.protocol + "://" + config.host + ":" + config.port + "/" 
-        const serviceName = config.serviceName.toLowerCase()
-        const index = await instanceExists(serviceName, config.url)
+        // config.url = config.protocol + "://" + config.host + ":" + config.port + "/" 
+        // const serviceName = config.serviceName.toLowerCase()
+        const index = await instanceExists(serviceName, url)
 
         if (index >= 0)
         {
-            return res.status(409).json({ message: `Configuration for ${config.serviceName} already exists at ${config.url}` })
+            return res.status(409).json({ message: `Configuration for ${serviceName} already exists at ${url}` })
         }
         else
         {
-            const instance = { url: config.url, enabled: config.enabled }
-            await client.rPush(config.serviceName, JSON.stringify(instance))
-            return res.status(201).json({ message: `${config.serviceName} instance registered successfully at ${config.url}` })
+            const instance = { url: url, enabled: enabled }
+            await client.rPush(serviceName, JSON.stringify(instance))
+            return res.status(201).json({ message: `${serviceName} instance registered successfully at ${url}` })
         }
     }
     catch(error){

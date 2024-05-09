@@ -37,7 +37,7 @@ app.listen(PORT, () =>
         host: HOST,
         port: PORT,
         enabled : true,
-        url: `http://arete-backend-teacherhub:${PORT}`
+        url: `http://arete-backend-teacherhub:${PORT}/`
     }
   }).then((response) => 
   {

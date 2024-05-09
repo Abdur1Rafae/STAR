@@ -49,7 +49,7 @@ module.exports.authenticate = async (req,res) =>
 
     try{
         let user
-
+        console.log(userInfo)
         if(userInfo.role === 'teacher'){user = await Teacher.findOne({ email : userInfo.email })}
         else{user = await Student.findOne({ email : userInfo.email })}
 

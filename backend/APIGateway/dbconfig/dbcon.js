@@ -1,10 +1,10 @@
 const redis = require('redis')
-const HOST = 'arete-redis-service'
+const HOST = 'redis-service.default.svc.cluster.local'
 const PORT = 6379
 
 const client = redis.createClient({
-    host: HOST,
-    port: PORT
+    url: `redis://${HOST}:${PORT}`,
+    password: 'aretepassword'
 })
 
 client.connect()

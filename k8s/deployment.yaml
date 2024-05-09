@@ -1,0 +1,183 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-app
+  template:
+    metadata:
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+      - name: frontend-app
+        image: abdurrafae/arete-frontend:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teacherhub-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teacherhub-app
+  template:
+    metadata:
+      labels:
+        app: teacherhub-app
+    spec:
+      containers:
+      - name: teacherhub
+        image: abdurrafae/teacherhub:latest
+        ports:
+        - containerPort: 3002
+        env:
+          - name: mongo_password
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_password
+          - name: mongo_username
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_username
+          - name: mongo_cluster
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_cluster
+          - name: mongo_database
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_database
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reporthub-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reporthub-app
+  template:
+    metadata:
+      labels:
+        app: reporthub-app
+    spec:
+      containers:
+      - name: reporthub
+        image: abdurrafae/reporthub:latest
+        ports:
+        - containerPort: 3004
+        env:
+          - name: mongo_password
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_password
+          - name: mongo_username
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_username
+          - name: mongo_cluster
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_cluster
+          - name: mongo_database
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_database
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assesshub-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assesshub-app
+  template:
+    metadata:
+      labels:
+        app: assesshub-app
+    spec:
+      containers:
+      - name: assesshub
+        image: abdurrafae/assesshub:latest
+        ports:
+        - containerPort: 3003
+        env:
+          - name: mongo_password
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_password
+          - name: mongo_username
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_username
+          - name: mongo_cluster
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_cluster
+          - name: mongo_database
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_database
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userguardian-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userguardian-app
+  template:
+    metadata:
+      labels:
+        app: userguardian-app
+    spec:
+      containers:
+      - name: userguardian
+        image: abdurrafae/userguardian:latest
+        ports:
+        - containerPort: 3001
+        env:
+          - name: mongo_password
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_password
+          - name: mongo_username
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_username
+          - name: mongo_cluster
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_cluster
+          - name: mongo_database
+            valueFrom:
+              secretKeyRef:
+                name: arete-secret
+                key: mongo_database

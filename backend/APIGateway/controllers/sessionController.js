@@ -10,9 +10,9 @@ const REFRESH_TOKEN_EXPIRATION = '1y'
 const AUTHENTICATION_SERVICE = 'userguardian'
 const SESSION_HASH_KEY = 'SESSION_ID'
 
-function createAccessToken(id, sessionId)
+function createAccessToken(user, sessionId)
 {
-    return jwt.sign({id, sessionId}, process.env.JWT_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRATION})   
+    return jwt.sign({id: user._id, role: user.role, name: user.name, sessionId}, process.env.JWT_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRATION})   
 }
 
 async function createSession(id)

@@ -18,7 +18,7 @@ app.listen(PORT, () =>
 {
   axios({
       method: 'POST',
-      url: 'http://localhost:3000/registry/register',
+      url: 'http://arete-backend-gateway:3000/registry/register',
       headers: {'Content-Type': 'application/json'},
       data: 
       {
@@ -26,7 +26,8 @@ app.listen(PORT, () =>
           protocol: "http",
           host: HOST,
           port: PORT,
-          enabled : true
+          enabled : true,
+          url: `http://arete-backend-userguardian:${PORT}/`
       }
   }).then((response) => 
   {
