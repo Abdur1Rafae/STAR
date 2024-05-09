@@ -1,10 +1,10 @@
 const redis = require('redis')
-const HOST = 'redis-service.default.svc.cluster.local'
+const HOST = '192.168.100.35'
 const PORT = 6379
 
 const client = redis.createClient({
-    url: `redis://${HOST}:${PORT}`,
-    password: 'aretepassword'
+    host: HOST,
+    port: PORT
 })
 
 client.connect()

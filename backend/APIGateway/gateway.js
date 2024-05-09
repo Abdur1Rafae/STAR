@@ -3,7 +3,6 @@ const express = require('express')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const serviceRoutes = require('./routes/serviceRoutes')
-const registryRoutes = require('./routes/registryRoutes')
 const sessionRoutes = require('./routes/sessionRoutes')
 const auth = require('./middleware/authMiddleware')
 require('dotenv').config()
@@ -22,9 +21,8 @@ app.use(express.json())
 app.use(morgan('combined'))
 app.use(helmet())
 
-app.use('/session', sessionRoutes)
-app.use('/registry', registryRoutes)
 app.use(auth)
+app.use('/session', sessionRoutes)
 app.use(serviceRoutes)
 
 

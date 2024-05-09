@@ -1,10 +1,10 @@
 const axios = require('axios')
-const getInstanceUrl = require('../util/microservice')
+const getServiceURL = require('../microservice/services')
 
 module.exports.redirect = async (req,res) => 
 {
     const path = req.params[1]
-    const url = await getInstanceUrl(req.params[0])
+    const url = await getServiceURL(req.params[0])
     if(url)
     {
         const targetURL = url + path + '?' + new URLSearchParams(req.query)

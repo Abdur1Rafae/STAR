@@ -556,3 +556,6 @@
 5/7/2024, 8:35:04 PM | INFO | DatabaseInfoService | Getting database overview for: 800ec432-6cc1-4cd2-839d-c65aba147794 | [object Object]
 5/7/2024, 8:35:04 PM | INFO | DatabaseClientFactory | Trying to get existing redis client. | [object Object]
 5/7/2024, 8:35:06 PM | INFO | NotificationGateway | Client disconnected: 0orwbOrtLsevmHtlAAAB | [object Object]
+5/7/2024, 9:08:57 PM | WARN | IoredisRedisConnectionStrategy | Server closed the connection. | [object Object]
+5/7/2024, 9:26:06 PM | INFO | IoredisRedisConnectionStrategy | Reconnecting to the redis database | [object Object]
+5/7/2024, 9:26:10 PM | INFO | IoredisRedisConnectionStrategy | Successfully connected to the redis database | [object Object]

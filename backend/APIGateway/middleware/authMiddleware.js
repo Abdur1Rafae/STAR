@@ -9,7 +9,9 @@ const unauthenticatedPaths =
 '/userguardian/user/forgot-password', 
 '/userguardian/user/verify-email', 
 '/userguardian/user/verify-otp', 
-'/userguardian/user/password-reset' 
+'/userguardian/user/password-reset',
+'/session/login',
+'/session/refresh'
 ]
 
 const verifyToken = async (token) => 
