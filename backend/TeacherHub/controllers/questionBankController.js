@@ -1,5 +1,5 @@
 const conn = require('../dbconfig/dbcon')
-const {Question, Assessment} = require('library/index')
+const {Question, Assessment, Section} = require('library/index')
 const remove = require('../util/remove')
 const mongoose = require('mongoose')
 
@@ -259,12 +259,20 @@ module.exports.getAllBanks = async (req,res) =>
         const teacher = req.body.decodedToken.id
 
         const questionBanks = await Assessment.aggregate([
-            { $match: { teacher: new mongoose.Types.ObjectId(teacher) } },
+            { 
+                $match: 
+                { 
+                    teacher: new mongoose.Types.ObjectId(teacher),
+                    'configurations.closeDate': { $lt: new Date() } 
+                } 
+            },
             {
-                $project: {
+                $project: 
+                {
                     _id: 1,
                     title: 1,
-                    updatedAt: 1,
+                    class: 1,
+                    scheduled: '$configurations.openDate',
                     questionCount: { $cond: { if: { $isArray: '$questionBank' }, then: { $size: '$questionBank' }, else: 0 } } 
                 }
             }
@@ -285,21 +293,27 @@ module.exports.getBankQuestions = async (req,res) =>
         const {assessmentId} = req.params
         
         const assessment = await Assessment.findById(assessmentId)
-        .select('questionBank -_id')
+        .select('questionBank -_id participants')
         .populate({
             path: 'questionBank.question',
             select: '-teacher -__v',
             model: Question
         })
+        .populate({
+            path: 'participants',
+            select: 'sectionName -_id',
+            model: Section
+        })
 
         if (!assessment){return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}
 
-        const formattedData = assessment.questionBank.map(item => ({
+        const questions = assessment.questionBank.map(item => ({
             ...item.question.toObject(),
             reuse: item.reuse
           }))
+          const participants = assessment.participants.map(item => (item.sectionName))
 
-        res.status(201).json({data: formattedData})
+        res.status(201).json({questions: questions, participants: participants})
 
     }
     catch (err) {

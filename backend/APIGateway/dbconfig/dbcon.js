@@ -1,5 +1,5 @@
 const redis = require('redis')
-const HOST = 'localhost'
+const HOST = '192.168.100.35'
 const PORT = 6379
 
 const client = redis.createClient({

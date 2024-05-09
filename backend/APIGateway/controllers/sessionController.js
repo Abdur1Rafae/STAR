@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 const uuid = require('uuid')
 const axios = require('axios')
-const getInstanceUrl = require('../util/microservice')
+const getServiceURL = require('../microservice/services')
 const client = require('../dbconfig/dbcon')
 
 const ACCESS_TOKEN_EXPIRATION = '1y'
@@ -10,9 +10,9 @@ const REFRESH_TOKEN_EXPIRATION = '1y'
 const AUTHENTICATION_SERVICE = 'userguardian'
 const SESSION_HASH_KEY = 'SESSION_ID'
 
-function createAccessToken(id, sessionId)
+function createAccessToken(user, sessionId)
 {
-    return jwt.sign({id, sessionId}, process.env.JWT_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRATION})   
+    return jwt.sign({id: user._id, role:user.role, sessionId}, process.env.JWT_SECRET, {expiresIn: ACCESS_TOKEN_EXPIRATION})   
 }
 
 async function createSession(id)
@@ -25,19 +25,23 @@ async function createSession(id)
 
 async function authenticateUser(user) 
 {
-    const url = await getInstanceUrl(AUTHENTICATION_SERVICE)
+    const url = await getServiceURL(AUTHENTICATION_SERVICE)
     if(!url){throw new Error('ER_SERVICE_UNAVAILABLE')}
 
-    const response = await axios.post(url + 'authenticate', 
+    try
     {
-        email: user.email,
-        password: user.password,
-        role: user.role
-    })
-    
-    if(!response){throw new Error('Internal Server Error')}
-
-    return response
+        return await axios.post(url + 'authenticate', 
+        {
+            email: user.email,
+            password: user.password,
+            role: user.role
+        })   
+    }
+    catch(error)
+    {
+        if(error.response){return error.response}
+        else{throw new Error('Internal Server Error')}   
+    }
 }
 
 module.exports.login = async (req,res) => 
@@ -78,6 +82,7 @@ module.exports.refresh = async (req, res) =>
 
         const decodedToken = jwt.decode(accessToken)
         const id = decodedToken.id
+        const role = decodedToken.role
         const sessionId = decodedToken.sessionId
 
         let refreshToken = await client.hGet(SESSION_HASH_KEY, id) 
@@ -93,7 +98,8 @@ module.exports.refresh = async (req, res) =>
             }
             else
             {
-                const refreshedToken = createAccessToken(id, sessionId)
+                const user = { _id: id, role: role}
+                const refreshedToken = createAccessToken(user, sessionId)
                 return res.status(200).json({message: 'Token Refreshed', accessToken: refreshedToken})  
             }
         })
