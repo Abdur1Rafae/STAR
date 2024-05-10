@@ -51,7 +51,7 @@ function AddQuestions() {
         const getAllQuestions = async() => {
             try{
                 const res = await GetStoredQuestions({assessmentId: assessmentName.assessmentId})
-                setQuestions(res)
+                setQuestions(res.questions)
             } catch(err) {
                 console.log(err)
                 return
@@ -66,7 +66,6 @@ function AddQuestions() {
             try {
                 const res = await GetAllTopics()
                 setTopicList(res)
-                console.log(res)
             } catch(err) {
             console.log(err)
             }
@@ -258,7 +257,7 @@ function AddQuestions() {
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
-                <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-1 md:p-4'>
+                <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-2 md:p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>
                             <div className='border-2 border-dotted border-slate-400'>
@@ -335,7 +334,7 @@ function AddQuestions() {
                         }
                         </div>
                     </div>
-                    <div className='bg-LightBlue w-full md:min-w-72 md:w-3/12 p-4'>
+                    <div className='bg-LightBlue w-full flex-grow md:min-w-64 md:w-3/12 p-2'>
                         <div className='w-full ml-1'>
                             <div className='flex text-sm font-body w-full justify-between'>
                                 <h4 className='font-medium w-24'>Questions:</h4>

@@ -9,7 +9,6 @@ const CategoryFilter = ({ categoryName, categories, selectedCategory, onSelectCa
                     onChange={(e) => onSelectCategory(e.target.value)}
                     className='outline-none bg-LightBlue rounded-md h-7'
                 >
-                    <option value={categoryName}>{categoryName}</option>
                     {categories.map((category, index) => (
                         <option key={index} value={category}>
                             {category}

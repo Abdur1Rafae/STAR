@@ -14,6 +14,7 @@ const OpenBank = () => {
     const [loading, setLoading] = useState(true)
     const {questionBank} = useParams()
     const [bankName, setBankName] = useState(questionBank)
+    const [sections, setSections] = useState([])
     const [topics, setTopics] = useState({})
     const [skillSet, setSkillSet] = useState([])
 
@@ -22,9 +23,9 @@ const OpenBank = () => {
             try {
                 const id = localStorage.getItem('QuestionBankID')
                 const Questions = await GetQuestionsOfQB({id: id})
-                console.log(Questions)
                 setTimeout(() => {
-                    setQuestions(Questions)
+                    setQuestions(Questions.questions)
+                    setSections(Questions.participants)
                     setLoading(false);
                 }, 1000);
             } catch(err) {
@@ -35,45 +36,7 @@ const OpenBank = () => {
         res()
     }, [])
 
-    const [questions, setQuestions] = useState([{
-            _id: null,
-            type: "Multiple Choice Question",
-            reuse: true,
-            question: "Who developed the theory of relativity?",
-            options: ["Isaac Newton","Albert Einstein","Stephen Hawking","Galileo Galilei"],
-            correctOptions: ["Albert Einstein"],
-            imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
-            explanation: "Albert Einstein developed the theory of relativity.",
-            skill: "Physics",
-            difficulty: "Hard",
-            points: 20
-        },
-        {
-            type: "True/False",
-            reuse: true,
-            question: "You are alive.",
-            options: ["True", "False"],
-            correctOptions: [],
-            isTrue: true,
-            imageUrl: null,
-            explanation: "Stephen Hawking developed the theory of relativity.",
-            skill: "Physics",
-            difficulty: "Hard",
-            points: 20
-        },
-        {
-            type: "Short Answer",
-            reuse: true,
-            question: "Tell me about yourself",
-            correctOptions:[],
-            options: [],
-            imageUrl: null,
-            explanation: "",
-            skill: "Physics",
-            difficulty: "Hard",
-            points: 20.
-        }
-    ])
+    const [questions, setQuestions] = useState([])
 
     useEffect(() => {
         const topicCountMap = {};
@@ -136,6 +99,10 @@ const OpenBank = () => {
                                     <div className='flex text-sm mt-2 font-body justify-between'>
                                         <h4 className='font-medium w-24'>Total Marks:</h4>
                                         <div className='w-40 flex justify-center'>{questions.reduce((totalPoints, question) => totalPoints + question.points, 0)}</div>
+                                    </div>
+                                    <div className='flex text-sm mt-2 font-body justify-between'>
+                                        <h4 className='font-medium w-24'>Sections:</h4>
+                                        <div className='w-40 flex justify-center'>{sections.map((section) => {return <p>{section}</p>})}</div>
                                     </div>
                                 </div>
 

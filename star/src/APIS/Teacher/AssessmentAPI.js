@@ -145,7 +145,7 @@ const GetStoredQuestions = async({assessmentId}) => {
         }
     })
 
-    return res.data.data
+    return res.data
 }
 
 const GetReuseQuestions = async({skill, topic, difficulty, type}) => {

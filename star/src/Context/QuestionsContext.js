@@ -5,44 +5,7 @@ export const QuestionContext = createContext();
 export const QuestionProvider = ({ children }) => {
   const [topicMap, setTopicMap] = useState({});
   const [skillMap, setSkillMap] = useState([])
-  const [questions, setQuestionSet] = useState([{
-    _id: null,
-    type: "Multiple Choice Question",
-    reuse: true,
-    question: "Who developed the theory of relativity?",
-    options: ["Isaac Newton","Albert Einstein","Stephen Hawking","Galileo Galilei"],
-    correctOptions: ["Albert Einstein"],
-    imageUrl: "https://scitechdaily.com/images/Theory-of-Relativity-Physics-Concept.jpg",
-    explanation: "Albert Einstein developed the theory of relativity.",
-    skill: "Physics",
-    difficulty: "Hard",
-    points: 20
-  },
-  {
-    type: "True/False",
-    reuse: true,
-    question: "You are alive.",
-    options: ["True", "False"],
-    correctOptions: [],
-    isTrue: true,
-    imageUrl: null,
-    explanation: "Stephen Hawking developed the theory of relativity.",
-    skill: "Physics",
-    difficulty: "Hard",
-    points: 20
-  },
-  {
-    type: "Short Answer",
-    reuse: true,
-    question: "Tell me about yourself",
-    correctOptions:[],
-    options: [],
-    imageUrl: null,
-    explanation: "",
-    skill: "Physics",
-    difficulty: "Hard",
-    points: 20.
-  }]);
+  const [questions, setQuestionSet] = useState([]);
   const [reuseQuestions, setReuseQuestions] = useState([])
   const [selectedQuestions, setSelectedQuestions] = useState([])
 

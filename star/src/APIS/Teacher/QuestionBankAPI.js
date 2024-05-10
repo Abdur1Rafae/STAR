@@ -21,7 +21,7 @@ const GetQuestionsOfQB = async({id}) => {
         }
     })
 
-    return res.data.data
+    return res.data
 }
 
 export {GetAllQuestionBanks, GetQuestionsOfQB}
