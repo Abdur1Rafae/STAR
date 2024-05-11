@@ -75,7 +75,7 @@ const IndividualQuestionPanel = ({responses}) => {
                 {currentQuestion.options?.map((option, index) => (
                     <div key={index} className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}>
                         <div
-                            className={`w-80 h-10 rounded-md mr-2 flex items-center border-2 ${
+                            className={`w-full min-h-10 rounded-md mr-2 flex items-center border-2 ${
                             currentQuestion.correctOptions?.includes(option) ? 'bg-green-300' : '' 
                             }`}
                         

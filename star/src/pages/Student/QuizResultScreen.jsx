@@ -86,11 +86,11 @@ const QuizResultScreen = () => {
         </div>
         <div className='text-xs self-center'>
           <span className="flex text-green-500 items-center">
-            <span className='pr-[1px]'><GoCheck /></span>  {correctAnswers} Correct Answers
+            <span className='pr-[1px]'><GoCheck /></span>  {correctAnswers} Correct
           </span>
           <span className="flex text-red-500 items-center">
             <span className='pr-[1px]'><IoMdClose /></span>
-            {submission.length - correctAnswers} Wrong Answers
+            {submission.length - correctAnswers} Wrong
           </span>
         </div>
       </div>

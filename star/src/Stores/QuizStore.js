@@ -88,7 +88,13 @@ const QuizStore = create((set) => ({
   },
 
   randomizeOptions: () => {
-
+    set((state) => {
+      const updatedQuestions = state.questions.map((question) => {
+        const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+        return { ...question, options: shuffledOptions };
+      });
+      return { ...state, questions: updatedQuestions };
+    });
   },
 
   setQuestions: (newQuestions) => set({
@@ -185,18 +191,6 @@ const QuizStore = create((set) => ({
       return nextState;
     });
   },
-
-  markAsAnswered: () => {
-    set((state) => {
-      const updatedQuestions = state.questions.map((question, index) => {
-        if (index === state.currentQuestionIndex) {
-          return { ...question, unanswered: false };
-        }
-        return question;
-      });
-      return { ...state, questions: updatedQuestions };
-    });
-  },
    
   flagQuestion: (number) => {
     set((state) => {
@@ -222,7 +216,8 @@ const QuizStore = create((set) => ({
         }, []);
       } else if (state.filter === 'unanswered') {
         filteredQuestions = state.questions.reduce((acc, question, index) => {
-          if (question.unanswered) acc.push(index);
+          if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null) acc.push(index);
+          console.log('checking', state.responses[index])
           return acc;
         }, []);
       }

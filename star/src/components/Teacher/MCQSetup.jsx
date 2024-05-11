@@ -58,7 +58,7 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
 
     const handleAddChoice = () => {
         let updatedChoices = [...choices]
-        updatedChoices.push("New Choice")
+        updatedChoices.push("")
         setChoices(updatedChoices)
         addOption(updatedChoices)
     };

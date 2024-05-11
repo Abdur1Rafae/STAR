@@ -44,7 +44,6 @@ const CourseInfo = () => {
           setUpcomingAssessment(upcomingAsg)
           setPassAssessments(pastAsg)
           setSkillsData(res.skillsBreakDown)
-
           setLoading(false)
         }, 500);
       } catch(err) {
@@ -89,7 +88,7 @@ const CourseInfo = () => {
         }
       })
     }
-    setAvgScore(totalScore / totalMarks * 100)
+    setAvgScore(Math.round(totalScore / totalMarks * 100))
     setTotalAttempted(attemptCount)
     setHighestScore(highestScore)
     setTotalScoreofHighest(corresTotalScore)

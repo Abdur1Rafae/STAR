@@ -40,7 +40,7 @@ const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'Al
                 {columns.map((column, colIndex) => (
                   <td key={colIndex} className='px-1 py-2 text-xs md:text-sm border-black border-y-[1px]'>
                     { column.key == "startTime" || column.key == "submitTime" ? 
-                      DDMMM_HHMM(row[column.key]) :
+                      row[column.key] !== null ? DDMMM_HHMM(row[column.key]) : '-' :
                       row[column.key]
                     }
                   </td>

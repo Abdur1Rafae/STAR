@@ -30,7 +30,7 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
                 className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
               >
                 <div
-                  className={`w-80 h-10 rounded-md mr-2 flex items-center border-2 ${
+                  className={`min-h-10 rounded-md mr-2 flex items-center border-2 ${
                     question?.questionId.correctOptions.includes(option) ? 'bg-green-300' : '' 
                   }`}
                 

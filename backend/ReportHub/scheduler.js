@@ -241,12 +241,11 @@ function generateReport(assessmentId)
 async function scheduleReportGeneration()
 {
     const now = new Date()
-
     let assessments = await Assessment.find
     ({
       'configurations.closeDate': { $lt: now },
        status: { $ne: "Published" },
-      'configurations.releaseGrade': true
+      'configurations.releaseGrades': true
     })
 
     assessments.forEach(async (assessment) => 
@@ -265,7 +264,7 @@ async function scheduleReportGeneration()
     return assessments.length
 }
 
-cron.schedule('*/25 * * * *', async () => 
+cron.schedule('*/1 * * * *', async () => 
 {
     console.log('Running assessment check...');
     try 

@@ -7,9 +7,10 @@ const Login = () => {
   const [isTeacherMode, setIsTeacherMode] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [check, setCheck] = useState(true)
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async() => {
+    setCheck(false)
     try {
       const response = await UserLogin({
          email: email,
@@ -18,8 +19,8 @@ const Login = () => {
       });
       if (response.status == 200) {
         localStorage.setItem('token', response.data.user.accessToken)
-        localStorage.setItem('userDetails', response.data.user)
-        if(response.data.role == 'student') {
+        localStorage.setItem('userDetails', JSON.stringify(response.data.user))
+        if(response.data.user.role == 'student') {
          window.location.assign('/home')
         }
         else {
@@ -29,14 +30,14 @@ const Login = () => {
       } else {
         console.log('Login failed:', response.statusText);
       }
-    } catch (error) {
+    } catch (error) {    
       console.log('Error:', error);
     }
   };
 
   return (
     <div className='w-full h-screen font-body'>
-      <div className='menu-container w-full h-14 bg-DarkBlue flex items-center '>
+      <div className={`menu-container w-full h-14 bg-DarkBlue flex items-center `}>
         <div className='w-full'>
           <div className="menuleft logo flex justify-start">
             <img src={logo} className='w-44 h-14 mr-2'></img>
@@ -100,7 +101,7 @@ const Login = () => {
                 <a href="" className='text-xs text-[#2D79F3]'>Forgot Password?</a>
               </div>
             </div>
-            <button type="submit" className='w-52 mt-8 mb-4 rounded-lg bg-DarkBlue text-white text-sm py-4 self-center'>Login</button>
+            <button type="button" onClick={handleSubmit} className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center`}>Login</button>
             <div className='flex items-center justify-center gap-2 self-center'>
               <span className='text-xs'>Don't have an Account? </span>
               <a className='text-xs text-[#2D79F3]'>Sign Up</a>

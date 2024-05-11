@@ -20,8 +20,7 @@ module.exports.getEnrolledClasses = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
 
         const classes = await Student.findById(student)
         .select('-name -erp -email -_id -__v') 
@@ -36,6 +35,7 @@ module.exports.getEnrolledClasses = async (req,res) =>
                 populate:{ path: 'teacher', select: '-_id firstName lastName'} 
             },
         })
+
 
         const formattedData = classes.enrolledSections.map( section => 
         ({
@@ -59,8 +59,7 @@ module.exports.getClassOverview = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
         const {sectionId} = req.params
 
         const section = await Section.findById(sectionId)
@@ -140,8 +139,7 @@ module.exports.getAssessmentReport = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
         const {responseId} = req.params
 
         const response = await Response.findById(responseId)
@@ -189,8 +187,7 @@ module.exports.getAssessmentSubmission = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
         const {responseId} = req.params
 
         let response = await Response.findById(responseId)

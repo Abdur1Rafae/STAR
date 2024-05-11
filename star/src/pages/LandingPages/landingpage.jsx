@@ -21,7 +21,9 @@ const LandingPage = () => {
 return (
 <div className='w-full scroll-smooth '>
     <div className='grid grid-cols-10 items-center bg-DarkBlue py-4 px-4 md:px-12'>
-    <img src={logo} alt="" className='w-[80px] col-span-5 md:col-span-2' />
+    <div className="menuleft logo flex justify-start">
+      <img src={logo} className='w-44 h-14 mr-2'></img>
+    </div>
     <div className='w-full col-span-5 md:hidden'>
           <button
             data-ripple-light="true"
@@ -86,7 +88,7 @@ return (
     </div>
     <div className='max-md:hidden col-span-4 flex gap-x-8 text-white font-semibold justify-end text-sm'>
         <button>Sign up</button>
-        <button className='bg-white px-8 py-2 rounded-md text-black'>Login</button>
+        <button onClick={()=>{window.location.assign('/login')}} className='bg-white px-8 py-2 rounded-md text-black'>Login</button>
     </div>
     </div>
     <div className='md:sticky top-0 h-screen w-full bg-DarkBlue content-center max-md:px-4'>

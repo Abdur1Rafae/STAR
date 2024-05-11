@@ -270,21 +270,23 @@ export const ReportProvider = ({ children }) => {
             setTopicDistribution(JSON.parse(localStorage.getItem('TopicDistribution')))
             const question = JSON.parse(localStorage.getItem('MostIncorrectQuestion'))
             let incorrectQuestion =  []
-            assessmentQuestion.map((ques)=>{
-                if(question.question == ques._id) {
-                    incorrectQuestion.push({
-                        question: ques.question,
-                        type: ques.type,
-                        options: ques.options,
-                        correctOptions: ques.correctOptions,
-                        image: ques.image,
-                        isTrue: ques.isTrue || false,
-                        percentage: Math.round(question.totalIncorrect / question.totalResponses * 100)
-                    });
-                }
-            })
-
-            setInCorrectQuestion(incorrectQuestion)
+            if(question !== null) {
+                assessmentQuestion.map((ques)=>{
+                    if(question.question == ques._id) {
+                        incorrectQuestion.push({
+                            question: ques.question,
+                            type: ques.type,
+                            options: ques.options,
+                            correctOptions: ques.correctOptions,
+                            image: ques.image,
+                            isTrue: ques.isTrue || false,
+                            percentage: Math.round(question.totalIncorrect / question.totalResponses * 100)
+                        });
+                    }
+                })
+    
+                setInCorrectQuestion(incorrectQuestion)
+            }
         }
         else {
             participants.map((section)=> {
@@ -292,22 +294,25 @@ export const ReportProvider = ({ children }) => {
                     setTopicDistribution(section.topicBreakDown)
                     setInCorrectQuestion(section.mostIncorrectQuestion)
                     const question = section.mostIncorrectQuestion
+                    console.log(question)
                     let incorrectQuestion =  []
-                    assessmentQuestion.map((ques)=>{
-                        if(question.question == ques._id) {
-                            incorrectQuestion.push({
-                                question: ques.question,
-                                type: ques.type,
-                                options: ques.options,
-                                correctOptions: ques.correctOptions,
-                                image: ques.image,
-                                isTrue: ques.isTrue || false,
-                                percentage: Math.round(question.totalIncorrect / question.totalResponses * 100)
-                            });
-                        }
-                    })
-
-                    setInCorrectQuestion(incorrectQuestion)
+                    if(question !== null) {
+                        assessmentQuestion.map((ques)=>{
+                            if(question.question == ques._id) {
+                                incorrectQuestion.push({
+                                    question: ques.question,
+                                    type: ques.type,
+                                    options: ques.options,
+                                    correctOptions: ques.correctOptions,
+                                    image: ques.image,
+                                    isTrue: ques.isTrue || false,
+                                    percentage: Math.round(question.totalIncorrect / question.totalResponses * 100)
+                                });
+                            }
+                        })
+    
+                        setInCorrectQuestion(incorrectQuestion)
+                    }
                 }
             })
         }

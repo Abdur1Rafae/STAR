@@ -25,6 +25,7 @@ const Reports = () => {
         const GetOverview = async() => {
             try {
                 const res = await GetReportsOverview({id:reportId});
+                console.log(res)
                 localStorage.setItem('ReportQuestionBank', JSON.stringify(res.questionBank))
                 localStorage.setItem('ReportParticipants', JSON.stringify(res.participants))
                 localStorage.setItem('TopicDistribution', JSON.stringify(res.topicBreakDown))

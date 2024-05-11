@@ -5,11 +5,15 @@ import MobUpQuiz from './MobUpQuiz';
 
 const AssignmentTable = ({assessments}) => {
     function formatDate(date) {
-        return new Date(date).toISOString().split('T')[0];
+        const localDate = new Date(date);
+        const formattedDate = localDate.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: false }).split(',')[0];
+        return formattedDate;
     }
-
+    
     function formatTime(date) {
-        return new Date(date).toISOString().split('T')[1].substring(0, 5);
+        const localTime = new Date(date);
+        const formattedTime = localTime.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: false}).split(',')[1].trim().substring(0, 5);
+        return formattedTime;
     }
 
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 770px)' })

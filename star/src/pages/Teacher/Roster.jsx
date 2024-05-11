@@ -2,22 +2,24 @@ import React, { useEffect, useState } from 'react';
 import MenuBar from '../../components/MenuBar';
 import SideBar from '../../components/Teacher/SideBar';
 import Subheader from '../../components/Teacher/Subheader';
-import LCSearchBar from '../../components/Teacher/LCSearchBar';
 import ActionBox from '../../components/Teacher/ActionBox';
 import LMTable from '../../components/Teacher/LMTable';
 import AddStudentDialog from '../../components/Teacher/AddStudentDialog';
 import AddStudentManually from '../../components/Teacher/AddStudentManually';
 import { BiChevronLeft } from 'react-icons/bi';
-import { MdOutlineModeEdit, MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete } from "react-icons/md";
 import { useParams } from 'react-router-dom';
 import { AddStudent,AddStudents, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
-import SubmitButton from '../../components/button/SubmitButton';
 import Loader from '../../components/Loader';
 import {ClickOutsideFunc} from '../../components/ClickOutsideFunc';
 import * as XLSX from "xlsx";
+import { UpdateSection } from '../../APIS/Teacher/SectionAPI';
+import { DeleteSection } from '../../APIS/Teacher/SectionAPI';
+import ConfirmationBox from '../../components/ConfirmationBox';
 
 const Roster = () => {
   let [profileDialog, setProfileDialog] = useState(false);
+  let [deleteSection, setDeleteSection] = useState(false)
 
   let handleProfileClick = () => {
     setProfileDialog(true);
@@ -31,13 +33,11 @@ const Roster = () => {
   const [loading, setLoading] = useState(true)
   const sectionId = useParams('sectionID')
   const [isEditing, setIsEditing] = useState(false);
-  const [editedClassName, setEditedClassName] = useState('');
   const [selectedClass, setSelectedClass] = useState(localStorage.getItem('SelectedSection'));
-  const [previousClassName, setPreviousClassName] = useState('');
+  const [editedClassName, setEditedClassName] = useState(selectedClass);
   const [isAddingStudent, setIsAddingStudent] = useState(false);
   const [isAddingStudentManually, setIsAddingStudentManually] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState(null)
   const [students, setStudents] = useState([]);
   const [error , setError] = useState('');
   const [showError, setShowError] = useState(false);
@@ -65,16 +65,30 @@ const Roster = () => {
     GetStudents()
   }, [])
 
-  const handleEditClassName = () => {
-    console.log('Class name edited:', editedClassName);
-    setSelectedClass(editedClassName);
-    setIsEditing(false);
-  };
+  async function handleKeyPress(event) {
+    if(editedClassName !== "") {
+        if (event.key === 'Enter') {
+          try {
+            const res = await UpdateSection({id:sectionId.sectionID, name: editedClassName})
+            setSelectedClass(editedClassName)
+            console.log(res)
+          } catch(err) {
+              console.log(err)
+          }
+          setIsEditing(false);
+        }
+    }
+}
 
-  const cancelEditClassName = () => {
-    setIsEditing(false);
-    setEditedClassName(previousClassName);
-  };
+  const handleDeleteSection = async() => {
+    try {
+      const res = DeleteSection({id: sectionId.sectionID})
+      console.log(res)
+      window.location.assign('/teacher/classes')
+    } catch(err) {
+      console.log(err)
+    }
+  }
 
   const trimAndLowercaseKeys = (obj) => {
     const trimmedLowerCaseObj = {};
@@ -149,17 +163,24 @@ const Roster = () => {
   }
   const handleAddStudent = async(student) => {
     try {
-      const addStudent = await AddStudent({sectionId: sectionId.sectionID, student: student})
-      student._id = addStudent.studentIds[0]
-      setStudents([...students, student]);
+      const index = students.findIndex(item => item.id === student.id);
+      if(index == -1) {
+        const addStudent = await AddStudent({sectionId: sectionId.sectionID, student: student})
+        student._id = addStudent.studentIds[0]
+        setStudents([...students, student]);
+      }
     } catch(err) {
       console.log(err)
     }
   };
-  const handleAddStudents = async(students) => {
-    console.log(students)
+  const handleAddStudents = async(newStudents) => {
     try {
-      const addStudent = await AddStudents({sectionId: sectionId.sectionID, students: students})
+      const filteredStudents = newStudents.filter(newStudent => !students.some(existingStudent => existingStudent.id === newStudent.id));
+      if(filteredStudents.length > 0) {
+        const addStudent = await AddStudents({sectionId: sectionId.sectionID, students: filteredStudents})
+        filteredStudents.forEach((student, index)=>student._id = addStudent.studentIds[index])
+        setStudents([...students, ...filteredStudents]);
+      } 
     } catch(err) {
       console.log(err)  
     }
@@ -173,6 +194,7 @@ const Roster = () => {
       console.log(res)
       updatedStudents.splice(index, 1);
       setStudents(updatedStudents);
+      setDeleteSection(false)
     }  catch(err) {
       console.log(err)
     }
@@ -180,69 +202,71 @@ const Roster = () => {
   };
 
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='w-full h-full'>
       <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"} />
-      <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+      <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
         <SideBar active={"Classes"} />
         <div className='w-full flex flex-col'>
           <Subheader name={"Classes"} />
-          <div className={`p-2 md:pl-4 md:pt-4 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
+          <div className={`p-2 md:pl-4 md:pt-4 flex gap-4 ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
             {
               loading ? 
               <Loader/>
               :
               <>
+                <div>
                 <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
                   <div className='flex items-center self-start'>
                     <button onClick={()=>{window.location.assign('/teacher/classes')}}><BiChevronLeft className='text-3xl' /></button>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editedClassName}
-                        className='border border-black w-40'
-                        onChange={(e) => setEditedClassName(e.target.value)}
-                      />
-                    ) : (
-                      <h4 className='font-semibold'>{selectedClass}</h4>
-                    )}
-                    {!isEditing && <MdOutlineModeEdit className='ml-2' onClick={() => {
-                      setIsEditing(true);
-                      setPreviousClassName(selectedClass);
-                    }} />}
-                    {isEditing && (
-                      <>
-                        <button className='text-sm bg-DarkBlue text-white rounded-md m-2 py-1 px-2' onClick={handleEditClassName}>Save</button>
-                        <button className='text-sm bg-DarkBlue text-white rounded-md py-1 px-2' onClick={cancelEditClassName}>Cancel</button>
-                      </>
-                    )}
+                    <div className='flex'>
+                    {
+                      isEditing ? 
+                      (
+                          <>                       
+                              <input 
+                                  autoFocus
+                                  placeholder='Section'
+                                  type='text' 
+                                  value={editedClassName} 
+                                  onChange={(e) => setEditedClassName(e.target.value)} 
+                                  className='text-sm md:text-md ml-2 bg-LightBlue border-none outline-none'
+                                  onKeyDown={handleKeyPress}
+                              />
+                          </>
+
+                      ) 
+                      : 
+                      (
+                          <>
+                              <button onClick={() => setIsEditing(true)}><h1 className='text-sm md:text-md ml-2 font-body text-DarkBlue hover:underline'>{editedClassName}</h1></button>
+                          </>
+                      )
+                    }
+                </div>
                   </div>
                   <div className='flex items-center gap-2 sm:flex-row flex-col'>
-                    <button className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md'>
+                    <button onClick={()=>{setDeleteSection(true)}} className='flex bg-DarkBlue text-white active:shadow-md item-center justify-center gap-1 text-sm px-2 py-1 rounded-md'>
                       <MdOutlineDelete size={21} />
-                      Delete
+                      <p>Delete</p>
                     </button>
-                    <button onClick={handleProfileClick} className='flex bg-DarkBlue text-white active:shadow-md items-center gap-2 text-sm px-2 py-1 rounded-md'>
+                    <button onClick={handleProfileClick} className='flex bg-DarkBlue text-white active:shadow-md item-center justify-center gap-1 text-sm px-2 py-1 rounded-md'>
                       <MdOutlineDelete size={21} />
-                      Add Student
+                      <p>Add Student</p>
                     </button>
                     <div ref={closeProfile} className={`dialogue top-56 md:top-44 md:right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                {profileDialog && (
-                    <div className='h-20 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
-                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>handleimportFromExcel()}>
-                            <button className=' ml-2'>Import from Excel</button>
-                        </div>
-                        
-                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>handleimportManually()}>
-                            <button className='ml-2'>Add Manually</button>
-                        </div>
+                      {profileDialog && (
+                          <div className='h-20 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
+                              <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>handleimportFromExcel()}>
+                                  <button className=' ml-2'>Import from Excel</button>
+                              </div>
+                              
+                              <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>handleimportManually()}>
+                                  <button className='ml-2'>Add Manually</button>
+                              </div>
+                          </div>
+                      )}
                     </div>
-                )}
-            </div>
-
                   </div>
-                </div>
-                <div className='mt-4'>
-                  <LCSearchBar />
                 </div>
                 <LMTable
                   data={students.map((student, index) => ({
@@ -257,11 +281,18 @@ const Roster = () => {
                 />
                 <AddStudentDialog isOpen={isAddingStudent} onClose={handleStudentDialogClose} selectedFilein={data} selectedFilename={selectedFile?.name}  EditClick = {handleimportFromExcel} sectionId = {sectionId} onSave={handleAddStudents} showError={showError} error={error}/>
                 <AddStudentManually isOpen={isAddingStudentManually} onClose={() => {setIsAddingStudentManually(false)}} onSave={handleAddStudent} />
+                </div>
               </>
             }
           </div>
         </div>
       </div>
+      {
+          deleteSection ? 
+          <ConfirmationBox message={`Confirm to delete class: ${selectedClass}`} onConfirm={handleDeleteSection} onCancel={()=>{setDeleteSection(false)}}/>
+          : 
+          ''
+      }
     </div>
   );
 };

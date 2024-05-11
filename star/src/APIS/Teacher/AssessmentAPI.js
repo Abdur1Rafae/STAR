@@ -167,7 +167,7 @@ const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
 
 const MonitorAssessment = async({id}) => {
     const token = localStorage.getItem('token')
-    const res = await AxiosBase.get(`assesshub/monitor/monitor-assessment/6613875b0c0e21848981ad7e`, {
+    const res = await AxiosBase.get(`assesshub/monitor/monitor-assessment/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
         }

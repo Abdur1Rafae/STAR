@@ -251,7 +251,7 @@ function AddQuestions() {
 
 
   return (
-    <div className=' w-full h-full font-body border-black'>
+    <div className=' w-full h-full font-body'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
@@ -285,7 +285,7 @@ function AddQuestions() {
                                 </button>
                             </div>
                         </div>
-                        <button onClick={handleOrdering} className={`hidden sm:flex self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
+                        <button onClick={handleOrdering} className={`${questions.length > 0 ? 'hidden lg:flex' : 'hidden'} self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
                             <IoIosMove/>
                             <p>Order</p>
                         </button>

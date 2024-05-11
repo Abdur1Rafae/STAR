@@ -7,10 +7,9 @@ export function DDMMM_HHMM(inputDate) {
     if(inputDate === undefined) {
         return '-';
     }
-
-    // Convert UTC date to local date
     const utcDate = new Date(inputDate);
-    const localDate = new Date(utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000));
+    const localDate = new Date(utcDate.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: false }));
+
     const day = localDate.getDate();
     const monthIndex = localDate.getMonth();
     const hours = localDate.getHours();

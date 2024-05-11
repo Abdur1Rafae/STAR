@@ -113,7 +113,7 @@ const ReportsOverview = () => {
                     </div>
                 </div>
                 <div className='w-full bg-LightBlue shadow-md mt-4 p-4'>
-                    <IncorrectQuestion question={incorrectQuestion[0]}/>
+                    <IncorrectQuestion question={incorrectQuestion != null ? incorrectQuestion[0] : undefined}/>
                 </div>
             </div>
         </div>
@@ -191,7 +191,7 @@ const ReportsOverview = () => {
                     <TopicUnderStanding inputData={topicDistribution}/>
                 </div>
                 <div className='w-full bg-LightBlue shadow-md p-4'>
-                    <IncorrectQuestion question={incorrectQuestion[0]}/>
+                    <IncorrectQuestion question={incorrectQuestion != null ? incorrectQuestion[0] : undefined}/>
                 </div>
             </div>
         </div>
@@ -202,6 +202,9 @@ const ReportsOverview = () => {
 const IncorrectQuestion = ({question}) => {
     return (
         <>
+        {
+            question !== undefined ? 
+            <>
             <h4 className='text-sm font-medium'>Most Incorrect Question</h4>
             <div className='mt-4'>
                 <div className='w-full flex justify-between items-center'>
@@ -244,6 +247,10 @@ const IncorrectQuestion = ({question}) => {
                     </div>
                 </div>
             </div>
+            </>
+            :
+            <></>
+        }
         </>
     )
 }

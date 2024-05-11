@@ -25,7 +25,7 @@ const QuizScreen = () => {
   const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
   const [tabSwitch, setTabSwitch] = useState([])
 
-  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, initializeQuestionStartTime, currentQuestionStartTime, updateQuizDetails, submitResponses } = QuizStore();
+  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback} = quizConfig
 
@@ -143,7 +143,7 @@ const QuizScreen = () => {
           { type: 'tab switch', duration: switchDuration }
         ]);
       }
-      switchStartTime = null; // Reset switch start time
+      switchStartTime = null;
     };
 
     const handleWindowBlur = () => {
@@ -173,29 +173,28 @@ const QuizScreen = () => {
     createResponseObjects([])
   }, [])
 
-  // useEffect(() => {
-  //   const saveData = async () => {
-  //     try {
-  //       await submitResponses();
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await submitResponses();
+      } catch (err) {
+        console.log(err);
+      }
+    };
   
-  //   const handleBeforeUnload = (event) => {
-  //     if (!submittingQuiz) {
-  //       console.log("here")
-  //       saveData();
-  //       event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-  //     }
-  //   };
+    const handleBeforeUnload = (event) => {
+      if (!submittingQuiz) {
+        saveData();
+        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
   
-  //   window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('beforeunload', handleBeforeUnload);
   
-  //   return () => {
-  //     window.removeEventListener('beforeunload', handleBeforeUnload);
-  //   };
-  // }, [responses, submittingQuiz]);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [responses, submittingQuiz]);
 
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)

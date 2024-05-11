@@ -28,7 +28,7 @@ const Classes = () => {
     setError('')
     try {
       const res = await AddClass({ name: newClass });
-      let updatedClasses = [...classes, { ClassID: res.classId, ClassName: newClass, Sections: null }];
+      let updatedClasses = [...classes, { ClassID: res.classId, className: newClass, Sections: null }];
       setClasses(updatedClasses);
       setNewClass('');
     } catch (err) {

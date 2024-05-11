@@ -23,16 +23,14 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
         setSections(updatedSections)
     }
 
-    const handleDeletingSection = async (id) => {
+    const handleDeletingSection = async (id, index) => {
         try {
             const res = await DeleteSection({ id: id });
             console.log(res);
-            const indexToDelete = sections.findIndex(section => section.SectionID === id);
-            if (indexToDelete !== -1) {
-                const updatedSections = [...sections];
-                updatedSections.splice(indexToDelete, 1);
-                setSections(updatedSections);
-            }
+            console.log(sections)
+            const updatedSections = [...sections];
+            updatedSections.splice(index, 1);
+            setSections(updatedSections);
         } catch (err) {
             console.log(err);
         }
@@ -55,6 +53,12 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
         setIsEditing(false);
     })
 
+    const handleEmptySectionDeletion = (index) => {
+        const updatedSections = [...sections]
+        updatedSections.splice(index, 1)
+        setSections(updatedSections)
+    }
+
 
   return (
     <div className='w-full md:w-7/12 border-[1px] border-black p-2 overflow-hidden flex flex-col'>
@@ -64,8 +68,7 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
                     isEditing ? 
                     (
                         <>                       
-                            <input 
-                                autoFocus
+                            <input
                                 placeholder='Class'
                                 type='text' 
                                 value={newClass} 
@@ -91,7 +94,7 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
         <div className={`transition-all ease-out duration-500 ${display ? '' : 'opacity-0 pointer-events-none h-0'}`}>
             {
                 sections.map((sectionItem, index)=> {
-                    return <SectionTab key={`${index} ${sectionItem._id}`} sectionID={sectionItem._id} classID={id} section={sectionItem.sectionName} onDelete={handleDeletingSection}/>
+                    return <SectionTab key={`${index} ${sectionItem._id}`} index={index} emptyDelete={handleEmptySectionDeletion} sectionID={sectionItem._id} classID={id} section={sectionItem.sectionName} onDelete={handleDeletingSection}/>
                 })
             }
             <div className='flex gap-2'>

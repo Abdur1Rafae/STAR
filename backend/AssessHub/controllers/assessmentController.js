@@ -5,8 +5,7 @@ module.exports.beginAssessment = async (req,res) =>
 {
   try
   {
-    //const student = req.body.decodedToken.id
-    const student = '6609c24b69f531c541e8b651'
+    const student = req.body.decodedToken.id
     const {assessmentId, sectionId} = req.params
 
     const response = await Response.findOneAndUpdate
@@ -45,8 +44,7 @@ module.exports.submitAssessment = async (req,res) =>
 {
   try
   {
-    //const student = req.body.decodedToken.id
-    const student = '6609c24b69f531c541e8b651'
+    const student = req.body.decodedToken.id
     const {responseId} = req.params
     const {submission} = req.body
 
@@ -86,8 +84,8 @@ module.exports.getUpcomingAssessments = async (req,res) =>
 {
     try{
 
-      //const student = req.body.decodedToken.id
-      const student = '6609c05b69f531c541e366a0'
+      const student = req.body.decodedToken.id
+      // const student = '6609c05b69f531c541e366a0'
 
       const assessments = await Student.findById(student)
       .select('-name -erp -email -_id -__v') 
@@ -137,8 +135,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
 {
   try
   {
-    //const student = req.body.decodedToken.email
-    const student = '6609c24b69f531c541e8b651'
+    const student = req.body.decodedToken.id
 
     const assessments = await Student.findById(student)
     .select('-name -erp -email -_id -__v') 

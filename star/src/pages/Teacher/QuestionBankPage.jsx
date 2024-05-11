@@ -23,7 +23,6 @@ function QuestionBankPage() {
       }
       return true
     })
-    console.log(asg)
     setFilteredData(asg)
   }, [questionBanks, selectedClass])
 
@@ -36,7 +35,6 @@ function QuestionBankPage() {
         setTimeout(() => {
           setQuestionBanks(res)
           const classes = [...new Set(res.filter((asg)=> asg.hasOwnProperty('class')).map(asg=> asg.class))]
-          console.log(classes)
           setClasses(classes)
           setLoading(false);
         }, 1000);

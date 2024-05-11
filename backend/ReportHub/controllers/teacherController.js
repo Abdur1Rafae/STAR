@@ -323,10 +323,12 @@ module.exports.getQuestionSummary= async (req,res) =>
           ]
            
         const optionsBreakDown = await Response.aggregate(pipelineOptionsBreakDown)
-
+        // console.log(assessment.summary.participants)
+        // console.log(optionsBreakDown)
         const report = assessment.summary.participants.map(section => 
         {
             let questions = section.questions
+            console.log(optionsBreakDown.find((sectionItem) => sectionItem._id === section.sectionName))
             const questionsBreakDown = optionsBreakDown.find((sectionItem) => sectionItem._id === section.sectionName).questions
         
             questions = questions.map(question => {

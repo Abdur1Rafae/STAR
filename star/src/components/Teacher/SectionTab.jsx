@@ -4,7 +4,7 @@ import { ClickOutsideFunc } from '../ClickOutsideFunc';
 import { AddSection, UpdateSection } from '../../APIS/Teacher/SectionAPI';
 import ConfirmationBox from '../ConfirmationBox';
 
-const SectionTab = ({sectionID, classID, section, onDelete}) => {
+const SectionTab = ({sectionID, classID, section, onDelete, index, emptyDelete}) => {
     const [sectionName, setSectionName] = useState(section ?? "");
     const [newSection, setNewSection] = useState(section);
     const [isEditing, setIsEditing] = useState(section ? false : true);
@@ -12,7 +12,7 @@ const SectionTab = ({sectionID, classID, section, onDelete}) => {
     const [deleteSection, setDeleteSection] = useState(false)
 
     async function handleKeyPress(event) {
-        if(newSection !== "") {
+        if(newSection !== "" && newSection != undefined) {
             if (event.key === 'Enter') {
                 if(sectionName == "") {
                     try {
@@ -25,6 +25,7 @@ const SectionTab = ({sectionID, classID, section, onDelete}) => {
                 else {
                     try {
                         const res = await UpdateSection({id:sectionId, name: newSection})
+                        setSectionName(newSection)
                     } catch(err) {
                         console.log(err)
                     }
@@ -36,8 +37,19 @@ const SectionTab = ({sectionID, classID, section, onDelete}) => {
     }
 
     let saveSectionName = ClickOutsideFunc(()=>{
-        setIsEditing(false);
+        if(newSection != "" && newSection != undefined && section!="") {
+            setIsEditing(false);
+        }
     })
+
+    let handleSectionDelete = () => {
+        if(sectionId == undefined) {
+            emptyDelete(index)
+        }
+        else {
+            setDeleteSection(true)
+        }
+    }
 
   return (
     <div className='w-full h-12 border-[1px] border-black p-2 bg-LightBlue flex justify-between mt-2'>
@@ -69,18 +81,18 @@ const SectionTab = ({sectionID, classID, section, onDelete}) => {
             </div>
         </div>
         <div className='flex'>
-            <button className='flex flex-col justify-center items-center mr-4 hover:text-DarkBlue' onClick={()=> {localStorage.setItem("SelectedSection", sectionName); window.location.assign(`classes/${sectionId}`)}}>
+            <button className='flex flex-col justify-center items-center mr-4 hover:text-DarkBlue' onClick={()=> {if(!isEditing){localStorage.setItem("SelectedSection", sectionName); window.location.assign(`classes/${sectionId}`)}}}>
                 <MdOutlineGroups className='text-xl'/>
                 <p className='text-xs font-body'>Roster</p>
             </button>
-            <button className='flex flex-col justify-center items-center hover:text-red-600' onClick={()=>{setDeleteSection(true)}}>
+            <button className='flex flex-col justify-center items-center hover:text-red-600' onClick={handleSectionDelete}>
                 <MdOutlineDeleteOutline className='text-xl'/>
                 <p className='text-xs font-body'>Delete</p>
             </button>
         </div>
         {
             deleteSection ? 
-            <ConfirmationBox message={`Confirm to delete class: ${section}`} onConfirm={()=>onDelete(section.SectionID)} onCancel={()=>{setDeleteSection(false)}}/>
+            <ConfirmationBox message={`Confirm to delete class: ${sectionName}`} onConfirm={()=>{onDelete(sectionId, index); setDeleteSection(false)}} onCancel={()=>{setDeleteSection(false)}}/>
             : 
             ''
         }
