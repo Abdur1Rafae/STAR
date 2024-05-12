@@ -138,7 +138,7 @@ module.exports.publish = async (req,res) =>
 
         const updatedAssessment = await Assessment.findByIdAndUpdate(
           assessmentId,
-          { $set: { status: "Reviewed", "configurations.releaseGrade": true } },
+          { $set: { status: "Reviewed", "configurations.releaseGrades": true } },
           { new: true }
         )
 

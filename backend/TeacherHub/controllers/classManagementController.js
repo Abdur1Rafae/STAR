@@ -145,6 +145,7 @@ module.exports.addStudentsToSection = async (req,res) =>
             for (const studentData of students) 
             {
                 const { name, email, erp } = studentData
+                const role = 'student'
 
                 const updateOp = {
                     updateOne: 
@@ -153,7 +154,7 @@ module.exports.addStudentsToSection = async (req,res) =>
                         update: 
                         {
                             $addToSet: { enrolledSections: sectionId },
-                            $setOnInsert: { name, erp }
+                            $setOnInsert: { name, erp, role }
                         },
                         upsert: true
                     }
@@ -204,7 +205,7 @@ module.exports.removeStudentFromSection = async (req,res) =>
         const index = section.roster.indexOf(studentId)
         if (index !== -1) {section.roster.splice(index, 1)}
 
-        const removedStudent = await Student.findByIdAndUpdate(studentId, { $pull: { enrolledSections: sectionId } })
+        const removedStudent = await User.findByIdAndUpdate(studentId, { $pull: { enrolledSections: sectionId } })
         if (!removedStudent) {return res.status(404).json({ error : 'ER_NOT_FOUND', message: 'Student not found' })}        
 
         await section.save()
