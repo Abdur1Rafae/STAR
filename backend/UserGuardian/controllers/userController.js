@@ -7,13 +7,12 @@ const saltRounds = 10
 
 const BASE_USER_SCHEMA = Joi.object
 ({
-    firstName: Joi.string().required(),
-    lastName: Joi.string().required(),
+    name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
 })
 
-const TEACHER_SCHEMA = BASE_USER_SCHEMA.concat(Joi.object({ role: Joi.string().valid('teacher').required()}))
+const TEACHER_SCHEMA = BASE_USER_SCHEMA.concat(Joi.object({role: Joi.string().valid('teacher').required()}))
 
 const STUDENT_SCHEMA = BASE_USER_SCHEMA.concat(Joi.object({erp: Joi.number().required(), role: Joi.string().valid('student').required()}))
 
@@ -38,7 +37,7 @@ module.exports.authenticate = async (req,res) =>
             const userData = 
             {
                 _id: user._id,
-                name: user.firstName + ' ' + user.lastName,
+                name: user.name,
                 role: user.role
             }
 
@@ -79,7 +78,7 @@ module.exports.updateProfile = async (req,res) =>
     const id = req.body.decodedToken.id
     const role = req.body.decodedToken.role
 
-    if(role!= 'teacher'){return res.status(401).json({error: 'ER_UNAUTH', message: 'Authorization Failed: Cannot perform update.'})}
+    if(role != 'teacher'){return res.status(401).json({error: 'ER_UNAUTH', message: 'Authorization Failed: Cannot perform update.'})}
 
     const user =  req.body
 
@@ -107,7 +106,7 @@ module.exports.forgotPassword = async (req,res) =>
         if (!existingUser || (existingUser.role === 'student' && existingUser.password == null)) {return res.status(404).json({ error: 'ER_NOT_FOUND' , message: 'User not found' })}
 
         const otp  = generateOTP()
-        //sendMail([email], 'forgotPassword', {otp, username: user.firstName})
+        //sendMail([email], 'forgotPassword', {otp, username: user.name})
         return res.status(200).json({message: 'OTP Sent', otp})
     }
     catch(err){res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to verify user' })}

@@ -1,4 +1,4 @@
-const {Response} = require('library/index')
+const {Response, Assessment} = require('library/index')
 const mongoose = require('mongoose')
 
 

@@ -1,6 +1,6 @@
 const conn = require('../dbconfig/dbcon')
 const Joi = require('joi')
-const {Teacher, Section, Student, Class} = require('library/index')
+const {Section, Class, User} = require('library/index')
 
 module.exports.createClass = async (req,res) => 
 {
@@ -12,8 +12,8 @@ module.exports.createClass = async (req,res) =>
         const insertId = await session.withTransaction(async () => 
         {
             const newClass = await Class.create([{className, teacher}], {session})
-            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $push: { classes: newClass[0] } }, { new: false }, {session})
 
+            const updatedTeacher = await User.findByIdAndUpdate(teacher, { $push: { classes: newClass[0] } }, { new: false }, {session})
             if(!updatedTeacher){throw new Error('Teacher not found')}
 
             return newClass[0]._id
@@ -33,16 +33,8 @@ module.exports.deleteClass = async (req,res) =>
         const teacher = req.body.decodedToken.id
         const {classId} = req.params
 
-        const session = await conn.startSession()
-        await session.withTransaction(async () => 
-        {
-            const deletedClass = await Class.findByIdAndDelete(classId, {session})
-            if(!deletedClass){throw new Error('Class not found')}
-
-            const updatedTeacher = await Teacher.findByIdAndUpdate(teacher, { $pull: { classes: classId } }, { new: false }, {session})
-            if(!updatedTeacher){throw new Error('Teacher not found')}
-        })
-        session.endSession()
+        const deletedClass = await Class.findByIdAndDelete(classId)
+        if(!deletedClass){throw new Error('Class not found')}
 
         return res.status(200).json({message: `Class Deleted Successfully`}) 
     }
@@ -64,10 +56,7 @@ module.exports.updateClass = async (req,res) =>
 
         return res.status(200).json({message: `Class Updated Successfully`})     
     }
-    catch(err){
-        if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
-        return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update class'})
-    }
+    catch(err){return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to update class'})}
 }
 
 module.exports.createSection = async (req,res) => 
@@ -100,18 +89,8 @@ module.exports.deleteSection = async (req,res) =>
     try{
         const { sectionId } = req.params
 
-        const session = await conn.startSession()
-        await session.withTransaction(async () => 
-        {
-            const deletedSection = await Section.findByIdAndDelete(sectionId, {session})
-            if(!deletedSection){throw new Error('Section not found')}
-
-            const classId = deletedSection.class
-            const updatedClass = await Class.findByIdAndUpdate( classId,{ $pull: { sections: sectionId } }, { new: false }, {session})
-            if(!updatedClass){throw new Error('Class not found')}
-
-        })
-        session.endSession()
+        const deletedSection = await Section.findByIdAndDelete(sectionId)
+        if(!deletedSection){throw new Error('Section not found')}
 
         return res.status(200).json({message: `Section Deleted Successfully`})
     }
@@ -183,7 +162,7 @@ module.exports.addStudentsToSection = async (req,res) =>
                 bulkOps.push(updateOp)
             }
 
-            const result = await Student.bulkWrite(bulkOps, {session})
+            const result = await User.bulkWrite(bulkOps, {session})
 
             const upsertedIds = Object.values(result.upsertedIds || {})
 
@@ -193,7 +172,7 @@ module.exports.addStudentsToSection = async (req,res) =>
             {
                 let modifiedEmails = []
                 modifiedEmails.push(...bulkOps.map(op => op.updateOne.filter.email))
-                const modifiedStudents = await Student.find({ email: { $in: modifiedEmails } }, { _id: 1 })
+                const modifiedStudents = await User.find({ email: { $in: modifiedEmails } }, { _id: 1 })
                 modifiedIds = modifiedStudents.map(student => student._id)
             }
 
@@ -258,7 +237,7 @@ module.exports.getClasses = async (req,res) =>
 
     try{
 
-        const teacherRecord = await Teacher.findById(teacher).populate
+        const teacherRecord = await User.findById(teacher).populate
         ({
             path: 'classes',
             select: 'className sections',
