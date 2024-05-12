@@ -1,4 +1,5 @@
 const conn = require('../dbconfig/dbcon')
+const mongoose = require('mongoose')
 const {Assessment, Section, Class} = require('library/index')
 const remove = require('../util/remove')
 
@@ -104,7 +105,7 @@ module.exports.launchAssessment = async (req,res) =>
         if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
         return res.status(200).json({message: `Assessment launched successfully`})  
     }
-    catch(err){res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to launch assessment'})}
+    catch(err){console.log(err);res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to launch assessment'})}
 }
 module.exports.draftAssessment = async (req,res) => 
 { 
