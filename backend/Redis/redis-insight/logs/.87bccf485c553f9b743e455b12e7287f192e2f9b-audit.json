@@ -33,19 +33,9 @@
             "hash": "d1871aa39d5edf2b18b5a5ec591a032af3156b3d7606ec43a093a02af0ac3b51"
         },
         {
-            "date": 1715422628660,
+            "date": 1715432906669,
             "name": "/data/logs/redisinsight-errors-2024-05-11.log.0",
-            "hash": "d92aeaa5d0bf12ffdfd1f93b33a02d2fcf79f80f5c7346e12009cd7453382cdc"
-        },
-        {
-            "date": 1715503120989,
-            "name": "/data/logs/redisinsight-errors-2024-05-12.log.0",
-            "hash": "e76c82b6c40a43120d2ce7784a061eaabb4dc32bd4ffcc8a5a8977c0f2a47295"
-        },
-        {
-            "date": 1715503576564,
-            "name": "/data/logs/redisinsight-errors-2024-05-12.log.2024",
-            "hash": "fa1e9329f79c8222e378d9fe64f1279dc367fa02e9a94900fac553bd08c5de50"
+            "hash": "d6a45659def2689412423c85cc0e1cc4adc999796b27c0cc5f0f4adf66d86f9f"
         }
     ]
 }

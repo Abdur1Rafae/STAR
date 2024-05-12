@@ -5,13 +5,12 @@ const SESSION_HASH_KEY = 'SESSION_ID'
 //paths that do not require authentication
 const unauthenticatedPaths = 
 [
-'/userguardian/user/signup', 
-'/userguardian/user/forgot-password', 
-'/userguardian/user/verify-email', 
-'/userguardian/user/verify-otp', 
-'/userguardian/user/password-reset',
+'/userguardian/signup', 
+'/userguardian/reset-password',
 '/session/login',
-'/session/refresh'
+'/session/refresh',
+'/session/forgot-password',
+'/session/verify-otp', 
 ]
 
 const verifyToken = async (token) => 
@@ -33,7 +32,6 @@ const checkSession = async (id, sessionId) =>
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
-    if (req.path.startsWith('/userguardian/user/verify-email') || req.path.startsWith('/userguardian/uploads')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']

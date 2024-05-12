@@ -18,7 +18,7 @@ module.exports.getMonitoringDetails = async (req,res) =>
 
         { $unwind: '$participants' },
 
-        { $lookup: { from: 'students', localField: 'participants.roster', foreignField: '_id', as: 'students' } },
+        { $lookup: { from: 'users', localField: 'participants.roster', foreignField: '_id', as: 'students' } },
 
         { $unwind: '$students' },
 

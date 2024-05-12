@@ -23,39 +23,24 @@
             "hash": "24a5d0c6e831911a2931b188d2328bedd93e05b42ac3210e25fd92bba66031fc"
         },
         {
-            "date": 1715171053936,
+            "date": 1715148854654,
             "name": "/data/logs/redisinsight-2024-05-08.log.0",
-            "hash": "edaa2e962626af8be2152401b73fff9341f1cb022ceb94c282b4aa42c6048a17"
+            "hash": "556b7f8e027565723ab0dd5a0d6a8e70b290febe909090ce97142140dc3f67e5"
         },
         {
-            "date": 1715229522691,
+            "date": 1715182164919,
+            "name": "/data/logs/redisinsight-2024-05-08.log.2024",
+            "hash": "f5c6aa15b1492d48fce647e16a128083accbce2742ebaf3c07656ce8f02e0b6d"
+        },
+        {
+            "date": 1715273890962,
             "name": "/data/logs/redisinsight-2024-05-09.log.0",
-            "hash": "0457d4f0e4821e07a6187f6d59a2ad51347668fef29778c1f192e52f077f65cb"
+            "hash": "129e746972c01ed8448cebbe60eff20d02e26762e6b4b1f40678e677893365fa"
         },
         {
-            "date": 1715275593762,
-            "name": "/data/logs/redisinsight-2024-05-09.log.2024",
-            "hash": "166217106d2d447d1993710f17da4d866e7077ac038d575352de329c85ee9ca8"
-        },
-        {
-            "date": 1715420208468,
+            "date": 1715432906713,
             "name": "/data/logs/redisinsight-2024-05-11.log.0",
-            "hash": "3855b18fcd4164ee09c59f5264cdece3d65da294dc42623c7dcea8891e6af521"
-        },
-        {
-            "date": 1715422628719,
-            "name": "/data/logs/redisinsight-2024-05-11.log.2024",
-            "hash": "7a139f4920347e8023763eaa5bb3ed3d1008607a32d3ca341fb735f7504d90c1"
-        },
-        {
-            "date": 1715503121013,
-            "name": "/data/logs/redisinsight-2024-05-12.log.0",
-            "hash": "3ec705acb33e9a9daba7be21f94839090fb7f00da03dededc01c18497339dbda"
-        },
-        {
-            "date": 1715503576588,
-            "name": "/data/logs/redisinsight-2024-05-12.log.2024",
-            "hash": "8dabae64e8ebb89eb606d0898cb2dbca5f5e92ebc2344aa3c20b84476049dc1e"
+            "hash": "50d8dc7d24dff545adbdced2da2edfa64a034a1b8febd0e10c0ad72339917bda"
         }
     ]
 }

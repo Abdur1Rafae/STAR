@@ -1,5 +1,5 @@
 const conn = require('../dbconfig/dbcon')
-const {Assessment, Question, Student, Response} = require('library/index')
+const {Assessment, Question, User, Response} = require('library/index')
 
 module.exports.beginAssessment = async (req,res) => 
 {
@@ -59,7 +59,7 @@ module.exports.submitAssessment = async (req,res) =>
 
       const assessmentId = updatedResponse.assessment
 
-      const updatedStudent = await Student.findByIdAndUpdate( 
+      const updatedStudent = await User.findByIdAndUpdate( 
         student,
         { $addToSet: { attemptedAssessments : assessmentId } }
       , {session})
@@ -85,9 +85,8 @@ module.exports.getUpcomingAssessments = async (req,res) =>
     try{
 
       const student = req.body.decodedToken.id
-      // const student = '6609c05b69f531c541e366a0'
 
-      const assessments = await Student.findById(student)
+      const assessments = await User.findById(student)
       .select('-name -erp -email -_id -__v') 
       .populate
       ({
@@ -102,7 +101,7 @@ module.exports.getUpcomingAssessments = async (req,res) =>
             {
                 path: 'assessments', 
                 select: '-_id title configurations.openDate configurations.closeDate configurations.duration',
-                match: { 'configurations.openDate': { $gt: new Date() } },
+                match: { 'configurations.openDate': { $gt: new Date() }, status: 'Launched' },
                 model: Assessment
             }
         ]
@@ -137,7 +136,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
   {
     const student = req.body.decodedToken.id
 
-    const assessments = await Student.findById(student)
+    const assessments = await User.findById(student)
     .select('-name -erp -email -_id -__v') 
     .populate
     ({
@@ -155,7 +154,8 @@ module.exports.getOngoingAssessments = async (req,res) =>
             match: 
             { 
               'configurations.openDate': { $lt: new Date() },
-              'configurations.closeDate': { $gt: new Date() }
+              'configurations.closeDate': { $gt: new Date() },
+              status: 'Launched'
             },
             populate: 
             [

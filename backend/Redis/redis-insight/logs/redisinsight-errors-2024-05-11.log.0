@@ -1,1 +1,3 @@
-5/11/2024, 10:17:08 AM | ERROR | KeytarEncryptionStrategy | Failed to initialize keytar module | [object Object]
+5/11/2024, 1:08:26 PM | ERROR | KeytarEncryptionStrategy | Failed to initialize keytar module | [object Object]
+5/11/2024, 7:49:53 PM | ERROR | KeysService | Failed to get key info. Not found key: maaz5318@gmail.com | [object Object]
+5/11/2024, 7:49:53 PM | ERROR | StringService | Failed to get string value. | [object Object]
