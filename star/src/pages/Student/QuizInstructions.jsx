@@ -8,6 +8,7 @@ import MenuBar from '../../components/MenuBar';
 import SubHeader from '../../components/Student/SubHeader';
 import QuizStore from '../../Stores/QuizStore';
 import { GetAssessmentQuestions } from '../../APIS/Student/AssessmentAPI';
+import { SubmitAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
 const QuizInstructions = () => {
@@ -40,31 +41,41 @@ const QuizInstructions = () => {
       const res = await GetAssessmentQuestions({id: quizStore.id, sectionId: quizStore.sectionId})
       localStorage.setItem('responseId', res.responseId)
       const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
-      const questionSet = [...res.questions]
-      console.log(questionSet)
-      if(storedQuizDetails.quizConfig.randomizeQuestions) {
-        for (let i = questionSet.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [questionSet[i], questionSet[j]] = [questionSet[j], questionSet[i]];
-        }
-      }
-
-      if(storedQuizDetails.quizConfig.randomizeAnswers) {
-        const shuffledQuestionSet = questionSet.map((question) => {
-          const options = [...question.options]; 
-          for (let i = options.length - 1; i > 0; i--) {
+      if(res.questions && res.questions.length > 0) {
+        const questionSet = [...res.questions]
+        console.log(questionSet)
+        if(storedQuizDetails.quizConfig.randomizeQuestions) {
+          for (let i = questionSet.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [options[i], options[j]] = [options[j], options[i]];
+            [questionSet[i], questionSet[j]] = [questionSet[j], questionSet[i]];
           }
-          return { ...question, options };
-        });
-        localStorage.setItem('questions', JSON.stringify(shuffledQuestionSet));
+        }
+
+        if(storedQuizDetails.quizConfig.randomizeAnswers) {
+          const shuffledQuestionSet = questionSet.map((question) => {
+            const options = [...question.options]; 
+            for (let i = options.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [options[i], options[j]] = [options[j], options[i]];
+            }
+            return { ...question, options };
+          });
+          localStorage.setItem('questions', JSON.stringify(shuffledQuestionSet));
+        }
+        else {
+          localStorage.setItem('questions', JSON.stringify(questionSet));
+        }
+        
+        window.location.assign('/quiz')
       }
       else {
-        localStorage.setItem('questions', JSON.stringify(questionSet));
+        try {
+          const sub = await SubmitAssessment({responses: []})
+          window.location.assign('/home')
+        } catch(err) {
+          console.log(err)
+        }
       }
-      
-      window.location.assign('/quiz')
     }
     catch (error) {
       console.log(error)

@@ -15,7 +15,6 @@ const Login = () => {
       const response = await UserLogin({
          email: email,
          password: password,
-         role: isTeacherMode ? 'teacher' : 'student'
       });
       if (response.status == 200) {
         localStorage.setItem('token', response.data.user.accessToken)

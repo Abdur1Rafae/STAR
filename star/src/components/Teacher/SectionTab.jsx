@@ -17,6 +17,7 @@ const SectionTab = ({sectionID, classID, section, onDelete, index, emptyDelete})
                 if(sectionName == "") {
                     try {
                         const res = await AddSection({classID: classID, name: newSection})
+                        console.log(res)
                         setSectionId(res.sectionId)
                     } catch(err) {
                         console.log(err)
@@ -92,7 +93,7 @@ const SectionTab = ({sectionID, classID, section, onDelete, index, emptyDelete})
         </div>
         {
             deleteSection ? 
-            <ConfirmationBox message={`Confirm to delete class: ${sectionName}`} onConfirm={()=>{onDelete(sectionId, index); setDeleteSection(false)}} onCancel={()=>{setDeleteSection(false)}}/>
+            <ConfirmationBox message={`Confirm to delete section: ${sectionName}`} onConfirm={()=>{onDelete(sectionId, index); setDeleteSection(false)}} onCancel={()=>{setDeleteSection(false)}}/>
             : 
             ''
         }

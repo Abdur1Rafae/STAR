@@ -1,7 +1,5 @@
 import { AxiosBase } from '../BaseUrl';
 
-const token = process.env.REACT_APP_STUDENT_TOKEN
-
 const GetOngoingAssessments = async () => {
     const token = localStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/ongoing-assessments`,{
@@ -72,4 +70,15 @@ const GetSubmission = async({id}) => {
     return res.data;
 }
 
-export {GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary}
+const LaunchAssessment = async({id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.put(`teacherhub/assessment-management/launch-assessment/${id}`,{},{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data;
+}
+
+export {GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary, LaunchAssessment}

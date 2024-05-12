@@ -88,13 +88,7 @@ const QuizStore = create((set) => ({
   },
 
   randomizeOptions: () => {
-    set((state) => {
-      const updatedQuestions = state.questions.map((question) => {
-        const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
-        return { ...question, options: shuffledOptions };
-      });
-      return { ...state, questions: updatedQuestions };
-    });
+
   },
 
   setQuestions: (newQuestions) => set({

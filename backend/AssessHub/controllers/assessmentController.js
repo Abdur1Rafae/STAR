@@ -150,7 +150,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
         {
             path: 'assessments', 
-            select: '_id title description configurations coverImage',
+            select: '_id title description configurations coverImage status',
             match: 
             { 
               'configurations.openDate': { $lt: new Date() },
@@ -161,7 +161,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
             [
               {
                 path: 'teacher',
-                select: 'firstName lastName -_id'
+                select: 'name -_id'
               },
               {
                 path: 'questionBank.question',
@@ -172,13 +172,14 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
       ]
     })
+    console.log(assessments)
   
     const data = []
     assessments.enrolledSections.forEach(section => 
     {
         section.assessments.forEach(assessment => 
           {
-            if(!assessments.attemptedAssessments.includes(assessment._id))
+            if(!assessments.attemptedAssessments || !assessments.attemptedAssessments.includes(assessment._id))
             {
               const assessmentData = 
               {
@@ -186,7 +187,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
                 assessmentId : assessment._id,
                 title: assessment.title,
                 description : assessment.description,
-                teacher: assessment.teacher.firstName + " " + assessment.teacher.lastName,
+                teacher: assessment.teacher.name,
                 className: section.class.className,
                 totalMarks: assessment.questionBank.reduce((total, questionObj) => {return total + (questionObj.question ? questionObj.question.points : 0)}, 0),
                 totalQuestions: assessment.questionBank.length,

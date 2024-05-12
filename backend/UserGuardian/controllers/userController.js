@@ -56,12 +56,17 @@ module.exports.signup = async (req,res) =>
         const { error, value: userInfo } = SIGNUP_SCHEMA.validate(req.body)
         if (error) {return res.status(400).json({ error: error.name, message: error.message })}
 
+        const password = await bcrypt.hash(userInfo.password, saltRounds)
+
         const existingUser = await User.findOne({ email: userInfo.email })
         if (existingUser && existingUser.password !=null) {return res.status(400).json({ error: 'ER_DUP' , message: 'User already exists' })}
-
-        userInfo.password = await bcrypt.hash(userInfo.password, saltRounds)
-        const user = new User(userInfo)
-        await user.save()
+        else if(existingUser && userInfo.role === 'student'){await User.findByIdAndUpdate(existingUser._id, { password })}
+        else
+        {
+            userInfo.password = password
+            const user = new User(userInfo)
+            await user.save()
+        }
 
         return res.status(201).json({message: 'User registration successful.'})
     }

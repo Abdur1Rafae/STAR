@@ -38,4 +38,15 @@ const GradeResponse = async({submissionId, responseId, score, feedback}) => {
     return res.data
 }
 
-export {GetAssessmentSummary, GetAssessmentResponses, GradeResponse}
+const PublishAssessment = async({id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.put(`/teacherhub/grade/publish/${id}`,{},{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
+export {GetAssessmentSummary, GetAssessmentResponses, GradeResponse, PublishAssessment}
