@@ -12,6 +12,15 @@ import { YYYYMMDD } from '../../Utils/DateFunctions'
 const QuizReports = () => {
   const [reports, setReports] = useState([])
 
+  // useEffect(()=> {
+  //   localStorage.removeItem('responseId')
+  //   localStorage.removeItem('ReportQuestionBank')
+  //   localStorage.removeItem('ReportParticipants')
+  //   localStorage.removeItem('TopicDistribution')
+  //   localStorage.removeItem('MostIncorrectQuestion')
+  //   localStorage.removeItem('ReportAsgMarks')
+  // }, [])
+
   useEffect(()=>{
     const GetData = async() => {
       try {
@@ -53,7 +62,7 @@ const QuizReports = () => {
           <Subheader name={"Reports"}/>
           <div className='flex md:px-4 md:pt-4 p-1 gap-4'>
               <LCSearchBar/>
-              <CategoryFilter categories={['3452', '2343', '2342']}/>
+              <CategoryFilter categories={['3452', '2343', '2342']} onSelectCategory={()=>{}}/>
           </div>
           <LMTable data={reports} columns = {columns} />
         </div>

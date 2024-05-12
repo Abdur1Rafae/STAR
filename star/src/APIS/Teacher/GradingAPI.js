@@ -4,7 +4,7 @@ import { AxiosBase } from '../BaseUrl';
 
 const GetAssessmentSummary = async({id}) => {
     const token = localStorage.getItem('token')
-    const res = await AxiosBase.get(`/teacherhub/grade/summary/6613875b0c0e21848981ad7e`, {
+    const res = await AxiosBase.get(`/teacherhub/grade/summary/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
         }

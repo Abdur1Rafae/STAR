@@ -22,9 +22,10 @@ const GradingTablePage = () => {
     const GetData = async() => {
       try {
         const res = await GetAssessmentSummary({id: assessment._id})
+        console.log(res)
         let check = false
         res.map((ques) => {
-          if(ques.totalResponses && (ques.totalResponses == ques.totalGraded)){
+          if(ques.totalResponses && (ques.totalResponses != ques.totalGraded)){
             check = true
           }
         })
@@ -77,6 +78,9 @@ const GradingTablePage = () => {
       } catch(err) {
         console.log(err)
       }
+    }
+    else {
+      console.log("cant publish")
     }
   }
 

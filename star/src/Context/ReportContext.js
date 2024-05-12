@@ -99,7 +99,9 @@ export const ReportProvider = ({ children }) => {
                                 highestScore = question.highestScore
                             }
                             avgScore += question.averageScore
-                            options = options.concat(question.optionsBreakDown)
+                            if(question.optionsBreakDown) {
+                                options = options.concat(question.optionsBreakDown)
+                            }
                         }
                     })
                 })
@@ -153,7 +155,9 @@ export const ReportProvider = ({ children }) => {
                                     highestScore = question.highestScore
                                 }
                                 avgScore += question.averageScore
-                                options = question.optionsBreakDown
+                                if(question.optionsBreakDown) {
+                                    options = options.concat(question.optionsBreakDown)
+                                }
                             }
                             
                         })
@@ -339,6 +343,7 @@ export const ReportProvider = ({ children }) => {
         let highScore = 0;
         participants.map((section)=>{
             newSections.push(section.sectionName)
+            console.log(section)
             totalStudentsCount += section.responses
             responseTime += section.responseTime
             if(section.highestScore > highScore) {

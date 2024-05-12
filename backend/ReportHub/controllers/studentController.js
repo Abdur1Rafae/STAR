@@ -23,7 +23,7 @@ module.exports.getEnrolledClasses = async (req,res) =>
         const student = req.body.decodedToken.id
 
         const classes = await User.findById(student)
-        .select('-name -erp -email -_id -__v -role -password -attemptedAssessments') 
+        .select('-name -erp -email -id -_v -role -password -attemptedAssessments') 
         .populate
         ({
             path: 'enrolledSections',
@@ -35,9 +35,7 @@ module.exports.getEnrolledClasses = async (req,res) =>
                 populate:{ path: 'teacher', select: '-_id name'} 
             },
         })
-        console.log(classes)
         if(!classes || !classes.enrolledSections){return res.status(201).json({data: []})} 
-
 
         const formattedData = classes.enrolledSections.map( section => 
         ({
@@ -84,6 +82,8 @@ module.exports.getClassOverview = async (req,res) =>
             assessmentData.title = assessment.title
             assessmentData.totalMarks = assessment.totalMarks ?? 0
             assessmentData.closeDate = assessment.configurations.closeDate
+
+
 
             if(assessment.configurations.closeDate < new Date())
             {

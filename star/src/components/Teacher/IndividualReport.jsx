@@ -155,7 +155,7 @@ const IndividualReport = () => {
                 <div className='w-full'>
                   <IndividualQuestionPanel responses={activeStudenData.responses}/>
                 </div>
-                <div className=''>
+                <div className='min-w-44'>
                   <ResultSummary  
                     obtainedMarks={activePerson.response.totalScore} 
                     totalMarks={totalMarks}

@@ -39,7 +39,7 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
 
   return (
     <div className="p-4 bg-LightBlue h-full drop-shadow-md">
-      <h2 className="text-lg font-bold font-body pb-4">Result Summary</h2>
+      <h2 className="text-md font-medium font-body pb-4">Summary</h2>
 
       <div className="flex flex-col justify-center items-center">
         <div className='h-16 w-16 flex flex-col justify-center'>
@@ -48,11 +48,11 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
         </div>
         <div className='text-xs self-center'>
           <span className="flex text-green-500 items-center">
-            <span className='pr-[1px]'><GoCheck /></span>  {correctAnswers} Correct Answers
+            <span className='pr-[1px]'><GoCheck /></span>  {correctAnswers} Correct
           </span>
           <span className="flex text-red-500 items-center">
             <span className='pr-[1px]'><IoMdClose /></span>
-            {wrongAnswers} Wrong Answers
+            {wrongAnswers} Wrong
           </span>
         </div>
       </div>
@@ -60,7 +60,7 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
       <hr className="h-px my-4 border-[1px] border-black"></hr>
       
       <div className="">
-        <h3 className="text-lg font-bold font-body">Questions</h3>
+        <h3 className="text-md font-medium font-body">Questions</h3>
       </div>
 
       <div className="flex flex-wrap justify-evenly gap-2 mt-2">

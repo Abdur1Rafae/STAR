@@ -53,6 +53,7 @@ const IndividualQuestionPanel = ({responses}) => {
     const modules = {
         toolbar: false
     };
+    console.log(currentResponse)
 
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">
@@ -62,7 +63,7 @@ const IndividualQuestionPanel = ({responses}) => {
             :
             <>
                 {
-        assessmentQuestion[questionIndex].image !== null ? 
+        assessmentQuestion[questionIndex].image !== null && assessmentQuestion[questionIndex].image !== undefined? 
         <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={assessmentQuestion[questionIndex].image} /></div>
         : ''
       }
@@ -97,7 +98,7 @@ const IndividualQuestionPanel = ({responses}) => {
             :
             currentQuestion.type == 'True/False'?
             <>
-                <div className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}>
+                <div className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100`}>
                     <div
                         className={`w-full h-10 rounded-md mr-2 flex items-center border-2 ${
                         currentQuestion.isTrue ? 'bg-green-300' : '' 
@@ -119,7 +120,10 @@ const IndividualQuestionPanel = ({responses}) => {
                 </div>
             </>
             :
-            ''
+            <div className='mt-2 border-1 border-gray-300 p-2 mb-4'>
+                <h4 className='text-sm font-medium'>Response:</h4>
+                <p className='text-xs'>{currentResponse.answer[0]}</p>
+            </div>
         }
         
       </div>
@@ -133,7 +137,7 @@ const IndividualQuestionPanel = ({responses}) => {
           </p>
         </div>
 }
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-end mt-2 gap-4">
         <SubmitButton active={moveBackward} label="Previous" onClick={handlePrevious}/>
         <SubmitButton active={moveForward} label="Next" onClick={handleNext}/>
       </div>
