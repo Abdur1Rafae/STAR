@@ -1,7 +1,6 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 import './App.css';
-import AppRoutes from './AppRoutes.js';
-import { BrowserRouter, createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
 import StudentDashboard from './pages/Student/StudentDashboard.jsx';
 import CourseInfo from './pages/Student/CourseInfo.jsx';
 import StudentCourses from './pages/Student/StudentCourses.jsx';
@@ -25,7 +24,6 @@ import { SectionProvider } from './Context/SectionsContext.js';
 import GradingTablePage from './pages/Teacher/GradingTablePage.jsx';
 import Roster from './pages/Teacher/Roster.jsx';
 import EditAssessmentDetails from './pages/Teacher/EditAssessmentDetails.jsx';
-import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
 import { ReportProvider } from './Context/ReportContext.js';

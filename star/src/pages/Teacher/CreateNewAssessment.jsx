@@ -270,7 +270,7 @@ function CreateNewAssessment() {
                      <SubmitButton label = 'Select' active={true} onClick={()=>setSelectSectionsDialog(true)}/>
                   </div>
 
-                  <div className='flex md:flex-row flex-col mt-4 items-center justify-around'>
+                  <div className='flex md:flex-row flex-col mt-4 items-center justify-between'>
                      <div className='flex flex-col items-center'>
                         <h2 className='mt-2 text-xs md:text-sm font-semibold'>Duration</h2>
                         <div className='flex items-center'>
@@ -290,7 +290,7 @@ function CreateNewAssessment() {
                            className='ml-2 w-12 text-sm mt-2 border border-black rounded p-1' />
                         </div>
                      </div>
-                     <div>
+                     <div className='flex gap-2 md:gap-4  flex-col lg:flex-row'>
                         <div className='flex flex-col items-center'>
                            <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
                            <input type='datetime-local' value={datetime || ''} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
