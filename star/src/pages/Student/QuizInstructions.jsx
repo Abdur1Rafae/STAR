@@ -1,5 +1,5 @@
 // QuizInstructions.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaRegHourglassHalf } from "react-icons/fa6";
 import { CiClock2 } from "react-icons/ci";
 import { CiViewList } from "react-icons/ci";
@@ -9,6 +9,8 @@ import SubHeader from '../../components/Student/SubHeader';
 import QuizStore from '../../Stores/QuizStore';
 import { GetAssessmentQuestions } from '../../APIS/Student/AssessmentAPI';
 import { SubmitAssessment } from '../../APIS/Student/AssessmentAPI';
+import { VscLayersActive } from 'react-icons/vsc';
+
 
 
 const QuizInstructions = () => {
@@ -20,7 +22,7 @@ const QuizInstructions = () => {
   const dateTime = QuizStore(store=>store.closeDate);
   const duration = QuizStore(store=>store.duration);
   const marks = QuizStore(store=>store.marks);
-
+  const [QuizSubmitted, setQuizSubmitted] = useState(false)
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'UTC',
     hour12: false,
@@ -71,7 +73,7 @@ const QuizInstructions = () => {
       else {
         try {
           const sub = await SubmitAssessment({responses: []})
-          window.location.assign('/home')
+          setQuizSubmitted(true)
         } catch(err) {
           console.log(err)
         }
@@ -126,6 +128,22 @@ const QuizInstructions = () => {
         <div className='mt-8'>
           <SubmitButton label="Begin Assessment" onClick={handleBeginAssessment} active={true}/>
         </div>
+        {
+          QuizSubmitted &&
+          <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center'>
+            <div className='w-96 h-64 bg-LightBlue border-[1px] border-black rounded-md flex flex-col gap-2 items-center'>
+              <div className='flex justify-between w-full bg-DarkBlue'>
+                <h3 className='font-body text-white'>Assessment Submitted</h3>
+              </div>
+
+              <div className='flex flex-col items-center justify-center mt-2 w-full p-2'>
+                <VscLayersActive className='text-5xl self-center text-green-600' />
+                <p className='font-body text-lg mt-4 mb-4'>Your Assessment has been submitted. The assessment had 0 questions to answer.</p>
+                <SubmitButton label={"Home"} onClick={()=>{window.location.assign('/home')}} active={true}/>
+              </div>
+            </div> 
+          </div>
+        }
       </div>
     </div>
   );

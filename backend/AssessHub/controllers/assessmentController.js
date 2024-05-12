@@ -179,7 +179,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
     {
         section.assessments.forEach(assessment => 
           {
-            if(assessments.attemptedAssessments && !assessments.attemptedAssessments.includes(assessment._id))
+            if(!assessments.attemptedAssessments || !assessments.attemptedAssessments.includes(assessment._id))
             {
               const assessmentData = 
               {

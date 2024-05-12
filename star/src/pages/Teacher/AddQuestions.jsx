@@ -17,7 +17,7 @@ import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, U
 import { useParams } from 'react-router';
 import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
 import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
-import { LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
+import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
 function AddQuestions() {
@@ -251,13 +251,18 @@ function AddQuestions() {
         }
     }
 
-    const handleSaveDraft = () => {
-        
+    const handleSaveDraft = async() => {
+        try{
+            const res = await DraftAssessment({id: assessmentName.assessmentId})
+
+            window.location.assign('/teacher/home')
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     const handleLaunch = async() => {
         try{
-            console.log(assessmentName.assessmentId)
             const res = await LaunchAssessment({id: assessmentName.assessmentId})
 
             window.location.assign('/teacher/home')
@@ -265,6 +270,7 @@ function AddQuestions() {
             console.log(err)
         }
     }
+
     const [profileDialog, setProfileDialog] = useState(false)
 
     let saveProfile = ClickOutsideFunc(()=>{

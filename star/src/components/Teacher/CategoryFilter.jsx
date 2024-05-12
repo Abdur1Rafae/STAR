@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CategoryFilter = ({ categoryName, categories, selectedCategory, onSelectCategory }) => {
+const CategoryFilter = ({ categoryName, categories, selectedCategory, onSelectCategory, assigning}) => {
     return (
         <div className="text-sm flex justify-between items-center h-8">
             <div className="bg-LightBlue border border-black rounded-sm hover:border-gray-400 h-8">
@@ -9,6 +9,13 @@ const CategoryFilter = ({ categoryName, categories, selectedCategory, onSelectCa
                     onChange={(e) => onSelectCategory(e.target.value)}
                     className='outline-none bg-LightBlue rounded-md h-7'
                 >
+                    {
+                        assigning ? 
+                        <option value={'All'}>
+                            All
+                        </option>
+                        : ''
+                    }
                     {categories.map((category, index) => (
                         <option key={index} value={category}>
                             {category}
