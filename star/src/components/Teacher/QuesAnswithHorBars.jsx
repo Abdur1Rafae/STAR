@@ -5,6 +5,8 @@ import { SkillBox } from './StoredQuestion';
 import { DifficultyBox } from './StoredQuestion';
 import { PointBox } from './StoredQuestion';
 import { ReportContent } from '../../Context/ReportContext';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const QuesAnswithHorBars = ({ index, question }) => {
   const {questionStats} = useContext(ReportContent)
@@ -15,6 +17,10 @@ const QuesAnswithHorBars = ({ index, question }) => {
     setOptions(questionStats.options)
     console.log(questionStats)
   }, [questionStats])
+
+  const modules = {
+    toolbar: false
+};
   
 
   function findIndexByProperty(value) {
@@ -31,7 +37,7 @@ const QuesAnswithHorBars = ({ index, question }) => {
       <div className="my-4">
         <div className='flex items-center'>
           <span className='border border-black mr-4 px-4 py-2 rounded-lg text-md font-bold text-DarkBlue'> {index + 1} </span>
-          <p className="text-md">{question?.question}</p>
+          <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-md'/>
         </div>
       </div>
 

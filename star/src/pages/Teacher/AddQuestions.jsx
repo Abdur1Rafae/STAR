@@ -326,9 +326,10 @@ function AddQuestions() {
                                 </button>
                             </div>
                         </div>
+                        <p className={`text-xs ${order ? '' : 'hidden'}`}>Drag and drop questions in required numbers</p>
                         <button onClick={handleOrdering} className={`${questions.length > 0 ? 'hidden lg:flex' : 'hidden'} self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
                             <IoIosMove/>
-                            <p>Order</p>
+                            <p> {order ? 'Save Order' : 'Change Order'}</p>
                         </button>
                         {
                         reuseDialog &&

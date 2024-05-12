@@ -4,6 +4,8 @@ import SubmitButton from '../button/SubmitButton';
 import { ReportContent } from '../../Context/ReportContext';
 import { GrRadialSelected } from "react-icons/gr";
 import Loader from '../Loader';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const IndividualQuestionPanel = ({responses}) => {
     const {assessmentQuestion, questionIndex, setQuestionIndex} = useContext(ReportContent)
@@ -48,6 +50,9 @@ const IndividualQuestionPanel = ({responses}) => {
             setQuestionIndex((prev)=>prev-1)
         }
     }
+    const modules = {
+        toolbar: false
+    };
 
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">
@@ -64,7 +69,7 @@ const IndividualQuestionPanel = ({responses}) => {
       <div className="mt-2 mb-2">
         <div className='flex gap-4'>
             <p>{questionIndex + 1}</p>
-            <p className="text-md">{assessmentQuestion[questionIndex].question}</p>
+            <ReactQuill readOnly={true} modules={modules} value={assessmentQuestion[questionIndex].question} className='w-full text-sm'/>
         </div>
       </div>
 

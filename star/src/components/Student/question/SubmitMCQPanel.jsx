@@ -2,8 +2,13 @@ import React from 'react';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizImage from './QuizImage';
 import SubmitButton from '../../button/SubmitButton';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
+  const modules = {
+    toolbar: false
+  };
 
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">
@@ -15,8 +20,8 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
         : ''
       }
       <div className="mb-4">
-        <div className='flex justify-between'>
-          <p className="text-md">{question?.questionId.question}</p>
+        <div className='flex justify-between  w-full'>
+          <ReactQuill readOnly={true} modules={modules} value={question?.questionId.question} className='w-full text-md select-none'/>
         </div>
       </div>
 

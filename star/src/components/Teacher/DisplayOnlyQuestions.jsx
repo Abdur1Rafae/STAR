@@ -6,9 +6,14 @@ import { SkillBox } from './StoredQuestion';
 import { DifficultyBox } from './StoredQuestion';
 import { PointBox } from './StoredQuestion';
 import { OptionBox } from './StoredQuestion';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, difficulty, point, image, explanation, options, isSelected}) => {
     const [display, setDisplay] = useState(false);
+    const modules = {
+        toolbar: false
+    };
 
   return (
     <div className='w-full bg-[#EEF3F3] rounded-lg border-[1px] border-black p-2 overflow-hidden flex gap-2'>
@@ -31,12 +36,8 @@ const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, di
                     </div>
                 </div>
                 <div className={`w-full flex ${display ? 'flex-col-reverse' : 'flex-col'}`}>
-                    <div className='flex gap-2 ml-2'>
-                        <h1 className='text-xs font-body'>
-                            {
-                                display || question.length <=25 ? (question) : (question.slice(0, 90)+'...')
-                            }
-                        </h1>
+                    <div className='flex gap-2'>
+                        <ReactQuill readOnly={true} modules={modules} value={display || question.length <=25 ? (question) : (question.slice(0, 90)+'...')} className='w-full text-xs font-body !border-none -p-2'/>
                     </div>
                 </div>
             </div>

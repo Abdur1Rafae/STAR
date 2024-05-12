@@ -3,6 +3,8 @@ import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import { GrRadialSelected } from "react-icons/gr";
 import QuizStore from '../../../Stores/QuizStore';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const CorrectTF = ({ question }) => {
   const [selectedOption, setSelectedOption] = useState({});
@@ -41,6 +43,9 @@ const CorrectTF = ({ question }) => {
       setCAMissed(correctAnswersNotSelected)
     }
   }, [selectedOption])
+  const modules = {
+    toolbar: false
+  };
 
   return (
     <div className="w-full mx-auto bg-white p-4 rounded-md">
@@ -61,8 +66,8 @@ const CorrectTF = ({ question }) => {
       <div className="mb-4">
           <div className="mb-4 flex flex-col items-center">
             {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
-            <div className='self-start'>
-                <p className="text-lg">{question?.question}</p>
+            <div className=' w-full'>
+            <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
             </div>
           </div>
         <div className="border-t border-black border-2 mt-2"></div>
