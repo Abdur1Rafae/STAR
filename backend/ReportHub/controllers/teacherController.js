@@ -215,8 +215,10 @@ module.exports.getReportOverview= async (req,res) =>
             const { questions, _id , ...rest } = item.toObject()
 
             const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName).breakdown
-
-            return { ...rest, topicBreakDown : sectionBreakDown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+            if(sectionBreakDown && sectionBreakDown.breakDown) {
+              return { ...rest, topicBreakDown : sectionBreakDown.breakDown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+            }
+            else{return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}}
           })
 
         const report = 
@@ -333,7 +335,10 @@ module.exports.getQuestionSummary= async (req,res) =>
         
                 })
             }
-            return questions
+            return{
+              section: section.sectionName,
+              questions: questions,
+          }
         })
 
         res.status(201).json(report)

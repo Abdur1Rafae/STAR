@@ -37,7 +37,7 @@ module.exports.getQuestionSummary = async (req,res) =>
                 question: { $first: '$question' },
                 points: { $first: '$question.points' },
                 totalResponses: { $sum: 1 },
-                totalGraded: { $sum: { $cond: [{ $gt: ['$responses.score', null] }, 1, 0] } }
+                totalGraded: { $sum: { $cond: [{ $ne: ['$responses.score', null] }, 1, 0] } }
               }
             },
             {
