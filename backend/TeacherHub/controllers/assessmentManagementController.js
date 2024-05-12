@@ -106,6 +106,17 @@ module.exports.launchAssessment = async (req,res) =>
     }
     catch(err){res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to launch assessment'})}
 }
+module.exports.draftAssessment = async (req,res) => 
+{ 
+    try{
+        const { assessmentId } = req.params
+
+        const updatedAssessment = await Assessment.findByIdAndUpdate(assessmentId, {status: 'Draft'})
+        if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
+        return res.status(200).json({message: `Assessment saved as draft successfully`})  
+    }
+    catch(err){res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to draft assessment'})}
+}
 module.exports.deleteAssessment = async (req,res) => 
 {
     try{

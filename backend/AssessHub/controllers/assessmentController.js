@@ -108,7 +108,8 @@ module.exports.getUpcomingAssessments = async (req,res) =>
       })
 
       const data = []
-      assessments.enrolledSections.forEach(section => {
+      assessments.enrolledSections.forEach(section => 
+        {
           section.assessments.forEach(assessment => {
               const assessmentData = 
               {
@@ -172,14 +173,13 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
       ]
     })
-    console.log(assessments)
   
     const data = []
     assessments.enrolledSections.forEach(section => 
     {
         section.assessments.forEach(assessment => 
           {
-            if(!assessments.attemptedAssessments || !assessments.attemptedAssessments.includes(assessment._id))
+            if(assessments.attemptedAssessments && !assessments.attemptedAssessments.includes(assessment._id))
             {
               const assessmentData = 
               {

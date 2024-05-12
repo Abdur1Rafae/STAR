@@ -145,7 +145,7 @@ module.exports.addStudentsToSection = async (req,res) =>
             for (const studentData of students) 
             {
                 const { name, email, erp } = studentData
-                const role = "student"
+                const role = 'student'
 
                 const updateOp = {
                     updateOne: 
