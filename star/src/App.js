@@ -34,6 +34,7 @@ import ViewFlags from './pages/Teacher/ViewFlags.jsx';
 import ObjectDetection from './pages/ObjectDetection.jsx';
 import LandingPage from './pages/LandingPages/landingpage.jsx';
 import Login from './pages/AuthenticationPages/Login.jsx';
+import Signup from './pages/AuthenticationPages/Signup.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
             <Route path=''element={<LandingPage/>}></Route>
 
             <Route path='login'element={<Login/>}></Route>
+            <Route path='signup'element={<Signup/>}></Route>
 
 
             <Route path='home' element = {<StudentDashboard/>} />

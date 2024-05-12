@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export const AxiosBase = axios.create({
-    baseURL:'http://arete-ingress-gateway/'
+    baseURL:'http://localhost:3000/'
 })

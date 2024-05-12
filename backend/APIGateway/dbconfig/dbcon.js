@@ -3,10 +3,10 @@ const HOST = '192.168.100.35'
 const PORT = 6379
 
 const client = redis.createClient({
-    // host: HOST,
-    // port: PORT
-    url: 'redis://redis-service.default.svc.cluster.local:6379',
-    password: 'aretepassword'
+    host: HOST,
+    port: PORT
+    // url: 'redis://redis-service.default.svc.cluster.local:6379',
+    // password: 'aretepassword'
 })
 
 client.connect()
