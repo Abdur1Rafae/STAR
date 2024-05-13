@@ -1,12 +1,11 @@
 const conn = require('../dbconfig/dbcon')
-const {Assessment, Question, Student, Response} = require('library/index')
+const {Assessment, Question, User, Response} = require('library/index')
 
 module.exports.beginAssessment = async (req,res) => 
 {
   try
   {
-    //const student = req.body.decodedToken.id
-    const student = '6609c24b69f531c541e8b651'
+    const student = req.body.decodedToken.id
     const {assessmentId, sectionId} = req.params
 
     const response = await Response.findOneAndUpdate
@@ -45,8 +44,7 @@ module.exports.submitAssessment = async (req,res) =>
 {
   try
   {
-    //const student = req.body.decodedToken.id
-    const student = '6609c24b69f531c541e8b651'
+    const student = req.body.decodedToken.id
     const {responseId} = req.params
     const {submission} = req.body
 
@@ -61,7 +59,7 @@ module.exports.submitAssessment = async (req,res) =>
 
       const assessmentId = updatedResponse.assessment
 
-      const updatedStudent = await Student.findByIdAndUpdate( 
+      const updatedStudent = await User.findByIdAndUpdate( 
         student,
         { $addToSet: { attemptedAssessments : assessmentId } }
       , {session})
@@ -86,10 +84,9 @@ module.exports.getUpcomingAssessments = async (req,res) =>
 {
     try{
 
-      //const student = req.body.decodedToken.id
-      const student = '6609c05b69f531c541e366a0'
+      const student = req.body.decodedToken.id
 
-      const assessments = await Student.findById(student)
+      const assessments = await User.findById(student)
       .select('-name -erp -email -_id -__v') 
       .populate
       ({
@@ -104,14 +101,15 @@ module.exports.getUpcomingAssessments = async (req,res) =>
             {
                 path: 'assessments', 
                 select: '-_id title configurations.openDate configurations.closeDate configurations.duration',
-                match: { 'configurations.openDate': { $gt: new Date() } },
+                match: { 'configurations.openDate': { $gt: new Date() }, status: 'Launched' },
                 model: Assessment
             }
         ]
       })
 
       const data = []
-      assessments.enrolledSections.forEach(section => {
+      assessments.enrolledSections.forEach(section => 
+        {
           section.assessments.forEach(assessment => {
               const assessmentData = 
               {
@@ -137,10 +135,9 @@ module.exports.getOngoingAssessments = async (req,res) =>
 {
   try
   {
-    //const student = req.body.decodedToken.email
-    const student = '6609c24b69f531c541e8b651'
+    const student = req.body.decodedToken.id
 
-    const assessments = await Student.findById(student)
+    const assessments = await User.findById(student)
     .select('-name -erp -email -_id -__v') 
     .populate
     ({
@@ -154,17 +151,18 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
         {
             path: 'assessments', 
-            select: '_id title description configurations coverImage',
+            select: '_id title description configurations coverImage status',
             match: 
             { 
               'configurations.openDate': { $lt: new Date() },
-              'configurations.closeDate': { $gt: new Date() }
+              'configurations.closeDate': { $gt: new Date() },
+              status: 'Launched'
             },
             populate: 
             [
               {
                 path: 'teacher',
-                select: 'firstName lastName -_id'
+                select: 'name -_id'
               },
               {
                 path: 'questionBank.question',
@@ -181,7 +179,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
     {
         section.assessments.forEach(assessment => 
           {
-            if(!assessments.attemptedAssessments.includes(assessment._id))
+            if(!assessments.attemptedAssessments || !assessments.attemptedAssessments.includes(assessment._id))
             {
               const assessmentData = 
               {
@@ -189,7 +187,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
                 assessmentId : assessment._id,
                 title: assessment.title,
                 description : assessment.description,
-                teacher: assessment.teacher.firstName + " " + assessment.teacher.lastName,
+                teacher: assessment.teacher.name,
                 className: section.class.className,
                 totalMarks: assessment.questionBank.reduce((total, questionObj) => {return total + (questionObj.question ? questionObj.question.points : 0)}, 0),
                 totalQuestions: assessment.questionBank.length,

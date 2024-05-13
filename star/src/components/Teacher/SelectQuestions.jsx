@@ -66,7 +66,7 @@ const SelectQuestions = ({topics}) => {
         <div className='mb-20 flex flex-col gap-4'>
         {
           reuseQuestions.length > 0 && reuseQuestions.map((question, index)=> {
-            return <button className='bg-red-100' key={index + question.question} onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSelected={selectedQuestions.some(item => item._id == question._id)} correctOptions={question.correctOptions} isTrue={question.isTrue} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.points} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></button>
+            return <button className='text-left' key={index + question.question} onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSelected={selectedQuestions.some(item => item._id == question._id)} correctOptions={question.correctOptions} isTrue={question.isTrue} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.points} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></button>
           })
         }
         </div>

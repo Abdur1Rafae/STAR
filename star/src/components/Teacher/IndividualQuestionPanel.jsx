@@ -4,6 +4,8 @@ import SubmitButton from '../button/SubmitButton';
 import { ReportContent } from '../../Context/ReportContext';
 import { GrRadialSelected } from "react-icons/gr";
 import Loader from '../Loader';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const IndividualQuestionPanel = ({responses}) => {
     const {assessmentQuestion, questionIndex, setQuestionIndex} = useContext(ReportContent)
@@ -48,6 +50,10 @@ const IndividualQuestionPanel = ({responses}) => {
             setQuestionIndex((prev)=>prev-1)
         }
     }
+    const modules = {
+        toolbar: false
+    };
+    console.log(currentResponse)
 
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">
@@ -57,14 +63,14 @@ const IndividualQuestionPanel = ({responses}) => {
             :
             <>
                 {
-        assessmentQuestion[questionIndex].image !== null ? 
+        assessmentQuestion[questionIndex].image !== null && assessmentQuestion[questionIndex].image !== undefined? 
         <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={assessmentQuestion[questionIndex].image} /></div>
         : ''
       }
       <div className="mt-2 mb-2">
         <div className='flex gap-4'>
             <p>{questionIndex + 1}</p>
-            <p className="text-md">{assessmentQuestion[questionIndex].question}</p>
+            <ReactQuill readOnly={true} modules={modules} value={assessmentQuestion[questionIndex].question} className='w-full text-sm'/>
         </div>
       </div>
 
@@ -75,8 +81,8 @@ const IndividualQuestionPanel = ({responses}) => {
                 {currentQuestion.options?.map((option, index) => (
                     <div key={index} className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}>
                         <div
-                            className={`w-80 h-10 rounded-md mr-2 flex items-center border-2 ${
-                            currentQuestion.correctOptions?.includes(option) ? 'bg-lime-400' : 'bg-rose-400' 
+                            className={`w-full min-h-10 rounded-md mr-2 flex items-center border-2 ${
+                            currentQuestion.correctOptions?.includes(option) ? 'bg-green-300' : '' 
                             }`}
                         
                         >
@@ -92,10 +98,10 @@ const IndividualQuestionPanel = ({responses}) => {
             :
             currentQuestion.type == 'True/False'?
             <>
-                <div className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}>
+                <div className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100`}>
                     <div
                         className={`w-full h-10 rounded-md mr-2 flex items-center border-2 ${
-                        currentQuestion.isTrue ? 'bg-lime-400' : 'bg-rose-400' 
+                        currentQuestion.isTrue ? 'bg-green-300' : '' 
                         }`}
                     
                     >
@@ -104,7 +110,7 @@ const IndividualQuestionPanel = ({responses}) => {
                     </div>
                     <div
                         className={`w-full h-10 rounded-md mr-2 flex items-center border-2 ${
-                        !currentQuestion.isTrue ? 'bg-lime-400' : 'bg-rose-400' 
+                        !currentQuestion.isTrue ? 'bg-green-300' : '' 
                         }`}
                     
                     >
@@ -114,7 +120,10 @@ const IndividualQuestionPanel = ({responses}) => {
                 </div>
             </>
             :
-            ''
+            <div className='mt-2 border-1 border-gray-300 p-2 mb-4'>
+                <h4 className='text-sm font-medium'>Response:</h4>
+                <p className='text-xs'>{currentResponse.answer[0]}</p>
+            </div>
         }
         
       </div>
@@ -128,7 +137,7 @@ const IndividualQuestionPanel = ({responses}) => {
           </p>
         </div>
 }
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-end mt-2 gap-4">
         <SubmitButton active={moveBackward} label="Previous" onClick={handlePrevious}/>
         <SubmitButton active={moveForward} label="Next" onClick={handleNext}/>
       </div>

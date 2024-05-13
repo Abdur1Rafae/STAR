@@ -64,7 +64,7 @@ const LegendList = ({labels}) => (
       {labels.map((label, index) => (
         <div key={index} className="flex items-center">
           <div
-            className="w-4 h-4 rounded-full mr-2"
+            className="w-2 h-2 rounded-full mr-2"
             style={{ backgroundColor: additionalColors[index % additionalColors.length] }}
           ></div>
           <span className='text-xs'>{label}</span>

@@ -1,6 +1,18 @@
 const conn = require('../dbconfig/dbcon')
-const {getAssessmentStatus, upload, remove} = require('../util/library')
+const mongoose = require('mongoose')
 const {Assessment, Section, Class} = require('library/index')
+const remove = require('../util/remove')
+
+function getAssessmentStatus(configurations) 
+{
+    const currentDate = new Date()
+    
+    if (currentDate < configurations.openDate) {return "Not Started"}
+
+    else if (currentDate < configurations.closeDate && configurations.openDate < currentDate) {return "In Progress"}
+    
+    return "Requires Review"
+}
 
 module.exports.createAssessment = async (req,res) => 
 {
@@ -8,8 +20,6 @@ module.exports.createAssessment = async (req,res) =>
         const teacher = req.body.decodedToken.id
 
         var {title, description, participants, configurations, coverImage} = req.body
-
-        const imagePath = upload(coverImage)
 
         const session = await conn.startSession()
         const insertedId = await session.withTransaction(async () => 
@@ -24,7 +34,7 @@ module.exports.createAssessment = async (req,res) =>
             
             const newAssessment = await Assessment.create(
             [{
-                teacher, class: classInfo.className, title, description, participants, configurations, coverImage : imagePath
+                teacher, class: classInfo.className, title, description, participants, configurations, coverImage, status: 'Draft'
             }], {session})
 
             const updatedSections = await Section.updateMany
@@ -33,7 +43,7 @@ module.exports.createAssessment = async (req,res) =>
                 { $push: { assessments: newAssessment[0] } } 
             )
 
-            if(updatedSections.matchedCount != participants.length){throw new Error('Failed to add all sections')}
+            if(updatedSections.matchedCount != participants.length){throw new Error('Failed to update all sections')}
 
             return newAssessment[0]._id
 
@@ -52,11 +62,7 @@ module.exports.updateAssessment = async (req,res) =>
     try{
         const { assessmentId } = req.params
 
-        const teacherID = req.body.decodedToken.email
-
         var {title, description, participants, configurations, coverImage} = req.body
-
-        const imagePath = upload(coverImage)
 
         const session = await conn.startSession()
         await session.withTransaction(async () => 
@@ -65,14 +71,12 @@ module.exports.updateAssessment = async (req,res) =>
             const oldAssessment = await Assessment.findOneAndUpdate
             (
                 {_id : assessmentId}, 
-                {teacherID, title, description, participants, configurations, coverImage : imagePath},
+                {title, description, participants, configurations, coverImage},
                 {new: false},
                 {session}
             )
 
             if(!oldAssessment){throw new Error('Assessment not found')}
-            
-            remove(oldAssessment.coverImage)
 
             const oldParticipants = oldAssessment.participants.map(String)
             const newParticipants = participants
@@ -91,6 +95,28 @@ module.exports.updateAssessment = async (req,res) =>
     catch(err){
         if (err.name === 'ValidationError' || err.message === 'Failed to update participants') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to update assessment'})}
+}
+module.exports.launchAssessment = async (req,res) => 
+{ 
+    try{
+        const { assessmentId } = req.params
+
+        const updatedAssessment = await Assessment.findByIdAndUpdate(assessmentId, {status: 'Launched'})
+        if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
+        return res.status(200).json({message: `Assessment launched successfully`})  
+    }
+    catch(err){console.log(err);res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to launch assessment'})}
+}
+module.exports.draftAssessment = async (req,res) => 
+{ 
+    try{
+        const { assessmentId } = req.params
+
+        const updatedAssessment = await Assessment.findByIdAndUpdate(assessmentId, {status: 'Draft'})
+        if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
+        return res.status(200).json({message: `Assessment saved as draft successfully`})  
+    }
+    catch(err){res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to draft assessment'})}
 }
 module.exports.deleteAssessment = async (req,res) => 
 {
@@ -129,7 +155,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
     {
         const teacher = req.body.decodedToken.id
 
-        const assessments = await Assessment.find({ teacher: teacher, status: { $nin: ["Published", "Reviewed"] } })
+        const assessments = await Assessment.find({ teacher: teacher, "configurations.releaseGrades": false, status: { $nin: ["Published", "Reviewed"] } })
         .populate
         ({
             path: 'participants',
@@ -149,13 +175,13 @@ module.exports.getScheduledAssessments = async (req,res) =>
                 title: assessment.title,
                 description: assessment.description,
                 className:  assessment.class,
-                participants: assessment.participants.reduce((names, section) => names.concat(section.sectionName), []),
+                participants: assessment.participants.reduce((names, section) => names.concat({_id: section._id, name: section.sectionName}), []),
                 configurations: assessment.configurations,
                 coverImage: assessment.coverImage,
                 totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,
                 totalStudents: assessment.participants.reduce((total, section) => total + (section.roster ? section.roster.length : 0), 0),
                 totalMarks: assessment.questionBank.reduce((total, questionObj) => total + (questionObj.question ? questionObj.question.points : 0) , 0),
-                category: getAssessmentStatus(assessment.configurations.openDate, assessment.configurations.closeDate),
+                category: getAssessmentStatus(assessment.configurations),
             }
         })
 

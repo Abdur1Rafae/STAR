@@ -5,7 +5,8 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import logo from './logo.png'
 import {ClickOutsideFunc} from './ClickOutsideFunc';
 
-const MenuBar = ({name, role}) => {
+const MenuBar = () => {
+    let user = JSON.parse(localStorage.getItem('userDetails'))
   let [profileDialog, setProfileDialog] = useState(false);
 
   let handleProfileClick = () => {
@@ -28,8 +29,8 @@ const MenuBar = ({name, role}) => {
                     <div className="rightContainer flex">
                         <button className='ml-2 sm:ml-4 sm:mr-4 text-white flex w-26 lg:w-56' onClick={handleProfileClick}>
                             <div className="UserInfo w-full text-white whitespace-nowrap self-center flex flex-col">
-                                <h1 className='text-xs self-start font-bold'>{name}</h1>
-                                <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>{role}</h3>
+                                <h1 className='text-xs self-start font-bold'>{user.name}</h1>
+                                <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>{user.role == 'teacher' ? 'Teacher' : 'Student'}</h3>
                             </div>
                             <MdKeyboardArrowDown className='text-3xl self-center'/>
                         </button>
@@ -44,7 +45,7 @@ const MenuBar = ({name, role}) => {
                             <button className='ml-2'>Profile</button>
                         </div>
                         
-                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>window.location.assign('/manage-account')}>
+                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>{localStorage.removeItem('token');localStorage.removeItem('userDetails');window.location.assign('/login')}}>
                             <RiLogoutCircleRLine className='self-center ml-4 text-lg'/>
                             <button className='ml-2'>Logout</button>
                         </div>

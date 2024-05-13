@@ -18,6 +18,8 @@ import Loader from '../../components/Loader';
 function LiveMonitoring() {
   const [loading, setLoading] = useState(true)
   const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('MonitorAssessment')) || {})
+  console.log(assessment)
+  const [sections, setSections] = useState(assessment.participants.map((section) => section.name))
   const [stats, setStats] = useState([])
   const [totalCount, setTotalCount] = useState(assessment.totalStudents)
   const [submitCount, setSubmitCount] = useState(0)
@@ -91,9 +93,9 @@ function LiveMonitoring() {
     { title: "Status", key: "status" }
   ];
   
-  const skills = ['Submitted', 'Active', 'Yet to attempt'];
+  const status = ['Submitted', 'Active', 'Not Started'];
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='w-full h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Live Monitoring"}/>
@@ -143,11 +145,11 @@ function LiveMonitoring() {
                       <div className="flex font-sans gap-4">
                         <div className="flex">
                           <p>Sections :&nbsp;</p>
-                          <CategoryFilter categoryName="All" categories={assessment.participants} selectedCategory={selectedSection} onSelectCategory={handleSelectSection}/>
+                          <CategoryFilter categoryName="All" categories={sections} selectedCategory={selectedSection} onSelectCategory={handleSelectSection} assigning={true}/>
                         </div>
                         <div className="flex">
                           <p>Status :&nbsp;</p>
-                          <CategoryFilter categoryName="All" categories={skills} selectedCategory={selectedStatus} onSelectCategory={handleSelectStatus}/>
+                          <CategoryFilter categoryName="All" categories={status} selectedCategory={selectedStatus} onSelectCategory={handleSelectStatus} assigning={true}/>
                         </div>
                       </div>
                       <LMTable data={stats} columns = {columns} selectedStatus= {selectedStatus} selectedSection= {selectedSection} />

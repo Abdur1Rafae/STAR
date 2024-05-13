@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DifficultyFilter = ({selectedLevel, setSelectLevel}) => {
+const DifficultyFilter = ({selectedLevel, setSelectLevel, assigning}) => {
     const difficulty = ['Easy', 'Medium', 'Hard'];
   return (
     <div className="text-sm flex justify-between items-center h-6">
@@ -10,9 +10,15 @@ const DifficultyFilter = ({selectedLevel, setSelectLevel}) => {
                 onChange={(e) => setSelectLevel(e.target.value)}
                 className='outline-none bg-LightBlue rounded-md h-5 flex'
             >
-                <option key={"All"} value={"All"} className='flex'>
+                {
+                    !assigning ? 
+                    <option key={"All"} value={"All"} className='flex'>
                         All
                     </option>
+                        :
+                        ''
+                }                
+
                 {difficulty.map((level, index) => (
                     <option key={index} value={level} className='flex'>
                         {level}

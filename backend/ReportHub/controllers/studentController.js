@@ -1,4 +1,4 @@
-const {Assessment, Response, Student, Section} = require('library/index')
+const {Assessment, Response, User, Section} = require('library/index')
 const mongoose = require('mongoose')
 
 function skillBreakDown(skills, response)
@@ -20,11 +20,10 @@ module.exports.getEnrolledClasses = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
 
-        const classes = await Student.findById(student)
-        .select('-name -erp -email -_id -__v') 
+        const classes = await User.findById(student)
+        .select('-name -erp -email -id -_v -role -password -attemptedAssessments') 
         .populate
         ({
             path: 'enrolledSections',
@@ -33,9 +32,10 @@ module.exports.getEnrolledClasses = async (req,res) =>
             {
                 path: 'class', 
                 select: '-_id className',
-                populate:{ path: 'teacher', select: '-_id firstName lastName'} 
+                populate:{ path: 'teacher', select: '-_id name'} 
             },
         })
+        if(!classes || !classes.enrolledSections){return res.status(201).json({data: []})} 
 
         const formattedData = classes.enrolledSections.map( section => 
         ({
@@ -43,10 +43,10 @@ module.exports.getEnrolledClasses = async (req,res) =>
             className: section.class.className,
             assessment: section.assessments.length || 0,
             enrolled: section.createdAt,
-            teacher: section.class.teacher.firstName + ' ' + section.class.teacher.lastName
+            teacher: section.class.teacher.name
         }))
 
-        res.status(201).json({data: formattedData})
+        return res.status(201).json({data: formattedData})
 
     }
     catch(err)
@@ -59,8 +59,7 @@ module.exports.getClassOverview = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
         const {sectionId} = req.params
 
         const section = await Section.findById(sectionId)
@@ -68,7 +67,7 @@ module.exports.getClassOverview = async (req,res) =>
         .populate(
             {
                 path: 'assessments',
-                select: 'title status totalMarks',
+                select: 'title status totalMarks configurations.openDate configurations.closeDate configurations.duration',
                 model: Assessment
             }
         ) 
@@ -80,26 +79,49 @@ module.exports.getClassOverview = async (req,res) =>
         {
             const assessmentData = {}
 
-            const response = await Response.findOne
-            ({
-                assessment: new mongoose.Types.ObjectId(assessment._id),
-                student: new mongoose.Types.ObjectId(student)
-            })
-            .select('responses.questionId responses.score totalScore submittedAt')
-            .populate({
-                path: 'responses.questionId',
-                select: '-_id points skill'
-            })
-
             assessmentData.title = assessment.title
-            assessmentData.totalMarks = assessment.totalMarks
-            assessmentData.submitted = response? response.submittedAt:null
+            assessmentData.totalMarks = assessment.totalMarks ?? 0
+            assessmentData.closeDate = assessment.configurations.closeDate
 
-            if(response && assessment.status === 'Published')
+
+
+            if(assessment.configurations.closeDate < new Date())
             {
-                assessmentData.responseId = response._id
-                assessmentData.totalScore = response.totalScore
-                skills = skillBreakDown(skills, response.responses)
+                const response = await Response.findOne
+                ({
+                    assessment: new mongoose.Types.ObjectId(assessment._id),
+                    student: new mongoose.Types.ObjectId(student)
+                })
+                .select('responses.questionId responses.score totalScore submittedAt')
+                .populate({
+                    path: 'responses.questionId',
+                    select: '-_id points skill'
+                })
+
+                if(response)
+                {
+                    if(assessment.status === 'Published')
+                    {
+                        assessmentData.status = 'Published'
+                        assessmentData.responseId = response._id
+                        assessmentData.submitted = response.submittedAt
+                        assessmentData.totalScore = response.totalScore
+                        skills = skillBreakDown(skills, response.responses)
+                    }
+                    else
+                    {
+                        assessmentData.status = 'Under Review'
+                        assessmentData.submitted = response.submittedAt
+                    }
+                }
+                else{assessmentData.status = 'Absent'}
+            }
+            else if(assessment.configurations.openDate > new Date())
+            {
+                assessmentData.status = 'Not Started'
+                assessmentData.openDate = assessment.configurations.openDate
+                assessment.closeDate = assessment.configurations.closeDate
+                assessment.duration = assessment.configurations.duration
             }
 
             responses.push(assessmentData);
@@ -118,12 +140,11 @@ module.exports.getAssessmentReport = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
         const {responseId} = req.params
 
         const response = await Response.findById(responseId)
-        .select('responses createdAt submittedAt previousScore previousTotal') 
+        .select('responses createdAt submittedAt') 
         .populate
         ({
             path: 'assessment',
@@ -138,7 +159,7 @@ module.exports.getAssessmentReport = async (req,res) =>
         const report =
         {
             duration: response.assessment.configurations.duration,
-            submiittedAt: response.submittedAt,
+            submittedAt: response.submittedAt,
             createdAt: response.createdAt,
             responses: response.responses.map( item => 
             {
@@ -149,6 +170,7 @@ module.exports.getAssessmentReport = async (req,res) =>
                         correct: 0
                     }
                     if(item.score === item.questionId.points){question.correct = 1}
+                    else if(item.answer.length === 0 || item.answer === null){question.correct = -1}
                     return question
             })
         }
@@ -166,8 +188,7 @@ module.exports.getAssessmentSubmission = async (req,res) =>
 {
     try
     {
-        //const student = req.body.decodedToken.email
-        const student = '6609c24b69f531c541e8b651'
+        const student = req.body.decodedToken.id
         const {responseId} = req.params
 
         let response = await Response.findById(responseId)

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: abdurrafae/api-gateway:latest
+        ports:
+        - containerPort: 3000
+        env:
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gateway-secret
+                key: JWT_SECRET
+          - name: JWT_REFRESH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: gateway-secret
+                key: JWT_REFRESH_SECRET
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arete-backend-gateway
+spec:
+  type: LoadBalancer
+  selector:
+    app: api-gateway
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

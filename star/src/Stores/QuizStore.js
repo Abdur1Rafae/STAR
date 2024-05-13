@@ -185,18 +185,6 @@ const QuizStore = create((set) => ({
       return nextState;
     });
   },
-
-  markAsAnswered: () => {
-    set((state) => {
-      const updatedQuestions = state.questions.map((question, index) => {
-        if (index === state.currentQuestionIndex) {
-          return { ...question, unanswered: false };
-        }
-        return question;
-      });
-      return { ...state, questions: updatedQuestions };
-    });
-  },
    
   flagQuestion: (number) => {
     set((state) => {
@@ -222,7 +210,8 @@ const QuizStore = create((set) => ({
         }, []);
       } else if (state.filter === 'unanswered') {
         filteredQuestions = state.questions.reduce((acc, question, index) => {
-          if (question.unanswered) acc.push(index);
+          if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null) acc.push(index);
+          console.log('checking', state.responses[index])
           return acc;
         }, []);
       }
@@ -253,6 +242,7 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
+      console.log(nextState.responses)
       const res = async() => {
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})

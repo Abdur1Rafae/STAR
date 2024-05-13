@@ -16,6 +16,8 @@ import { ToggleStore } from '../../Stores/ToggleStore';
 import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
 import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
+import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
+import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
 function AddQuestions() {
@@ -51,7 +53,7 @@ function AddQuestions() {
         const getAllQuestions = async() => {
             try{
                 const res = await GetStoredQuestions({assessmentId: assessmentName.assessmentId})
-                setQuestions(res)
+                setQuestions(res.questions)
             } catch(err) {
                 console.log(err)
                 return
@@ -66,7 +68,6 @@ function AddQuestions() {
             try {
                 const res = await GetAllTopics()
                 setTopicList(res)
-                console.log(res)
             } catch(err) {
             console.log(err)
             }
@@ -134,7 +135,6 @@ function AddQuestions() {
     const deleteQuestion = async(id) => {
         try{
             const questionToDelete = questions[id]
-            console.log(questionToDelete)
             if(questionToDelete.reuse) {
                 const res = await DeleteReuseQuestion({questionId: questionToDelete._id, assessmentId:assessmentName.assessmentId})
             }
@@ -153,7 +153,6 @@ function AddQuestions() {
     };
 
     const updateQuestion = async(index, newOptions, questionText, explanationText, imageUrl, skill, difficulty, point, topic, type, correctOptions, isTrue, reuse) => {
-        console.log("here")
         const updatedQuestions = [...questions];
         if(type == "MCQ") {
             updatedQuestions[index] = {
@@ -252,15 +251,54 @@ function AddQuestions() {
         }
     }
 
+    const handleSaveDraft = async() => {
+        try{
+            const res = await DraftAssessment({id: assessmentName.assessmentId})
+
+            window.location.assign('/teacher/home')
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    const handleLaunch = async() => {
+        try{
+            const res = await LaunchAssessment({id: assessmentName.assessmentId})
+
+            window.location.assign('/teacher/home')
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    const [profileDialog, setProfileDialog] = useState(false)
+
+    let saveProfile = ClickOutsideFunc(()=>{
+        setProfileDialog(false);
+    })
+
 
   return (
-    <div className=' w-full h-full font-body border-black'>
+    <div className=' w-full h-full font-body'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
-                <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
-                <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-4'>
+                <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
+                <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                    {profileDialog && (
+                        <div className='h-20 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
+                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleSaveDraft}>
+                                <button className=' ml-2'>Save as Draft</button>
+                            </div>
+                            
+                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLaunch}>
+                                <button className='ml-2'>Launch</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-2 md:p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>
                             <div className='border-2 border-dotted border-slate-400'>
@@ -288,9 +326,10 @@ function AddQuestions() {
                                 </button>
                             </div>
                         </div>
-                        <button onClick={handleOrdering} className={`hidden sm:flex self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
+                        <p className={`text-xs ${order ? '' : 'hidden'}`}>Drag and drop questions in required numbers</p>
+                        <button onClick={handleOrdering} className={`${questions.length > 0 ? 'hidden lg:flex' : 'hidden'} self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
                             <IoIosMove/>
-                            <p>Order</p>
+                            <p> {order ? 'Save Order' : 'Change Order'}</p>
                         </button>
                         {
                         reuseDialog &&
@@ -327,7 +366,7 @@ function AddQuestions() {
                             questions.length > 0 ?
                             questions.map((question, index)=> {
                                 return (
-                                    <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-3'>
+                                    <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-1 md:p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
                                         <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>
@@ -337,7 +376,7 @@ function AddQuestions() {
                         }
                         </div>
                     </div>
-                    <div className='bg-LightBlue w-full md:min-w-72 md:w-3/12 p-4'>
+                    <div className='bg-LightBlue w-full flex-grow md:min-w-64 md:w-3/12 p-2'>
                         <div className='w-full ml-1'>
                             <div className='flex text-sm font-body w-full justify-between'>
                                 <h4 className='font-medium w-24'>Questions:</h4>

@@ -1,26 +1,34 @@
-import React, { useState, useContext } from 'react';
-import LCSearchBar from '../../components/Teacher/LCSearchBar';
-import { CiFilter } from "react-icons/ci";
+import React, { useContext, useEffect, useState } from 'react';
 import QuestionTabTile from './QuestionTabTile';
+import { ReportContent } from '../../Context/ReportContext';
 
 const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
-    console.log(questions.length)
+  const {allQuestionPercent} = useContext(ReportContent)
+  const [QuestionSetup, setQuestionSetup] = useState([])
+
+  useEffect(()=>{
+    setQuestionSetup(allQuestionPercent)
+  }, [allQuestionPercent])
+
+  const findPercent = (id) =>{
+    const foundQuestion = allQuestionPercent.find(item => item.question === id);
+    if(foundQuestion.question == '6640ce2dd40bb4605e2b6003'){
+      console.log(foundQuestion.totalCorrect, foundQuestion.totalResponses,Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)
+    }
+    return Math.round((foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)
+  }
   return (
-    <div className='h-full'>
+    <div className='h-52'>
       <div className='sticky top-0 bg-LightBlue'>
-        <div className='flex items-center pl-2 pt-4 gap-4 bg-LightBlue'>
-          <LCSearchBar  placeholder="Search" />
-          <CiFilter size={28} />
-        </div>
-        <div className='border border-gray-300 my-4 mx-2'></div>
       </div>
       <div className=''>
         {questions.map((question, index) => (
           <QuestionTabTile
-            key= {index}
-            singlequestioninfo= {question } // {question}
-            active={question === activeQuestion} // Set active to true if person matches the activePerson
-            onClick={() => onQuestionClick(question)} // Pass the onClick handler to handle click event
+            index= {index}
+            singlequestioninfo= {question }
+            active={question === activeQuestion} 
+            onClick={() => onQuestionClick(question)}
+            percent={QuestionSetup.length > 0 ? findPercent(question._id): 0}
           />
         ))}
       </div>

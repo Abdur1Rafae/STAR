@@ -28,7 +28,8 @@ const Classes = () => {
     setError('')
     try {
       const res = await AddClass({ name: newClass });
-      let updatedClasses = [...classes, { ClassID: res.classId, ClassName: newClass, Sections: null }];
+      console.log(res)
+      let updatedClasses = [...classes, { _id: res.classId, className: newClass, Sections: null }];
       setClasses(updatedClasses);
       setNewClass('');
     } catch (err) {
@@ -41,6 +42,7 @@ const Classes = () => {
     const FetchClasses = async() => {
       try {
         const res = await GetAllClasses()
+        console.log(res)
         setTimeout(() => {
           setClasses(res.data)
           setLoading(false);
@@ -84,15 +86,18 @@ const Classes = () => {
             </div>
             {
               isCreatingClass &&
-              <div className='absolute top-32 right-4 w-52 h-32 bg-LightBlue border-[1px] border-black rounded-md p-2 flex flex-col justify-around items-center'>
-                <div className='flex justify-between w-full'>
-                  <h3 className='font-body'>Enter Class Name</h3>
-                  <button onClick={()=>{setCreatingClass(false)}}><MdClose className='self-center'/></button>
-                </div>
-                <input autoFocus type='text' className='rounded-md h-8 px-2 border-[1px]' onChange={(e)=> setNewClass(e.target.value)}></input>
-                <SubmitButton active={true} label={"Create"} onClick={handleAddingClass}/>
-                <p className='text-xs text-red-500'>{error}</p>
-              </div> 
+              <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center'>
+                <div className='w-72 h-36 bg-LightBlue border-[1px] border-black rounded-md p-2 flex flex-col gap-4 justify-around items-center'>
+                  <div className='flex justify-between w-full'>
+                    <h3 className='font-body'>Enter Class Name</h3>
+                    <button onClick={()=>{setCreatingClass(false)}}><MdClose className='self-center'/></button>
+                  </div>
+                  <input autoFocus type='text' className='focus:outline-none rounded-md h-20 px-2 border-[1px]' onChange={(e)=> setNewClass(e.target.value)}></input>
+                  <SubmitButton active={true} label={"Create"} onClick={handleAddingClass}/>
+                  <p className='text-xs text-red-500'>{error}</p>
+                </div> 
+              </div>
+
             }
         </div>
     </div>

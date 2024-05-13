@@ -15,6 +15,7 @@ const StudentDashboard = () => {
         const GetLiveAssessments = (async()=>{
             try{
                 const res = await GetOngoingAssessments()
+                console.log(res)
                 SetLiveAssessments(res)
                 setTimeout(() => {
                     setLoading(false);
@@ -27,6 +28,7 @@ const StudentDashboard = () => {
         const GetAssessments = (async()=>{
             try{
                 const res = await GetUpcomingAssessments()
+                console.log(res)
                 SetUpcomingAssessments(res)
             } catch(err) {
                 console.log(err)

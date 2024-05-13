@@ -1,7 +1,6 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 import './App.css';
-import AppRoutes from './AppRoutes.js';
-import { BrowserRouter, createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
 import StudentDashboard from './pages/Student/StudentDashboard.jsx';
 import CourseInfo from './pages/Student/CourseInfo.jsx';
 import StudentCourses from './pages/Student/StudentCourses.jsx';
@@ -25,14 +24,23 @@ import { SectionProvider } from './Context/SectionsContext.js';
 import GradingTablePage from './pages/Teacher/GradingTablePage.jsx';
 import Roster from './pages/Teacher/Roster.jsx';
 import EditAssessmentDetails from './pages/Teacher/EditAssessmentDetails.jsx';
-import TeacherDashboard from './pages/Teacher/TeacherDashboard.jsx'
 import QuizSubmission from './pages/Student/QuizSubmission.jsx';
 import Root from './pages/Root.jsx';
 import { ReportProvider } from './Context/ReportContext.js';
+import CaptureScreen from './pages/Student/CaptureScreen.jsx';
+import ViewFlags from './pages/Teacher/ViewFlags.jsx';
+import ObjectDetection from './pages/ObjectDetection.jsx';
+import LandingPage from './pages/LandingPages/landingpage.jsx';
+import Login from './pages/AuthenticationPages/Login.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root/>}>
+            <Route path=''element={<LandingPage/>}></Route>
+
+            <Route path='login'element={<Login/>}></Route>
+
+
             <Route path='home' element = {<StudentDashboard/>} />
             <Route path="manage-account" element = {<AccountManagerPage/>} />
             <Route path="quiz" element = {<QuizScreen />} />
@@ -42,6 +50,7 @@ const router = createBrowserRouter(
             <Route path="quiz-result" element = {<QuizResultScreen/>} />
             <Route path="quiz-instructions" element = {<QuizInstructions/>} />
             <Route path='quiz-submitted' element={<QuizSubmission/>}/>
+            <Route path='/capture-face' element={<CaptureScreen/>}></Route>
               
             <Route path="teacher/home" element = {<ScheduledAssessment/>} />
             <Route path='teacher/classes' element={<Classes/>}></Route>
@@ -56,20 +65,17 @@ const router = createBrowserRouter(
             <Route path='teacher/grading/:assessmentName' element={<Grading/>}/>
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>
-
-
-
+            <Route path='teacher/view-flags' element={<ViewFlags/>}></Route>
+            {/* <Route path='/object-detection' element={<ObjectDetection/>}></Route> */}
+        
          </Route>
   )
 );
 
 const App = () => {
   return (
-
-    <StrictMode>
     <RouterProvider router={router} />
-    </StrictMode>
-);
+  );
 };
 
 export default App;

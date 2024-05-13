@@ -5,10 +5,7 @@ import { AiOutlineBarChart } from "react-icons/ai";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
 
-const QuizCountImp = () => {
-    var totalCOunt = 2;
-    var attempts = 2;
-    var improvement = 20
+const QuizCountImp = ({totalCount, attempts, improvement}) => {
   return (
     <div className='w-full md:w-80 lg:w-6/12 bg-LightBlue h-28 rounded-lg flex justify-around font-medium drop-shadow-md'>
         <div className="totalQuiz flex flex-col justify-center items-center w-auto">
@@ -17,7 +14,7 @@ const QuizCountImp = () => {
                 <p className='text-xs ml-[1px]'>Assessments</p>
             </div>
             <div>
-                <h1 className='text-DarkBlue text-xl md:text-3xl'>{totalCOunt}</h1>
+                <h1 className='text-DarkBlue text-xl md:text-3xl'>{totalCount}</h1>
             </div>
             <p className='text-xs ml-[1px]'>Conducted</p>
         </div>
@@ -36,10 +33,14 @@ const QuizCountImp = () => {
                 <AiOutlineBarChart  className='text-DarkBlue'/>
                 <p className='text-xs ml-[1px]'>Achieved</p>
             </div>
-            <div className='flex'>
+            <div className='flex items-center'>
                 {
-                    improvement>0 ?
-                    <FaArrowTrendUp className={`self-center text-lg text-green-500 mr-2`}/> :
+                    improvement > 0 ?
+                    <FaArrowTrendUp className={`self-center text-lg text-green-500 mr-2`}/> 
+                    :
+                    improvement == 0 ?
+                    ''
+                    :
                     <FaArrowTrendDown className={`self-center text-lg text-red-500 mr-2`}/>
                 }
                 <h1 className={`text-DarkBlue text-xl md:text-3xl ${improvement>0 ? 'text-green-500' : 'text-red-500'}`}>{improvement} %</h1>

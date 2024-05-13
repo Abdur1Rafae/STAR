@@ -190,6 +190,21 @@ function CreateNewAssessment() {
       console.log(formattedDate);
    };
 
+   const handleNavigationDecision = () => {
+      if(!allowNavigation) {
+            setAllowInstantFeedback(false)
+      }
+      setAllowNavigation((prev) => !prev)
+   }
+
+   const handleInstantFeedbackDecision = () =>{
+      if(!allowInstantFeedback) {
+            setAllowNavigation(false)
+      }
+
+      setAllowInstantFeedback((prev) => !prev)
+   }
+
   
   return (
    <div className='flex flex-col h-full font-body'>
@@ -255,7 +270,7 @@ function CreateNewAssessment() {
                      <SubmitButton label = 'Select' active={true} onClick={()=>setSelectSectionsDialog(true)}/>
                   </div>
 
-                  <div className='flex md:flex-row flex-col mt-4 items-center justify-around'>
+                  <div className='flex md:flex-row flex-col mt-4 items-center justify-between'>
                      <div className='flex flex-col items-center'>
                         <h2 className='mt-2 text-xs md:text-sm font-semibold'>Duration</h2>
                         <div className='flex items-center'>
@@ -275,7 +290,7 @@ function CreateNewAssessment() {
                            className='ml-2 w-12 text-sm mt-2 border border-black rounded p-1' />
                         </div>
                      </div>
-                     <div>
+                     <div className='flex gap-2 md:gap-4  flex-col lg:flex-row'>
                         <div className='flex flex-col items-center'>
                            <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
                            <input type='datetime-local' value={datetime || ''} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
@@ -368,7 +383,7 @@ function CreateNewAssessment() {
                         <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
                      </div>
                      <div class="flex items-center my-4">
-                        <input checked={allowNavigation} onChange={()=>setAllowNavigation((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                         <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
                      </div>
                   </div>
@@ -382,7 +397,7 @@ function CreateNewAssessment() {
                         </div>
                      </div>
                      <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={()=>{setAllowInstantFeedback((prev)=>!prev); setAllowNavigation(allowInstantFeedback)}} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                         <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
                      </div>
                      <div class="flex items-center my-4">

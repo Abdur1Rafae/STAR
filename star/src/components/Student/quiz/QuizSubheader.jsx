@@ -3,7 +3,6 @@ import Timer from '../Timer'
 import { CgNotes } from "react-icons/cg";
 import { useMediaQuery } from 'react-responsive'
 import { ToggleStore } from '../../../Stores/ToggleStore';
-import QuizStore from '../../../Stores/QuizStore';
 
 
 const QuizSubheader = () => {

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { DDMMM_HHMM } from "../../Utils/DateFunctions";
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'All', onClick}) => {
   const [filteredData, setFilteredData] = useState(data)
+  const modules = {
+    toolbar: false
+};
 
   useEffect(() => {
     const filteredResult = data.filter(item => {
@@ -40,7 +45,10 @@ const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'Al
                 {columns.map((column, colIndex) => (
                   <td key={colIndex} className='px-1 py-2 text-xs md:text-sm border-black border-y-[1px]'>
                     { column.key == "startTime" || column.key == "submitTime" ? 
-                      DDMMM_HHMM(row[column.key]) :
+                      row[column.key] !== null ? DDMMM_HHMM(row[column.key]) : '-' :
+                      column.key == "question" ? 
+                      <ReactQuill readOnly={true} modules={modules} value={(row[column.key].slice(0, 125)+'...')} className='w-full text-md'/>
+                      :
                       row[column.key]
                     }
                   </td>

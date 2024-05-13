@@ -6,10 +6,16 @@ import { BiChevronLeft } from 'react-icons/bi'
 import { GetAssessmentResponses, GradeResponse } from '../../APIS/Teacher/GradingAPI'
 import { useParams } from 'react-router-dom'
 import Loader from '../../components/Loader'
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const Grading = () => {
+    const modules = {
+        toolbar: false
+    };
     const [loading, setLoading] = useState(true)
     const assessmentTitle = useParams('assessmentName')
+    const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
     const question = JSON.parse(localStorage.getItem('Response'))
     const [responses, setResponses] = useState([])
     const [responseIndex, setResponseIndex] = useState(0)
@@ -30,9 +36,8 @@ const Grading = () => {
 
     const handleResponseSubmission = async() => {
         try {
+            console.log(selectedResponse)
             const SubmitGrade = await GradeResponse({submissionId: selectedResponse.submissionId, responseId: selectedResponse.responseId, score: score, feedback: feedback})
-            console.log(SubmitGrade)
-            console.log(responseIndex == question.totalResponses - 1)
             if(responseIndex == question.totalResponses - 1) {
                 window.location.assign('/teacher/grading-table')
             }
@@ -48,7 +53,7 @@ const Grading = () => {
     useEffect(()=> {
         const GetResponses = async()=>{
             try{
-                const res = await GetAssessmentResponses({id:question._id})
+                const res = await GetAssessmentResponses({id:question._id, assessmentId: assessment._id})
                 
                 setTimeout(() => {
                     setResponses(res)
@@ -100,12 +105,12 @@ const Grading = () => {
                             </div>
                             <div className='flex md:flex-row flex-col w-full gap-4'>
                                 <div className='w-full gap-4 flex flex-col'>
-                                    <div className='w-full mt-4 border-[1px] border-black'>
+                                    <div className='w-full border-[1px] border-black'>
                                         <div className='bg-LightBlue h-10 flex items-center p-2'>
                                             <h3 className='font-semibold'>Question</h3>
                                         </div>
-                                        <div className='p-4'>
-                                            <p className='text-sm'>{question.question}</p>
+                                        <div className='p-1'>
+                                            <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-md'/>
                                         </div>
                                     </div>
                                     <div className='border-[1px] border-black'>
@@ -131,7 +136,7 @@ const Grading = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='w-full md:w-96 md:mt-4 border-[1px] border-black font-body'>
+                                <div className='w-full md:w-96 border-[1px] border-black font-body'>
                                     <div className='bg-LightBlue h-10 flex items-center justify-center p-2'>
                                         <h3 className='font-semibold'>Marking</h3>
                                     </div>
@@ -139,7 +144,7 @@ const Grading = () => {
                                         <div className='flex justify-between items-center'>
                                             <h3 className='font-medium text-sm'>Score</h3>
                                             <div className='flex gap-2'>
-                                                <input type='number' onChange={handleScore} value={score} className='border-[1px] border-black w-16 h-6'></input>
+                                                <input type='number' onChange={handleScore} value={score} className='border-[1px] border-black w-16 h-6 pl-2'></input>
                                                 <p className='text-sm'>out of {question.points}</p>
                                             </div>
                                         </div>

@@ -3,6 +3,8 @@ import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
 import QuizStore from '../../../Stores/QuizStore';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const TextAnswerPanel = ({ question, Flagged }) => {
   const [userAnswer, setUserAnswer] = useState('');
@@ -17,8 +19,9 @@ const TextAnswerPanel = ({ question, Flagged }) => {
 
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
-    setResponse(answer ? answer.answer[0] : '')
-    setUserAnswer(answer ? answer.answer[0] : '')
+    console.log(answer)
+    setResponse(answer && answer.answer[0] ? answer.answer[0] : '')
+    setUserAnswer(answer && answer.answer[0] ? answer.answer[0] : '')
   }, [question])
 
   useEffect(() => {
@@ -41,6 +44,9 @@ const TextAnswerPanel = ({ question, Flagged }) => {
     flagQuestion()
     filter()
   };
+  const modules = {
+    toolbar: false
+  };
 
   return (
     <div className="w-full mx-auto bg-white p-4 rounded-md mb-4">
@@ -61,8 +67,8 @@ const TextAnswerPanel = ({ question, Flagged }) => {
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
         {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
-        <div className='flex justify-between self-start'>
-            <p className="text-lg select-none">{question?.question}</p>
+        <div className='flex justify-between self-start  w-full'>
+          <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
         </div>
       </div>
 

@@ -10,12 +10,33 @@ import Loader from '../../components/Loader';
 function ScheduledAssessment() {
     const [loading, setLoading] = useState(true)
     const [assessments, setAssessments] = useState([])
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const classes = ['All', 'Technology', 'Science', 'Art', 'Sports'];
-    const statuses = ['All', 'In Progress', 'Requires Grading', 'Not Started'];
+    const [selectedClass, setSelectedClass] = useState('All');
+    const [selectedStatus, setSelectedStatus] = useState('All');
+    const [classes, setClasses] = useState([]);
+    const statuses = ['All', 'In Progress', 'Requires Review', 'Not Started'];
+    const [filteredAssesments, setFilteredAssessments] = useState([])
 
-    const handleSelectCategory = (category) => {
-        setSelectedCategory(category);
+    useEffect(()=> {
+        const data = assessments.filter((assessment) => {
+            if(selectedClass !== 'All'  && assessment.className != selectedClass) {
+                return false;
+            }
+            if(selectedStatus!== 'All' && assessment.category != selectedStatus) {
+                return false;
+            }
+            return true
+        })
+
+        setFilteredAssessments(data)
+    }, [assessments, selectedClass, selectedStatus])
+
+
+    const handleSelectClass = (category) => {
+        setSelectedClass(category);
+    };
+
+    const handleSelectStatus = (category) => {
+        setSelectedStatus(category);
     };
 
     useEffect(()=> {
@@ -25,6 +46,8 @@ function ScheduledAssessment() {
                 setTimeout(() => {
                     setAssessments(res);
                     console.log(res)
+                    const classes = ['All',...new Set(res.filter((asg => asg.hasOwnProperty('className'))).map(asg => asg.className))]
+                    setClasses(classes)
                     setLoading(false);
                 }, 1000);
             } catch (err) {
@@ -40,7 +63,7 @@ function ScheduledAssessment() {
         <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Home"}/>
             <div className='w-full flex flex-col'>
-                <SubheaderBut name={"Scheduled Assessments"} button={"New"} onClick={()=>{window.location.assign('/teacher/create-new-assessment')}}/>
+                <SubheaderBut name={"Dashboard"} button={"New Assessment"} onClick={()=>{window.location.assign('/teacher/create-new-assessment')}}/>
                 <div className={`p-2 md:pl-4 md:pt-4 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
                     {
                         loading ? 
@@ -55,22 +78,20 @@ function ScheduledAssessment() {
                                 <div className= 'flex gap-4 mt-4 md:mt-0'>
                                     <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Filter by:</p>
                                     <CategoryFilter
-                                            categoryName="Class"
                                             categories={classes}
-                                            selectedCategory={selectedCategory}
-                                            onSelectCategory={handleSelectCategory}
+                                            selectedCategory={selectedClass}
+                                            onSelectCategory={handleSelectClass}
                                         /> 
                                     <CategoryFilter
-                                        categoryName="Status"
                                         categories={statuses}
-                                        selectedCategory={selectedCategory}
-                                        onSelectCategory={handleSelectCategory}
+                                        selectedCategory={selectedStatus}
+                                        onSelectCategory={handleSelectStatus}
                                     /> 
                                 </div>
                             </div>
                             <div className='flex flex-wrap gap-6'>
                                 {
-                                    assessments.map((assessment, index)=> {
+                                    filteredAssesments.map((assessment, index)=> {
                                         return <AssessmentCard key={assessment._id} assessment={assessment} />
                                     })
                                 }

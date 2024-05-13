@@ -20,26 +20,30 @@ ChartJS.register(
 );
 
 export const options = {
-    responsive: true,
-    tension: 0,
-    plugins: {
-        legend: {
-            display: false,
-        },
-    },
-    scales:{
-        y:{
-            grid:{
-                display:false
-            },
-        },
-        x:{
-            grid:{
-                display:false
-            }
-        },
-    }
+  responsive: true,
+  tension: 0,
+  plugins: {
+      legend: {
+          display: false,
+      },
+  },
+  scales:{
+      y:{
+          grid:{
+              display:false
+          },
+          ticks: {
+              stepSize: 1
+          }
+      },
+      x:{
+          grid:{
+              display:false
+          }
+      },
+  }
 };
+
 
 const labels = ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%'];
 

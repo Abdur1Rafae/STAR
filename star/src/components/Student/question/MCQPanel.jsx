@@ -4,6 +4,8 @@ import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
 import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const MCQPanel = ({ question }) => {
   const [isFlagged, setIsFlagged] = useState(question.flagged);
@@ -19,7 +21,7 @@ const MCQPanel = ({ question }) => {
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
     setResponse(answer)
-    setSelectedOption(answer ? answer.answer : [])
+    setSelectedOption(answer && answer.answer ? answer.answer : [])
     setIsFlagged(question.flagged)
   }, [question])
 
@@ -27,7 +29,7 @@ const MCQPanel = ({ question }) => {
     setResponse(answer => {
       const updatedAnswer = {
         questionId: question._id,
-        answer: answer ? answer.answer : selectedOption
+        answer: answer && answer.answer ? answer.answer : selectedOption
       };
       updateResponse(questionNumber, updatedAnswer);
       return answer;
@@ -62,6 +64,10 @@ const MCQPanel = ({ question }) => {
     filterQuestions()
   };
 
+  const modules = {
+    toolbar: false
+  };
+
   return (
     <div className="w-full mx-auto bg-white p-4 rounded-md select-none">
       <div className="flex justify-between">
@@ -81,9 +87,9 @@ const MCQPanel = ({ question }) => {
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
         {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
-        <div className='self-start'>
-          <div className=''>
-            <p className="text-lg">{question?.question}</p>
+        <div className='self-start  w-full'>
+          <div className=' w-full'>
+            <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
           </div>
         </div>
       </div>
