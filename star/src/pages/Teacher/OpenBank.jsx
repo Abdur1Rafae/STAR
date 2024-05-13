@@ -102,7 +102,7 @@ const OpenBank = () => {
                                     </div>
                                     <div className='flex text-sm mt-2 font-body justify-between'>
                                         <h4 className='font-medium w-24'>Sections:</h4>
-                                        <div className='w-40 flex justify-center'>{sections.map((section) => {return <p>{section}</p>})}</div>
+                                        <div className='w-40 flex justify-center'>{sections.map((section) => {return <p>{section}, </p>})}</div>
                                     </div>
                                 </div>
 

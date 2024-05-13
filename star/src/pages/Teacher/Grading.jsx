@@ -15,6 +15,7 @@ const Grading = () => {
     };
     const [loading, setLoading] = useState(true)
     const assessmentTitle = useParams('assessmentName')
+    const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
     const question = JSON.parse(localStorage.getItem('Response'))
     const [responses, setResponses] = useState([])
     const [responseIndex, setResponseIndex] = useState(0)
@@ -35,8 +36,8 @@ const Grading = () => {
 
     const handleResponseSubmission = async() => {
         try {
+            console.log(selectedResponse)
             const SubmitGrade = await GradeResponse({submissionId: selectedResponse.submissionId, responseId: selectedResponse.responseId, score: score, feedback: feedback})
-            console.log(SubmitGrade)
             if(responseIndex == question.totalResponses - 1) {
                 window.location.assign('/teacher/grading-table')
             }
@@ -52,7 +53,7 @@ const Grading = () => {
     useEffect(()=> {
         const GetResponses = async()=>{
             try{
-                const res = await GetAssessmentResponses({id:question._id})
+                const res = await GetAssessmentResponses({id:question._id, assessmentId: assessment._id})
                 
                 setTimeout(() => {
                     setResponses(res)

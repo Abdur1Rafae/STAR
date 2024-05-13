@@ -15,7 +15,6 @@ const QuesAnswithHorBars = ({ index, question }) => {
 
   useEffect(()=>{
     setOptions(questionStats.options)
-    console.log(questionStats)
   }, [questionStats])
 
   const modules = {

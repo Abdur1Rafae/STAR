@@ -37,7 +37,15 @@ module.exports.getQuestionSummary = async (req,res) =>
                 question: { $first: '$question' },
                 points: { $first: '$question.points' },
                 totalResponses: { $sum: 1 },
-                totalGraded: { $sum: { $cond: [{ $ne: ['$responses.score', null] }, 1, 0] } }
+                totalGraded: {
+                  $sum: {
+                    $cond: [
+                      { $ne: [ { $ifNull: ["$responses.score", null] }, null ] },
+                      1,
+                      0
+                    ]
+                  }
+                }
               }
             },
             {
@@ -51,7 +59,6 @@ module.exports.getQuestionSummary = async (req,res) =>
               }
             }
           ])
-    
         if (!result) 
         {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}    
 
@@ -66,14 +73,14 @@ module.exports.getQuestionResponses = async (req,res) =>
 {
     try
     {
-        const {questionId} = req.params
+        const {questionId, assessmentId} = req.params
 
         const responses = await Response.aggregate([
             {
                 $unwind: '$responses'
             },
             {
-              $match: { 'responses.questionId': new mongoose.Types.ObjectId(questionId) }
+              $match: { 'responses.questionId': new mongoose.Types.ObjectId(questionId), assessment: new mongoose.Types.ObjectId(assessmentId) }
             },
             {
               $project: 

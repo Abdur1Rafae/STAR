@@ -4,19 +4,30 @@ import studentimage from './student-img.png';
 import { UserLogin } from '../../APIS/AuthAPI';
 
 const Login = () => {
-  const [isTeacherMode, setIsTeacherMode] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('')
   const [check, setCheck] = useState(true)
 
   const handleSubmit = async() => {
     setCheck(false)
+    if(email == '') {
+      setCheck(true)
+      setError('Email Required')
+      return
+    }
+    if(password == '') {
+      setCheck(true)
+      setError('Password Required')
+      return
+    }
     try {
       const response = await UserLogin({
          email: email,
          password: password,
       });
       if (response.status == 200) {
+        setError('')
         localStorage.setItem('token', response.data.user.accessToken)
         localStorage.setItem('userDetails', JSON.stringify(response.data.user))
         if(response.data.user.role == 'student') {
@@ -26,10 +37,18 @@ const Login = () => {
          window.location.assign('/teacher/home')
         }
         console.log('Login successful:', response.data);
-      } else {
-        console.log('Login failed:', response.statusText);
       }
     } catch (error) {    
+      if(error.response.status == 404) {
+        setError('User Not Found')
+      }
+      else if(error.response.status == 400) {
+        setError('Invalid Email')
+      }
+      else if(error.response.status == 401) {
+        setError('Invalid Credentials')
+      }
+      setCheck(true)
       console.log('Error:', error);
     }
   };
@@ -52,6 +71,7 @@ const Login = () => {
         </div>
         <div className='m-4 lg:m-16 h-fit max-md:py-8 md:p-4 flex flex-col items-center justify-center'>
           <p className='text-xs text-gray-500 flex flex-col items-center mt-8'>Please login into your account</p>
+          <p className='text-xs text-red-500 flex flex-col items-center mt-2'>{error}</p>
           <form onSubmit={handleSubmit} className=' w-full flex flex-col'>
                <label className='text-md font-semibold'>Email</label>
                <input 
@@ -78,7 +98,7 @@ const Login = () => {
                 <a href="" className='text-xs text-[#2D79F3]'>Forgot Password?</a>
               </div>
             </div>
-            <button type="button" onClick={handleSubmit} className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center`}>Login</button>
+            <button type="button" onClick={check ? handleSubmit : ()=> {}} className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center`}>Login</button>
             <div className='flex items-center justify-center gap-2 self-center'>
               <span className='text-xs'>Don't have an Account? </span>
               <a className='text-xs text-[#2D79F3]'>Sign Up</a>

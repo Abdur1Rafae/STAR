@@ -36,18 +36,15 @@ export const ReportProvider = ({ children }) => {
                 questionData.forEach((section, sectionIndex) => {
                     section.questions.forEach((question, questionIndex) => {
                         const existingQuestionIndex = compiledData.findIndex(item => item.question === question.question);
-                        
                         if (existingQuestionIndex !== -1) {
                             compiledData[existingQuestionIndex].totalResponses += question.totalResponses;
                             compiledData[existingQuestionIndex].totalCorrect += question.totalCorrect;
                         } else {
                             const newData = {
                                 question: question.question,
-                                totalResponses: 0,
-                                totalCorrect: 0
+                                totalResponses: question.totalResponses,
+                                totalCorrect: question.totalCorrect
                             };
-                            newData.totalResponses = question.totalResponses;
-                            newData.totalCorrect = question.totalCorrect;
                             compiledData.push(newData);
                         }
                     });
@@ -62,11 +59,9 @@ export const ReportProvider = ({ children }) => {
                         section.questions.forEach((question, questionIndex) => {
                             const newData = {
                                 question: question.question,
-                                totalResponses: 0,
-                                totalCorrect: 0
+                                totalResponses: question.totalResponses,
+                                totalCorrect: question.totalCorrect
                             };
-                            newData.totalResponses = question.totalResponses;
-                            newData.totalCorrect = question.totalCorrect;
                             compiledData.push(newData);
                         });
                     }
@@ -93,7 +88,6 @@ export const ReportProvider = ({ children }) => {
                     totalScore = assessmentQuestion[questionIndex].points
                     
                     section.questions.map((question)=>{
-                        console.log(question)
                         if(question.question == qId) {
                             totalResponses += question.totalResponses
                             totalSkipped += question.totalSkipped
