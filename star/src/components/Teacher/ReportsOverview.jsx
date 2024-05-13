@@ -43,7 +43,7 @@ const ReportsOverview = () => {
         <div className='md:flex w-full gap-2 lg:gap-4 hidden'>
             <div className='mt-4 w-1/2 flex flex-col gap-4'>
                 <div className='bg-LightBlue w-full flex lg:justify-between shadow-md pr-4 py-2'>
-                    <AssessmentInfo avg={Math.round(avgScore/totalMarks * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
+                    <AssessmentInfo avg={Math.round(totalParticipants/(topPerformers.length + absentees.length + requireAttention.length) * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2'>
                     <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>
@@ -294,9 +294,9 @@ const AssessmentInfo = ({avg, participants, questionCount, avgResponseTime}) => 
         <>
             <div className='w-48 lg:ml-8'>
                 <GaugeGraph percentage={avg}/>
-                <div className='absolute flex flex-col items-center -mt-20 ml-16'>
+                <div className='absolute flex flex-col items-center -mt-20 ml-14'>
                     <h4 className='text-3xl font-bold font-sans'>{avg}%</h4>
-                    <p className='text-sm'>Average</p>
+                    <p className='text-sm'>Completion</p>
                 </div>
             </div>
             <div className='w-full lg:w-48 lg:mr-12 my-auto font-medium text-xs flex flex-col gap-2'>

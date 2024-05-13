@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { GetResponses } from '../../APIS/Teacher/ReportAPI';
 import IndividualQuestionPanel from './IndividualQuestionPanel';
 import Loader from '../Loader';
+import { CgUnavailable } from "react-icons/cg";
 
 const IndividualReport = () => {
   const [loading, setLoading] = useState(true)
@@ -17,8 +18,10 @@ const IndividualReport = () => {
   const [showStudents, setShowStudents] = useState(false); 
   const [activeStudenData, setActiveStudentData] = useState({})
   const [skillMap, setSkillMap] = useState({})
+  const [noData, setNoData] = useState(false)
 
   const [peopleinfo, setPeopleInfo] = useState([]);
+  const [studentFetched, setStudentFetched] = useState(false)
 
   useEffect(()=>{
     const students = []
@@ -39,43 +42,54 @@ const IndividualReport = () => {
       })
     })
     setPeopleInfo(students)
+    setStudentFetched(true)
   }, [selectedSection, topPerformers, requireAttention])
 
   const [activePerson, setActivePerson] = useState({});
 
   useEffect(()=>{
-    if(peopleinfo.length > 0) {
+    if(peopleinfo.length > 0 && studentFetched) {
       setActivePerson(peopleinfo[0])
       const getResponseforFiststudent = async()=>{
         try {
           const res = await GetResponses({id: peopleinfo[0].response._id})
           console.log(res)
-          setTimeout(() => {
-            setActiveStudentData(res)
-            setLoading(false)
-          }, 500);
-          const questionStats = assessmentQuestion.reduce((acc, question, index) => {
-            const skill = question.skill;
-            if (!acc[skill]) {
-              acc[skill] = { totalCount: 0, correct: 0 };
-            }
-            res.responses.forEach(response => {
-              if (response.questionId === question._id) {
-                acc[skill].totalCount++;
-                if (response.score === question.points) {
-                  acc[skill].correct++;
-                }
+          if(res.responses.length > 0) {
+            setTimeout(() => {
+              setActiveStudentData(res)
+              setLoading(false)
+            }, 500);
+            const questionStats = assessmentQuestion.reduce((acc, question, index) => {
+              const skill = question.skill;
+              if (!acc[skill]) {
+                acc[skill] = { totalCount: 0, correct: 0 };
               }
-            });
-          
-            return acc;
-          }, {});
-          setSkillMap(questionStats)
+              res.responses.forEach(response => {
+                if (response.questionId === question._id) {
+                  acc[skill].totalCount++;
+                  if (response.score === question.points) {
+                    acc[skill].correct++;
+                  }
+                }
+              });
+            
+              return acc;
+            }, {});
+            setSkillMap(questionStats)
+          }
+          else {
+            setLoading(false)
+            setNoData(true)
+          }
         } catch(err) {
           console.log(err)
         }
       }
       getResponseforFiststudent()
+    }
+    else if(studentFetched) {
+      setLoading(false)
+      setNoData(true)
     }
   }, [peopleinfo])
 
@@ -83,7 +97,6 @@ const IndividualReport = () => {
     try {
       const res = await GetResponses({ id: response});
       setActiveStudentData(res)
-      console.log(res);
       const questionStats = assessmentQuestion.reduce((acc, question, index) => {
         const skill = question.skill;
         if (!acc[skill]) {
@@ -104,7 +117,6 @@ const IndividualReport = () => {
     } catch (err) {
       console.log(err);
     }
-    console.log('API call debounced');
   }, 500);
 
   const handlePersonClick = (person) => {
@@ -132,6 +144,17 @@ const IndividualReport = () => {
             <div className='w-full h-screen flex items-center justify-center'> 
               <Loader/>
             </div>
+            :
+            noData ? 
+            <>
+              <div className='w-full h-80 flex flex-col items-center justify-center'>
+                <CgUnavailable size={100}/>
+                <div className='w-1/2'> 
+                <p className='text-gray-800 font-medium'>No Individual Performance data was generated from this assessment.</p>
+                <p className='text-gray-400'>This occurs when no student attempted the assessment, or the assessment had no questions</p>
+                </div>
+              </div>
+            </>
             :
             <div className='flex flex-col lg:flex-row justify-between gap-4 mt-4'>
             <div className='hidden w-4/12 lg:flex bg-LightBlue shadow-md rounded-md'>
@@ -162,22 +185,6 @@ const IndividualReport = () => {
                     responses={activeStudenData.responses}/>                   
                 </div>
               </div>
-              {/* {
-                showStudents &&
-                <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
-                    <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
-                        <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between z-50'>
-                            <h3 className='my-auto ml-2'>Select Student</h3>
-                            <button className='mr-2' onClick={()=>{setShowStudents(false)}}><MdClose className='text-lg'/></button>
-                        </div>
-                        <div className='h-full overflow-y-auto no-scrollbar'>
-                            <div className='h-full flex flex-col gap-4'>
-                              <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
-                            </div>            
-                        </div>
-                    </div>
-                </div>
-              } */}
             </div>
           </div>
           }

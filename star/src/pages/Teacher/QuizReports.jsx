@@ -11,20 +11,28 @@ import { YYYYMMDD } from '../../Utils/DateFunctions'
 
 const QuizReports = () => {
   const [reports, setReports] = useState([])
+  const [filteredReports, setFilteredReports] = useState([])
+  const [classes, setClasses] = useState([])
+  const [selectedClass, setSelectedClass] = useState('All')
 
-  // useEffect(()=> {
-  //   localStorage.removeItem('responseId')
-  //   localStorage.removeItem('ReportQuestionBank')
-  //   localStorage.removeItem('ReportParticipants')
-  //   localStorage.removeItem('TopicDistribution')
-  //   localStorage.removeItem('MostIncorrectQuestion')
-  //   localStorage.removeItem('ReportAsgMarks')
-  // }, [])
+
+  useEffect(()=> {
+    const data = reports.filter((report) => {
+        if(selectedClass !== 'All'  && report.class != selectedClass) {
+            return false;
+        }
+        return true
+    })
+
+    setFilteredReports(data)
+  }, [reports, selectedClass])
 
   useEffect(()=>{
     const GetData = async() => {
       try {
         const res = await GetAllReports()
+        const classes = ['All',...new Set(res.filter((asg => asg.hasOwnProperty('class'))).map(asg => asg.class))]
+        setClasses(classes)
         const transformedRes = res.map(item => ({
           ...item,
           generated: YYYYMMDD(item.generated),
@@ -62,7 +70,7 @@ const QuizReports = () => {
           <Subheader name={"Reports"}/>
           <div className='flex md:px-4 md:pt-4 p-1 gap-4'>
               <LCSearchBar/>
-              <CategoryFilter categories={['3452', '2343', '2342']} onSelectCategory={()=>{}}/>
+              <CategoryFilter categories={classes} selectedCategory={selectedClass} onSelectCategory={setSelectedClass}/>
           </div>
           <LMTable data={reports} columns = {columns} />
         </div>

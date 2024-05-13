@@ -19,19 +19,24 @@ const Reports = () => {
     const [tab, setTab] = useState('Overview')
     const reportId = localStorage.getItem('ReportId')
     const reportTitile = useParams()
-    const {sections, setSelectedSection, selectedSection} = useContext(ReportContent)
+    const {sections,setApiCallCompleted, setAllSecIncorrectQuestion, setAllSecTopicDistribution,   setSelectedSection, selectedSection, setAssessmentQuestions, setParticipants, setTopicDistribution, setInCorrectQuestion} = useContext(ReportContent)
 
     useEffect(()=>{
         const GetOverview = async() => {
             try {
                 const res = await GetReportsOverview({id:reportId});
-                console.log(res)
-                localStorage.setItem('ReportQuestionBank', JSON.stringify(res.questionBank))
-                localStorage.setItem('ReportParticipants', JSON.stringify(res.participants))
-                localStorage.setItem('TopicDistribution', JSON.stringify(res.topicBreakDown))
-                localStorage.setItem('MostIncorrectQuestion', JSON.stringify(res.mostIncorrectQuestion))
-                localStorage.setItem('ReportAsgMarks', res.totalMarks)
                 setTimeout(() => {
+                    console.log(res)
+                    setAssessmentQuestions(res.questionBank)
+                    //localStorage.setItem('ReportQuestionBank', JSON.stringify(res.questionBank))
+                    setParticipants(res.participants)
+                    //localStorage.setItem('ReportParticipants', JSON.stringify(res.participants))
+                    setAllSecTopicDistribution(res.topicBreakDown)
+                    //localStorage.setItem('TopicDistribution', JSON.stringify(res.topicBreakDown))
+                    setAllSecIncorrectQuestion(res.mostIncorrectQuestion)
+                    //localStorage.setItem('MostIncorrectQuestion', JSON.stringify(res.mostIncorrectQuestion))
+                    localStorage.setItem('ReportAsgMarks', res.totalMarks ?? 0)
+                    setApiCallCompleted(true)
                     setLoading(false)
                 }, 1000);
             } catch(err) {

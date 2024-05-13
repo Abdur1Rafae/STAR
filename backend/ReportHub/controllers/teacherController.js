@@ -216,8 +216,8 @@ module.exports.getReportOverview= async (req,res) =>
 
             if(breakDown) {
               const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName)
-              if(sectionBreakDown && sectionBreakDown.breakDown) {
-                return { ...rest, topicBreakDown : sectionBreakDown.breakDown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+              if(sectionBreakDown && sectionBreakDown.breakdown) {
+                return { ...rest, topicBreakDown : sectionBreakDown.breakdown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
               }
               else{
                 return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}

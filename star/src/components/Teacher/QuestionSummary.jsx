@@ -8,6 +8,7 @@ import { GetQuestionStats } from '../../APIS/Teacher/ReportAPI.js';
 import { FcClock } from "react-icons/fc";
 import Loader from '../Loader.jsx';
 import QuestionTabTile from '../navigations/QuestionTabTile.jsx';
+import { CgUnavailable } from "react-icons/cg";
 
 const QuestionSummary = () => {
   const [loading, setLoading] = useState(true)
@@ -15,6 +16,7 @@ const QuestionSummary = () => {
   const data = [{name: 'Correct', value: questionStats.totalCorrect},{name: 'Incorrect', value: (questionStats.totalResponses - (questionStats.totalCorrect + questionStats.totalSkipped))},{name: 'Skipped', value: questionStats.totalSkipped}];
   const [activeQuestion, setactiveQuestion] = useState(assessmentQuestion[0]);
   const [showQuestions , setShowQuestions] = useState(false);
+  const [noData, setNoData] = useState(false)
 
   const findPercent = (id) =>{
     const foundQuestion = allQuestionPercent.find(item => item.question === id);
@@ -32,6 +34,10 @@ const QuestionSummary = () => {
             setQuestionData(res)
             setLoading(false)
           }, 500);
+        }
+        else {
+          setLoading(false)
+          setNoData(true)
         }
       } catch(err) {
         console.log(err)
@@ -52,6 +58,18 @@ const QuestionSummary = () => {
         loading ? 
         <Loader/>
         :
+        noData ?
+        <>
+              <div className='w-full h-80 flex flex-col items-center justify-center'>
+                <CgUnavailable size={100}/>
+                <div className='w-1/2'> 
+                <p className='text-gray-800 font-medium'>No Question Summary data was generated from this assessment.</p>
+                <p className='text-gray-400'>This occurs when no student attempted the assessment, or the assessment had no questions</p>
+                </div>
+              </div>
+            </>
+            :
+
         <>
         <div className={`md:w-1/3 md:hidden ${showQuestions ? 'h-52' : 'h-0'} order-last transition-all duration-200 ease-in-out overflow-y-scroll bg-LightBlue rounded-lg shadow-md`} >
             <div className=''>
