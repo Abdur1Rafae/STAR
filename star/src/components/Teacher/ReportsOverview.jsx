@@ -1,6 +1,5 @@
 import React, {useState, useContext} from 'react'
 import { StudentDonutGraph } from './StudentDonut'
-import { BiChevronDown } from 'react-icons/bi'
 import CircularProgressBar from '../Student/course/CircularProgressBar'
 import { BarChart } from './BarChart'
 import { GaugeGraph } from './GuageChart'
@@ -10,9 +9,11 @@ import { LuAlarmClock } from 'react-icons/lu'
 import { PolarChart } from './PolarChart'
 import { ReportContent } from '../../Context/ReportContext'
 import QuizImage from '../Student/question/QuizImage'
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const ReportsOverview = () => {
-    const {totalMarks, scoreDistribution, avgScore, highestScore, incorrectQuestion, topPerformers, absentees, requireAttention, avgResponseTime,topicDistribution, totalParticipants,  questionCount, selectedSection, sections, setSelectedSection} = useContext(ReportContent)
+    const {totalMarks, scoreDistribution, avgScore, highestScore, incorrectQuestion, topPerformers, absentees, requireAttention, avgResponseTime,topicDistribution, totalParticipants,  questionCount} = useContext(ReportContent)
     const [extendPerformers, setExtendPerformers] = useState(true)
     const [extendAbsentees, setExtendAbsentees] = useState(false)
     const [extendRA, setExtendRA] = useState(false)
@@ -35,12 +36,14 @@ const ReportsOverview = () => {
         setExtendAbsentees(false)
         setExtendPerformers(false)
     }
+
+
   return (
     <>
         <div className='md:flex w-full gap-2 lg:gap-4 hidden'>
             <div className='mt-4 w-1/2 flex flex-col gap-4'>
                 <div className='bg-LightBlue w-full flex lg:justify-between shadow-md pr-4 py-2'>
-                    <AssessmentInfo avg={(avgScore/totalMarks * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
+                    <AssessmentInfo avg={Math.round(avgScore/totalMarks * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2'>
                     <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>
@@ -200,6 +203,9 @@ const ReportsOverview = () => {
 }
 
 const IncorrectQuestion = ({question}) => {
+    const modules = {
+        toolbar: false
+    };
     return (
         <>
         {
@@ -208,7 +214,7 @@ const IncorrectQuestion = ({question}) => {
             <h4 className='text-sm font-medium'>Most Incorrect Question</h4>
             <div className='mt-4'>
                 <div className='w-full flex justify-between items-center'>
-                    <p className='text-sm font-sans'>{question?.question}</p>
+                    <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-sm'/>
                     <div className='w-3/12 flex items-center justify-center'>
                         <div className='w-24'>
                             <CircularProgressBar percentage={question?.percentage} width={7} flip={true}/>
@@ -297,7 +303,7 @@ const AssessmentInfo = ({avg, participants, questionCount, avgResponseTime}) => 
                 <div className='flex w-full justify-between items-center'>
                     <div className='flex gap-2 items-center'>
                         <TiGroup/>
-                        <p>Participants</p>
+                        <p>Responses</p>
                     </div>
                     <p>{participants}</p>
                 </div>

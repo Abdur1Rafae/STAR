@@ -5,6 +5,8 @@ import TFSetup from './TFSetup';
 import SASetup from './SASetup';
 import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || 'Problem Solving');
@@ -75,8 +77,11 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
             </div>
         </div>
 
-        <textarea value={newQuestion} onChange={(e)=> setNewQuestion(e.target.value)} className='w-full h-32 border-black border-[1px] mt-2 p-4 text-sm resize-none' placeholder='Enter your Question'></textarea>
-
+        <h4 className='font-medium text-sm mt-4'>Question</h4>
+        <div className='w-full h-40 overflow-y-scroll bg-white border-black border-[1px] mt-2 text-sm'>
+        <ReactQuill value={newQuestion}
+        onChange={(value)=> setNewQuestion(value)} className='h-28'/>
+        </div>
         <div className='mt-2'>
             {type == "MCQ" ? <MCQSetup updateOption={updateOption} correctOptions={newCorrectOptions} setCorrectOption={setNewCorrectOptions} addOption={setNewOptions} options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup options={newOptions} setOptions={setNewOptions} image={newImage} isTrue={isTrue} setIsTrue={setCorrect}/> : <SASetup/>)}
         </div>

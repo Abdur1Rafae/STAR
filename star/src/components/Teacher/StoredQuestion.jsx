@@ -5,11 +5,16 @@ import { MdEdit, MdOutlineDeleteOutline } from "react-icons/md";
 import QuizImage from '../Student/question/QuizImage';
 import QuestionCreator from './QuestionCreator';
 import { ToggleStore } from '../../Stores/ToggleStore';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill, difficulty, points, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue, reuse}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const Ordering = ToggleStore((store)=> store.Ordering)
+    const modules = {
+        toolbar: false
+    };
 
   return (
     <div draggable={Ordering} onDragStart={(e) => handleDrag(e, id)} className={`w-full bg-[#EEF3F3] rounded-lg border-[1px] border-black p-2 overflow-hidden flex gap-2 ${Ordering ? 'hover:cursor-grabbing' : ''}`}>
@@ -33,13 +38,9 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
                         </button>
                     </div>
                 </div>
-                <div className={`w-full flex ${display ? 'flex-col-reverse' : 'flex-col'}`}>
-                    <div className='flex gap-2 ml-2'>
-                        <h1 className='text-xs font-body'>
-                            {
-                                display || question.length <=25 ? (question) : (question.slice(0, 90)+'...')
-                            }
-                        </h1>
+                <div className={`w-full ${isEditing ? 'hidden' : 'w-full'}`}>
+                    <div className='flex gap-2'>
+                        <ReactQuill readOnly={true} modules={modules} value={display || question.length <=25 ? (question) : (question.slice(0, 90)+'...')} className='w-full text-xs font-body !border-none -p-2'/>
                     </div>
                 </div>
             </div>

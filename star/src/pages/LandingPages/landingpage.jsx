@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo-2.png';
+import logo from '../../components/logo.png';
 import cover1 from './cover1.png'
 import cover2 from './cover2.png'
 import cover3 from './cover3.png'
@@ -20,20 +20,20 @@ const LandingPage = () => {
   };
 return (
 <div className='w-full scroll-smooth '>
-    <div className='grid grid-cols-10 gap-2 items-center bg-DarkBlue py-4 px-4 md:px-12'>
-    <div className="menuleft logo flex justify-start col-span-5 md:col-span-2">
+    <div className='flex items-center justify-between bg-DarkBlue'>
+    <div className="menuleft logo flex justify-start">
       <img src={logo} className='w-44 h-14'></img>
     </div>
     <div className='w-full col-span-5 md:hidden'>
           <button
             data-ripple-light="true"
             data-popover-target="menu"
-            className="w-full select-none rounded-lg  py-3 px-6 text-right align-right font-sans text-xs font-bold uppercase text-white  transition-all  "
-            onClick={toggleDropDown} // Toggle dropdown on button click
+            className="w-full select-none rounded-lg  py-3 px-6 text-right align-right font-sans text-xs font-bold uppercase text-white  transition-all  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            onClick={toggleDropDown}
           >
             <IoMdMenu className="inline-block  " size={28}/>
           </button>
-           
+          <div className={`${isDropDownOpen ? 'h-48' : 'h-0'} overflow-y-hidden transition-all duration-200 ease-in-out`}>
             <ul
               role="menu"
               data-popover="menu"
@@ -45,41 +45,53 @@ return (
                 role="menuitem"
                 className="block w-full cursor-pointer select-none rounded-md px-8 pt-[9px] pb-2 text-start leading-tight transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
               >
+                <button>
                 Home
+                </button>
               </li>
               <li
                 role="menuitem"
                 className="block w-full cursor-pointer select-none rounded-md px-8 pt-[9px] pb-2 text-start leading-tight transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
               >
+                <button>
                 Features
+                </button>
               </li>
               <li
                 role="menuitem"
                 className="block w-full cursor-pointer select-none rounded-md px-8 pt-[9px] pb-2 text-start leading-tight transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
               >
+                <button>
                 About us
+                </button>
               </li>
               <li
                 role="menuitem"
                 className="block w-full cursor-pointer select-none rounded-md px-8 pt-[9px] pb-2 text-start leading-tight transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
               >
+                <button>
                 Pricing
+                </button>
               </li>
               <div className='w-full border border-gray-200 '></div>
               <li
                 role="menuitem"
                 className="block w-full cursor-pointer select-none rounded-md px-8 pt-[9px] pb-2 text-start leading-tight transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
               >
+                <button>
                 Login
+                </button>
               </li>
               <li
                 role="menuitem"
                 className="block w-full cursor-pointer select-none rounded-md px-8 pt-[9px] pb-2 text-start leading-tight transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
               >
+                <button>
                 Signup
+                </button>
               </li>
             </ul>
-          
+          </div>
         </div>
     <div className='max-md:hidden col-span-4 flex gap-x-8 text-white font-semibold text-sm '>
         <button>Home</button>
@@ -156,7 +168,7 @@ return (
         </div>
     </div>
 
-    <div className='md:sticky top-0  h-96 w-full h-screen bg-black md:grid grid-cols-3 p-12'>
+    <div className='md:sticky top-0  h-96 w-full bg-black md:grid grid-cols-3 p-12'>
         <div className='col-span-2 content-center md:px-12 max-md:text-center'>
             <h2 className='text-white font-bold text-2xl md:text-4xl leading-normal'>
             See Beyond The Grade. 

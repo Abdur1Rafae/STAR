@@ -1,5 +1,4 @@
 const cron = require('node-cron')
-const moment = require('moment')
 const mongoose = require('mongoose')
 const {Assessment, Response} = require('library/index')
 
@@ -33,7 +32,7 @@ function generateReport(assessmentId)
             { $unwind: "$participants" },
             {
               $lookup: {
-                from: "students",
+                from: "users",
                 localField: "participants.roster",
                 foreignField: "_id",
                 pipeline: [
@@ -83,9 +82,33 @@ function generateReport(assessmentId)
                 responses: {
                   $sum: {$cond: [{ $ne: [{$size: "$student.response"}, 0] }, 1, 0]}
                 },
-                responseTime: {$avg: {$divide: [{ $subtract: [{$first: "$student.response.submittedAt"}, {$first: "$student.response.createdAt"}] },1000]}} ,
-                averageScore: { $avg: {$first: "$student.response.totalScore"} },
-                highestScore: { $max: {$first: "$student.response.totalScore"} },
+                responseTime: 
+                {
+                  $avg: 
+                  {
+                    $cond: [
+                      { $and: [{ $ne: [{$first: "$student.response.submittedAt"}, null] }, { $ne: [{$first:"$student.response.createdAt"}, null] }] },
+                      { $divide: [{ $subtract: [{$first: "$student.response.submittedAt"}, {$first:"$student.response.createdAt"}] }, 1000] },
+                      0,
+                    ],
+                  },
+                },
+                averageScore: {
+                  $avg: {
+                    $first: 
+                    {
+                      $ifNull: ["$student.response.totalScore", 0], 
+                    },
+                  },
+                },
+                highestScore: {
+                  $max: {
+                    $first: 
+                    {
+                      $ifNull: ["$student.response.totalScore", 0], 
+                    },
+                  },
+                },
                 students: {
                   $push: {
                     name: "$student.name",
@@ -97,7 +120,18 @@ function generateReport(assessmentId)
                 },
               },
             },
-          ]
+            {
+              $project: {
+                sectionId: "$_id",
+                sectionName: 1,
+                responses: 1,
+                responseTime: 1,
+                averageScore: 1,
+                highestScore: 1,
+                students: 1
+              }
+            }
+        ]
         const questionPipeline = 
         [
           {
@@ -204,18 +238,21 @@ function generateReport(assessmentId)
             },
           },
         ]
-        
+
         const participantSummary = Assessment.aggregate(participantPipeline)
         const questionSummary =  Response.aggregate(questionPipeline)
 
         Promise.all([questionSummary, participantSummary])
         .then(async results => 
         {
-            const participants = results[1].map(participant => {
-                const questionsData = results[0].find(item => item._id.equals(participant._id));
-                
-                const { _id, ...rest } = participant
-                return { ...rest, questions: questionsData.questions }
+            const participants = results[1].map(participant => 
+            {
+                const questionsData = results[0].find(item => item._id.equals(participant.sectionId))
+
+                let questions = []
+                if(questionsData && questionsData.questions){questions = questionsData.questions}
+                const { _id, students, ...rest } = participant
+                return { ...rest, students, questions }
             })
 
             const summary = { participants , generated:  Date.now()}

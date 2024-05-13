@@ -1,4 +1,4 @@
-const {Response} = require('library/index')
+const {Response, Assessment} = require('library/index')
 const mongoose = require('mongoose')
 
 
@@ -37,7 +37,7 @@ module.exports.getQuestionSummary = async (req,res) =>
                 question: { $first: '$question' },
                 points: { $first: '$question.points' },
                 totalResponses: { $sum: 1 },
-                totalGraded: { $sum: { $cond: [{ $gt: ['$responses.score', null] }, 1, 0] } }
+                totalGraded: { $sum: { $cond: [{ $ne: ['$responses.score', null] }, 1, 0] } }
               }
             },
             {
@@ -104,7 +104,6 @@ module.exports.gradeResponse = async (req,res) =>
     {
       const {submissionId, responseId} = req.params
       const {score, feedback} = req.body
-      console.log(req.body)
 
       if(score == null){return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: score' })}
 
@@ -139,7 +138,7 @@ module.exports.publish = async (req,res) =>
 
         const updatedAssessment = await Assessment.findByIdAndUpdate(
           assessmentId,
-          { $set: { status: "Reviewed", "configurations.releaseGrade": true } },
+          { $set: { status: "Reviewed", "configurations.releaseGrades": true } },
           { new: true }
         )
 

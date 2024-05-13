@@ -16,10 +16,12 @@ function findMostIncorrectQuestion(questions)
 
     return mostIncorrect;
 }
-function findMostIncorrectOverall(participants) {
+function findMostIncorrectOverall(participants) 
+{
     const allQuestions = participants.flatMap(participant => participant.questions);
 
-    const groupedQuestions = allQuestions.reduce((acc, question) => {
+    const groupedQuestions = allQuestions.reduce((acc, question) => 
+    {
         const { question: questionId, totalResponses, totalCorrect, totalSkipped } = question;
         const totalIncorrect = totalResponses - (totalCorrect + totalSkipped);
         if (!acc[questionId]) {
@@ -31,13 +33,13 @@ function findMostIncorrectOverall(participants) {
         return acc;
     }, {});
 
-    const questionsArray = Object.values(groupedQuestions);
+    const questionsArray = Object.values(groupedQuestions)
 
     questionsArray.sort((a, b) => b.totalIncorrect - a.totalIncorrect)
 
     const question = questionsArray.length > 0 ? questionsArray[0] : null
 
-    if(question && question.totalIncorrect === 0){return null}
+    if(!question || question.totalIncorrect === 0){return null}
     else
     {
         return{
@@ -166,12 +168,11 @@ module.exports.getReportOverview= async (req,res) =>
               },
               },
             {
-              $addFields: {
-                percentage: {
-                  $divide: [
-                    "$totalCorrect",
-                    "$totalResponses",
-                  ],
+              $addFields: 
+              {
+                percentage: 
+                {
+                  $cond: { if: { $eq: ["$totalResponses", 0] }, then: 0, else: { $divide: ["$totalCorrect", "$totalResponses"] } },
                 },
               },
             },
@@ -213,9 +214,15 @@ module.exports.getReportOverview= async (req,res) =>
         const participants = assessment.summary.participants.map(item => {
             const { questions, _id , ...rest } = item.toObject()
 
-            const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName).breakdown
-
-            return { ...rest, topicBreakDown : sectionBreakDown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+            if(breakDown) {
+              const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName)
+              if(sectionBreakDown && sectionBreakDown.breakDown) {
+                return { ...rest, topicBreakDown : sectionBreakDown.breakDown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+              }
+              else{
+                return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+              }
+            } 
           })
 
         const report = 
@@ -254,22 +261,15 @@ module.exports.getQuestionSummary= async (req,res) =>
               }
             },
             {
-              $lookup: {
-                from: "sections",
-                localField: "section",
-                foreignField: "_id",
-                as: "section"
-              }
-            },
-            {
               $project: {
-                section: {$first: '$section.sectionName'},
+                section: 1,
                 responses: 1
               }
             },
             { $unwind: "$responses" },
             {
-              $lookup: {
+              $lookup: 
+              {
                 from: "questions",
                 localField: "responses.questionId",
                 foreignField: "_id",
@@ -320,25 +320,28 @@ module.exports.getQuestionSummary= async (req,res) =>
                 }
               }
             }
-          ]
+        ]
            
         const optionsBreakDown = await Response.aggregate(pipelineOptionsBreakDown)
-        // console.log(assessment.summary.participants)
-        // console.log(optionsBreakDown)
+
         const report = assessment.summary.participants.map(section => 
         {
             let questions = section.questions
-            console.log(optionsBreakDown.find((sectionItem) => sectionItem._id === section.sectionName))
-            const questionsBreakDown = optionsBreakDown.find((sectionItem) => sectionItem._id === section.sectionName).questions
+            let questionsBreakDown = optionsBreakDown.find((sectionItem) => sectionItem._id.equals(new mongoose.Types.ObjectId(section.sectionId)))
+            if(questionsBreakDown && questionsBreakDown.questions)
+            {
+              questions = questions.map(question =>
+                {
+                  const optionBreakDown = questionsBreakDown.questions.find(item => item.question.equals(new mongoose.Types.ObjectId(question.question)))
+                  if(optionBreakDown && optionBreakDown.breakDown){return {...question.toObject(), optionsBreakDown: optionBreakDown.breakDown}}
+                  else{return {...question.toObject()}}
         
-            questions = questions.map(question => {
-                const optionBreakDown = questionsBreakDown.find(item => item.question.equals(question.question)).breakDown
-                return {...question.toObject(), optionsBreakDown: optionBreakDown}
-            })
-            return{
-                section: section.sectionName,
-                questions: questions,
+                })
             }
+            return{
+              section: section.sectionName,
+              questions: questions,
+            }
         })
 
         res.status(201).json(report)

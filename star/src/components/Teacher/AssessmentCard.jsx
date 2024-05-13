@@ -9,6 +9,7 @@ import GradeButton from '../button/GradeButton';
 import EditButton from '../button/EditButton';
 import Asssessment from '../Assessment.png'
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
+import { MdDelete } from 'react-icons/md';
 
 const AssessmentCard = ({ assessment }) => {
     let buttonComponent, statusColor, statusTextColor;

@@ -1,4 +1,4 @@
-const {Assessment, Response, Student, Section} = require('library/index')
+const {Assessment, Response, User, Section} = require('library/index')
 const mongoose = require('mongoose')
 
 function skillBreakDown(skills, response)
@@ -22,8 +22,8 @@ module.exports.getEnrolledClasses = async (req,res) =>
     {
         const student = req.body.decodedToken.id
 
-        const classes = await Student.findById(student)
-        .select('-name -erp -email -_id -__v') 
+        const classes = await User.findById(student)
+        .select('-name -erp -email -id -_v -role -password -attemptedAssessments') 
         .populate
         ({
             path: 'enrolledSections',
@@ -32,10 +32,10 @@ module.exports.getEnrolledClasses = async (req,res) =>
             {
                 path: 'class', 
                 select: '-_id className',
-                populate:{ path: 'teacher', select: '-_id firstName lastName'} 
+                populate:{ path: 'teacher', select: '-_id name'} 
             },
         })
-
+        if(!classes || !classes.enrolledSections){return res.status(201).json({data: []})} 
 
         const formattedData = classes.enrolledSections.map( section => 
         ({
@@ -43,10 +43,10 @@ module.exports.getEnrolledClasses = async (req,res) =>
             className: section.class.className,
             assessment: section.assessments.length || 0,
             enrolled: section.createdAt,
-            teacher: section.class.teacher.firstName + ' ' + section.class.teacher.lastName
+            teacher: section.class.teacher.name
         }))
 
-        res.status(201).json({data: formattedData})
+        return res.status(201).json({data: formattedData})
 
     }
     catch(err)
@@ -67,7 +67,7 @@ module.exports.getClassOverview = async (req,res) =>
         .populate(
             {
                 path: 'assessments',
-                select: 'title status totalMarks configurations.openData configurations.closeDate configurations.duration',
+                select: 'title status totalMarks configurations.openDate configurations.closeDate configurations.duration',
                 model: Assessment
             }
         ) 
@@ -80,7 +80,8 @@ module.exports.getClassOverview = async (req,res) =>
             const assessmentData = {}
 
             assessmentData.title = assessment.title
-            assessmentData.totalMarks = assessment.totalMarks
+            assessmentData.totalMarks = assessment.totalMarks ?? 0
+            assessmentData.closeDate = assessment.configurations.closeDate
 
 
 

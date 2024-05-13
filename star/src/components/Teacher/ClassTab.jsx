@@ -27,7 +27,6 @@ const ClassTab = ({id, name, onDelete, classSections}) => {
         try {
             const res = await DeleteSection({ id: id });
             console.log(res);
-            console.log(sections)
             const updatedSections = [...sections];
             updatedSections.splice(index, 1);
             setSections(updatedSections);

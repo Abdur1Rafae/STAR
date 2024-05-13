@@ -145,11 +145,11 @@ function LiveMonitoring() {
                       <div className="flex font-sans gap-4">
                         <div className="flex">
                           <p>Sections :&nbsp;</p>
-                          <CategoryFilter categoryName="All" categories={sections} selectedCategory={selectedSection} onSelectCategory={handleSelectSection}/>
+                          <CategoryFilter categoryName="All" categories={sections} selectedCategory={selectedSection} onSelectCategory={handleSelectSection} assigning={true}/>
                         </div>
                         <div className="flex">
                           <p>Status :&nbsp;</p>
-                          <CategoryFilter categoryName="All" categories={status} selectedCategory={selectedStatus} onSelectCategory={handleSelectStatus}/>
+                          <CategoryFilter categoryName="All" categories={status} selectedCategory={selectedStatus} onSelectCategory={handleSelectStatus} assigning={true}/>
                         </div>
                       </div>
                       <LMTable data={stats} columns = {columns} selectedStatus= {selectedStatus} selectedSection= {selectedSection} />

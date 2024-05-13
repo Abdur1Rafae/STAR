@@ -16,6 +16,8 @@ import { ToggleStore } from '../../Stores/ToggleStore';
 import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
 import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
+import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
+import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
 function AddQuestions() {
@@ -249,6 +251,32 @@ function AddQuestions() {
         }
     }
 
+    const handleSaveDraft = async() => {
+        try{
+            const res = await DraftAssessment({id: assessmentName.assessmentId})
+
+            window.location.assign('/teacher/home')
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    const handleLaunch = async() => {
+        try{
+            const res = await LaunchAssessment({id: assessmentName.assessmentId})
+
+            window.location.assign('/teacher/home')
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    const [profileDialog, setProfileDialog] = useState(false)
+
+    let saveProfile = ClickOutsideFunc(()=>{
+        setProfileDialog(false);
+    })
+
 
   return (
     <div className=' w-full h-full font-body'>
@@ -256,7 +284,20 @@ function AddQuestions() {
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Add Questions"}/>
             <div className='w-full '>
-                <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={handleSubmitQuestions}/>
+                <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
+                <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                    {profileDialog && (
+                        <div className='h-20 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
+                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleSaveDraft}>
+                                <button className=' ml-2'>Save as Draft</button>
+                            </div>
+                            
+                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLaunch}>
+                                <button className='ml-2'>Launch</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
                 <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-2 md:p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className='w-full flex flex-wrap items-start justify-center gap-4'>
@@ -285,9 +326,10 @@ function AddQuestions() {
                                 </button>
                             </div>
                         </div>
+                        <p className={`text-xs ${order ? '' : 'hidden'}`}>Drag and drop questions in required numbers</p>
                         <button onClick={handleOrdering} className={`${questions.length > 0 ? 'hidden lg:flex' : 'hidden'} self-end text-xs items-center justify-center gap-1 border-[1px] border-black  px-2 py-1 active:shadow-lg ${order ? 'bg-slate-200' : ''}`}>
                             <IoIosMove/>
-                            <p>Order</p>
+                            <p> {order ? 'Save Order' : 'Change Order'}</p>
                         </button>
                         {
                         reuseDialog &&

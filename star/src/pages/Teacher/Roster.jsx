@@ -7,7 +7,7 @@ import LMTable from '../../components/Teacher/LMTable';
 import AddStudentDialog from '../../components/Teacher/AddStudentDialog';
 import AddStudentManually from '../../components/Teacher/AddStudentManually';
 import { BiChevronLeft } from 'react-icons/bi';
-import { MdOutlineDelete } from "react-icons/md";
+import { MdAdd, MdOutlineDelete } from "react-icons/md";
 import { useParams } from 'react-router-dom';
 import { AddStudent,AddStudents, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
 import Loader from '../../components/Loader';
@@ -163,9 +163,10 @@ const Roster = () => {
   }
   const handleAddStudent = async(student) => {
     try {
-      const index = students.findIndex(item => item.id === student.id);
+      const index = students.findIndex(item => item.id === student.erp);
       if(index == -1) {
         const addStudent = await AddStudent({sectionId: sectionId.sectionID, student: student})
+        console.log(addStudent)
         student._id = addStudent.studentIds[0]
         setStudents([...students, student]);
       }
@@ -250,7 +251,7 @@ const Roster = () => {
                       <p>Delete</p>
                     </button>
                     <button onClick={handleProfileClick} className='flex bg-DarkBlue text-white active:shadow-md item-center justify-center gap-1 text-sm px-2 py-1 rounded-md'>
-                      <MdOutlineDelete size={21} />
+                      <MdAdd size={21} />
                       <p>Add Student</p>
                     </button>
                     <div ref={closeProfile} className={`dialogue top-56 md:top-44 md:right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>

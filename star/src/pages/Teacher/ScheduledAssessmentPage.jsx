@@ -63,7 +63,7 @@ function ScheduledAssessment() {
         <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Home"}/>
             <div className='w-full flex flex-col'>
-                <SubheaderBut name={"Dashboard"} button={"Assessment"} onClick={()=>{window.location.assign('/teacher/create-new-assessment')}}/>
+                <SubheaderBut name={"Dashboard"} button={"New Assessment"} onClick={()=>{window.location.assign('/teacher/create-new-assessment')}}/>
                 <div className={`p-2 md:pl-4 md:pt-4 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
                     {
                         loading ? 
