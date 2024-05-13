@@ -95,7 +95,7 @@ function LiveMonitoring() {
   
   const status = ['Submitted', 'Active', 'Not Started'];
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='w-full h-full'>
         <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
         <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Live Monitoring"}/>

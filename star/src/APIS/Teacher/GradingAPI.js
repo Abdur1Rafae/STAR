@@ -13,9 +13,9 @@ const GetAssessmentSummary = async({id}) => {
     return res.data.data
 }
 
-const GetAssessmentResponses = async({id}) => {
+const GetAssessmentResponses = async({id, assessmentId}) => {
     const token = localStorage.getItem('token')
-    const res = await AxiosBase.get(`/teacherhub/grade/responses/${id}`, {
+    const res = await AxiosBase.get(`/teacherhub/grade/responses/${assessmentId}/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
         }

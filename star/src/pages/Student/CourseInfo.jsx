@@ -80,7 +80,7 @@ const CourseInfo = () => {
         totalCount++
         totalMarks += assessment.totalMarks
         let obj = {
-          title: ddmmyy(assessment.submitted),
+          title: ddmmyy(assessment.closeDate),
           value: assessment.totalScore ? Math.round(assessment.totalScore / assessment.totalMarks * 100) : 0
         }
         if(assessment.status == "Absent" || assessment.status == "Published") {
