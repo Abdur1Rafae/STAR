@@ -6,6 +6,7 @@ import logo from './logo.png'
 import {ClickOutsideFunc} from './ClickOutsideFunc';
 
 const MenuBar = ({name, role}) => {
+    let user = localStorage.getItem('UserInfo')
   let [profileDialog, setProfileDialog] = useState(false);
 
   let handleProfileClick = () => {

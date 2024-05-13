@@ -42,6 +42,7 @@ const Classes = () => {
     const FetchClasses = async() => {
       try {
         const res = await GetAllClasses()
+        console.log(res)
         setTimeout(() => {
           setClasses(res.data)
           setLoading(false);

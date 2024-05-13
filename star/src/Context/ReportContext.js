@@ -4,8 +4,8 @@ import { secondsToHMS } from '../Utils/TimeFunction';
 export const ReportContent = createContext()
 
 export const ReportProvider = ({ children }) => {
-    const [assessmentQuestion, setAssessmentQuestions] = useState(JSON.parse(localStorage.getItem('ReportQuestionBank')) || [])
-    const [participants, setParticipants] =useState(JSON.parse(localStorage.getItem('ReportParticipants')) || [])
+    const [assessmentQuestion, setAssessmentQuestions] = useState([])
+    const [participants, setParticipants] =useState([])
     const totalMarks = localStorage.getItem('ReportAsgMarks')
     const [sections, setSections] = useState([])
     const [selectedSection, setSelectedSection] = useState('All')
@@ -15,8 +15,10 @@ export const ReportProvider = ({ children }) => {
     const [highestScore, setHighestScore] = useState(0)
     const [scoreDistribution, setScoreDistribution] = useState([])
     const [topicList, setTopicList] = useState({})
-    const [topicDistribution, setTopicDistribution] = useState(JSON.parse(localStorage.getItem('TopicDistribution')) || [])
-    const [incorrectQuestion, setInCorrectQuestion] = useState(JSON.parse(localStorage.getItem('MostIncorrectQuestion')) ||{})
+    const [topicDistribution, setTopicDistribution] = useState([])
+    const [allSecTopicDistribution, setAllSecTopicDistribution] = useState([])
+    const [allSecIncorrectQuestion, setAllSecIncorrectQuestion] = useState({})
+    const [incorrectQuestion, setInCorrectQuestion] = useState({})
     const [topPerformers, setTopPerformers] = useState([])
     const [absentees, setAbsentees] = useState([])
     const [requireAttention, setRequireAttention] = useState([])
@@ -24,6 +26,7 @@ export const ReportProvider = ({ children }) => {
     const [questionIndex, setQuestionIndex] = useState(0)
     const [questionStats, setQuestionStats] = useState({})
     const [allQuestionPercent, setAllQuestionPercent] = useState([])
+    const [apiCallCompleted, setApiCallCompleted] = useState(false)
 
     useEffect(()=>{
         if(questionData.length > 0){
@@ -90,6 +93,7 @@ export const ReportProvider = ({ children }) => {
                     totalScore = assessmentQuestion[questionIndex].points
                     
                     section.questions.map((question)=>{
+                        console.log(question)
                         if(question.question == qId) {
                             totalResponses += question.totalResponses
                             totalSkipped += question.totalSkipped
@@ -190,16 +194,16 @@ export const ReportProvider = ({ children }) => {
                 section.students.map((student) => {
                     if(student.response) {
                         const percentage = Math.round(student.response.totalScore / totalMarks * 100)
-                        if(percentage > 90) {
+                        if(percentage > 60 || isNaN(percentage)) {
                             topPerformingstudents.push({
                                 name: student.name,
                                 section: section.sectionName,
-                                score: percentage,
+                                score: isNaN(percentage) ? 100 : percentage,
                                 erp: student.erp,
                                 response: student.response
                             })
                         }
-                        else if(percentage < 60) {
+                        else if(percentage <= 60) {
                             requireAttentionstudents.push({
                                 name: student.name,
                                 section: section.sectionName,
@@ -231,7 +235,7 @@ export const ReportProvider = ({ children }) => {
                     section.students.map((student) => {
                         if(student.response) {
                             const percentage = Math.round(student.response.totalScore / totalMarks * 100)
-                            if(percentage > 90) {
+                            if(percentage > 60) {
                                 topPerformingstudents.push({
                                     name: student.name,
                                     section: section.sectionName,
@@ -240,7 +244,7 @@ export const ReportProvider = ({ children }) => {
                                     response: student.response
                                 })
                             }
-                            else if(percentage < 60) {
+                            else if(percentage <= 60) {
                                 requireAttentionstudents.push({
                                     name: student.name,
                                     section: section.sectionName,
@@ -267,17 +271,17 @@ export const ReportProvider = ({ children }) => {
                 }    
             })
         }
-    }, [selectedSection])
+    }, [selectedSection, apiCallCompleted])
     
     useEffect(()=> {
         if(selectedSection == 'All') {
-            setTopicDistribution(JSON.parse(localStorage.getItem('TopicDistribution')))
-            const question = JSON.parse(localStorage.getItem('MostIncorrectQuestion'))
-            let incorrectQuestion =  []
+            setTopicDistribution(allSecTopicDistribution)
+            const question = allSecIncorrectQuestion
+            let incorrectQuestions =  []
             if(question !== null) {
                 assessmentQuestion.map((ques)=>{
                     if(question.question == ques._id) {
-                        incorrectQuestion.push({
+                        incorrectQuestions.push({
                             question: ques.question,
                             type: ques.type,
                             options: ques.options,
@@ -289,16 +293,14 @@ export const ReportProvider = ({ children }) => {
                     }
                 })
     
-                setInCorrectQuestion(incorrectQuestion)
+                setInCorrectQuestion(incorrectQuestions)
             }
         }
         else {
             participants.map((section)=> {
                 if(section.sectionName == selectedSection) {
-                    setTopicDistribution(section.topicBreakDown)
-                    setInCorrectQuestion(section.mostIncorrectQuestion)
+                    setTopicDistribution(section.topicBreakDown ? section.topicBreakDown : [])
                     const question = section.mostIncorrectQuestion
-                    console.log(question)
                     let incorrectQuestion =  []
                     if(question !== null) {
                         assessmentQuestion.map((ques)=>{
@@ -320,7 +322,7 @@ export const ReportProvider = ({ children }) => {
                 }
             })
         }
-    }, [selectedSection])
+    }, [selectedSection, apiCallCompleted])
 
     useEffect(()=> {
         const topics = {};
@@ -343,7 +345,6 @@ export const ReportProvider = ({ children }) => {
         let highScore = 0;
         participants.map((section)=>{
             newSections.push(section.sectionName)
-            console.log(section)
             totalStudentsCount += section.responses
             responseTime += section.responseTime
             if(section.highestScore > highScore) {
@@ -395,34 +396,34 @@ export const ReportProvider = ({ children }) => {
             setAvgScore(meanScore)
             setHighestScore(highScore)
         }
-    }, [selectedSection, sections])
+    }, [selectedSection, sections, apiCallCompleted])
 
     useEffect(()=> {
         let scores = []
         if(selectedSection == 'All'){
             participants.map((section)=>{
-                section.students.map((student) => [
+                section.students.map((student) => {
                     scores.push(Math.round(((student.response ? student.response.totalScore : 0) / totalMarks) * 100))
-                ])
+                })
             })
         }
         else {
             participants.map((section)=>{
                 if(section.sectionName == selectedSection){
-                    section.students.map((student) => [
+                    section.students.map((student) => {
                         scores.push(Math.round(((student.response ? student.response.totalScore : 0) / totalMarks) * 100))
-                    ])
+                    })
                 }
             })
         }
 
         setScoreDistribution(scores)
-    }, [selectedSection])
+    }, [selectedSection, apiCallCompleted])
 
     const questionCount = assessmentQuestion.length
 
     return (
-        <ReportContent.Provider value={{allQuestionPercent, questionStats, questionData, setQuestionData, questionIndex, setQuestionIndex, topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
+        <ReportContent.Provider value={{setAllSecIncorrectQuestion,setAllSecTopicDistribution, setApiCallCompleted, setInCorrectQuestion, allQuestionPercent, questionStats, questionData, setQuestionData, questionIndex, setQuestionIndex, topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution,setTopicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
             {children}
         </ReportContent.Provider>
     )

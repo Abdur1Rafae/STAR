@@ -242,6 +242,7 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
+      console.log(nextState.responses)
       const res = async() => {
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})

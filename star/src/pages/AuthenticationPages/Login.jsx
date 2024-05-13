@@ -51,28 +51,6 @@ const Login = () => {
           </div>
         </div>
         <div className='m-4 lg:m-16 h-fit max-md:py-8 md:p-4 flex flex-col items-center justify-center'>
-          <div className='flex flex-col items-center'>
-            <div className="w-max bg-white border-2 text-xs border-black rounded-full flex overflow-hidden">
-              <button
-                type="button"
-                className={`px-4 py-2 flex items-center tracking-wider font-semibold outline-none transition-all duration-300 ${
-                  isTeacherMode ? 'bg-DarkBlue text-white' : 'bg-gray-50 text-black'
-                }`}
-                onClick={() => setIsTeacherMode(true)}
-              >
-                Teacher
-              </button>
-              <button
-                type="button"
-                className={`px-4 py-2 flex items-center tracking-wider font-semibold outline-none transition-all duration-300 ${
-                  isTeacherMode ? 'bg-gray-50 text-black' : 'bg-DarkBlue text-white'
-                }`}
-                onClick={() => setIsTeacherMode(false)}
-              >
-                Student
-              </button>
-            </div>
-          </div>
           <p className='text-xs text-gray-500 flex flex-col items-center mt-8'>Please login into your account</p>
           <form onSubmit={handleSubmit} className=' w-full flex flex-col'>
                <label className='text-md font-semibold'>Email</label>

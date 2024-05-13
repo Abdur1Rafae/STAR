@@ -68,7 +68,7 @@ const router = createBrowserRouter(
             <Route path='teacher/reports'element={<QuizReports />}></Route>
             <Route path='teacher/grading-table'element={<GradingTablePage />}></Route>
             <Route path='teacher/view-flags' element={<ViewFlags/>}></Route>
-            <Route path='/object-detection' element={<ObjectDetection/>}></Route>
+            {/* <Route path='/object-detection' element={<ObjectDetection/>}></Route> */}
         
          </Route>
   )

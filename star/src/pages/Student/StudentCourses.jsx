@@ -3,15 +3,20 @@ import MenuBar from '../../components/MenuBar';
 import CourseCard from '../../components/Student/course/CourseCard';
 import SubHeader from '../../components/Student/SubHeader';
 import { GetEnrolledClasses } from '../../APIS/Student/ClassAPI';
+import Loader from '../../components/Loader';
 
 const StudentCourses = () => {
     const [classes, setClasses] = useState([])
+    const [loading, setLoading] = useState(true)
     useEffect(()=> {
         const GetClasses = (async()=>{
             try {
                 const res = await GetEnrolledClasses();
                 console.log(res)
-                setClasses(res)
+                setTimeout(() => {
+                    setClasses(res)
+                    setLoading(false)
+                }, 1000);
             } catch(err) {
                 console.log(err)
             }
@@ -26,6 +31,11 @@ const StudentCourses = () => {
         <MenuBar name={"Maaz Shamim"} role={"Student"}/>
         <SubHeader isActive={"Courses"}/>
         {
+            loading ? 
+            <div className='w-full h-screen flex items-center justify-center'>
+            <Loader className='mb-20'/>
+            </div>
+            :
             classes.length > 0 ?
             (classes.map((Sem)=>{
                 return (

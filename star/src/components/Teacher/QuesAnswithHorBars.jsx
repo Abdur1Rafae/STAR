@@ -28,15 +28,15 @@ const QuesAnswithHorBars = ({ index, question }) => {
   }
 
   return (
-    <div className="flex-grow w-full p-4">
+    <div className="flex-grow w-full p-2">
       <div className='flex gap-2 m-2 w-full'>
         <SkillBox skill={question.skill} />
         <DifficultyBox difficulty={question.difficulty} />
         <PointBox point={question.points} />
       </div>
-      <div className="my-4">
-        <div className='flex items-center'>
-          <span className='border border-black mr-4 px-4 py-2 rounded-lg text-md font-bold text-DarkBlue'> {index + 1} </span>
+      <div className="my-1">
+        <div className='flex flex-col md:flex-row items-center'>
+          {/* <span className='border border-black mr-0 md:mr-4 px-4 py-2 rounded-lg text-md font-bold text-DarkBlue'> {index + 1} </span> */}
           <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-md'/>
         </div>
       </div>
