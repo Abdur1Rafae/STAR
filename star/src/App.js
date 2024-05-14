@@ -6,6 +6,7 @@ import CourseInfo from './pages/Student/CourseInfo.jsx';
 import StudentCourses from './pages/Student/StudentCourses.jsx';
 import AssessmentInfo from './pages/Student/AssessmentInfo.jsx'
 import AccountManagerPage from './pages/Student/AccountManagerPage.jsx';
+import AccountManagerPageT from './pages/Teacher/AccountManagerPage.jsx'
 import QuizScreen from './pages/Student/QuizScreen.jsx';
 import QuizResultScreen from './pages/Student/QuizResultScreen.jsx';
 import QuizInstructions from './pages/Student/QuizInstructions.jsx';
@@ -32,13 +33,19 @@ import ViewFlags from './pages/Teacher/ViewFlags.jsx';
 import ObjectDetection from './pages/ObjectDetection.jsx';
 import LandingPage from './pages/LandingPages/landingpage.jsx';
 import Login from './pages/AuthenticationPages/Login.jsx';
-
+import Signup from './pages/AuthenticationPages/Signup.jsx';
+import ForgotPassword from './pages/AuthenticationPages/ForgotPassword.jsx';
+import ChangePassword from './pages/AuthenticationPages/ChangePassword.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root/>}>
             <Route path=''element={<LandingPage/>}></Route>
 
             <Route path='login'element={<Login/>}></Route>
+            <Route path='signup'element={<Signup/>}></Route>
+
+            <Route path='forgot-password'element={<ForgotPassword/>}></Route>
+            <Route path='change-password'element={<ChangePassword/>}></Route>
 
 
             <Route path='home' element = {<StudentDashboard/>} />
@@ -53,6 +60,7 @@ const router = createBrowserRouter(
             <Route path='/capture-face' element={<CaptureScreen/>}></Route>
               
             <Route path="teacher/home" element = {<ScheduledAssessment/>} />
+            <Route path="teacher-account" element = {<AccountManagerPageT/>} />
             <Route path='teacher/classes' element={<Classes/>}></Route>
             <Route path='teacher/classes/:sectionID' element={<Roster/>}></Route>
             <Route path='teacher/library' element={<QuestionBankPage/>}></Route>
