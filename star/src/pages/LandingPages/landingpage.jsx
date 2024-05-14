@@ -106,7 +106,7 @@ return (
         <p className='font-medium text-white text-center text-xs md:text-2xl  flex flex-col items-center mt-4'>Personalized learning that empowers you to reach your full potential</p>
         <div className='relative h-96 bg-DarkBlue w-full flex flex-col items-center mt-4 '>
         <button onClick={()=>{window.location.assign('/signup')}} className='bg-black px-8 py-2 md:px-12 md:py-4 text-sm text-white rounded-[10px]'>Get Started</button>
-        <img src={cover1} alt=""  className='h-[280px] md:h-[380px] md:w-1/2 bg-white absolute top-24 rounded-tl-[100px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[100px]  pt-8 '/>
+        <img src={cover1} alt=""  className='h-[280px] md:h-full md:w-1/2  bg-white absolute top-24 rounded-tl-[100px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[100px]  pt-8 '/>
         </div>
     </div>
 
@@ -138,10 +138,10 @@ return (
         <img src={cover4} alt=""  className=''/>
         </div> 
        
-        <div className='w-full md:h-screen pt-12 '>
+        <div className='w-full md:h-screen pt-12 max-md:px-12 '>
             <h2 className='font-bold text-2xl md:text-5xl max-md:text-center '>Personalize Learning for Every Student</h2>
             <p className='font-normal text-sm md:text-xl mt-12 md:pr-8 max-md:text-center'>Arete empowers you to move beyond a one-size-fits-all approach. With our data-driven insights, you can:</p>
-            <ul class="list-disc p-4 text-sm md:text-xl">
+            <ul class="list-disc p-4 text-sm md:text-xl max-md:text-center">
                 <li>Design targeted lesson plans that cater to individual student needs.</li>
                 <li> Provide Differentiated instruction and activities for optimal impact. </li>
                 <li>Offer personalized support and resources for students who require additional assistance.</li>
@@ -153,15 +153,48 @@ return (
     <div className='md:sticky top-0  bg-[#F4F9FD] w-full h-fit md:h-screen px-12 max-md:mb-8  '>
         <h2 className=' w-full flex flex-col items-center font-bold text-2xl md:text-3xl pt-12  max-md:text-center'>Features Beyond Limitations</h2>
         <div className='md:grid grid-cols-3  gap-x-8 mt-12 place-items-center  '>
-            <div className=" max-md:mt-12 h-32  md:w-72 md:h-96 bg-[url('./pages/LandingPages/card1.jpg')]  rounded-xl p-4  bg-cover bg-center md:bg-no-repeat " >
-                <span className='h-full flex flex-col justify-end items-center font-bold text-white text-xl md:text-2xl md:p-4 '>Adaptive Testing</span>
+            <div className="place-content-end relative max-md:mt-12 h-72  md:w-72 md:h-96 bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6)),url('./pages/LandingPages/card1.jpg')] hover:bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('./pages/LandingPages/card1.jpg')]  rounded-xl p-4  bg-cover bg-center md:bg-no-repeat " >
+                <div className='h-12 overflow-hidden transition-all	 ease-in-out duration-500 hover:h-full '>
+                <span className=' flex flex-col justify-end  items-center font-bold text-white text-xl md:text-2xl   '>
+                  <h1 className='underline'>Adaptive Testing</h1>
+                  <ul class="underline-none h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
+                  <li>Design targeted lesson plans that cater to individual student needs.</li>
+                  <li> Provide Differentiated instruction and activities for optimal impact. </li>
+                  <li>Offer personalized support and resources for students who require additional assistance.</li>
+                </ul>  
+                  </span>
+                
+                </div>
             </div>
-            <div className="max-md:mt-12 h-32 md:w-72 md:h-96 bg-[url('./pages/LandingPages/card2.jpg')] rounded-xl p-4 bg-cover bg-center md:bg-no-repeat" >
-                <span className='h-full flex flex-col justify-end items-center font-bold text-white text-xl md:text-2xl md:p-4 '>Live Monitoring</span>
+            <div className="place-content-end relative max-md:mt-12 h-72  md:w-72 md:h-96 bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6)),url('./pages/LandingPages/card2.jpg')] hover:bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('./pages/LandingPages/card2.jpg')]  rounded-xl p-4  bg-cover bg-center md:bg-no-repeat " >
+                <div className='h-12 overflow-hidden transition-all	 ease-in-out duration-500 hover:h-full '>
+                <span className=' flex flex-col justify-end  items-center font-bold text-white text-xl md:text-2xl   '>
+                  <h1 className='underline'>Live Monitoring</h1>
+                  <ul class="h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
+                  <li>Design targeted lesson plans that cater to individual student needs.</li>
+                  <li> Provide Differentiated instruction and activities for optimal impact. </li>
+                  <li>Offer personalized support and resources for students who require additional assistance.</li>
+                </ul>  
+                  </span>
+                
+                </div>
+
             </div>
-            <div className=" max-md:mt-12 h-32 md:w-72 md:h-96 bg-[url('./pages/LandingPages/card3.png')] rounded-xl p-4 bg-cover bg-center md:bg-no-repeat " >
-                <span className='h-full flex flex-col justify-end items-center font-bold text-white text-xl md:text-2xl md:p-4  '>Advance Reporting</span>
+            <div className="place-content-end relative max-md:mt-12 h-72  md:w-72 md:h-96 bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6)),url('./pages/LandingPages/card3.png')] hover:bg-[linear-gradient(to_bottom,rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('./pages/LandingPages/card3.png')]  rounded-xl p-4  bg-cover bg-center md:bg-no-repeat " >
+                <div className='h-12 overflow-hidden transition-all	 ease-in-out duration-500 hover:h-full '>
+                <span className=' flex flex-col justify-end  items-center font-bold text-white text-xl md:text-2xl   '>
+                  <h1 className='underline'>Advanced Reporting</h1>
+                  <ul class="h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
+                  <li>Design targeted lesson plans that cater to individual student needs.</li>
+                  <li> Provide Differentiated instruction and activities for optimal impact. </li>
+                  <li>Offer personalized support and resources for students who require additional assistance.</li>
+                </ul>  
+                  </span>
+                
+                </div>
+
             </div>
+            
         </div>
     </div>
 
