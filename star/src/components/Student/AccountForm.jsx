@@ -4,6 +4,8 @@ import { MdModeEdit } from "react-icons/md";
 
 const AccountForm = () => {
   let user = JSON.parse(localStorage.getItem('userDetails'));
+  let email =localStorage.getItem('userEmail');
+  console.log(user);
   const [formData, setFormData] = useState({
     name: 'John',
     lastName: 'Doe',
@@ -41,29 +43,20 @@ const AccountForm = () => {
           <span className='pl-2 pt-2 text-xs font-light'>First Name</span>
           <input
             type="text"
-            value={formData.name}
+            value={user.name}
             name="name"
             onChange={handleChange}
             className="pl-2 outline-none focus:outline-none bg-blue-50"
           />
         </div>
-        <div className='h-16 w-full border bg-blue-50 rounded-md shadow-md flex flex-col'>
-          <span className='pl-2 pt-2 text-xs font-light'>Last Name</span>
-          <input
-            type="text"
-            value={formData.lastName}
-            name="lastName"
-            onChange={handleChange}
-            className="pl-2 outline-none focus:outline-none bg-blue-50"
-          />
-        </div>
+        
       </div>
       <div className='flex md:flex-row flex-col pb-4 gap-4 md:w-8/12'>
         <div className='h-16 w-full border bg-blue-50 rounded-md shadow-md flex flex-col'>
           <span className='pl-2 pt-2 text-xs font-light'>Email</span>
           <input
             type="email"
-            value={formData.email}
+            value={email}
             name="email"
             onChange={handleChange}
             className="pl-2 outline-none focus:outline-none bg-blue-50"

@@ -30,6 +30,7 @@ const Login = () => {
         setError('')
         localStorage.setItem('token', response.data.user.accessToken)
         localStorage.setItem('userDetails', JSON.stringify(response.data.user))
+        localStorage.setItem('userEmail' , email )
         if(response.data.user.role == 'student') {
          window.location.assign('/home')
         }
