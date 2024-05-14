@@ -14,6 +14,17 @@ const GetAssessments = async() => {
     return res.data.data
 }
 
+const DeleteAssessment = async({id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.delete(`teacherhub/assessment-management/delete-assessment/${id}`, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
 const CreateAssessment = async({name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
     instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
         const token = localStorage.getItem('token')
@@ -21,6 +32,7 @@ const CreateAssessment = async({name, description, sections, image, openDate, cl
         title: name,
         description: description,
         participants : sections,
+        coverImage:image,
         configurations : 
         {
             openDate: openDate,
@@ -50,7 +62,6 @@ const AddQuestion = async({assessmentId, question}) => {
     if(question.type == "True/False") {
         question.options = ["True", "False"]
     }
-    console.log(question)
     const res = await AxiosBase.post(`teacherhub/question-bank/add-question/${assessmentId}`,{
         question: question,
     },{
@@ -218,4 +229,4 @@ const GetAllTopics = async() => {
     return res.data.data
 }
 
-export {GetAllTopics, GetAssessments, CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions, MonitorAssessment, UpdateAssessment}
+export {DeleteAssessment, GetAllTopics, GetAssessments, CreateAssessment, AddQuestion, UpdateQuestion, DeleteQuestion, AddReuseQuestion, UpdateReuseQuestion,DeleteReuseQuestion, UpdateOrder, GetStoredQuestions, GetReuseQuestions, MonitorAssessment, UpdateAssessment}

@@ -38,7 +38,7 @@ const Signup = () => {
   };
 
   return (
-    <div className='w-full h-screen font-body'>
+    <div className='w-full h-screen font-body bg-LightBlue'>
       <div className={`menu-container w-full h-14 bg-DarkBlue flex items-center `}>
         <div className='w-full'>
           <div className="menuleft logo flex justify-start">
@@ -46,7 +46,7 @@ const Signup = () => {
           </div>
         </div>
       </div>
-      <div className='md:flex gap-4 p-8 bg-LightBlue  h-fit overflow-x-hidden '>
+      <div className='md:flex gap-4 p-8 h-fit overflow-x-hidden '>
             <div className='flex flex-col justify-end md:min-w-96'>
                 <h1 className='font-bold text-center text-2xl md:text-left leading-relaxed'>Are you ready to take control of your learning journey?</h1>
                 <h2 className='text-DarkBlue text-center text-3xl md:text-left font-semibold mt-8'>Register Now!</h2>
@@ -54,7 +54,7 @@ const Signup = () => {
                 <img src={cover2} alt="" className='md:w-64  '/>
                 </div>
             </div>  
-            <div className='flex-auto border border-2 border-black p-4 rounded-lg max-md:mt-8'>
+            <div className='flex-auto border border-black p-4 rounded-lg max-md:mt-8'>
                     <div className='flex flex-col items-center'>
                     <div className="w-max bg-white border-2 text-xs border-black rounded-full flex overflow-hidden">
                     <button
@@ -80,20 +80,20 @@ const Signup = () => {
                 <form className='py-4 text-sm flex-grow min-w-72' action="">
                     <div className='md:flex gap-4 mt-4'>
                         <div>
-                            <input placeholder= "FirstName" type="text" className='max-md:mt-4 w-full border border-2 border-gray-200 rounded-lg p-2'/>
+                            <input placeholder= "FirstName" type="text" className='max-md:mt-4 w-full border border-gray-200 rounded-lg p-2'/>
                         </div>
                         <div>
-                            <input placeholder= "LastName" type="text" className='max-md:mt-4 w-full border border-2 border-gray-200  rounded-lg p-2'/>
+                            <input placeholder= "LastName" type="text" className='max-md:mt-4 w-full border border-gray-200  rounded-lg p-2'/>
                         </div>
                     </div>
                     <div className=''>
-                        <input placeholder= "Email" type="email" className='mt-4 w-full border border-2 border-gray-200 rounded-lg p-2'/>
+                        <input placeholder= "Email" type="email" className='mt-4 w-full border  border-gray-200 rounded-lg p-2'/>
                     </div>
                     <div>
-                        <input placeholder= "Organization" type="text" className=' mt-4 w-full border border-2 border-gray-200 rounded-lg p-2'/>
+                        <input placeholder= "Organization" type="text" className=' mt-4 w-full border border-gray-200 rounded-lg p-2'/>
                     </div>
                     <div>
-                        <input placeholder= "Password" type="password" className='mt-4 w-full border border-2 border-gray-200 rounded-lg p-2'/>
+                        <input placeholder= "Password" type="password" className='mt-4 w-full border border-gray-200 rounded-lg p-2'/>
                     </div>
                     <div className='flex flex-col items-center' >
                     <button type="button"  className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center flex flex-col items-center`}>Signup</button>

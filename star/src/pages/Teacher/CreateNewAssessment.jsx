@@ -14,6 +14,7 @@ import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
 import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { CreateAssessment } from '../../APIS/Teacher/AssessmentAPI';
+import { UploadImageFile } from '../../APIS/ImageAPI';
 
 
 
@@ -38,41 +39,69 @@ function CreateNewAssessment() {
    const [adaptiveTesting, setAdaptiveTesting] = useState(false);
    const [candidateMonitoring, setCandidateMonitoring] = useState(false);
    const [error, setError] = useState('')
+   const [imageFile, setImageFile] = useState(null)
 
-   const handleSubmission = ()=> {
-      if(assessmentName == '') {
-         setError('Set Assessment Name')
-         return
+   const handleSubmission = async () => {
+      if (assessmentName === '') {
+        setError('Set Assessment Name');
+        return;
       }
-      if(datetime == '') {
-         setError('Set Start Date')
-         return
+      if (datetime === '') {
+        setError('Set Start Date');
+        return;
       }
-      if(hour == 0 && mins == 0) {
-         setError('Set Assessment Duration')
-         return
+      if (hour === 0 && mins === 0) {
+        setError('Set Assessment Duration');
+        return;
       }
-      if(closedatetime == '') {
-         setError('Set Close Date')
-         return
+      if (closedatetime === '') {
+        setError('Set Close Date');
+        return;
       }
-      setError('')
-      const sectionIDs = sections.map(section=> section._id)
-      const durationInMins = hour * 60 + mins
-
-      const res = async() => {
-         try {
-            const data = await CreateAssessment({name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
-            monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-            setAssessmentId(data.assessmentId)
-            window.location.assign(`/teacher/questions-set/${data.assessmentId}`)
-         } catch(err) {
-            console.log(err)
-         }
+      setError('');
+    
+      try {
+        const sectionIDs = sections.map((section) => section._id);
+        const durationInMins = hour * 60 + mins;
+    
+        const uploadingImage = async () => {
+          try {
+            const data = await UploadImageFile({ image: imageFile });
+            console.log(data);
+            return data.data.url;
+          } catch (err) {
+            console.log(err);
+          }
+        };
+    
+        const assessmentImage = imageFile !== null ? await uploadingImage() : null;
+    
+        const data = await CreateAssessment({
+          name: assessmentName,
+          description: description,
+          sections: sectionIDs,
+          image: assessmentImage,
+          openDate: datetime,
+          closeDate: closedatetime,
+          duration: durationInMins,
+          adaptiveTesting: adaptiveTesting,
+          monitoring: candidateMonitoring,
+          instantFeedback: allowInstantFeedback,
+          navigation: allowNavigation,
+          releaseGrades: publishImmediately,
+          viewSubmission: viewSubmissions,
+          randomizeQuestions: randomizeQuestions,
+          randomizeAnswers: optionShuffle,
+          finalScore: showFinalScore,
+        });
+    
+        setAssessmentId(data.assessmentId);
+        // window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
+      } catch (err) {
+        console.log(err);
       }
-
-      res()
-   }
+    };
+    
 
   const handleViewSubmissionsToggle = () => {
     setViewSubmissions((prevValue) => !prevValue);
@@ -125,6 +154,7 @@ function CreateNewAssessment() {
          const imageUrl = URL.createObjectURL(file);
          setImage(imageUrl);
       }
+      setImageFile(file)
    };
 
 
@@ -135,6 +165,7 @@ function CreateNewAssessment() {
    const handleDeleteImage = () => {
       setImage(null); 
       fileInputRef.current.value = null; 
+      setImageFile(null)
    };
 
    const handleHourChange = (event) => {

@@ -58,7 +58,6 @@ const QuizScreen = () => {
   const upload = async({image}) => {
     try {
       const res = await UploadImage({image: image})
-      console.log(res)
       return res.data.url
     } catch(err) {
       console.log(err)

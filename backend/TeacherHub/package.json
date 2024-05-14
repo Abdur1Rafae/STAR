@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Abdur1Rafae/STAR#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "joi": "^17.12.2",

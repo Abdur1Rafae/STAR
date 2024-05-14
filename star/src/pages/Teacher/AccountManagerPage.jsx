@@ -17,7 +17,7 @@ const AccountManagerPage = () => {
     }
 
     return (
-        <div className='flex flex-col mb-20'>
+        <div className='w-full h-full'>
             <MenuBar />
             <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
             <SideBar active={"Profile"}/>

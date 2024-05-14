@@ -19,6 +19,7 @@ import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 
 function EditAssessmentDetails() {
     const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
+    console.log(assessment)
     const [editingOpenDate, setEditingOpenDate] = useState(false)
     const [editingCloseDate, setEditingCloseDate] = useState(false)
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')

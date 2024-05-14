@@ -23,6 +23,20 @@ const UploadImage = async({image}) => {
     return res
 }
 
+const UploadImageFile = async({image}) => {
+    const formData = new FormData();
+    formData.append('image', image, 'screenshot.png');
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.post('teacherhub/upload-image',
+        formData, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res
+}
+
 
 const UserLogout = async() => {
     const token = localStorage.getItem('token')
@@ -35,4 +49,4 @@ const UserLogout = async() => {
     return res
 }
 
-export {UploadImage, UserLogout}
+export {UploadImage, UploadImageFile, UserLogout}

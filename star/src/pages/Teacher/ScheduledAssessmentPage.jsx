@@ -38,6 +38,17 @@ function ScheduledAssessment() {
     const handleSelectStatus = (category) => {
         setSelectedStatus(category);
     };
+    
+    const handleDeleteAsessment = ({ id }) => {
+        const index = assessments.findIndex((assessment) => assessment._id === id);
+        if (index !== -1) {
+            const updatedAssessments = [...assessments];
+            updatedAssessments.splice(index, 1);
+            setAssessments(updatedAssessments);
+        } else {
+            console.log('Assessment not found');
+        }
+    };
 
     useEffect(()=> {
         const getAssessments = async () => {
@@ -92,7 +103,7 @@ function ScheduledAssessment() {
                             <div className='flex flex-wrap gap-6'>
                                 {
                                     filteredAssesments.map((assessment, index)=> {
-                                        return <AssessmentCard key={assessment._id} assessment={assessment} />
+                                        return <AssessmentCard key={assessment._id} assessment={assessment} onDelete={()=>handleDeleteAsessment(assessment._id)} />
                                     })
                                 }
                             </div>
