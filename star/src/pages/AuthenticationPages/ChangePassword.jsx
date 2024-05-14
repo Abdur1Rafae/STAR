@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import logo from '../../components/logo.png';
 import studentimage from './student-img.png';
 import { UserLogin } from '../../APIS/AuthAPI';
-
+import cpimage from './cp-image.png';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +10,6 @@ const Login = () => {
   const [check, setCheck] = useState(true)
 
   const handleSubmit = async() => {
-    setError('')
     setCheck(false)
     if(email == '') {
       setCheck(true)
@@ -28,6 +27,7 @@ const Login = () => {
          password: password,
       });
       if (response.status == 200) {
+        setError('')
         localStorage.setItem('token', response.data.user.accessToken)
         localStorage.setItem('userDetails', JSON.stringify(response.data.user))
         if(response.data.user.role == 'student') {
@@ -63,25 +63,22 @@ const Login = () => {
         </div>
       </div>
       <div className='lg:grid grid-cols-2 w-full h-full lg:content-center bg-[#F4F9Fd]'>
-        <div className='mt-4 md:mt-4 lg:mt-16'>
-          <h1 className='font-bold md:text-3xl text-center'>Welcome back to the journey of learning! <br /> Let's make it a great one.</h1>
-          <div className='w-full'>
-            <img src={studentimage} alt=""  className='md:w-[700px] lg:w-[900px]'></img>
-          </div>
+        <div className=' lg:mt-16'>
+            <img src={cpimage} alt=""  className='md:w-[700px] lg:w-[900px]'></img>
         </div>
         <div className='m-4 lg:m-16 h-fit max-md:py-8 md:p-4 flex flex-col items-center justify-center'>
-          <p className='text-xs text-gray-500 flex flex-col items-center mt-8'>Please login into your account</p>
+            <h2 className="text-2xl font-bold py-4">Change Password</h2>
           <p className='text-xs text-red-500 flex flex-col items-center mt-2'>{error}</p>
           <form onSubmit={handleSubmit} className=' w-full flex flex-col'>
-               <label className='text-md font-semibold'>Email</label>
+               <label className='text-md font-semibold'>New Password</label>
                <input 
-               type="email" 
-               placeholder='Enter your Email' 
+               type="password" 
+               placeholder='Enter your New Password' 
                className='rounded-lg text-xs h-fit w-full my-2 py-4 px-2'
                value={email}
                onChange={(e) => setEmail(e.target.value)}
                />
-            <label className='text-md font-semibold mt-2'>Password</label>
+            <label className='text-md font-semibold mt-2'>Confirm Password</label>
             <input 
               type="password" 
               placeholder='Password' 
@@ -89,20 +86,8 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center gap-2'>
-                <input type="checkbox" className='h-fit'/>
-                <label className='text-xs'>Remember me</label>
-              </div>
-              <div>
-                <button onClick={()=>{window.location.assign('/forgot-password')}}  className='text-xs text-[#2D79F3]'>Forgot Password?</button>
-              </div>
-            </div>
-            <button type="button" onClick={check ? handleSubmit : ()=> {}} className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center`}>Login</button>
-            <div className='flex items-center justify-center gap-2 self-center'>
-              <span className='text-xs'>Don't have an Account? </span>
-              <button onClick={()=>{window.location.assign('/signup')}} className='text-xs text-[#2D79F3]'>Sign Up</button>
-            </div>
+            <button type="button" onClick={check ? handleSubmit : ()=> {}} className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center`}>Change Password</button>
+          
           </form>
         </div>
       </div>
