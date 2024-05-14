@@ -74,7 +74,7 @@ module.exports.signup = async (req,res) =>
     {
         console.log(err)
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
-        else{return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to refresh token'})}
+        else{return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to register user'})}
     }
 }
 
