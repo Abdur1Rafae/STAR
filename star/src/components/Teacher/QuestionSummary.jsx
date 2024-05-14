@@ -29,7 +29,7 @@ const QuestionSummary = () => {
         const report = localStorage.getItem('ReportId')
         const res = await GetQuestionStats({id: report})
         console.log(res)
-        if(res[0].questions.length > 0) {
+        if(res.length > 0 && res[0].questions.length > 0) {
           setTimeout(() => {
             setQuestionData(res)
             setLoading(false)

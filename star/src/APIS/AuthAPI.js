@@ -9,4 +9,15 @@ const UserLogin = async({email, password}) => {
     return res
 }
 
-export {UserLogin}
+const UserLogout = async() => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.post('session/logout',{},{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res
+}
+
+export {UserLogin, UserLogout}

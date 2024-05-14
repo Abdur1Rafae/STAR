@@ -10,6 +10,7 @@ const Login = () => {
   const [check, setCheck] = useState(true)
 
   const handleSubmit = async() => {
+    setError('')
     setCheck(false)
     if(email == '') {
       setCheck(true)
@@ -27,7 +28,6 @@ const Login = () => {
          password: password,
       });
       if (response.status == 200) {
-        setError('')
         localStorage.setItem('token', response.data.user.accessToken)
         localStorage.setItem('userDetails', JSON.stringify(response.data.user))
         if(response.data.user.role == 'student') {

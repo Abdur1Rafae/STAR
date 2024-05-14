@@ -1,5 +1,11 @@
 import {create} from 'zustand';
 import { SubmitAssessment } from '../APIS/Student/AssessmentAPI';
+import CryptoJS from 'crypto-js';
+
+const decryptData = (encryptedData, key) => {
+  const decrypted = CryptoJS.AES.decrypt(encryptedData, key).toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decrypted);
+};
 
 const QuizStore = create((set) => ({
   id: '',
@@ -12,7 +18,7 @@ const QuizStore = create((set) => ({
   description: '',
   className: '',
   marks: 0,
-  questions: JSON.parse(localStorage.getItem('questions')) || [],
+  questions: localStorage.getItem('questions') ? decryptData(JSON.parse(localStorage.getItem('questions')), 'Arete1234') : [],
   currentQuestionIndex: 0,
   filter: 'all',
   filteredQuestions: [],

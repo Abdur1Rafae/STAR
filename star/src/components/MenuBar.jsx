@@ -4,6 +4,7 @@ import { RiLogoutCircleRLine } from 'react-icons/ri';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import logo from './logo.png'
 import {ClickOutsideFunc} from './ClickOutsideFunc';
+import { UserLogout } from '../APIS/AuthAPI';
 
 const MenuBar = () => {
     let user = JSON.parse(localStorage.getItem('userDetails'))
@@ -16,6 +17,17 @@ const MenuBar = () => {
   let closeProfile = ClickOutsideFunc(()=>{
     setProfileDialog(false);
   })
+
+  let handleLogout = async() => {
+    try {
+        const res = await UserLogout()
+        localStorage.removeItem('token')
+        localStorage.removeItem('userDetails')
+        window.location.assign('/login')
+    } catch(err) {
+        console.log(err)
+    }
+  }
 
     return (
         <div className="">
@@ -45,7 +57,7 @@ const MenuBar = () => {
                             <button className='ml-2'>Profile</button>
                         </div>
                         
-                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={()=>{localStorage.removeItem('token');localStorage.removeItem('userDetails');window.location.assign('/login')}}>
+                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLogout}>
                             <RiLogoutCircleRLine className='self-center ml-4 text-lg'/>
                             <button className='ml-2'>Logout</button>
                         </div>

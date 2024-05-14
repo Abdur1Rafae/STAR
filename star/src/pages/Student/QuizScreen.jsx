@@ -14,6 +14,7 @@ import ConfirmationBox from '../../components/ConfirmationBox';
 import CorrectSA from '../../components/Student/question/CorrectSA';
 import Webcam from 'react-webcam';
 import * as faceDetection from '@tensorflow-models/face-detection';
+import { UploadImage } from '../../APIS/ImageAPI';
 
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
@@ -23,7 +24,6 @@ const QuizScreen = () => {
   const [renderCount, setRenderCount] = useState(0)
 
   const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
-  const [tabSwitch, setTabSwitch] = useState([])
 
   const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
@@ -35,10 +35,8 @@ const QuizScreen = () => {
   const [vioArray, setVioArray] = useState([]);
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
-
-  useEffect(()=>{
-    console.log(tabSwitch)
-  }, [tabSwitch])
+  const [detectorFailed, setDetectorFailed] = useState(false)
+  const [interval, setIntervalId] = useState()
 
   useEffect(() => {
     if (webcamRef.current && webcamRef.current.video) {
@@ -57,14 +55,31 @@ const QuizScreen = () => {
     console.log(vioArray)
   }, [vioArray])
 
-  useEffect(()=> {
-    if(violationOver && prevVio && prevVio.startTime) {
-      const duration = (Date.now() - prevVio.startTime) * renderCount;
-      const updatedVio = { ...prevVio, duration };
-      console.log(updatedVio)
-      setVioArray(prevArray => [...prevArray, updatedVio]);
-      setRenderCount(0)
+  const upload = async({image}) => {
+    try {
+      const res = await UploadImage({image: image})
+      console.log(res)
+      return res.data.url
+    } catch(err) {
+      console.log(err)
     }
+  }
+
+  useEffect(()=> {
+    const compute = async() => {
+      if(violationOver && prevVio && prevVio.startTime) {
+        const duration = (Date.now() - prevVio.startTime) * renderCount;
+        const updatedVio = { ...prevVio, duration };
+        setImgSrc(updatedVio.image)
+        const url = await upload({image :updatedVio.image})
+        updatedVio.image = url
+        console.log(updatedVio.image)
+        setVioArray(prevArray => [...prevArray, updatedVio]);
+        setRenderCount(0)
+      }
+    }
+
+    compute()
   }, [prevVio, violationOver])
 
 
@@ -80,14 +95,42 @@ const QuizScreen = () => {
         runtime: 'mediapipe',
         solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
       };
-      const detector = await faceDetection.createDetector(model ,detectorConfig);
+      let detector = await faceDetection.createDetector(model ,detectorConfig);
 
-      setInterval(async () => {
+      const intervalId = setInterval(async () => {
         await detectStudent(videoElement, detector);
-        console.log("calling detector", Date.now())
       }, 10000)
+      setIntervalId(intervalId)
     }
   }
+
+  useEffect(()=> {
+    if(detectorFailed) {
+      clearInterval(interval)
+      const intervalId = setInterval(async () => {
+        try {
+          const videoElement = webcamRef.current.video;
+          if (!videoElement) {
+            console.log('Webcam footage not found. Kindly ensure your webcam is functional and allow access to it.');
+            return;
+          }
+          const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+          const detectorConfig = {
+            runtime: 'mediapipe',
+            solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
+          };
+          let detector = await faceDetection.createDetector(model, detectorConfig);
+          setDetectorFailed(false);
+          await detectStudent(videoElement, detector);
+        } catch (err) {
+          console.log(err);
+          setDetectorFailed(true);
+        }
+      }, 10000)
+      setIntervalId(intervalId)
+    }
+
+  }, [detectorFailed])
 
   const detectStudent = async (videoElement, detector) => {
     
@@ -97,12 +140,11 @@ const QuizScreen = () => {
       const faces = await detector.estimateFaces(videoElement, estimationConfig);
 
       if (faces.length === 1) {
-        console.log("One Person Detected")
         setViolationOver(true)
+        setImgSrc('')
       } else if (faces.length === 0) {
-        console.log("No person detected")
         if(violationOver) {
-          const imageSrc = webcamRef.current.getScreenshot();
+          const imageSrc = webcamRef.current.getScreenshot({width: 1920, height: 1080});
           const startTime = Date.now();
           setPrevVio({
             startTime: startTime,
@@ -113,7 +155,6 @@ const QuizScreen = () => {
           setViolationOver(false)
         }
       } else {
-        console.log("More than one person detected")
         if(violationOver) {
           const imageSrc = webcamRef.current.getScreenshot();
           const startTime = Date.now();
@@ -127,6 +168,7 @@ const QuizScreen = () => {
         }
       }
     } catch (err) {
+      setDetectorFailed(true);
       console.log(err)
     }
   }
@@ -138,10 +180,9 @@ const QuizScreen = () => {
       if (switchStartTime) {
         const switchEndTime = new Date();
         const switchDuration = switchEndTime - switchStartTime;
-        setTabSwitch(prevTabSwitch => [
-          ...prevTabSwitch,
-          { type: 'tab switch', duration: switchDuration }
-        ]);
+        if(switchDuration > 10000) {
+          setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timeStamp: switchStartTime }]);
+        }
       }
       switchStartTime = null;
     };
@@ -162,7 +203,6 @@ const QuizScreen = () => {
   
 
   useEffect(()=> {
-    localStorage.removeItem('questions')
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
@@ -231,6 +271,7 @@ const QuizScreen = () => {
       setSubmittingQuiz(true)
       const res = await submitResponses()
       localStorage.removeItem('SuccessSubmit')
+      localStorage.removeItem('questions')
       window.location.assign('/quiz-submitted')
     } catch(err) {
       console.log(err)
@@ -302,9 +343,7 @@ const QuizScreen = () => {
                 )
               )
           }
-
           </div>
-
           <Webcam className='w-0 h-0' ref={webcamRef}/>
 
           <div className={`fixed sm:w-full h-12 border-black border-t-[1px] bottom-0 left-0 right-0 bg-white p-4 flex justify-between items-center`}>

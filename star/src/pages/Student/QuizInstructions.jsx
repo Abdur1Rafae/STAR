@@ -1,4 +1,3 @@
-// QuizInstructions.js
 import React, { useEffect, useState } from 'react';
 import { FaRegHourglassHalf } from "react-icons/fa6";
 import { CiClock2 } from "react-icons/ci";
@@ -10,7 +9,13 @@ import QuizStore from '../../Stores/QuizStore';
 import { GetAssessmentQuestions } from '../../APIS/Student/AssessmentAPI';
 import { SubmitAssessment } from '../../APIS/Student/AssessmentAPI';
 import { VscLayersActive } from 'react-icons/vsc';
+import CryptoJS from 'crypto-js';
 
+
+const encryptData = (data, key) => {
+  const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
+  return encrypted;
+};
 
 
 const QuizInstructions = () => {
@@ -62,10 +67,10 @@ const QuizInstructions = () => {
             }
             return { ...question, options };
           });
-          localStorage.setItem('questions', JSON.stringify(shuffledQuestionSet));
+          localStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
         }
         else {
-          localStorage.setItem('questions', JSON.stringify(questionSet));
+          localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
         }
         
         window.location.assign('/quiz')

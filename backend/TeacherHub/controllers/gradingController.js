@@ -126,7 +126,7 @@ module.exports.gradeResponse = async (req,res) =>
       responseToUpdate.score = score
       responseToUpdate.feedback = feedback
       if(oldScore>0){submission.totalScore += score - oldScore}
-      
+      else{submission.totalScore += score}
 
       await submission.save()
 
