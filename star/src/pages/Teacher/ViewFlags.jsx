@@ -96,7 +96,7 @@ const ViewFlags = () => {
                                 {row.duration}
                             </td>
                             <td className='px-1 py-2 text-xs md:text-sm border-black border-y-[1px] flex items-center justify-center'>
-                                <img src={row.image ? 'http://127.0.0.1:3000//teacherhub'+row.image : ''} className='w-48 h-48'/>
+                                <img crossorigin="anonymous" src={row.image ? 'http://localhost:3000/teacherhub/'+row.image : ''} className='w-48 h-48'/>
                             </td>
                         </tr>
                         ))}
