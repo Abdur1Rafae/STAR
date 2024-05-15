@@ -29,7 +29,7 @@ const AccountManagerPage = () => {
                         <h1 className='text-xl font-semibold'>Profile</h1>
                         <hr class="h-px my-4 border-[1px] border-black"></hr>
 
-                        <AccountForm />
+                        <AccountForm  />
                         <h1 className='text-xl font-semibold'>Notifications</h1>
                         <hr class="h-px my-4 border-[1px] border-black"></hr>
 
