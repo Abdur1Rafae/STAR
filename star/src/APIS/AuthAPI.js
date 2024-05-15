@@ -20,4 +20,9 @@ const UserLogout = async() => {
     return res
 }
 
-export {UserLogin, UserLogout}
+const UserSignup = async({obj}) => {
+    const res = await AxiosBase.post('userguardian/signup', obj)
+    return res
+}
+
+export {UserLogin, UserLogout, UserSignup}

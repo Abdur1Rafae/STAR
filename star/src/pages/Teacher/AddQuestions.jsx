@@ -287,13 +287,23 @@ function AddQuestions() {
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
                 <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                     {profileDialog && (
-                        <div className='h-20 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
-                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleSaveDraft}>
-                                <button className=' ml-2'>Save as Draft</button>
+                        <div className='h-28 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
+                            <div className='h-full w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleSaveDraft}>
+                                <button className='ml-2 text-left'>
+                                    <div className=''>
+                                        <p>Save as Draft</p>
+                                        <p className='text-[10px]'>If not finalized</p>
+                                    </div>
+                                </button>
                             </div>
                             
-                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLaunch}>
-                                <button className='ml-2'>Launch</button>
+                            <div className='h-full w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLaunch}>
+                                <button className='ml-2 text-left'>
+                                    <div>
+                                        <p>Launch</p>
+                                        <p className='text-[10px]'>Finalized and Allow students to view it as upcoming</p>
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     )}

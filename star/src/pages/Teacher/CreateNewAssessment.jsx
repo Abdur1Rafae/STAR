@@ -96,7 +96,7 @@ function CreateNewAssessment() {
         });
     
         setAssessmentId(data.assessmentId);
-        // window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
+        window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
       } catch (err) {
         console.log(err);
       }

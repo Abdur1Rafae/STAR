@@ -34,7 +34,6 @@ kind: Service
 metadata:
   name: arete-backend-gateway
 spec:
-  type: LoadBalancer
   selector:
     app: api-gateway
   ports:

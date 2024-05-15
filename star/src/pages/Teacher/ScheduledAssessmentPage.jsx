@@ -103,7 +103,7 @@ function ScheduledAssessment() {
                             <div className='flex flex-wrap gap-6'>
                                 {
                                     filteredAssesments.map((assessment, index)=> {
-                                        return <AssessmentCard key={assessment._id} assessment={assessment} onDelete={()=>handleDeleteAsessment(assessment._id)} />
+                                        return <AssessmentCard key={assessment._id} assessment={assessment} onDelete={()=>handleDeleteAsessment({id:assessment._id})} />
                                     })
                                 }
                             </div>
