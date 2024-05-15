@@ -92,4 +92,15 @@ const DraftAssessment = async({id}) => {
     return res.data;
 }
 
-export {DraftAssessment, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary, LaunchAssessment}
+const FlagStudents = async({data, id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.put(`assesshub/monitor/flag-candidate/${id}`,data, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    console.log(res.data)
+}
+
+export {FlagStudents, DraftAssessment, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary, LaunchAssessment}

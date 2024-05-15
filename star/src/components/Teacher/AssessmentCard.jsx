@@ -71,7 +71,7 @@ const AssessmentCard = ({ assessment, onDelete }) => {
 
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>
-            <img className="w-full h-32 rounded-lg" crossorigin="anonymous" src={ assessment.coverImage ? 'http://127.0.0.1:3000/teacherhub/'+assessment.coverImage: Asssessment} alt="" />
+            <img className="w-full h-32 rounded-lg" crossorigin="anonymous" src={ assessment.coverImage ? 'http://192.168.10.3:3000/teacherhub/'+assessment.coverImage: Asssessment} alt="" />
             <div className='flex mt-2 items-center'>
                 <h3 className={`text-md font-medium text-DarkBlue ml-2`}>{assessment.title}</h3>
                 <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.category}</div>

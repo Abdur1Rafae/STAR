@@ -49,4 +49,27 @@ const PublishAssessment = async({id}) => {
     return res.data
 }
 
-export {GetAssessmentSummary, GetAssessmentResponses, GradeResponse, PublishAssessment}
+const FlaggedStudents = async({id}) => {
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.get(`/teacherhub/grade/flagging-summary/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+const GetFlagDetails = async({id}) => {
+    console.log(id)
+    const token = localStorage.getItem('token')
+    const res = await AxiosBase.get(`/teacherhub/grade/candidate-violations/${id}`,{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data.data
+}
+
+export {GetFlagDetails, FlaggedStudents, GetAssessmentSummary, GetAssessmentResponses, GradeResponse, PublishAssessment}

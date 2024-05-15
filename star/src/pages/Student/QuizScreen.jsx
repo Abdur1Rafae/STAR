@@ -15,6 +15,7 @@ import CorrectSA from '../../components/Student/question/CorrectSA';
 import Webcam from 'react-webcam';
 import * as faceDetection from '@tensorflow-models/face-detection';
 import { UploadImage } from '../../APIS/ImageAPI';
+import { FlagStudents } from '../../APIS/Student/AssessmentAPI';
 
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
@@ -44,6 +45,30 @@ const QuizScreen = () => {
     }
   }, [webcamRef]);
 
+  const UploadFlaggings = async() => {
+    const responseId = localStorage.getItem('responseId')
+    console.log("Pushing data to servers")
+    try {
+      const res = await FlagStudents({data: vioArray, id: responseId})
+      console.log(res)
+      setVioArray([])
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (vioArray.length > 0) {
+        UploadFlaggings();
+      }else {
+        console.log("No data to push")
+      }
+    }, 90000); // 90 seconds
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   useEffect(() => {
     if (isWebcamReady) {
       startCameraAndDetection();
@@ -66,8 +91,8 @@ const QuizScreen = () => {
 
   useEffect(()=> {
     const compute = async() => {
-      if(violationOver && prevVio && prevVio.startTime) {
-        const duration = (Date.now() - prevVio.startTime) * renderCount;
+      if(violationOver && prevVio && prevVio.timestamp) {
+        const duration = (Date.now() - prevVio.timestamp) * renderCount;
         const updatedVio = { ...prevVio, duration };
         setImgSrc(updatedVio.image)
         const url = await upload({image :updatedVio.image})
@@ -89,6 +114,7 @@ const QuizScreen = () => {
         console.log('Webcam footage not found. Kindly ensure your webcam is functional and allow access to it.');
         return;
       }
+
       const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
       const detectorConfig = {
         runtime: 'mediapipe',
@@ -103,33 +129,33 @@ const QuizScreen = () => {
     }
   }
 
-  useEffect(()=> {
-    if(detectorFailed) {
-      clearInterval(interval)
-      const intervalId = setInterval(async () => {
-        try {
-          const videoElement = webcamRef.current.video;
-          if (!videoElement) {
-            console.log('Webcam footage not found. Kindly ensure your webcam is functional and allow access to it.');
-            return;
-          }
-          const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
-          const detectorConfig = {
-            runtime: 'mediapipe',
-            solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
-          };
-          let detector = await faceDetection.createDetector(model, detectorConfig);
-          setDetectorFailed(false);
-          await detectStudent(videoElement, detector);
-        } catch (err) {
-          console.log(err);
-          setDetectorFailed(true);
-        }
-      }, 10000)
-      setIntervalId(intervalId)
-    }
+  // useEffect(()=> {
+  //   if(detectorFailed) {
+  //     clearInterval(interval)
+  //     const intervalId = setInterval(async () => {
+  //       try {
+  //         const videoElement = webcamRef.current.video;
+  //         if (!videoElement) {
+  //           console.log('Webcam footage not found. Kindly ensure your webcam is functional and allow access to it.');
+  //           return;
+  //         }
+  //         const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+  //         const detectorConfig = {
+  //           runtime: 'mediapipe',
+  //           solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
+  //         };
+  //         let detector = await faceDetection.createDetector(model, detectorConfig);
+  //         setDetectorFailed(false);
+  //         await detectStudent(videoElement, detector);
+  //       } catch (err) {
+  //         console.log(err);
+  //         setDetectorFailed(true);
+  //       }
+  //     }, 10000)
+  //     setIntervalId(intervalId)
+  //   }
 
-  }, [detectorFailed])
+  // }, [detectorFailed])
 
   const detectStudent = async (videoElement, detector) => {
     
@@ -143,10 +169,11 @@ const QuizScreen = () => {
         setImgSrc('')
       } else if (faces.length === 0) {
         if(violationOver) {
+          console.log('No Person detected')
           const imageSrc = webcamRef.current.getScreenshot({width: 1920, height: 1080});
           const startTime = Date.now();
           setPrevVio({
-            startTime: startTime,
+            timestamp: startTime,
             type: 'No person on screen',
             image: imageSrc
           });
@@ -155,10 +182,11 @@ const QuizScreen = () => {
         }
       } else {
         if(violationOver) {
+          console.log('More than one Person detected')
           const imageSrc = webcamRef.current.getScreenshot();
           const startTime = Date.now();
           setPrevVio({
-            startTime: startTime,
+            timestamp: startTime,
             type: 'More than one person on screen',
             image: imageSrc
           });
@@ -177,10 +205,10 @@ const QuizScreen = () => {
     const handleWindowFocus = () => {
       document.title = 'Arete Assessment';
       if (switchStartTime) {
-        const switchEndTime = new Date();
+        const switchEndTime = Date.now();
         const switchDuration = switchEndTime - switchStartTime;
         if(switchDuration > 10000) {
-          setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timeStamp: switchStartTime }]);
+          setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timestamp: switchStartTime }]);
         }
       }
       switchStartTime = null;
@@ -213,28 +241,28 @@ const QuizScreen = () => {
     createResponseObjects([])
   }, [])
 
-  useEffect(() => {
-    const saveData = async () => {
-      try {
-        await submitResponses();
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  // useEffect(() => {
+  //   const saveData = async () => {
+  //     try {
+  //       await submitResponses();
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
   
-    const handleBeforeUnload = (event) => {
-      if (!submittingQuiz) {
-        saveData();
-        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-      }
-    };
+  //   const handleBeforeUnload = (event) => {
+  //     if (!submittingQuiz) {
+  //       saveData();
+  //       event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+  //     }
+  //   };
   
-    window.addEventListener('beforeunload', handleBeforeUnload);
+  //   window.addEventListener('beforeunload', handleBeforeUnload);
   
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [responses, submittingQuiz]);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleBeforeUnload);
+  //   };
+  // }, [responses, submittingQuiz]);
 
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)

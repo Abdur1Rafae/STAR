@@ -4,7 +4,7 @@ import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { BiChevronLeft } from 'react-icons/bi'
 import LMTable from '../../components/Teacher/LMTable'
-import { GetAssessmentSummary, PublishAssessment } from '../../APIS/Teacher/GradingAPI'
+import { FlaggedStudents, GetAssessmentSummary, PublishAssessment } from '../../APIS/Teacher/GradingAPI'
 import Loader from '../../components/Loader'
 import { GrOverview } from "react-icons/gr";
 import { FaUsersViewfinder } from "react-icons/fa6";
@@ -13,6 +13,7 @@ import ViewBox from '../../components/Teacher/ViewBox'
 const GradingTablePage = () => {
   const [loading, setLoading] = useState(true)
   const [gradingData, setGradingData] = useState([])
+  const [flaggingData, setFlaggingData] = useState([])
   
   const [tab, setTab] = useState('Questions')
   const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
@@ -48,6 +49,29 @@ const GradingTablePage = () => {
 
     GetData()
   }, [])
+
+  useEffect(()=> {
+    const getFlags = async () => {
+      try {
+        const res = await FlaggedStudents({id: assessment._id})
+        console.log(res)
+        if(res.length > 0) {
+          let num = 1
+          const updatedRes = res.map(obj => ({
+            num: num++,
+            ...obj,
+            view: <ViewBox onClick={()=>handleFlagClick({id: obj._id})}/>
+          }));
+          
+          setFlaggingData(updatedRes);
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    }
+
+    getFlags()
+  }, [])
   
   const columns = [
     { title: "No.", key: "num" },
@@ -61,12 +85,13 @@ const GradingTablePage = () => {
     {title: "No.", key: "num"},
     {title: "Name", key: "name"},
     {title: "ERP", key: "erp"},
-    {title: "Violations Count", key: "count"},
+    {title: "Violations Count", key: "violations"},
     { title: "", key: "view"}
   ]
 
-  const handleFlagClick = (id) => {
-
+  const handleFlagClick = ({id}) => {
+    localStorage.setItem('FlagId', id)
+    window.location.assign('/teacher/view-flags')
   }
 
   const handlePublish = async() => {
@@ -83,8 +108,6 @@ const GradingTablePage = () => {
       console.log("cant publish")
     }
   }
-
-  const flaggedData = [{num:1, name: "Abdur Rafae", erp:"22828", count:5, view:<ViewBox onClick={()=>handleFlagClick()}/>}]
   
   
   return (
@@ -122,7 +145,7 @@ const GradingTablePage = () => {
                 tab == "Questions" ? 
                 <LMTable data={gradingData} columns = {columns} onClick={true}/>
                 :
-                <LMTable data={flaggedData} columns = {flagColumns} onClick={false}/>
+                <LMTable data={flaggingData} columns = {flagColumns} onClick={false}/>
 
               }
               </>

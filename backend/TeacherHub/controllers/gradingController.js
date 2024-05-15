@@ -75,13 +75,14 @@ module.exports.getQuestionResponses = async (req,res) =>
   try
   {
       const {assessmentId, questionId} = req.params
+      console.log(assessmentId, questionId)
 
       const responses = await Response.aggregate([
           {
             $match: 
             { 
               'responses.questionId': new mongoose.Types.ObjectId(questionId),
-              assessment: new mongoose.Typees.ObjectId(assessmentId) 
+              assessment: new mongoose.Types.ObjectId(assessmentId) 
 
             }
           },

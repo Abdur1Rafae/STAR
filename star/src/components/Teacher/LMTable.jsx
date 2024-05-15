@@ -19,6 +19,7 @@ const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'Al
   }, [data, selectedSection, selectedStatus]);
 
   const handleClick = (data) => {
+    console.log(data)
     const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
     localStorage.setItem('Response', JSON.stringify(data))
     window.location.assign(`/teacher/grading/${assessment.title}`)
@@ -47,7 +48,7 @@ const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'Al
                     { column.key == "startTime" || column.key == "submitTime" ? 
                       row[column.key] !== null ? DDMMM_HHMM(row[column.key]) : '-' :
                       column.key == "question" ? 
-                      <ReactQuill readOnly={true} modules={modules} value={(row[column.key].slice(0, 125)+'...')} className='w-full text-md'/>
+                      <ReactQuill readOnly={true} modules={modules} value={row[column.key] ? (row[column.key].slice(0, 125)+'...') : ''} className='w-full text-md'/>
                       :
                       row[column.key]
                     }

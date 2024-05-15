@@ -54,7 +54,7 @@ const Grading = () => {
         const GetResponses = async()=>{
             try{
                 const res = await GetAssessmentResponses({id:question._id, assessmentId: assessment._id})
-                
+                console.log(res)
                 setTimeout(() => {
                     setResponses(res)
                     setLoading(false);
