@@ -8,11 +8,6 @@
     "extension": "",
     "files": [
         {
-            "date": 1715112236565,
-            "name": "/data/logs/redisinsight-errors-2024-05-07.log.0",
-            "hash": "90a27b996f42d571a48ef81eb99b775907e875909c45f19db941ada03488efd1"
-        },
-        {
             "date": 1715182164873,
             "name": "/data/logs/redisinsight-errors-2024-05-08.log.0",
             "hash": "7077ec8b2903cc67b3dfbec45ac73393028d84e6ec10de1888d3306c99b6759f"
@@ -33,9 +28,19 @@
             "hash": "d6a45659def2689412423c85cc0e1cc4adc999796b27c0cc5f0f4adf66d86f9f"
         },
         {
-            "date": 1715558252983,
-            "name": "/data/logs/redisinsight-errors-2024-05-12.log.0",
-            "hash": "10310a206f33629acd3a814c6aac16f1332f9ef65748da6954c9b8a6d17b3e66"
+            "date": 1715560471074,
+            "name": "/data/logs/redisinsight-errors-2024-05-13.log.0",
+            "hash": "ca58379f4ff183a8b6c9df2d279f977e9d0f1984d8019b31f21e0a5d78b5b321"
+        },
+        {
+            "date": 1715603807368,
+            "name": "/data/logs/redisinsight-errors-2024-05-13.log.2024",
+            "hash": "c1e9ff86687b7361e3360839108e3540ad9d9aedb9059b60620fdc0deac9bf94"
+        },
+        {
+            "date": 1715717694152,
+            "name": "/data/logs/redisinsight-errors-2024-05-14.log.0",
+            "hash": "b1c00ab06a98d28f613d0a3376ad8464b162da4a0cdcd651a4f5e015aa37e00a"
         }
     ]
 }

@@ -214,15 +214,11 @@ module.exports.getReportOverview= async (req,res) =>
         const participants = assessment.summary.participants.map(item => {
             const { questions, _id , ...rest } = item.toObject()
 
-            if(breakDown) {
-              const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName)
-              if(sectionBreakDown && sectionBreakDown.breakdown) {
-                return { ...rest, topicBreakDown : sectionBreakDown.breakdown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
-              }
-              else{
-                return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
-              }
-            } 
+            const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName).breakdown
+            if(sectionBreakDown && sectionBreakDown.breakdown) {
+              return { ...rest, topicBreakDown : sectionBreakDown.breakDown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+            }
+            else{return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}}
           })
 
         const report = 
@@ -333,6 +329,7 @@ module.exports.getQuestionSummary= async (req,res) =>
               questions = questions.map(question =>
                 {
                   const optionBreakDown = questionsBreakDown.questions.find(item => item.question.equals(new mongoose.Types.ObjectId(question.question)))
+                  console.log(optionBreakDown)
                   if(optionBreakDown && optionBreakDown.breakDown){return {...question.toObject(), optionsBreakDown: optionBreakDown.breakDown}}
                   else{return {...question.toObject()}}
         
@@ -341,7 +338,7 @@ module.exports.getQuestionSummary= async (req,res) =>
             return{
               section: section.sectionName,
               questions: questions,
-            }
+          }
         })
 
         res.status(201).json(report)
