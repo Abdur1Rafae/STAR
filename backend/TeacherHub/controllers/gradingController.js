@@ -76,30 +76,34 @@ module.exports.getQuestionResponses = async (req,res) =>
   {
       const {assessmentId, questionId} = req.params
 
-      const responses = await Response.aggregate([
+      const responses = await Response.aggregate(
+      [
+        {
+          $match: 
           {
-            $match: 
-            { 
-              'responses.questionId': new mongoose.Types.ObjectId(questionId),
-              assessment: new mongoose.Typees.ObjectId(assessmentId) 
-
-            }
-          },
-          {
-            $unwind: '$responses'
-          },
-          {
-            $project: 
-            {
-              _id: 0,
-              submissionId: '$_id',
-              responseId: '$responses._id',
-              answer: '$responses.answer',
-              score: '$responses.score',
-              feedback: '$responses.feedback'
-            }
+            assessment: new mongoose.Types.ObjectId(assessmentId)
           }
-        ]);
+        },
+        {
+          $unwind: "$responses"
+        },
+        {
+          $match: 
+          {
+            "responses.questionId": new mongoose.Types.ObjectId(questionId),
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            submissionId: "$_id",
+            responseId: "$responses._id",
+            answer: "$responses.answer",
+            score: "$responses.score",
+            feedback: "$responses.feedback"
+          }
+        }
+      ]);
   
       if (!responses) 
       {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Question not found' })}    
