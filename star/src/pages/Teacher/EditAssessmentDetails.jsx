@@ -1,5 +1,4 @@
 import React ,{ useState, useRef, useEffect, useContext }from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import SubmitButton from '../../components/button/SubmitButton';
@@ -233,9 +232,7 @@ function EditAssessmentDetails() {
 
 
     return (
-    <div className='flex flex-col h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
             <Subheader name={"Edit Assessment"}/>
@@ -499,9 +496,7 @@ function EditAssessmentDetails() {
             </div>
             }
         </div>
-        </div>
-        
-    </div>
+        </>
     );
 }
 

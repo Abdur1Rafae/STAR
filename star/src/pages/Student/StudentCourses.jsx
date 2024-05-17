@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import MenuBar from '../../components/MenuBar';
 import CourseCard from '../../components/Student/course/CourseCard';
 import SubHeader from '../../components/Student/SubHeader';
 import { GetEnrolledClasses } from '../../APIS/Student/ClassAPI';
@@ -27,8 +26,7 @@ const StudentCourses = () => {
 
     
     return (
-    <div className='flex flex-col mb-20'>
-        <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+    <>
         <SubHeader isActive={"Courses"}/>
         {
             loading ? 
@@ -54,7 +52,7 @@ const StudentCourses = () => {
             :
             <p className='ml-4 mt-4'>Not enrolled in any classes yet.</p>
         }
-    </div>
+    </>
     )
 }
 

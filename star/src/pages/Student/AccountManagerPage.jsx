@@ -2,7 +2,6 @@ import React from 'react';
 import { useMatch } from 'react-router-dom';
 import AccountForm from '../../components/Student/AccountForm';
 import Notifications from '../../components/Student/Notifications';
-import MenuBar from '../../components/MenuBar';
 import { MdAccountBox } from "react-icons/md";
 import SubmitButton from '../../components/button/SubmitButton';
 import CancelButton from '../../components/button/CancelButton';
@@ -10,14 +9,9 @@ import DeleteButton from '../../components/button/DeleteButton';
 import SubHeader from '../../components/Student/SubHeader';
 
 const AccountManagerPage = () => {
-    const match = useMatch('/manage-account');
-    if (!match) {
-        return null;
-    }
 
     return (
-        <div className='flex flex-col mb-20'>
-            <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+        <>
             <SubHeader/>
             <div className="flex items-center justify-center  ">
                 <div className="w-full">
@@ -46,7 +40,7 @@ const AccountManagerPage = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

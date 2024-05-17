@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react'
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import { BiChevronLeft } from 'react-icons/bi'
@@ -7,12 +6,12 @@ import { GrOverview } from "react-icons/gr";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import { MdQueryStats } from "react-icons/md";
 import ReportsOverview from '../../components/Teacher/ReportsOverview'
-import QuestionSummary from '../../components/Teacher/QuestionSummary'
-import IndividualReport from '../../components/Teacher/IndividualReport'
 import { GetReportsOverview } from '../../APIS/Teacher/ReportAPI'
 import Loader from '../../components/Loader'
 import { useParams } from 'react-router';
 import { ReportContent } from '../../Context/ReportContext'
+import QuestionSummary from '../../components/Teacher/QuestionSummary'
+import IndividualReport from '../../components/Teacher/IndividualReport'
 
 const Reports = () => {
     const [loading, setLoading] = useState(true)
@@ -49,9 +48,7 @@ const Reports = () => {
     
 
   return (
-    <div className='flex flex-col h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Reports"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Reports"}/>
@@ -117,8 +114,7 @@ const Reports = () => {
                     }
                 </div>
             </div>
-        </div>
-    </div>
+        </>
   )
 }
 

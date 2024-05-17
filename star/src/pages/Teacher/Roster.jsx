@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import MenuBar from '../../components/MenuBar';
 import SideBar from '../../components/Teacher/SideBar';
 import Subheader from '../../components/Teacher/Subheader';
 import ActionBox from '../../components/Teacher/ActionBox';
@@ -9,7 +8,7 @@ import AddStudentManually from '../../components/Teacher/AddStudentManually';
 import { BiChevronLeft } from 'react-icons/bi';
 import { MdAdd, MdOutlineDelete } from "react-icons/md";
 import { useParams } from 'react-router-dom';
-import { AddStudent,AddStudents, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
+import { AddStudent, AddStudents, DeleteStudent, GetAllStudents } from '../../APIS/Teacher/SectionAPI';
 import Loader from '../../components/Loader';
 import {ClickOutsideFunc} from '../../components/ClickOutsideFunc';
 import * as XLSX from "xlsx";
@@ -84,7 +83,7 @@ const Roster = () => {
     try {
       const res = DeleteSection({id: sectionId.sectionID})
       console.log(res)
-      window.location.assign('/teacher/classes')
+      window.history.back()
     } catch(err) {
       console.log(err)
     }
@@ -203,9 +202,7 @@ const Roster = () => {
   };
 
   return (
-    <div className='w-full h-full'>
-      <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"} />
-      <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
         <SideBar active={"Classes"} />
         <div className='w-full flex flex-col'>
           <Subheader name={"Classes"} />
@@ -218,7 +215,7 @@ const Roster = () => {
                 <div>
                 <div className='w-full bg-LightBlue flex md:flex-row flex-col p-2 items-center justify-between shadow-md'>
                   <div className='flex items-center self-start'>
-                    <button onClick={()=>{window.location.assign('/teacher/classes')}}><BiChevronLeft className='text-3xl' /></button>
+                    <button onClick={()=>{window.history.back()}}><BiChevronLeft className='text-3xl' /></button>
                     <div className='flex'>
                     {
                       isEditing ? 
@@ -287,14 +284,13 @@ const Roster = () => {
             }
           </div>
         </div>
-      </div>
       {
           deleteSection ? 
-          <ConfirmationBox message={`Confirm to delete class: ${selectedClass}`} onConfirm={handleDeleteSection} onCancel={()=>{setDeleteSection(false)}}/>
+          <ConfirmationBox message={`Confirm to delete section: ${selectedClass}`} onConfirm={handleDeleteSection} onCancel={()=>{setDeleteSection(false)}}/>
           : 
           ''
       }
-    </div>
+    </>
   );
 };
 

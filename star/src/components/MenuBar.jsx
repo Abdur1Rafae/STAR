@@ -12,9 +12,9 @@ const MenuBar = () => {
 
     let handleAccountClick = () => {
         if (user.role === 'teacher') {
-            window.location.assign('/teacher-account');
+            window.location.assign('teacher-account');
         } else {
-            window.location.assign('/manage-account');
+            window.location.assign('manage-account');
         }
     };
     let handleProfileClick = () => {

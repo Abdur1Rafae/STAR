@@ -45,9 +45,7 @@ const ViewFlags = () => {
   
   
   return (
-    <div className=' w-full h-full font-body'>
-      <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-      <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+    <>
          <SideBar active={"Grading"}/>
          <div className='w-full h-full'>
           <Subheader name={"Grading"}/>
@@ -106,8 +104,7 @@ const ViewFlags = () => {
             }
           </div>
         </div>
-      </div>
-   </div>
+      </>
 );
 }
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import LMTable from '../../components/Teacher/LMTable'
@@ -95,9 +94,7 @@ function LiveMonitoring() {
   
   const status = ['Submitted', 'Active', 'Not Started'];
   return (
-    <div className='w-full h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Live Monitoring"}/>
@@ -157,8 +154,7 @@ function LiveMonitoring() {
                   }
                   </div>
             </div>   
-        </div>
-    </div>
+        </>
   );
 }
 

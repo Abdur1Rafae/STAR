@@ -40,7 +40,7 @@ const Timer = () => {
     if (remainingTime === 0 || closingTime === currentTime) {
       localStorage.removeItem('SuccessSubmit')
       saveData()
-      window.location.assign('/quiz-submitted');
+      window.location.assign('quiz-submitted');
     }
   }, [remainingTime]);
 

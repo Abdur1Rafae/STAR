@@ -64,7 +64,7 @@ const QuizScreen = () => {
       }else {
         console.log("No data to push")
       }
-    }, 90000); // 90 seconds
+    }, 90000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -235,7 +235,7 @@ const QuizScreen = () => {
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
       localStorage.removeItem('responseId')
       localStorage.removeItem('SuccessSubmit')
-      window.location.assign('/quiz-submitted')
+      window.location.assign('quiz-submitted')
     }
     updateQuizDetails(storedQuizDetails)
     createResponseObjects([])
@@ -299,15 +299,14 @@ const QuizScreen = () => {
       const res = await submitResponses()
       localStorage.removeItem('SuccessSubmit')
       localStorage.removeItem('questions')
-      window.location.assign('/quiz-submitted')
+      window.location.assign('quiz-submitted')
     } catch(err) {
       console.log(err)
     }
   }
 
   return (
-    <div className='flex flex-col w-screen lg:w-full'>
-      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+    <>
       <QuizSubheader/>
       <div className="">
         <div className="quiz-screen p-2 md:p-4 w-full">
@@ -430,7 +429,7 @@ const QuizScreen = () => {
           ''
         }
       </div>
-    </div>
+    </>
   );
 };
 

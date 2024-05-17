@@ -73,7 +73,7 @@ const QuizInstructions = () => {
           localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
         }
         
-        window.location.assign('/quiz')
+        window.location.assign('quiz')
       }
       else {
         try {
@@ -90,8 +90,7 @@ const QuizInstructions = () => {
   }
 
   return (
-    <div className='flex flex-col mb-8'>
-      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+    <>
       <SubHeader/>
       <div className="mt-4 md:mx-4 flex flex-col items-center justify-center border-t-4 border-grey-600">
         <div className="w-full p-8 rounded shadow-md shadow-outline">
@@ -150,7 +149,7 @@ const QuizInstructions = () => {
           </div>
         }
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
 import React ,{ useState, useRef, useEffect, useContext }from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import SubmitButton from '../../components/button/SubmitButton';
@@ -18,12 +17,12 @@ import { UploadImageFile } from '../../APIS/ImageAPI';
 
 
 
-function CreateNewAssessment() {
+const CreateNewAssessment = () => {
    const [assessmentId, setAssessmentId] = useState('')
    const [assessmentName, setName] = useState('');
    const [description, setDesc] = useState('')
    const [classes, setClasses] = useState([])
-   const {sections, removeSection, saveSections} = useContext(SectionContext)
+   const {sections, saveSections} = useContext(SectionContext)
    const [hour, setHour] = useState(0)
    const [mins, setMins] = useState(30)
    
@@ -218,7 +217,6 @@ function CreateNewAssessment() {
 
       const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
       setCloseDatetime(formattedDate);
-      console.log(formattedDate);
    };
 
    const handleNavigationDecision = () => {
@@ -238,9 +236,7 @@ function CreateNewAssessment() {
 
   
   return (
-   <div className='flex flex-col h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+   <>
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
             <Subheader name={"Create New Assessment"}/>
@@ -490,10 +486,8 @@ function CreateNewAssessment() {
          </div>
          }
       </div>
-      </div>
-      
-   </div>
-);
+      </>
+   );
 }
 
 export default CreateNewAssessment;

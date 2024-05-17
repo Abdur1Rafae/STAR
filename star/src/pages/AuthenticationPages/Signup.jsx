@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import logo from '../../components/logo.png';
-import studentimage from './student-img.png';
-import runningman from './runningman.png';
-import { UserLogin, UserSignup } from '../../APIS/AuthAPI';
+import { UserSignup } from '../../APIS/AuthAPI';
 import cover2 from './cover2.png';
 
 const Signup = () => {

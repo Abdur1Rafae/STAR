@@ -4,7 +4,7 @@ import { FaCircleArrowRight } from "react-icons/fa6";
 const CourseCard = ({classInfo}) => {
   const handleClassClick = () => {
     localStorage.setItem('selectedClass', JSON.stringify(classInfo))
-    window.location.assign(`/courses/${classInfo.className}`);
+    window.location.assign(`courses/${classInfo.className}`);
   }
   return (
     <button className='font-body text-left w-56 h-[90px] bg-[#F4F9FD] mt-4 rounded-md border-[1px] border-black transition-all duration-200 flex flex-col justify-between hover:scale-105' onClick={handleClassClick}>

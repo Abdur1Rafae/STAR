@@ -1,7 +1,6 @@
 import AssessmentCard from '../../components/Teacher/AssessmentCard';
 import CategoryFilter from '../../components/Teacher/CategoryFilter';
 import React ,{ useState, useEffect }from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { GetAssessments } from '../../APIS/Teacher/AssessmentAPI';
@@ -69,9 +68,7 @@ function ScheduledAssessment() {
         getAssessments()
     }, [])
   return (
-    <div className='flex flex-col h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Home"}/>
             <div className='w-full flex flex-col'>
                 <SubheaderBut name={"Dashboard"} button={"New Assessment"} onClick={()=>{window.location.assign('/teacher/create-new-assessment')}}/>
@@ -111,8 +108,7 @@ function ScheduledAssessment() {
                     }
                 </div>
             </div>
-        </div>
-    </div>
+        </>
   );
 }
 

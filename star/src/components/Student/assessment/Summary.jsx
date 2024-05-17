@@ -16,7 +16,7 @@ const Summary = () => {
   const [submissionTime, setSubmissionTime] = useState()
   const [responseTime, setResponseTime] = useState(0)
   const [topicMap, setTopicMap] = useState({})
-  const [skillMap, setSkillMap] = useState({"Problem Solving": {correct: 3, totalCount: 4}, "logic": {correct: 3, totalCount: 4} })
+  const [skillMap, setSkillMap] = useState({})
   const [totalCorrect, setTotalCorrect] = useState(0)
   const [totalSkipped, setTotalSkipped] = useState(0)
 
@@ -25,11 +25,11 @@ const Summary = () => {
     const GetSummary = async() => {
       try {
         const res = await GetAssessmentSummary({id: assessmentInfo.id})
+        console.log(res)
         setDuration(res.duration)
         setResponses(res.responses)
-        setSubmissionTime(DDMMMMYYYY_HHMM(res.submittedAt))
+        setSubmissionTime(DDMMMMYYYY_HHMM({date:res.submittedAt}))
         setResponseTime(calculateTimeDifference(res.createdAt, res.submittedAt))
-        console.log(res)
       } catch(err) {
         console.log(err)
       }

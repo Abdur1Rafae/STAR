@@ -5,15 +5,15 @@ const PastQuizCard = ({id, previousScore, prevTotalScore, Name, Date, AchievedSc
     const handleAssessmentClick = () => {
         if(showReport) {
             const obj = {
-                previousScore: previousScore,
-                prevTotalScore: prevTotalScore,
+                previousScore: prevTotalScore,
+                prevTotalScore: previousScore,
                 id: id,
                 title: Name,
                 currentScore: AchievedScore,
                 totalScore: totalScore
             }
             localStorage.setItem('selectedAssessment', JSON.stringify(obj))
-            window.location.assign(`/courses/assessment/${Name}`)
+            window.location.assign(`assessment/${Name}`)
         }
     }
   return (

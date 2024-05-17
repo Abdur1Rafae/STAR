@@ -102,8 +102,7 @@ const CourseInfo = () => {
   const quizzes = 1
 
   return (
-    <div className="flex flex-col mb-2 font-body">
-      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+    <>
       <SubHeader/>
       <div className={`p-2 ${loading ? 'flex items-center justify-center h-screen' : ''}`}>
         {
@@ -141,7 +140,7 @@ const CourseInfo = () => {
           </>
         }
       </div>
-    </div>
+    </>
   )
 }
 

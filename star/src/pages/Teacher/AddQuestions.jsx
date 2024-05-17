@@ -20,7 +20,7 @@ import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
 import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
-function AddQuestions() {
+const AddQuestions = () => {
     const [loading, setLoading] = useState(true)
     const assessmentName = useParams()
     const [creatingQuestion, setCreateQuestion] = useState(null);
@@ -279,10 +279,8 @@ function AddQuestions() {
 
 
   return (
-    <div className=' w-full h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
-            <SideBar active={"Add Questions"}/>
+    <>
+            <SideBar/>
             <div className='w-full '>
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
                 <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
@@ -419,8 +417,7 @@ function AddQuestions() {
                     </div>
                 </div>
             </div>    
-        </div>
-    </div>
+        </>
   );
 }
 

@@ -16,7 +16,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
 
     const [newCorrectOptions, setNewCorrectOptions] = useState(correctOptions ? correctOptions : [])
     const [newExplanation, setNewExplanation] = useState(explanation);
-    const [newPoints, setNewPoints] = useState(points);
+    const [newPoints, setNewPoints] = useState(points ?? 1);
     const [newImage, setNewImage] = useState(image);
     const [topicName, setTopicName] = useState(topic ? topic : '')
     const [isCorrect, setCorrect] = useState(isTrue ?? false)

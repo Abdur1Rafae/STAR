@@ -47,9 +47,7 @@ function QuestionBankPage() {
   }, [])
     
   return (
-    <div className='flex flex-col h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Library"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Library"}/>
@@ -85,8 +83,8 @@ function QuestionBankPage() {
                       </div>
                       <div className='flex flex-wrap gap-8'>
                         {
-                          filteredData.map((qb)=> {
-                            return <QuestionBankCard className={qb.class} onClick={()=>{window.location.assign(`/teacher/library/${qb.title}`); localStorage.setItem('QuestionBankID', qb._id)}} Name={qb.title} date={qb.scheduled} id={qb._id} count={qb.questionCount}/>
+                          filteredData.map((qb, index)=> {
+                            return <QuestionBankCard key={index} className={qb.class} onClick={()=>{window.location.assign(`/teacher/library/${qb.title}`); localStorage.setItem('QuestionBankID', qb._id)}} Name={qb.title} date={qb.scheduled} id={qb._id} count={qb.questionCount}/>
                           })
                         }
                       </div>
@@ -94,8 +92,7 @@ function QuestionBankPage() {
                   }
                 </div>
             </div>
-        </div>
-    </div>
+        </>
   );
 }
 

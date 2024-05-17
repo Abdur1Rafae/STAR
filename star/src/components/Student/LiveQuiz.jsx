@@ -40,7 +40,7 @@ const LiveQuiz = ({assessment}) => {
             } 
         }
         localStorage.setItem('quizDetails', JSON.stringify(quizDetails));
-        window.location.assign('/quiz-instructions')
+        window.location.assign('quiz-instructions')
     }
   return (
     <button className='font-body flex border-2 border-grey rounded-lg transition-all duration-200 text-left hover:scale-105' onClick={handleClick}>

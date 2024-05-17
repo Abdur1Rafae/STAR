@@ -3,7 +3,7 @@ import { AiOutlineBarChart } from "react-icons/ai";
 
 const PastCurScore = ({CurrentScore, totalScore, PrevTotalScore, PreviousScore}) => {
 
-    const improvement = PrevTotalScore != null ?  Math.round(((CurrentScore - PreviousScore) / (totalScore - PrevTotalScore)) * 100) : '-'
+    const improvement = PrevTotalScore != null ?  Math.round(((CurrentScore / totalScore) - (PreviousScore / PrevTotalScore)) * 100) : '-'
   return (
     <div className='flex-grow w-full md:mb-0 bg-LightBlue h-28 flex p-2 items-center justify-around shadow-md'>
         <div className='w-24 h-20 flex flex-col'>

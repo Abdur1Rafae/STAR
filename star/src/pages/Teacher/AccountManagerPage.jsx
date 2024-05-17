@@ -1,28 +1,19 @@
 import React from 'react';
-import { useMatch } from 'react-router-dom';
 import AccountForm from '../../components/Student/AccountForm';
 import Notifications from '../../components/Student/Notifications';
-import MenuBar from '../../components/MenuBar';
 import { MdAccountBox } from "react-icons/md";
 import SubmitButton from '../../components/button/SubmitButton';
 import CancelButton from '../../components/button/CancelButton';
 import DeleteButton from '../../components/button/DeleteButton';
-import SubHeader from '../../components/Student/SubHeader';
 import SideBar from '../../components/Teacher/SideBar'
 
 const AccountManagerPage = () => {
-    const match = useMatch('/teacher-account');
-    if (!match) {
-        return null;
-    }
 
     return (
-        <div className='w-full h-full'>
-            <MenuBar />
-            <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
-            <SideBar active={"Profile"}/>
+        <>
+            <SideBar/>
 
-            <div className="flex items-center justify-center w-full  ">
+            <div className="flex justify-center w-full">
                 <div className="w-full">
                     <div className="bg-white p-8 items-center">
                         <div className='flex mb-6'>
@@ -49,8 +40,7 @@ const AccountManagerPage = () => {
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
+        </>
     );
 };
 

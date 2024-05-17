@@ -67,9 +67,7 @@ const Classes = () => {
   }
 
   return (
-    <div className='flex flex-col h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Classes"}/>
             <div className='w-full flex flex-col'>
                 <SubheaderBut name={"Classes"} button={"New"} onClick={showDialogBox}/>
@@ -99,8 +97,7 @@ const Classes = () => {
               </div>
 
             }
-        </div>
-    </div>
+    </>
   )
 }
 
