@@ -4,7 +4,6 @@ import SubmitButton from '../../components/button/SubmitButton';
 import QuizNavigation from '../../components/Student/quiz/QuizNavigation';
 import TrueFalse from '../../components/Student/question/TrueFalsePanel';
 import TextAnswerPanel from '../../components/Student/question/TextAnswerPanel';
-import MenuBar from '../../components/MenuBar';
 import QuizSubheader from '../../components/Student/quiz/QuizSubheader';
 import { ToggleStore } from '../../Stores/ToggleStore';
 import QuizStore from '../../Stores/QuizStore';

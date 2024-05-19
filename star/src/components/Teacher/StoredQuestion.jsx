@@ -52,13 +52,13 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
                     </>
                     :
                     <>
-                        {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
+                        {image !== null && image !== undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
                         {
                             type == "MCQ" ? 
                             (
                                 <div className='flex flex-col gap-2 mt-2'>
-                                    {options.map((option)=>{
-                                        return <OptionBox option={option} isActive={correctOptions.includes(option)}/> 
+                                    {options.map((option, index)=>{
+                                        return <OptionBox key={index} option={option} isActive={correctOptions.includes(option)}/> 
                                     })}
                                 </div>
                             )
@@ -66,8 +66,8 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
                             type == "True/False" ?
                             (
                                 <div className='flex flex-col gap-2 mt-2'>
-                                    {options.map((option)=>{
-                                        return <OptionBox option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
+                                    {options.map((option, index)=>{
+                                        return <OptionBox key={index} option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
                                     })}
                                 </div>
                             )

@@ -11,6 +11,7 @@ import Asssessment from '../Assessment.png'
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 import { MdDelete } from 'react-icons/md';
 import { DeleteAssessment } from '../../APIS/Teacher/AssessmentAPI';
+import { baseUrl } from '../../APIS/BaseUrl';
 
 const AssessmentCard = ({ assessment, onDelete }) => {
     let buttonComponent, statusColor, statusTextColor;
@@ -71,7 +72,7 @@ const AssessmentCard = ({ assessment, onDelete }) => {
 
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>
-            <img className="w-full h-32 rounded-lg" crossorigin="anonymous" src={ assessment.coverImage ? 'http://localhost:3000/teacherhub/'+assessment.coverImage: Asssessment} alt="" />
+            <img className="w-full h-32 rounded-lg" crossOrigin="anonymous" src={ assessment.coverImage ? `${baseUrl}teacherhub/`+assessment.coverImage: Asssessment} alt="" />
             <div className='flex mt-2 items-center'>
                 <h3 className={`text-md font-medium text-DarkBlue ml-2`}>{assessment.title}</h3>
                 <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.category}</div>

@@ -69,7 +69,7 @@ const TrueFalsePanel = ({ question, Flagged}) => {
       </div>
       <div className="mb-4">
           <div className="mb-4 flex flex-col items-center">
-            {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
+            {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
             <div className='self-start w-full'>
               <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
             </div>

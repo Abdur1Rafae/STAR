@@ -7,7 +7,7 @@ const SkillEvaluation = ({skills}) => {
     <div className='w-full md:w-1/3 h-auto md:h-72 bg-LightBlue rounded-lg drop-shadow-md md:overflow-y-auto'>
         <h2 className='text-md font-semibold p-2 mb-4'>Skill Evaluation</h2>
         {Object.entries(skills).map(([key, value], index) => (
-            <div className='mx-2 mb-4'>
+            <div key={index} className='mx-2 mb-4'>
                 <HorizontalProgressBar Skill={key} Score={Math.round(value.correct / value.total * 100)} Color={colorsArr[index]}/>
             </div>
         ))}

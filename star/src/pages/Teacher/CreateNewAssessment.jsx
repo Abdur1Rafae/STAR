@@ -1,4 +1,4 @@
-import React ,{ useState, useRef, useEffect, useContext }from 'react';
+import React ,{ useState, useRef, useEffect, useContext, lazy }from 'react';
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import SubmitButton from '../../components/button/SubmitButton';
@@ -10,10 +10,10 @@ import { MdOutlineDeleteOutline,MdOutlineDisplaySettings,MdPublish,MdClose } fro
 import { PiChalkboardTeacherLight } from "react-icons/pi";
 import { VscPreview,VscFeedback } from "react-icons/vsc";
 import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
-import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { CreateAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import { UploadImageFile } from '../../APIS/ImageAPI';
+const ClassTabDisplay = lazy(()=> import('../../components/Teacher/ClassTabDisplay'));
 
 
 
@@ -42,62 +42,62 @@ const CreateNewAssessment = () => {
 
    const handleSubmission = async () => {
       if (assessmentName === '') {
-        setError('Set Assessment Name');
-        return;
+         setError('Set Assessment Name');
+         return;
       }
       if (datetime === '') {
-        setError('Set Start Date');
-        return;
+         setError('Set Start Date');
+         return;
       }
       if (hour === 0 && mins === 0) {
-        setError('Set Assessment Duration');
-        return;
+         setError('Set Assessment Duration');
+         return;
       }
       if (closedatetime === '') {
-        setError('Set Close Date');
-        return;
+         setError('Set Close Date');
+         return;
       }
       setError('');
     
       try {
-        const sectionIDs = sections.map((section) => section._id);
-        const durationInMins = hour * 60 + mins;
-    
-        const uploadingImage = async () => {
-          try {
+         const sectionIDs = sections.map((section) => section._id);
+         const durationInMins = hour * 60 + mins;
+      
+         const uploadingImage = async () => {
+            try {
             const data = await UploadImageFile({ image: imageFile });
             console.log(data);
             return data.data.url;
-          } catch (err) {
+            } catch (err) {
             console.log(err);
-          }
-        };
+            }
+         };
     
-        const assessmentImage = imageFile !== null ? await uploadingImage() : null;
-    
-        const data = await CreateAssessment({
-          name: assessmentName,
-          description: description,
-          sections: sectionIDs,
-          image: assessmentImage,
-          openDate: datetime,
-          closeDate: closedatetime,
-          duration: durationInMins,
-          adaptiveTesting: adaptiveTesting,
-          monitoring: candidateMonitoring,
-          instantFeedback: allowInstantFeedback,
-          navigation: allowNavigation,
-          releaseGrades: publishImmediately,
-          viewSubmission: viewSubmissions,
-          randomizeQuestions: randomizeQuestions,
-          randomizeAnswers: optionShuffle,
-          finalScore: showFinalScore,
-        });
-    
-        setAssessmentId(data.assessmentId);
-        window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
+         const assessmentImage = imageFile !== null ? await uploadingImage() : null;
+      
+         const data = await CreateAssessment({
+            name: assessmentName,
+            description: description,
+            sections: sectionIDs,
+            image: assessmentImage,
+            openDate: datetime,
+            closeDate: closedatetime,
+            duration: durationInMins,
+            adaptiveTesting: adaptiveTesting,
+            monitoring: candidateMonitoring,
+            instantFeedback: allowInstantFeedback,
+            navigation: allowNavigation,
+            releaseGrades: publishImmediately,
+            viewSubmission: viewSubmissions,
+            randomizeQuestions: randomizeQuestions,
+            randomizeAnswers: optionShuffle,
+            finalScore: showFinalScore,
+         });
+      
+         setAssessmentId(data.assessmentId);
+         window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
       } catch (err) {
-        console.log(err);
+         console.log(err);
       }
     };
     
@@ -240,7 +240,7 @@ const CreateNewAssessment = () => {
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
             <Subheader name={"Create New Assessment"}/>
-            <div className={`p-4 flex gap-4 overflow-hidden flex-col`}>
+            <div className={`p-4 flex gap-4 overflow-hidden flex-col font-body`}>
             <div className='flex md:flex-row flex-col justify-center items-center sm:h-96 md:h-64 border border-black bg-LightBlue'>
                <div className='md:w-2/3 w-full'>
                   <h2 className='ml-4 mt-2 text-sm font-semibold'>Assessment Title</h2>

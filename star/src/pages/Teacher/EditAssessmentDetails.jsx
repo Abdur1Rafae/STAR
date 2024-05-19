@@ -212,7 +212,6 @@ function EditAssessmentDetails() {
 
         const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
         setCloseDatetime(formattedDate);
-        console.log(formattedDate);
     };
 
     const handleNavigationDecision = () => {
@@ -275,15 +274,15 @@ function EditAssessmentDetails() {
                 <div className='w-full lg:w-2/3  border border-black bg-LightBlue p-2' >
                     <h2 className='text-sm font-semibold '>Assessment Detail</h2>
 
-                    <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
+                    <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
 
                     <h2 className='text-sm font-semibold'>Participant</h2>
                     <div className='flex items-center gap-2 mt-2'>
                         <div className='bg-white p-2 min-h-10 w-full border border-black rounded flex gap-2 flex-wrap'>
                         {
-                            sections.map((section) => {
+                            sections.map((section, index) => {
                                 return (
-                                    <div className='h-6 w-auto p-1 rounded-lg border-[1px] border-black'>
+                                    <div key={index} className='h-6 w-auto p-1 rounded-lg border-[1px] border-black'>
                                     <p className='text-xs'>{section.name}</p>
                                     </div>
                                 )
@@ -349,7 +348,7 @@ function EditAssessmentDetails() {
                         <p className='text-xs text-gray-400'>Schedule when students can view their score</p>
                         </div>
                     </div>
-                    <div class="flex items-center mt-4">
+                    <div className="flex items-center mt-4">
                         <input
                         id="default-checkbox"
                         type="radio"
@@ -366,7 +365,7 @@ function EditAssessmentDetails() {
                         Immediately after close date
                         </label>
                     </div>
-                    <div class="flex items-center mt-2">
+                    <div className="flex items-center mt-2">
                         <input
                         id="checked-checkbox"
                         type="radio"
@@ -400,7 +399,7 @@ function EditAssessmentDetails() {
             </div>
             <div className='h-full mt-2 border border-black bg-LightBlue p-2 '>
                 <h2 className='text-sm font-semibold '>Configurations</h2>
-                <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
+                <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
                 <div className='flex md:flex-row flex-col gap-4 items-start'>
                     <div className='w-full'>
                         <div className='flex'>
@@ -410,17 +409,17 @@ function EditAssessmentDetails() {
                             <p className='text-xs text-gray-400 '>Customizes how questions are viewed by candidates.</p>
                         </div>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={randomizeQuestions} type="checkbox" onChange={()=>setRandomizeQuestions((prev) => !prev)} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Randomize questions</label>
+                        <div className="flex items-center my-4">
+                        <input id="default-checkbox" checked={randomizeQuestions} type="checkbox" onChange={()=>setRandomizeQuestions((prev) => !prev)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="default-checkbox" className="ms-2 text-xs font-medium text-gray-900">Randomize questions</label>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input checked={optionShuffle} onChange={()=>setOptionShuffle((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
+                        <div className="flex items-center my-4">
+                        <input checked={optionShuffle} onChange={()=>setOptionShuffle((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
+                        <div className="flex items-center my-4">
+                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
                         </div>
                     </div>
                     <div className='mb-2 md:h-36 md:w-0 w-full border border-black '></div>
@@ -432,13 +431,13 @@ function EditAssessmentDetails() {
                             <p className='text-xs text-gray-400 '>Customizes how candidate view score and receive feedback during assessment.</p>
                         </div>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
+                        <div className="flex items-center my-4">
+                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="default-checkbox" className="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input id="checked-checkbox" checked={showFinalScore} onChange={()=>setShowFinalScore((prev)=>!prev)} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Show Final Score</label>
+                        <div className="flex items-center my-4">
+                        <input id="checked-checkbox" checked={showFinalScore} onChange={()=>setShowFinalScore((prev)=>!prev)} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Show Final Score</label>
                         </div>
                     </div>
                     <div className='mb-2 md:h-36 md:w-0 w-full border border-black'></div>

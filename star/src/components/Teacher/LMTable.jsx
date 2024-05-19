@@ -19,7 +19,6 @@ const LMTable = ({ data, columns , selectedSection = 'All', selectedStatus = 'Al
   }, [data, selectedSection, selectedStatus]);
 
   const handleClick = (data) => {
-    console.log(data)
     const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
     localStorage.setItem('Response', JSON.stringify(data))
     window.location.assign(`/teacher/grading/${assessment.title}`)

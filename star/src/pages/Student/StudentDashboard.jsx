@@ -52,9 +52,9 @@ const StudentDashboard = () => {
                         {
                             LiveAssessments.length > 0 ?
                             (
-                                LiveAssessments.map((assessment)=>{
+                                LiveAssessments.map((assessment, index)=>{
                                     return(
-                                    <LiveQuiz assessment={assessment}/>
+                                    <LiveQuiz key={index} assessment={assessment}/>
                                 )})
                             )
                             :

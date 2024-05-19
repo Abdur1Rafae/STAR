@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import logo from '../../components/logo.png';
 import cover1 from './cover1.png'
 import cover2 from './cover2.jpeg'
@@ -19,7 +19,7 @@ return (
 <div className='w-full scroll-smooth '>
     <div className='flex items-center justify-between bg-DarkBlue'>
     <div className="menuleft logo flex justify-start">
-      <img src={logo} className='w-44 h-14'></img>
+      <img loading="lazy" src={logo} className='w-44 h-14'></img>
     </div>
     <div className='w-full col-span-5 md:hidden'>
           <button
@@ -106,13 +106,13 @@ return (
         <p className='font-medium text-white text-center text-xs md:text-2xl  flex flex-col items-center mt-4'>Personalized learning that empowers you to reach your full potential</p>
         <div className='relative h-96 bg-DarkBlue w-full flex flex-col items-center mt-4 '>
         <button onClick={()=>{window.location.assign('/signup')}} className='bg-black px-8 py-2 md:px-12 md:py-4 text-sm text-white rounded-[10px]'>Get Started</button>
-        <img src={cover1} alt=""  className='h-[280px] md:h-full md:w-1/2  bg-white absolute top-24 rounded-tl-[100px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[100px]  pt-8 '/>
+        <img loading="lazy" src={cover1} alt=""  className='h-[280px] md:h-full md:w-1/2  bg-white absolute top-24 rounded-tl-[100px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[100px]  pt-8 '/>
         </div>
     </div>
 
     <div className='md:sticky max-md:mt-8 top-0  bg-[#F4F9FD] h-96 md:h-screen md:grid grid-cols-2 content-center  items-center'>
         <div className='h-full w-full  flex flex-col items-center max-md:hidden pt-8 '>
-        <img src={cover2} alt="" className=''/>
+        <img loading="lazy" src={cover2} alt="" className=''/>
         </div>
         <div className='h-full w-full flex flex-col items-center justify-center  '>
             <h2 className='font-bold text-2xl md:text-5xl max-md:text-center'>Your Journey Starts Here</h2>
@@ -128,20 +128,20 @@ return (
             <p className='font-normal text-sm md:text-lg pt-8 md:mt-12 md:pr-8 max-md:text-center'>Arete's in-depth assessments go beyond traditional grading. We provide clear and actionable insights that reveal each student's unique learning profile. We help you identify areas where students excel and pinpoint areas that require additional support.</p>
         </div>
        <div className='h-full relative  content-center max-md:hidden '>
-        <img src={shapebg} alt="" className='absolute object-scale-down -top-44 right-0 -mr-12 ' />
-        <img src={cover3} alt=""  className='absolute w-[549px] h-[510px] rounded-[336.5px] -top-24 -right-10 -mr-12 '/>
+        <img loading="lazy" src={shapebg} alt="" className='absolute object-scale-down -top-44 right-0 -mr-12 ' />
+        <img loading="lazy" src={cover3} alt=""  className='absolute w-[549px] h-[510px] rounded-[336.5px] -top-24 -right-10 -mr-12 '/>
         </div> 
        
     </div>
     <div className='md:sticky top-0  bg-[#F4F9FD] md:h-screen md:grid grid-cols-2 content-center   items-center gap-2'>
     <div className='max-md:hidden '>
-        <img src={cover4} alt=""  className=''/>
+        <img loading="lazy" src={cover4} alt=""  className=''/>
         </div> 
        
         <div className='w-full md:h-screen pt-12 max-md:px-12 '>
             <h2 className='font-bold text-2xl md:text-5xl max-md:text-center '>Personalize Learning for Every Student</h2>
             <p className='font-normal text-sm md:text-xl mt-12 md:pr-8 max-md:text-center'>Arete empowers you to move beyond a one-size-fits-all approach. With our data-driven insights, you can:</p>
-            <ul class="list-disc p-4 text-sm md:text-xl max-md:text-center">
+            <ul className="list-disc p-4 text-sm md:text-xl max-md:text-center">
                 <li>Design targeted lesson plans that cater to individual student needs.</li>
                 <li> Provide Differentiated instruction and activities for optimal impact. </li>
                 <li>Offer personalized support and resources for students who require additional assistance.</li>
@@ -157,7 +157,7 @@ return (
                 <div className='h-12 overflow-hidden transition-all	 ease-in-out duration-500 hover:h-full '>
                 <span className=' flex flex-col justify-end  items-center font-bold text-white text-xl md:text-2xl   '>
                   <h1 className='underline'>Adaptive Testing</h1>
-                  <ul class="underline-none h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
+                  <ul className="underline-none h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
                   <li>Design targeted lesson plans that cater to individual student needs.</li>
                   <li> Provide Differentiated instruction and activities for optimal impact. </li>
                   <li>Offer personalized support and resources for students who require additional assistance.</li>
@@ -170,7 +170,7 @@ return (
                 <div className='h-12 overflow-hidden transition-all	 ease-in-out duration-500 hover:h-full '>
                 <span className=' flex flex-col justify-end  items-center font-bold text-white text-xl md:text-2xl   '>
                   <h1 className='underline'>Live Monitoring</h1>
-                  <ul class="h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
+                  <ul className="h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
                   <li>Design targeted lesson plans that cater to individual student needs.</li>
                   <li> Provide Differentiated instruction and activities for optimal impact. </li>
                   <li>Offer personalized support and resources for students who require additional assistance.</li>
@@ -184,7 +184,7 @@ return (
                 <div className='h-12 overflow-hidden transition-all	 ease-in-out duration-500 hover:h-full '>
                 <span className=' flex flex-col justify-end  items-center font-bold text-white text-xl md:text-2xl   '>
                   <h1 className='underline'>Advanced Reporting</h1>
-                  <ul class="h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
+                  <ul className="h-full  list-disc p-4 text-white text-xs md:text-sm max-md:text-center  hover:opacity-100">
                   <li>Design targeted lesson plans that cater to individual student needs.</li>
                   <li> Provide Differentiated instruction and activities for optimal impact. </li>
                   <li>Offer personalized support and resources for students who require additional assistance.</li>
@@ -209,7 +209,7 @@ return (
         </div>
 
         <div className='content-center max-md:mt-12'>
-            <img src={cover5} alt=""  className='rounded-xl w-96'/>
+            <img loading="lazy" src={cover5} alt=""  className='rounded-xl w-96'/>
         </div>
     </div>
 </div>

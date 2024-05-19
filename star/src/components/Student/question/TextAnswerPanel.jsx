@@ -65,7 +65,7 @@ const TextAnswerPanel = ({ question, Flagged }) => {
       </div>
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
-        {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
+        {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
         <div className='flex justify-between self-start  w-full'>
           <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
         </div>

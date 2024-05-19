@@ -10,7 +10,7 @@ const AssessmentHistory = ({data}) => {
             {
                 data.map((assessment, index) => {
                     return (
-                        <div className='w-full mb-2'>
+                        <div key={index} className='w-full mb-2'>
                             <PastQuizCard previousScore={index > 0 ? data[index - 1].totalScore : '-'} prevTotalScore={index > 0 ? (data[index-1].status == "Published" || data[index - 1].status == "Absent" ? (data[index - 1].totalMarks ? data[index-1].totalMarks : '-') : 0) : '-'} showReport={assessment.totalScore} id={assessment.responseId} AchievedScore={assessment.status == "Published" ? assessment.totalScore : assessment.status == "Under Review" ? 'pending' : 0} totalScore={assessment.totalMarks} Date={assessment.submitted ? DDMMM_HHMM(assessment.submitted) : '-'} Name={assessment.title}/>
                         </div>
                     )

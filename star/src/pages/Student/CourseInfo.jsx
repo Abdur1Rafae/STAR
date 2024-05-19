@@ -34,7 +34,7 @@ const CourseInfo = () => {
           const pastAsg = []
           let upcomingAsg = {}
           res.assessmentHistory.map((assessment) => {
-            if(assessment.status == "Upcoming") {
+            if(assessment.status == "Not Started") {
               upcomingAsg = assessment
             }
             else {
@@ -104,7 +104,7 @@ const CourseInfo = () => {
   return (
     <>
       <SubHeader/>
-      <div className={`p-2 ${loading ? 'flex items-center justify-center h-screen' : ''}`}>
+      <div className={`p-2 font-body ${loading ? 'flex items-center justify-center h-screen' : ''}`}>
         {
           loading ?
           <div className='-mt-8'>
@@ -122,7 +122,7 @@ const CourseInfo = () => {
                   <div className='flex flex-col md:flex-row w-full justify-items-stretch gap-4'>
                     <QuizCountImp totalCount={pastAssessments.length} attempts={totalAttempted} improvement={improvement}/>
                     <ScoreView avgScore={avgScore} highestScore={highestScore} totalScore={totalScoreofHighest}/>
-                    <UpQuiz/>
+                    <UpQuiz assessment={upcomingAssessment}/>
                   </div>
                   <div className='w-full flex flex-col md:flex-row gap-4'>
                     <PerformanceGraph inputData={graphData}/>

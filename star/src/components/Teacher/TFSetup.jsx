@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FcAddImage } from "react-icons/fc";
+import { baseUrl } from '../../APIS/BaseUrl';
 
-const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
+const TFSetup = ({image, setImage,setImageFile, options, setOptions, isTrue, setIsTrue}) => {
     const [markedCorrect, setMarkCorrect] = useState(isTrue);
     const fileInputRef = useRef(null);
-    const [imageUrl, setImageUrl] = useState(image);
+    const [userUpload, setUserUpload] = useState(false)
 
     
 
@@ -23,10 +24,12 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
 
     const handleFileInputChange = (event) => {
         const file = event.target.files[0];
+        setUserUpload(true)
         if (file) {
             const imageUrl = URL.createObjectURL(file);
-            setImageUrl(imageUrl);
+            setImage(imageUrl);
         }
+        setImageFile(file)
     };
 
     const handleClick = () => {
@@ -34,7 +37,7 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
     };
 
     const handleDeleteImage = () => {
-        setImageUrl(null); 
+        setImage(null); 
         fileInputRef.current.value = null; 
     };
 
@@ -61,12 +64,12 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
                         onChange={handleFileInputChange}
                         style={{ display: 'none' }}
                     />
-                    <button className={`${imageUrl ? 'hidden' : 'w-28 h-28'}`} onClick={handleClick}>
+                    <button className={`${image ? 'hidden' : 'w-28 h-28'}`} onClick={handleClick}>
                         <FcAddImage className='w-full h-full' />
                     </button>
-                    {imageUrl && (
+                    {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={imageUrl} alt="Uploaded Image" className='w-24 h-24'/>
+                            <img crossOrigin='anonymous' src={userUpload? image : `${baseUrl}teacherhub/`+image} alt="Uploaded Image" className='w-24 h-24'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>
