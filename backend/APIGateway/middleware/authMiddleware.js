@@ -32,6 +32,7 @@ const checkSession = async (id, sessionId) =>
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
+    if (req.path.startsWith('/teacherhub/uploads')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']
