@@ -117,8 +117,8 @@ const AddQuestions = () => {
         }
         try {
             const res = await AddQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]})
-            const index = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
-            if(index == -1) {
+            const indexOfTopic = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+            if(indexOfTopic == -1) {
                 setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
             }
             updatedQuestions[index]._id = res.insertedId
@@ -201,8 +201,8 @@ const AddQuestions = () => {
         try {
             if(reuse) {
                 const res = await UpdateReuseQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]}) 
-                const index = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
-                if(index == -1) {
+                const indexOfTopic = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+                if(indexOfTopic == -1) {
                     setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
                 }
                 updatedQuestions[index].reuse = false
@@ -210,8 +210,8 @@ const AddQuestions = () => {
             }
             else {
                 const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]})
-                const index = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
-                if(index == -1) {
+                const indexOfTopic = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+                if(indexOfTopic == -1) {
                     setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
                 } 
                 console.log(res)

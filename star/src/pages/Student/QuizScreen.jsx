@@ -274,7 +274,6 @@ const QuizScreen = () => {
       const res = await submitResponses()
       localStorage.removeItem('SuccessSubmit')
       localStorage.removeItem('questions')
-      window.location.assign('quiz-submitted')
     } catch(err) {
       console.log(err)
     }

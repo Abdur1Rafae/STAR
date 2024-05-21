@@ -100,8 +100,7 @@ const ForgotPasswordScreen = () => {
       </div>
       <button
         type="button"
-        // onClick={handleSubmitOTP}
-        onClick={window.location.assign('/change-password')}
+        onClick={handleSubmitOTP}
         className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue' : 'bg-slate-500'} text-white text-sm py-4 self-center`}
       >
         Verify

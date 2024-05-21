@@ -8,7 +8,7 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 
 const TrueFalsePanel = ({ question, Flagged}) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState([]);
   const [isFlagged, setIsFlagged] = useState(Flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const questionNumber = QuizStore(store => store.currentQuestionIndex)
@@ -23,8 +23,9 @@ const TrueFalsePanel = ({ question, Flagged}) => {
 
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
-    setResponse(answer && answer.answer[0] ? answer.answer[0] : null)
-    setSelectedOption(answer && answer.answer[0] ? answer.answer[0] : null)
+    console.log(answer)
+    setResponse(answer && answer.answer ? answer.answer : [])
+    setSelectedOption(answer && answer.answer ? answer.answer : [])
     setIsFlagged(question.flagged)
   }, [question])
 
@@ -32,7 +33,7 @@ const TrueFalsePanel = ({ question, Flagged}) => {
     setResponse(answer => {
       const updatedAnswer = {
         questionId: question._id,
-        answer: [answer ? answer : selectedOption]
+        answer: answer && answer.answer ? answer.answer : selectedOption
       };
       updateResponse(questionNumber, updatedAnswer);
       return answer;
@@ -40,8 +41,8 @@ const TrueFalsePanel = ({ question, Flagged}) => {
   }, [selectedOption]);
 
   const handleAnswerSelect = (answer) => {
-    setSelectedOption(answer);
-    setResponse(answer)
+    console.log(answer)
+    setSelectedOption([answer]);
   };
 
   const handleToggleFlag = () => {
@@ -81,11 +82,11 @@ const TrueFalsePanel = ({ question, Flagged}) => {
       <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
             className={`w-full min-h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
-              selectedOption === 'True' ? 'bg-DarkBlue text-white' : ''
+              selectedOption.includes('True') ? 'bg-DarkBlue text-white' : ''
             }`}
             onClick={() => handleAnswerSelect('True')}
           >
-            {selectedOption === "True" ?<GrRadialSelected className='ml-4'/> : ""}   
+            {selectedOption.includes("True") ?<GrRadialSelected className='ml-4'/> : ""}   
             <p className='ml-4'>True</p>
           </div>
         </div>
@@ -93,11 +94,11 @@ const TrueFalsePanel = ({ question, Flagged}) => {
         <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
             className={`w-full min-h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
-              selectedOption === 'False' ? 'bg-DarkBlue text-white' : ''
+              selectedOption.includes('False') ? 'bg-DarkBlue text-white' : ''
             }`}
             onClick={() => handleAnswerSelect('False')}
           >
-            {selectedOption === "False" ?<GrRadialSelected className='ml-4'/> : ""}   
+            {selectedOption.includes("False") ?<GrRadialSelected className='ml-4'/> : ""}   
             <p className='ml-4'>False</p>
           </div>
         </div>

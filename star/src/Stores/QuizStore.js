@@ -254,6 +254,7 @@ const QuizStore = create((set) => ({
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})
           console.log(sub)
+          window.location.assign('quiz-submitted')
         } catch(err) {
           console.log(err)
         }

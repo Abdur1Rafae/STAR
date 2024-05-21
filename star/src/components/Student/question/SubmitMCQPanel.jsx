@@ -4,6 +4,7 @@ import QuizImage from './QuizImage';
 import SubmitButton from '../../button/SubmitButton';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import {baseUrl} from '../../../APIS/BaseUrl'
 
 const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
   const modules = {
@@ -13,8 +14,8 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto h-full p-4 shadow-md rounded-md flex flex-col justify-between">
       {
-        question?.questionId.image ? 
-        <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={question?.questionId.image} /></div>
+        question?.questionId.image !== undefined ? 
+        <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={`${baseUrl}teacherhub/`+question?.questionId.image} /></div>
         : ''
       }
       <div className="mb-4">

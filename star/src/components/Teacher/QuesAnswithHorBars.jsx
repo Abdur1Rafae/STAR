@@ -7,6 +7,7 @@ import { PointBox } from './StoredQuestion';
 import { ReportContent } from '../../Context/ReportContext';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import {baseUrl} from '../../APIS/BaseUrl'
 
 const QuesAnswithHorBars = ({ index, question }) => {
   const {questionStats} = useContext(ReportContent)
@@ -68,7 +69,7 @@ const QuesAnswithHorBars = ({ index, question }) => {
             </div>
               {question.image && (
                 <div className='md:w-1/4 mx-auto my-auto'>
-                  <QuizImage imageUrl={question.image} />
+                  <QuizImage imageUrl={`${baseUrl}teacherhub/`+question.image} />
                 </div>
               )}
             </>

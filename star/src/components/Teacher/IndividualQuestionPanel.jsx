@@ -6,6 +6,7 @@ import { GrRadialSelected } from "react-icons/gr";
 import Loader from '../Loader';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import { baseUrl } from '../../APIS/BaseUrl';
 
 const IndividualQuestionPanel = ({responses}) => {
     const {assessmentQuestion, questionIndex, setQuestionIndex} = useContext(ReportContent)
@@ -64,7 +65,7 @@ const IndividualQuestionPanel = ({responses}) => {
             <>
                 {
         assessmentQuestion[questionIndex].image !== null && assessmentQuestion[questionIndex].image !== undefined? 
-        <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={assessmentQuestion[questionIndex].image} /></div>
+        <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={`${baseUrl}teacherhub/`+assessmentQuestion[questionIndex].image} /></div>
         : ''
       }
       <div className="mt-2 mb-2">
