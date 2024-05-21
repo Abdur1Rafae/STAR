@@ -21,6 +21,9 @@ module.exports.createAssessment = async (req,res) =>
 
         var {title, description, participants, configurations, coverImage} = req.body
 
+        configurations.openDate = new Date(configurations.openDate)
+        configurations.closeDate = new Date(configurations.closeDate)
+
         const session = await conn.startSession()
         const insertedId = await session.withTransaction(async () => 
         {
@@ -63,6 +66,9 @@ module.exports.updateAssessment = async (req,res) =>
         const { assessmentId } = req.params
 
         var {title, description, participants, configurations, coverImage} = req.body
+
+        configurations.openDate = new Date(configurations.openDate)
+        configurations.closeDate = new Date(configurations.closeDate)
 
         const session = await conn.startSession()
         await session.withTransaction(async () => 
@@ -155,7 +161,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
     {
         const teacher = req.body.decodedToken.id
 
-        const assessments = await Assessment.find({ teacher: teacher, "configurations.releaseGrades": false, status: { $nin: ["Published", "Reviewed"] } })
+        const assessments = await Assessment.find({ teacher: teacher, status: { $nin: ["Published", "Reviewed"] } })
         .populate
         ({
             path: 'participants',
@@ -169,7 +175,8 @@ module.exports.getScheduledAssessments = async (req,res) =>
 
         if(!assessments){return res.status(200).json({data: []})}
 
-        const categorizedAssessments = assessments.map(assessment => {
+        const categorizedAssessments = assessments.map(assessment => 
+        {
             return {
                 _id: assessment._id,
                 title: assessment.title,

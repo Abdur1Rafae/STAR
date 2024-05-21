@@ -134,7 +134,6 @@ module.exports.forgotPassword = async (req,res) =>
             {
                 let otp = response.data.otp
                 await client.setEx(email, 180, otp)
-                console.log(otp)
                 return res.status(200).json({message: 'OTP Sent'})  
             } 
             else {return res.status(response.status).json({ error: response.data.error, message: response.data.message })}

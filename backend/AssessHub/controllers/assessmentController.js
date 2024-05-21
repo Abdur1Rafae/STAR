@@ -107,6 +107,8 @@ module.exports.getUpcomingAssessments = async (req,res) =>
         ]
       })
 
+      if(!assessments.enrolledSections || assessments.enrolledSections.length === 0){return res.status(200).json({data: []})}
+
       const data = []
       assessments.enrolledSections.forEach(section => 
         {
@@ -136,7 +138,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
   try
   {
     const student = req.body.decodedToken.id
-
+    
     const assessments = await User.findById(student)
     .select('-name -erp -email -_id -__v') 
     .populate
@@ -173,6 +175,8 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
       ]
     })
+
+    if(!assessments.enrolledSections || assessments.enrolledSections.length === 0){return res.status(200).json({data: []})}
   
     const data = []
     assessments.enrolledSections.forEach(section => 
@@ -199,10 +203,10 @@ module.exports.getOngoingAssessments = async (req,res) =>
         })
     })
 
-    res.status(200).json({data: data})  
+    return res.status(200).json({data: data})  
   }
   catch(err){
       console.log(err)
-      res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get upcoming assessments'})
+      res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get ongoing assessments'})
   } 
 }
