@@ -3,8 +3,11 @@ const mongoose = require('mongoose')
 const {Assessment, Section, Class} = require('library/index')
 const remove = require('../util/remove')
 
-function getAssessmentStatus(configurations) 
+function getAssessmentStatus(configurations, status) 
 {
+
+    if(status.equal('Draft')){return 'Not Started'}
+
     const currentDate = new Date()
     
     if (currentDate < configurations.openDate) {return "Not Started"}
@@ -21,12 +24,10 @@ module.exports.createAssessment = async (req,res) =>
 
         var {title, description, participants, configurations, coverImage} = req.body
 
-        configurations.openDate = new Date(configurations.openDate)
-        configurations.closeDate = new Date(configurations.closeDate)
-
         const session = await conn.startSession()
         const insertedId = await session.withTransaction(async () => 
         {
+            if(participants.length === 0){return res.status(400).json({ error: 'ER_VALIDATION', message: 'Participants cannot be empty' })}
             const sections = await Section.find({ _id: { $in: participants } }, { class: 1 }).session(session)
     
             const uniqueClasses = new Set(sections.map(section => section.class.toString()))
@@ -53,11 +54,11 @@ module.exports.createAssessment = async (req,res) =>
         })
         session.endSession()
     
-        res.status(200).json({assessmentId: insertedId, message: `Assessment Created Successfully`})  
+        return res.status(200).json({assessmentId: insertedId, message: `Assessment Created Successfully`})  
     }
     catch(err){
         if (err.name === 'ValidationError' || err.message === 'Invalid image data' || err.message === 'Failed to add all sections' || err.message === 'Sections belong to different classes') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create assessment'})
+        else{return res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to create assessment'})}
     }
 }
 module.exports.updateAssessment = async (req,res) => 
@@ -66,9 +67,6 @@ module.exports.updateAssessment = async (req,res) =>
         const { assessmentId } = req.params
 
         var {title, description, participants, configurations, coverImage} = req.body
-
-        configurations.openDate = new Date(configurations.openDate)
-        configurations.closeDate = new Date(configurations.closeDate)
 
         const session = await conn.startSession()
         await session.withTransaction(async () => 
@@ -188,7 +186,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
                 totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,
                 totalStudents: assessment.participants.reduce((total, section) => total + (section.roster ? section.roster.length : 0), 0),
                 totalMarks: assessment.questionBank.reduce((total, questionObj) => total + (questionObj.question ? questionObj.question.points : 0) , 0),
-                category: getAssessmentStatus(assessment.configurations),
+                category: getAssessmentStatus(assessment.configurations, assessment.status),
             }
         })
 

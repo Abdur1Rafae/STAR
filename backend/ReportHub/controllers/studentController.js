@@ -84,46 +84,45 @@ module.exports.getClassOverview = async (req,res) =>
             assessmentData.totalMarks = assessment.totalMarks ?? 0
             assessmentData.closeDate = assessment.configurations.closeDate
 
-            if(assessment.configurations.closeDate < new Date())
-            {
-                const response = await Response.findOne
-                ({
-                    assessment: new mongoose.Types.ObjectId(assessment._id),
-                    student: new mongoose.Types.ObjectId(student)
-                })
-                .select('responses.questionId responses.score totalScore submittedAt')
-                .populate({
-                    path: 'responses.questionId',
-                    select: '-_id points skill'
-                })
+            const response = await Response.findOne
+            ({
+                assessment: new mongoose.Types.ObjectId(assessment._id),
+                student: new mongoose.Types.ObjectId(student)
+            })
+            .select('responses.questionId responses.score totalScore submittedAt')
+            .populate({
+                path: 'responses.questionId',
+                select: '-_id points skill'
+            })
 
-                if(response)
+            if(response)
+            {
+                if(assessment.status === 'Published')
                 {
-                    if(assessment.status === 'Published')
-                    {
-                        assessmentData.status = 'Published'
-                        assessmentData.responseId = response._id
-                        assessmentData.submitted = response.submittedAt
-                        assessmentData.totalScore = response.totalScore
-                        skills = skillBreakDown(skills, response.responses)
-                    }
-                    else
-                    {
-                        assessmentData.status = 'Under Review'
-                        assessmentData.submitted = response.submittedAt
-                    }
+                    assessmentData.status = 'Published'
+                    assessmentData.responseId = response._id
+                    assessmentData.submitted = response.submittedAt
+                    assessmentData.totalScore = response.totalScore
+                    skills = skillBreakDown(skills, response.responses)
                 }
-                else{assessmentData.status = 'Absent'}
+                else
+                {
+                    assessmentData.status = 'Under Review'
+                    assessmentData.submitted = response.submittedAt
+                }
             }
-            else if(assessment.configurations.openDate > new Date())
+            else
             {
-                assessmentData.status = 'Not Started'
-                assessmentData.openDate = assessment.configurations.openDate
-                assessment.closeDate = assessment.configurations.closeDate
-                assessment.duration = assessment.configurations.duration
+                if(assessment.configurations.openDate > new Date())
+                {
+                    assessmentData.status = 'Not Started'
+                    assessmentData.openDate = assessment.configurations.openDate
+                    assessment.duration = assessment.configurations.duration
+                }
+                else if(assessment.configurations.openDate < new Date()){assessmentData.status = 'Absent'}
             }
 
-            responses.push(assessmentData);
+            responses.push(assessmentData)
         }
 
         res.status(201).json({assessmentHistory: responses, skillsBreakDown:skills})
