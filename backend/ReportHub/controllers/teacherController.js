@@ -135,7 +135,7 @@ module.exports.getReportOverview= async (req,res) =>
               $project: {
                 _id: 0,
                 section:
-                  "$summary.participants.sectionName",
+                  "$summary.participants.sectionId",
                 questions:
                   "$summary.participants.questions",
               },
@@ -213,8 +213,7 @@ module.exports.getReportOverview= async (req,res) =>
 
         const participants = assessment.summary.participants.map(item => {
             const { questions, _id , ...rest } = item.toObject()
-
-            const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName).breakdown
+            const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id.equals(new mongoose.Types.ObjectId(item.sectionId)))
             if(sectionBreakDown && sectionBreakDown.breakdown) {
               return { ...rest, topicBreakDown : sectionBreakDown.breakdown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
             }
@@ -234,8 +233,8 @@ module.exports.getReportOverview= async (req,res) =>
     }
     catch(err)
     {
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to generate report'})
+      console.log(err)
+      res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to generate report'})
     }
 }
 module.exports.getQuestionSummary= async (req,res) => 

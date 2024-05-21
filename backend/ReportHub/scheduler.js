@@ -277,25 +277,37 @@ function generateReport(assessmentId)
 
 async function scheduleReportGeneration()
 {
-    const now = new Date()
+
     let assessments = await Assessment.find
     ({
-      'configurations.closeDate': { $lt: now },
+      'configurations.closeDate': { $lt: new Date() },
        status: { $ne: "Published" },
       'configurations.releaseGrades': true
+    }).populate({
+      path: 'questionBank.question', 
+      select: 'type' 
     })
 
     assessments.forEach(async (assessment) => 
     {
-        try
+      try
+      {
+        const hasShortAnswers = assessment.questionBank.some(item => item.question.type === 'Short Answer')
+        if (hasShortAnswers) 
         {
-            console.log(`Generating report for assessment: ${assessment._id}`);
-            generateReport(assessment._id)
-        }
-        catch(err)
+          assessment.configurations.releaseGrades = false
+          await assessment.save()
+        } 
+        else
         {
-            throw new Error(err.message)
+          console.log(`Generating report for assessment: ${assessment._id}`)
+          generateReport(assessment._id)
         }
+      }
+      catch(err)
+      {
+        throw new Error(err.message)
+      }
     })
 
     return assessments.length
