@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Joi = require('joi')
 const {User} = require('library/index')
 const saltRounds = 10
-//const {sendMail} = require('../util/Mail/mail')
+const {sendMail} = require('../mail/mail')
 
 const BASE_USER_SCHEMA = Joi.object
 ({
@@ -40,6 +40,8 @@ module.exports.authenticate = async (req,res) =>
                 name: user.name,
                 role: user.role
             }
+
+            if(user.role === 'student'){userData.erp = user.erp}
 
             return res.status(200).json({message: 'Authentication Successful', userData })
         }
@@ -111,10 +113,13 @@ module.exports.forgotPassword = async (req,res) =>
         if (!existingUser || (existingUser.role === 'student' && existingUser.password == null)) {return res.status(404).json({ error: 'ER_NOT_FOUND' , message: 'User not found' })}
 
         const otp  = generateOTP()
-        //sendMail([email], 'forgotPassword', {otp, username: user.name})
+        sendMail([email], 'forgotPassword', {otp, username: existingUser.name})
         return res.status(200).json({message: 'OTP Sent', otp})
     }
-    catch(err){res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to verify user' })}
+    catch(err)
+    {
+        console.log(err)
+        return res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to verify user' })}
 }
 module.exports.resetPassword = async (req,res) => 
 {

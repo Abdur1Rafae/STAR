@@ -103,7 +103,7 @@ module.exports.getQuestionResponses = async (req,res) =>
             feedback: "$responses.feedback"
           }
         }
-      ]);
+      ])
   
       if (!responses) 
       {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Question not found' })}    

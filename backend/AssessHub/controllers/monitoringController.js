@@ -54,6 +54,10 @@ module.exports.getMonitoringDetails = async (req,res) =>
                 studentId: '$students._id',
                 studentName: '$students.name',
                 sectionName: '$participants.sectionName',
+                score:
+                {
+                  $cond: {if: '$responseExists', then: { $arrayElemAt: ['$response.totalScore', 0] }, else: null}
+                },
                 startTime:
                 {
                   $cond: {if: '$responseExists', then: { $arrayElemAt: ['$response.createdAt', 0] }, else: null}
