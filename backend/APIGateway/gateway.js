@@ -20,6 +20,7 @@ const PORT = 3000
 app.use(express.json())
 app.use(morgan('combined'))
 app.use(helmet())
+console.log(new Date())
 
 app.use(auth)
 app.use('/session', sessionRoutes)

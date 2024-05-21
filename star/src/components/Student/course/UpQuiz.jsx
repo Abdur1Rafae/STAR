@@ -6,11 +6,10 @@ import { DDMMMMYYYY_HHMM } from '../../../Utils/DateFunctions';
 
 const UpQuiz = ({assessment}) => {
   return (
-    <div className={`flex-grow flex flex-col ${assessment ? 'justify-between': ''} bg-LightBlue h-28 min-w-56 rounded-lg drop-shadow-md p-1`}>
-        <h1 className='text-xs font-medium font-body'>Upcoming Assessments</h1>
-        <div className='w-full border-[1px] border-black'></div>
+    <div className={`flex-grow flex flex-col ${assessment.status ? 'justify-between': ''} bg-LightBlue h-28 min-w-56 rounded-lg drop-shadow-md p-1`}>
+        <h1 className='text-xs font-medium font-body border-b-2 border-black pb-1'>Upcoming Assessments</h1>
         {
-            assessment ? 
+            assessment.status ? 
             <div className='flex justify-between px-1 py-1 gap-4'>
             <div className='infoContainer flex flex-col justify-between h-full'>
                 <div className='flex items-center gap-4'>

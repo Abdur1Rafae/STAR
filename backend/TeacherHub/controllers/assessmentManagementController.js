@@ -155,7 +155,7 @@ module.exports.getScheduledAssessments = async (req,res) =>
     {
         const teacher = req.body.decodedToken.id
 
-        const assessments = await Assessment.find({ teacher: teacher, "configurations.releaseGrades": false, status: { $nin: ["Published", "Reviewed"] } })
+        const assessments = await Assessment.find({ teacher: teacher, status: { $nin: ["Published", "Reviewed"] } })
         .populate
         ({
             path: 'participants',

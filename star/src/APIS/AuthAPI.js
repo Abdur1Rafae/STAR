@@ -25,4 +25,9 @@ const UserSignup = async({obj}) => {
     return res
 }
 
-export {UserLogin, UserLogout, UserSignup}
+const ForgotPassword = async({email}) => {
+    const res = await AxiosBase.post('forgot-password', {email: email})
+    return res
+}
+
+export {UserLogin, UserLogout, UserSignup, ForgotPassword}

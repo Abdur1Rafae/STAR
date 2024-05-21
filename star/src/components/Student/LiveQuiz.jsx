@@ -9,6 +9,7 @@ const LiveQuiz = ({assessment}) => {
 
 
     const formattedDate = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'UTC',
         hour12: false,
         year: 'numeric',
         month: 'long',

@@ -18,7 +18,6 @@ import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 
 function EditAssessmentDetails() {
     const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
-    console.log(assessment)
     const [editingOpenDate, setEditingOpenDate] = useState(false)
     const [editingCloseDate, setEditingCloseDate] = useState(false)
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')
@@ -106,24 +105,51 @@ function EditAssessmentDetails() {
         setPublishOption((prev)=>!prev);
     };
 
+    useEffect(()=> {
+        console.log(closedatetime)
+    }, [closedatetime])
+
     useEffect(() => {
         if (!datetime) return;
-
-        const minDate = new Date(datetime);
-
-        minDate.setHours(minDate.getHours() + (isNaN(hour) ? 0: hour));
-        minDate.setMinutes(minDate.getMinutes() + (isNaN(mins) ? 0 : mins));
-
-        const year = minDate.getFullYear();
-        const month = String(minDate.getMonth() + 1).padStart(2, '0');
-        const day = String(minDate.getDate()).padStart(2, '0');
-        const hours = String(minDate.getHours()).padStart(2, '0');
-        const minutes = String(minDate.getMinutes()).padStart(2, '0');
-
-        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-        console.log(formattedDate, hour, mins)
+    
+        // Extract date and time parts from the datetime string
+        const [datePart, timePart] = datetime.split('T');
+        const [year, month, day] = datePart.split('-');
+        const [hourString, minuteString] = timePart.split(':');
+    
+        // Convert strings to numbers and handle NaN cases
+        const inputHour = parseInt(hourString, 10);
+        const inputMinute = parseInt(minuteString, 10);
+        const addedHours = isNaN(hour) ? 0 : hour;
+        const addedMinutes = isNaN(mins) ? 0 : mins;
+    
+        // Calculate the new time without converting to local time
+        let newHour = inputHour + addedHours;
+        let newMinute = inputMinute + addedMinutes;
+    
+        // Handle minute overflow
+        if (newMinute >= 60) {
+            newHour += Math.floor(newMinute / 60);
+            newMinute = newMinute % 60;
+        }
+    
+        // Handle hour overflow
+        if (newHour >= 24) {
+            newHour = newHour % 24;
+            // This does not account for day change, assuming you want to keep the day unchanged.
+        }
+    
+        // Format new hour and minute as strings
+        const hours = String(newHour).padStart(2, '0');
+        const minutes = String(newMinute).padStart(2, '0');
+    
+        // Combine the parts back into the ISO string format
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:00.000Z`;
+    
+        console.log(formattedDate, addedHours, addedMinutes);
         setCloseDatetime(formattedDate);
     }, [datetime, hour, mins]);
+    
 
 
 

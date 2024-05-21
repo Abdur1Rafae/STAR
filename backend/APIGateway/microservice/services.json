@@ -1,6 +1,6 @@
 {
-    "assesshub": "http://localhost:3003/",
-    "reporthub": "http://localhost:3004/",
-    "teacherhub": "http://localhost:3002/",
-    "userguardian": "http://localhost:3001/"
+    "assesshub": "http://arete-backend-assesshub:3003/",
+    "reporthub": "http://arete-backend-reporthub:3004/",
+    "teacherhub": "http://arete-backend-teacherhub:3002/",
+    "userguardian": "http://arete-backend-userguardian:3001/"
 }

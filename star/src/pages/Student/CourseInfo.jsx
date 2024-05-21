@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import QuizCountImp from '../../components/Student/course/QuizCountImp'
 import ScoreView from '../../components/Student/course/ScoreView'
-import MenuBar from '../../components/MenuBar'
 import SubHeader from '../../components/Student/SubHeader'
 import UpQuiz from '../../components/Student/course/UpQuiz'
 import SkillEvaluation from '../../components/Student/course/SkillEvaluation'

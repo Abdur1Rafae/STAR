@@ -6,13 +6,15 @@ import MobUpQuiz from './MobUpQuiz';
 const AssignmentTable = ({assessments}) => {
     function formatDate(date) {
         const localDate = new Date(date);
-        const formattedDate = localDate.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: false }).split(',')[0];
+        const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+        const formattedDate = localDate.toLocaleDateString('en-GB', options);
         return formattedDate;
     }
     
     function formatTime(date) {
         const localTime = new Date(date);
-        const formattedTime = localTime.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: false}).split(',')[1].trim().substring(0, 5);
+        const options = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' };
+        const formattedTime = localTime.toLocaleTimeString('en-GB', options);
         return formattedTime;
     }
 

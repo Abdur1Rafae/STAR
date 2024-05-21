@@ -27,7 +27,7 @@ const QuizScreen = () => {
 
   const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
-  const {navigation, instantFeedback} = quizConfig
+  const {navigation, instantFeedback, monitoring} = quizConfig
 
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
@@ -69,7 +69,7 @@ const QuizScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (isWebcamReady) {
+    if (isWebcamReady && monitoring) {
       startCameraAndDetection();
     }
   }, [isWebcamReady]);
@@ -127,34 +127,6 @@ const QuizScreen = () => {
       setIntervalId(intervalId)
     }
   }
-
-  // useEffect(()=> {
-  //   if(detectorFailed) {
-  //     clearInterval(interval)
-  //     const intervalId = setInterval(async () => {
-  //       try {
-  //         const videoElement = webcamRef.current.video;
-  //         if (!videoElement) {
-  //           console.log('Webcam footage not found. Kindly ensure your webcam is functional and allow access to it.');
-  //           return;
-  //         }
-  //         const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
-  //         const detectorConfig = {
-  //           runtime: 'mediapipe',
-  //           solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
-  //         };
-  //         let detector = await faceDetection.createDetector(model, detectorConfig);
-  //         setDetectorFailed(false);
-  //         await detectStudent(videoElement, detector);
-  //       } catch (err) {
-  //         console.log(err);
-  //         setDetectorFailed(true);
-  //       }
-  //     }, 10000)
-  //     setIntervalId(intervalId)
-  //   }
-
-  // }, [detectorFailed])
 
   const detectStudent = async (videoElement, detector) => {
     
