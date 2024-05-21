@@ -6,7 +6,7 @@ const remove = require('../util/remove')
 function getAssessmentStatus(configurations, status) 
 {
 
-    if(status.equal('Draft')){return 'Not Started'}
+    if(status === 'Draft'){return 'Not Started'}
 
     const currentDate = new Date()
     
