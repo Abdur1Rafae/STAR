@@ -8,6 +8,12 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
   const modules = {
     toolbar: false,
   };
+  const getRowClass = (rowIndex) => {
+    if (rowIndex === 0) return ' text-xl bg-[#ffc308]/75 shadow-xl';  // First row largest
+    if (rowIndex === 1) return ' text-lg bg-[#d6d6d6] shadow-xl';   // Second row smaller
+    if (rowIndex === 2) return 'text-md bg-[#d4a96b]/75 shadow-xl ';   // Third row smaller
+    return '';  // Normal size for the rest
+  };
 
   useEffect(() => {
     const filteredResult = data.filter(item => {
@@ -34,7 +40,7 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
   return (
     <div className="w-full md:w-11/12 py-2 md:p-0 md:mx-2">
       <div>
-        <table className="w-full text-sm md:text-base border-separate border-spacing-y-2">
+        <table className="w-full  border-separate border-spacing-y-2">
           <thead>
             <tr className="text-center text-gray-600">
               <th className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">Rank</th>
@@ -51,11 +57,11 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
               <tr
                 key={rowIndex}
                 onClick={onClick ? () => handleClick(row) : () => {}}
-                className={`text-center shadow-md bg-LightBlue ${onClick ? 'hover:cursor-pointer' : ''} `}
+                className={`text-center shadow-md bg-LightBlue ${onClick ? 'hover:cursor-pointer' : ''} ${getRowClass(rowIndex)}`}
               >
-                <td className="px-1 py-2 text-xs md:text-sm border-black border-y-[1px]">{rowIndex + 1}</td>
+                <td className="px-1 py-2  border-black border-y-[1px]">{rowIndex + 1}</td>
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex} className="px-1 py-2 text-xs md:text-sm border-black border-y-[1px]">
+                  <td key={colIndex} className="px-1 py-2  border-black border-y-[1px]">
                     {column.key === "startTime" || column.key === "submitTime"
                       ? row[column.key] !== null
                         ? DDMMM_HHMM(row[column.key])
