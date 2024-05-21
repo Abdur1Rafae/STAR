@@ -15,7 +15,14 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
       const statusMatch = selectedStatus === 'All' || !selectedStatus || item.status === selectedStatus;
       return sectionMatch && statusMatch;
     });
-    setFilteredData(filteredResult);
+  
+    const sortedResult = filteredResult.sort((a, b) => {
+      const scoreA = a.score ?? 0;
+      const scoreB = b.score ?? 0;
+      return scoreB - scoreA;
+    });
+  
+    setFilteredData(sortedResult);
   }, [data, selectedSection, selectedStatus]);
 
   const handleClick = (data) => {
@@ -30,7 +37,7 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
         <table className="w-full text-sm md:text-base border-separate border-spacing-y-2">
           <thead>
             <tr className="text-center text-gray-600">
-              <th className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">S.No</th>
+              <th className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">Rank</th>
               {columns.map((column, index) => (
                 <th key={index} className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">
                   {column.title}

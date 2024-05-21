@@ -90,7 +90,8 @@ function LiveMonitoring() {
     { title: "Section", key: "sectionName" },
     { title: "Start Time", key: "startTime" },
     { title: "Submit Time", key: "submitTime" },
-    { title: "Status", key: "status" }
+    { title: "Score", key: "score"},
+    { title: "Status", key: "status" },
   ];
 
   const handleRefresh = async() => {
