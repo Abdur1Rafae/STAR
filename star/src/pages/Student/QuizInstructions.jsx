@@ -29,7 +29,6 @@ const QuizInstructions = () => {
   const marks = QuizStore(store=>store.marks);
   const [QuizSubmitted, setQuizSubmitted] = useState(false)
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'UTC',
     hour12: false,
     year: 'numeric',
     month: 'long',

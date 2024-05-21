@@ -41,11 +41,6 @@ const AddQuestions = () => {
             console.log(err)
         }
     }
-
-    const handleSubmitQuestions = () => {
-        console.log(questions)
-        window.location.assign('/teacher/home')
-    }  
     
     useEffect(()=> {
         const getAllQuestions = async() => {
@@ -122,6 +117,10 @@ const AddQuestions = () => {
         }
         try {
             const res = await AddQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]})
+            const index = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+            if(index == -1) {
+                setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
+            }
             updatedQuestions[index]._id = res.insertedId
             setQuestions(updatedQuestions);
         } catch(err) {
@@ -202,11 +201,19 @@ const AddQuestions = () => {
         try {
             if(reuse) {
                 const res = await UpdateReuseQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]}) 
+                const index = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+                if(index == -1) {
+                    setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
+                }
                 updatedQuestions[index].reuse = false
                 console.log(res)
             }
             else {
-                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]}) 
+                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]})
+                const index = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+                if(index == -1) {
+                    setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
+                } 
                 console.log(res)
             }
             setQuestions(updatedQuestions);
@@ -231,12 +238,10 @@ const AddQuestions = () => {
             buttons.forEach(button => {
                 button.disabled = true;
             });
-            console.log(questions)
         }
         else {
             setOrder(false)
             const orderArray = questions.map((question)=>question._id)
-            console.log(orderArray)
             try {
                 const res = await UpdateOrder({questions: orderArray, assessmentId: assessmentName.assessmentId})
                 console.log(res)
@@ -345,7 +350,7 @@ const AddQuestions = () => {
                                     <h3 className='my-auto ml-2'>Select Questions to add</h3>
                                     <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
                                 </div>
-                                <div className='overflow-y-auto no-scrollbar'>
+                                <div className='overflow-y-auto'>
                                     <div className='h-full flex flex-col gap-4'>
                                         <SelectQuestions topics={topicList}/>
                                     </div>   

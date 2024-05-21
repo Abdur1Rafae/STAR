@@ -95,7 +95,7 @@ const CreateNewAssessment = () => {
          });
       
          setAssessmentId(data.assessmentId);
-         //window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
+         window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
       } catch (err) {
          console.log(err);
       }
@@ -470,7 +470,8 @@ const CreateNewAssessment = () => {
                      <h3 className='my-auto ml-2'>Select Sections</h3>
                      <button className='mr-2' onClick={()=>setSelectSectionsDialog(false)}><MdClose className='text-lg'/></button>
                   </div>
-                  <div className='overflow-y-auto no-scrollbar'>
+                  <div className='overflow-y-auto'>
+                     <p className='ml-4 mt-2 text-xs text-DarkBlue font-bold'>Select from single class only!</p>
                      <div className='h-full flex flex-col gap-4 p-4'>
                         {
                            classes.map((item, index) => (

@@ -57,15 +57,17 @@ const QuizScreen = () => {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (vioArray.length > 0) {
-        UploadFlaggings();
-      }else {
-        console.log("No data to push")
-      }
-    }, 90000);
-
-    return () => clearInterval(intervalId);
+    if(monitoring) {
+      const intervalId = setInterval(() => {
+        if (vioArray.length > 0) {
+          UploadFlaggings();
+        }else {
+          console.log("No data to push")
+        }
+      }, 90000);
+  
+      return () => clearInterval(intervalId);
+    }
   }, []);
 
   useEffect(() => {
@@ -172,31 +174,33 @@ const QuizScreen = () => {
   }
 
   useEffect(() => {
-    let switchStartTime = null;
-    const handleWindowFocus = () => {
-      document.title = 'Arete Assessment';
-      if (switchStartTime) {
-        const switchEndTime = Date.now();
-        const switchDuration = switchEndTime - switchStartTime;
-        if(switchDuration > 10000) {
-          setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timestamp: switchStartTime }]);
+    if(monitoring) {
+      let switchStartTime = null;
+      const handleWindowFocus = () => {
+        document.title = 'Arete Assessment';
+        if (switchStartTime) {
+          const switchEndTime = Date.now();
+          const switchDuration = switchEndTime - switchStartTime;
+          if(switchDuration > 10000) {
+            setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timestamp: switchStartTime }]);
+          }
         }
-      }
-      switchStartTime = null;
-    };
+        switchStartTime = null;
+      };
 
-    const handleWindowBlur = () => {
-      document.title = 'Warning!';
-      switchStartTime = new Date();
-    };
+      const handleWindowBlur = () => {
+        document.title = 'Warning!';
+        switchStartTime = new Date();
+      };
 
-    window.addEventListener('focus', handleWindowFocus);
-    window.addEventListener('blur', handleWindowBlur);
+      window.addEventListener('focus', handleWindowFocus);
+      window.addEventListener('blur', handleWindowBlur);
 
-    return () => {
-      window.removeEventListener('focus', handleWindowFocus);
-      window.removeEventListener('blur', handleWindowBlur);
-    };
+      return () => {
+        window.removeEventListener('focus', handleWindowFocus);
+        window.removeEventListener('blur', handleWindowBlur);
+      };
+    }
   }, []);
   
 
@@ -341,7 +345,9 @@ const QuizScreen = () => {
               )
           }
           </div>
-          <Webcam className='w-0 h-0' ref={webcamRef}/>
+          {
+            monitoring && <Webcam className='w-0 h-0' ref={webcamRef}/>
+          }
 
           <div className={`fixed sm:w-full h-12 border-black border-t-[1px] bottom-0 left-0 right-0 bg-white p-4 flex justify-between items-center`}>
             <div className="mb-0">

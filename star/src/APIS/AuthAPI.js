@@ -26,8 +26,13 @@ const UserSignup = async({obj}) => {
 }
 
 const ForgotPassword = async({email}) => {
-    const res = await AxiosBase.post('forgot-password', {email: email})
+    const res = await AxiosBase.post('session/forgot-password', {email: email})
     return res
 }
 
-export {UserLogin, UserLogout, UserSignup, ForgotPassword}
+const VerifyOtp = async({email, otp}) => {
+    const res = await AxiosBase.post('session/verify-OTP', {email: email, otp: otp})
+    return res
+}
+
+export {UserLogin, UserLogout, UserSignup, ForgotPassword, VerifyOtp}

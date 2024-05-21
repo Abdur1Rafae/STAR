@@ -196,7 +196,8 @@ const QuizStore = create((set) => ({
     set((state) => {
       const updatedQuestions = state.questions.map((question, index) => {
         if (index == number) {
-          return { ...question, flagged: !question.flagged };
+          console.log(question)
+          return { ...question, flagged: (question.flagged !==undefined ? !question.flagged : true) };
         }
         return question;
       });

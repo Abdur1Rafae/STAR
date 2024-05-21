@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import logo from '../../components/logo.png';
 import fgimage from './fg-image.png';
 import { ForgotPassword } from '../../APIS/AuthAPI';
+import { VerifyOtp } from '../../APIS/AuthAPI';
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
@@ -45,39 +46,75 @@ const ForgotPasswordScreen = () => {
     } 
   };
 
+  const [otp, setOtp] = useState(['', '', '', '']);
+  const inputs = useRef([]);
+
+  const handleChange = (index, value) => {
+    if (value.length > 1) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < inputs.current.length - 1) {
+      inputs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (index, event) => {
+    if (event.key === 'Backspace' && !otp[index] && index > 0) {
+      inputs.current[index - 1].focus();
+    }
+  };
+
+
+  const handleSubmitOTP = async() => {
+    try {
+      const joinOTP = otp.join('')
+      if(joinOTP.length === 4) {
+        const res = await VerifyOtp({email: email, otp: joinOTP})
+        console.log(res)
+      }
+    } catch(err) {
+      console.log(err)
+    }
+  }
+  
   const renderOTP = () => (
+
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-2xl font-bold py-4">Enter OTP</h2>
-      <div class="flex items-center justify-center gap-3">
-            <input
-                type="text"
-                class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border  hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
-                maxlength="1" />
-            <input
-                type="text"
-                class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border  hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
-                maxlength="1" />
-            <input
-                type="text"
-                class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border  hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
-                maxlength="1" />
-            <input
-                type="text"
-                class="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border  hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
-                maxlength="1" />
-        </div>
+      <div className="flex items-center justify-center gap-3">
+        {otp.map((value, index) => (
+          <input
+            key={index}
+            type="number"
+            value={value}
+            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
+            maxLength={1}
+            onChange={(e) => handleChange(index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
+            ref={(el) => (inputs.current[index] = el)}
+          />
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={handleSubmitOTP}
+        className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue' : 'bg-slate-500'} text-white text-sm py-4 self-center`}
+      >
+        Verify
+      </button>
+      <div className="flex items-center justify-center gap-2 self-center">
+        <span className="text-xs">Didn't get OTP</span>
         <button
-          type="button"
-          className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue' : 'bg-slate-500'} text-white text-sm py-4 self-center`}
+          className={`text-xs ${disableResend ? 'text-gray-500 cursor-not-allowed' : 'text-[#2D79F3]'}`}
+          onClick={handleResendClick}
+          disabled={disableResend}
         >
-          Verify
+          Resend {disableResend && `(${timer}s)`}
         </button>
-        <div className="flex items-center justify-center gap-2 self-center">
-          <span className="text-xs">Didn't get OTP</span>
-          <button className={`text-xs ${disableResend ? 'text-gray-500 cursor-not-allowed' : 'text-[#2D79F3]'}`} onClick={handleResendClick} disabled={disableResend}>
-            Resend {disableResend && `(${timer}s)`}
-          </button>
-        </div>
+      </div>
     </div>
   );
 

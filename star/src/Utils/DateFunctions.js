@@ -8,11 +8,12 @@ export function DDMMM_HHMM(inputDate) {
         return '-';
     }
     const utcDate = new Date(inputDate);
+    const localDate = new Date(utcDate.toLocaleString('en-US', { timeZone: 'Asia/Karachi', hour12: false }));
 
-    const day = utcDate.getDate();
-    const monthIndex = utcDate.getMonth();
-    const hours = utcDate.getHours();
-    const minutes = utcDate.getMinutes();
+    const day = localDate.getDate();
+    const monthIndex = localDate.getMonth();
+    const hours = localDate.getHours();
+    const minutes = localDate.getMinutes();
 
     const formattedDate = `${day} ${months[monthIndex]} - ${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
 
@@ -30,7 +31,6 @@ export function ddmmyy(input) {
 }
 
 const transformedDate = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'UTC',
     hour12: false,
     year: 'numeric',
     month: 'long',

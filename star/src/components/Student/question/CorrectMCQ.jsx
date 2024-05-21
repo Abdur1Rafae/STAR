@@ -78,7 +78,7 @@ const CorrectMCQ = ({ question }) => {
             >
               <div
                 className={`min-h-10 rounded-md flex items-center gap-4  ${
-                  correctAnswersMarked.includes(option) || correctAnswersMissed.includes(option) ? 'bg-emerald-300' : 'bg-rose-300'
+                  correctAnswersMarked.includes(option) || correctAnswersMissed.includes(option) ? 'bg-emerald-300' : ''
                 } border-[1px] border-black`}
               >
                 <div className="ml-4">

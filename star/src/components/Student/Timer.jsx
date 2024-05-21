@@ -14,7 +14,7 @@ const Timer = () => {
   const currentTime = Date.now();
 
   // Calculate the initial remaining time based on current time and closing time
-  const initialRemainingTime = closingTime > currentTime
+  const initialRemainingTime = closingTime < (currentTime + durationInSeconds)
     ? Math.max(0, (closingTime - currentTime) / 1000)
     : durationInSeconds;
 

@@ -103,7 +103,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
                     <p className='text-xs'>Topic :&nbsp;</p>
                     <input 
                         value={topicName} 
-                        onChange={(e) => setTopicName(e.target.value)} 
+                        onChange={(e) => {setTopicName(e.target.value.trim())}} 
                         list="Topics" 
                         type='text' 
                         className='text-xs bg-LightBlue border-black border-[1px] w-44 h-6 rounded-md p-2'
