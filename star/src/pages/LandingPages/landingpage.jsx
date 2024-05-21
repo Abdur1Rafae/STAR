@@ -106,7 +106,7 @@ return (
         <p className='font-medium text-white text-center text-xs md:text-2xl  flex flex-col items-center mt-4'>Personalized learning that empowers you to reach your full potential</p>
         <div className='relative h-96 bg-DarkBlue w-full flex flex-col items-center mt-4 '>
         <button onClick={()=>{window.location.assign('/signup')}} className='bg-black px-8 py-2 md:px-12 md:py-4 text-sm text-white rounded-[10px]'>Get Started</button>
-        <img loading="lazy" src={cover1} alt=""  className='h-[280px] md:h-full md:w-1/2  bg-white absolute top-24 rounded-tl-[100px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[100px]  pt-8 '/>
+        <img loading="lazy" src={cover1} alt=""  className='h-[280px] md:h-full md:w-1/3  bg-white absolute top-24 rounded-tl-[100px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[100px]  pt-8 '/>
         </div>
     </div>
 
