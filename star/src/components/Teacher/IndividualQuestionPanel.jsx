@@ -56,7 +56,7 @@ const IndividualQuestionPanel = ({responses}) => {
     console.log(currentResponse)
 
   return (
-    <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">
+    <div className="bg-LightBlue flex-grow w-full h-full flex flex-col justify-between mx-auto p-4 shadow-md rounded-md">
         {
             Object.keys(currentResponse).length === 0 ?
             <Loader/>

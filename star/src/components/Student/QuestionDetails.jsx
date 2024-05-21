@@ -33,7 +33,7 @@ const QuestionDetails = ({ score, topic, difficulty, skillTargeted, totalScore }
               </div>
 
               <div className='flex text-xs mt-2 font-body'>
-                  <h4 className='font-medium w-32 md:w-24'>Skill Targeted:</h4>
+                  <h4 className='font-medium w-32 md:w-24'>Skill:</h4>
                   <div className='w-full flex justify-center self-center'>{skillTargeted}</div>
               </div>
 

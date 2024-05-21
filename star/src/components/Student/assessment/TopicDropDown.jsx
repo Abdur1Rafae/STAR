@@ -38,7 +38,7 @@ const TopicDropDown = ({topic, score, correct, total}) => {
                 </div>
                 <div className='flex flex-col justify-center items-center'>
                     <h3 className='text-red-500 font-medium'>{total-correct}</h3>
-                    <p className='text-sm text-gray-700'>Missed</p>
+                    <p className='text-sm text-gray-700'>Incorrect</p>
                 </div>
             </div>
         </div> 

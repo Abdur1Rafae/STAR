@@ -59,14 +59,13 @@ const Reports = () => {
                         :
                         <>
                             <div className='w-full bg-LightBlue flex flex-col p-2 items-center justify-between shadow-md'>
-                                <div className='w-full flex justify-between items-center self-start'>
+                                <div className='w-full flex justify-between items-center flex-wrap gap-2 self-start'>
                                     <div className='flex items-center'>
                                         <button onClick={()=>{window.location.assign('/teacher/reports')}}><BiChevronLeft className='text-3xl'/></button>
                                         <h4 className='font-semibold'>{reportTitile.assessmentName}</h4>
                                     </div>
-                                    <div className="text-sm flex justify-between items-center h-8 border-b-2 border-black">
+                                    <div className="text-sm self-end flex justify-between items-center h-8 border-b-2 border-black">
                                         <div className="bg-LightBlue flex gap-2 items-center rounded-sm h-8">
-                                            <h3>Section: </h3>
                                             <select
                                                 value={selectedSection}
                                                 onChange={(e) => setSelectedSection(e.target.value)}

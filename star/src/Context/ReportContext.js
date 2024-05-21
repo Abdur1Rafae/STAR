@@ -20,6 +20,7 @@ export const ReportProvider = ({ children }) => {
     const [allSecIncorrectQuestion, setAllSecIncorrectQuestion] = useState({})
     const [incorrectQuestion, setInCorrectQuestion] = useState({})
     const [topPerformers, setTopPerformers] = useState([])
+    const [avgPerformers, setAvgPerformers] = useState([])
     const [absentees, setAbsentees] = useState([])
     const [requireAttention, setRequireAttention] = useState([])
     const [questionData, setQuestionData] = useState([])
@@ -183,12 +184,13 @@ export const ReportProvider = ({ children }) => {
         const topPerformingstudents = []
         const absentstudents = []
         const requireAttentionstudents = []
+        const avgStudents = []
         if(selectedSection == 'All') {
             participants.map((section) => {
                 section.students.map((student) => {
                     if(student.response) {
                         const percentage = Math.round(student.response.totalScore / totalMarks * 100)
-                        if(percentage > 60 || isNaN(percentage)) {
+                        if(percentage >= 80 || isNaN(percentage)) {
                             topPerformingstudents.push({
                                 name: student.name,
                                 section: section.sectionName,
@@ -197,7 +199,7 @@ export const ReportProvider = ({ children }) => {
                                 response: student.response
                             })
                         }
-                        else if(percentage <= 60) {
+                        else if(percentage <= 40) {
                             requireAttentionstudents.push({
                                 name: student.name,
                                 section: section.sectionName,
@@ -205,7 +207,16 @@ export const ReportProvider = ({ children }) => {
                                 erp: student.erp,
                                 response: student.response
                             })
-                        }   
+                        } 
+                        else {
+                            avgStudents.push({
+                                name: student.name,
+                                section: section.sectionName,
+                                score: percentage,
+                                erp: student.erp,
+                                response: student.response
+                            })
+                        }  
                     }
                     else {
                         absentstudents.push({
@@ -218,7 +229,7 @@ export const ReportProvider = ({ children }) => {
                     }
                 })
             })
-
+            setAvgPerformers(avgStudents)
             setTopPerformers(topPerformingstudents)
             setAbsentees(absentstudents)
             setRequireAttention(requireAttentionstudents)
@@ -229,7 +240,7 @@ export const ReportProvider = ({ children }) => {
                     section.students.map((student) => {
                         if(student.response) {
                             const percentage = Math.round(student.response.totalScore / totalMarks * 100)
-                            if(percentage > 60) {
+                            if(percentage >= 80 || isNaN(percentage)) {
                                 topPerformingstudents.push({
                                     name: student.name,
                                     section: section.sectionName,
@@ -238,7 +249,7 @@ export const ReportProvider = ({ children }) => {
                                     response: student.response
                                 })
                             }
-                            else if(percentage <= 60) {
+                            else if(percentage <= 40) {
                                 requireAttentionstudents.push({
                                     name: student.name,
                                     section: section.sectionName,
@@ -246,7 +257,16 @@ export const ReportProvider = ({ children }) => {
                                     erp: student.erp,
                                     response: student.response
                                 })
-                            }   
+                            } 
+                            else {
+                                avgStudents.push({
+                                    name: student.name,
+                                    section: section.sectionName,
+                                    score: percentage,
+                                    erp: student.erp,
+                                    response: student.response
+                                })
+                            }  
                         }
                         else {
                             absentstudents.push({
@@ -258,7 +278,7 @@ export const ReportProvider = ({ children }) => {
                             })
                         }
                     })
-    
+                    setAvgPerformers(avgStudents)
                     setTopPerformers(topPerformingstudents)
                     setAbsentees(absentstudents)
                     setRequireAttention(requireAttentionstudents)
@@ -417,7 +437,7 @@ export const ReportProvider = ({ children }) => {
     const questionCount = assessmentQuestion.length
 
     return (
-        <ReportContent.Provider value={{setAllSecIncorrectQuestion,setAllSecTopicDistribution, setApiCallCompleted, setInCorrectQuestion, allQuestionPercent, questionStats, questionData, setQuestionData, questionIndex, setQuestionIndex, topPerformers, absentees, requireAttention, incorrectQuestion, topicDistribution,setTopicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
+        <ReportContent.Provider value={{setAllSecIncorrectQuestion,setAllSecTopicDistribution, setApiCallCompleted, setInCorrectQuestion, allQuestionPercent, questionStats, questionData, setQuestionData, questionIndex, setQuestionIndex, topPerformers, absentees, avgPerformers, requireAttention, incorrectQuestion, topicDistribution,setTopicDistribution, scoreDistribution, avgScore, highestScore, avgResponseTime, totalParticipants, sections, selectedSection, setSelectedSection, questionCount, assessmentQuestion, setAssessmentQuestions, participants, setParticipants, totalMarks}}>
             {children}
         </ReportContent.Provider>
     )

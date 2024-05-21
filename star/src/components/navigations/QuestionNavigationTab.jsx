@@ -12,9 +12,6 @@ const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
 
   const findPercent = (id) =>{
     const foundQuestion = allQuestionPercent.find(item => item.question === id);
-    if(foundQuestion.question == '6640ce2dd40bb4605e2b6003'){
-      console.log(foundQuestion.totalCorrect, foundQuestion.totalResponses,Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)
-    }
     return Math.round((foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)
   }
   return (

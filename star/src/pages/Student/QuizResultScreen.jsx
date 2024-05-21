@@ -23,6 +23,13 @@ const QuizResultScreen = () => {
         console.log(res)
         setTimeout(() => {
           setSubmission(res.submission)
+          let count = 0;
+          res.submission.forEach((response) => {
+            if(response.isCorrect) {
+              count++;
+            }
+          })
+          setCorrectAnswers(count)
           setLoading(false)
         }, 500);
         setError(null)
@@ -114,7 +121,7 @@ const QuizResultScreen = () => {
     </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full min-h-80">
         <SubmitMCQPanel next={handleNext}  previous={handlePrevious} fwd={moveForward} bkd={moveBackward}  question={submission[currentQuestion]}
           currentQuestion={currentQuestion}
           totalQuestions={submission.length}/>

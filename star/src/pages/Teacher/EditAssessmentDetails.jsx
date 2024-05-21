@@ -504,17 +504,17 @@ function EditAssessmentDetails() {
                         <h3 className='my-auto ml-2'>Select Sections</h3>
                         <button className='mr-2' onClick={()=>setSelectSectionsDialog(false)}><MdClose className='text-lg'/></button>
                     </div>
-                    <div className='overflow-y-auto'>
+                    <div className='h-full overflow-hidden'>
                         <p className='ml-4 mt-2 text-xs text-DarkBlue font-bold'>Select from single class only!</p>
-                        <div className='h-full flex flex-col gap-4 p-4'>
-                        {
+                        <div className='h-full flex flex-col gap-4 p-4 pb-20 overflow-auto'>
+                            {
                             classes.map((item, index) => (
                                 <ClassTabDisplay key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{}} />
                             ))
-                        }
+                            }
                         </div>   
                         <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={()=>{saveSections(); setSelectSectionsDialog(false)}}>Select</button>
+                            <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={()=>{saveSections(); setSelectSectionsDialog(false)}}>Select</button>
                         </div>            
                     </div>
                 </div>

@@ -470,9 +470,9 @@ const CreateNewAssessment = () => {
                      <h3 className='my-auto ml-2'>Select Sections</h3>
                      <button className='mr-2' onClick={()=>setSelectSectionsDialog(false)}><MdClose className='text-lg'/></button>
                   </div>
-                  <div className='overflow-y-auto'>
+                  <div className='overflow-hidden flex-grow flex flex-col'>
                      <p className='ml-4 mt-2 text-xs text-DarkBlue font-bold'>Select from single class only!</p>
-                     <div className='h-full flex flex-col gap-4 p-4'>
+                     <div className='h-full p-4 pb-20 flex flex-col overflow-y-auto'>
                         {
                            classes.map((item, index) => (
                               <ClassTabDisplay key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{}} />

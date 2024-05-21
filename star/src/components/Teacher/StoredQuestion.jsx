@@ -21,7 +21,6 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
-                    <input type="checkbox"/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={points}/>
