@@ -72,10 +72,15 @@ module.exports.getMonitoringDetails = async (req,res) =>
                 },
                 flagged: 
                 {
-                  $cond: 
-                  {
-                    if: { $gt: [{ $size: "$response.flaggings"}, 0] },
-                    then: true,
+                  $cond: {
+                    if: "$responseExists",
+                    then: {
+                      $cond: {
+                        if: { $gt: [{ $size: {$arrayElemAt: ["$response.flaggings", 0]} }, 0] },
+                        then: true,
+                        else: false
+                      }
+                    },
                     else: false
                   }
                 }
