@@ -47,7 +47,7 @@ const TrueFalsePanel = ({ question, Flagged}) => {
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
-    flagQuestion()
+    flagQuestion(questionNumber)
     filterQuestions()
   };
 

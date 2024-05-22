@@ -14,6 +14,7 @@ import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { UpdateAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
+import { UploadImageFile } from '../../APIS/ImageAPI';
 
 
 function EditAssessmentDetails() {
@@ -42,6 +43,17 @@ function EditAssessmentDetails() {
     const [adaptiveTesting, setAdaptiveTesting] = useState(assessment.configurations ? assessment.configurations.adaptiveTesting : false);
     const [candidateMonitoring, setCandidateMonitoring] = useState(assessment.configurations ? assessment.configurations.monitoring : false);
     const [error, setError] = useState('')
+    const [imageFile, setImageFile] = useState(null)
+
+    const uploadingImage = async () => {
+        try {
+            const data = await UploadImageFile({ image: imageFile });
+            console.log(data);
+            return data.data.url;
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(()=> {
         if(assessment.configurations.duration > 120) {
@@ -87,7 +99,8 @@ function EditAssessmentDetails() {
 
         const res = async() => {
             try {
-                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
+                const assessmentImage = imageFile !== null ? await uploadingImage() : null;
+                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, image:assessmentImage, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
                 window.location.assign(`/teacher/questions-set/${assessmentId}`)
             } catch(err) {
                 console.log(err)
@@ -176,6 +189,7 @@ function EditAssessmentDetails() {
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
         }
+        setImageFile(file)
     };
 
 
@@ -186,6 +200,7 @@ function EditAssessmentDetails() {
     const handleDeleteImage = () => {
         setImage(null); 
         fileInputRef.current.value = null; 
+        setImageFile(null)
     };
 
     const handleHourChange = (event) => {

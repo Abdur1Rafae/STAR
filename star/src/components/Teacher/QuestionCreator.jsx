@@ -73,7 +73,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
                 // console.log(image)
             }
             const assessmentImage = newImage !== null && newImage.length !== 0 ? await uploadingImage() : null;
-            savingHandler(questionID, newOptions, newQuestion, newExplanation, assessmentImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName, type, newCorrectOptions, isCorrect, reuse)
+            savingHandler(questionID, newOptions, newQuestion, newExplanation, assessmentImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName.trim(), type, newCorrectOptions, isCorrect, reuse)
             closeHandler()
         } catch(err) {
             console.log(err)
@@ -103,7 +103,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
                     <p className='text-xs'>Topic :&nbsp;</p>
                     <input 
                         value={topicName} 
-                        onChange={(e) => {setTopicName(e.target.value.trim())}} 
+                        onChange={(e) => {setTopicName(e.target.value)}} 
                         list="Topics" 
                         type='text' 
                         className='text-xs bg-LightBlue border-black border-[1px] w-44 h-6 rounded-md p-2'

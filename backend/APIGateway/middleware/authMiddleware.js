@@ -5,12 +5,12 @@ const SESSION_HASH_KEY = 'SESSION_ID'
 //paths that do not require authentication
 const unauthenticatedPaths = 
 [
-'/userguardian/signup', 
-'/userguardian/reset-password',
-'/session/login',
-'/session/refresh',
-'/session/forgot-password',
-'/session/verify-otp', 
+'/backend/userguardian/signup', 
+'/backend/userguardian/reset-password',
+'/backend/session/login',
+'/backend/session/refresh',
+'/backend/session/forgot-password',
+'/backend/session/verify-otp', 
 ]
 
 const verifyToken = async (token) => 
@@ -32,7 +32,7 @@ const checkSession = async (id, sessionId) =>
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
-    if (req.path.startsWith('/teacherhub/uploads')) {return next()}
+    if (req.path.startsWith('/backend/teacherhub/uploads')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']

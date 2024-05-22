@@ -194,6 +194,7 @@ const QuizStore = create((set) => ({
    
   flagQuestion: (number) => {
     set((state) => {
+      console.log(number)
       const updatedQuestions = state.questions.map((question, index) => {
         if (index == number) {
           console.log(question)

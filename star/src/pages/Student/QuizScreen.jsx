@@ -42,7 +42,7 @@ const QuizScreen = () => {
     if (webcamRef.current && webcamRef.current.video) {
       setIsWebcamReady(true);
     }
-  }, [webcamRef]);
+  }, [webcamRef.current]);
 
   const UploadFlaggings = async() => {
     const responseId = localStorage.getItem('responseId')
@@ -58,23 +58,29 @@ const QuizScreen = () => {
 
   useEffect(() => {
     if(monitoring) {
+      console.log("in push")
       const intervalId = setInterval(() => {
         if (vioArray.length > 0) {
           UploadFlaggings();
         }else {
           console.log("No data to push")
         }
-      }, 90000);
+      }, 45000);
   
       return () => clearInterval(intervalId);
     }
-  }, []);
+    else{
+      console.log("No monitoring enabled")
+    }
+  }, [vioArray, monitoring]);
 
   useEffect(() => {
     if (isWebcamReady && monitoring) {
+      console.log("detection started")
       startCameraAndDetection();
     }
-  }, [isWebcamReady]);
+    console.log(isWebcamReady, monitoring)
+  }, [isWebcamReady, monitoring]);
 
   useEffect(()=> {
     setPrevVio(null)

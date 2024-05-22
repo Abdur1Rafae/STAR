@@ -61,6 +61,7 @@ const MCQPanel = ({ question }) => {
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
     flagQuestion(questionNumber)
+    console.log(questionNumber)
     filterQuestions()
   };
 

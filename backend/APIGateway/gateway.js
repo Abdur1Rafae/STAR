@@ -23,8 +23,8 @@ app.use(helmet())
 console.log(new Date())
 
 app.use(auth)
-app.use('/session', sessionRoutes)
-app.use(serviceRoutes)
+app.use('/backend/session', sessionRoutes)
+app.use('/backend',serviceRoutes)
 
 
 app.listen(PORT, () => 

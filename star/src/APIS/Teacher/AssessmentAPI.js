@@ -194,6 +194,7 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
         title: name,
         description: description,
         participants : sections,
+        coverImage:image,
         configurations : 
         {
             openDate: new Date(openDate),

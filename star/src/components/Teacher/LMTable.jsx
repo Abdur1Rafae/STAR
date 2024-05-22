@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { DDMMM_HHMM } from "../../Utils/DateFunctions";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+import { useLocation } from 'react-router-dom';
 
 const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All', onClick }) => {
+  const location = useLocation();
+  const pathStartsWith = location.pathname.startsWith('live-monitoring');
   const [filteredData, setFilteredData] = useState(data);
   const modules = {
     toolbar: false,
@@ -43,7 +46,9 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
         <table className="w-full  border-separate border-spacing-y-2">
           <thead>
             <tr className="text-center text-gray-600">
-              <th className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">Rank</th>
+              {
+                pathStartsWith && <th className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">Rank</th>
+              }
               {columns.map((column, index) => (
                 <th key={index} className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">
                   {column.title}
@@ -57,9 +62,11 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
               <tr
                 key={rowIndex}
                 onClick={onClick ? () => handleClick(row) : () => {}}
-                className={`text-center shadow-md bg-LightBlue ${onClick ? 'hover:cursor-pointer' : ''} ${getRowClass(rowIndex)}`}
+                className={`text-center shadow-md bg-LightBlue ${onClick ? 'hover:cursor-pointer' : ''} ${pathStartsWith ? getRowClass(rowIndex) : ''}`}
               >
-                <td className="px-1 py-2  border-black border-y-[1px]">{rowIndex + 1}</td>
+                {
+                  pathStartsWith && <td className="px-1 py-2  border-black border-y-[1px]">{rowIndex + 1}</td>
+                }
                 {columns.map((column, colIndex) => (
                   <td key={colIndex} className="px-1 py-2  border-black border-y-[1px]">
                     {column.key === "startTime" || column.key === "submitTime"

@@ -40,7 +40,7 @@ const TextAnswerPanel = ({ question, Flagged }) => {
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
-    flagQuestion()
+    flagQuestion(questionNumber)
     filter()
   };
   const modules = {
