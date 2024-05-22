@@ -14,8 +14,8 @@ app.use(morgan('combined'))
 app.use(helmet())
 
 app.use(auth)
-app.use('/session', sessionRoutes)
-app.use(serviceRoutes)
+app.use('/backend/session', sessionRoutes)
+app.use('/backend', serviceRoutes)
 
 
 app.listen(PORT, () => 
