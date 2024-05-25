@@ -39,6 +39,7 @@ const TFSetup = ({image, setImage,setImageFile, options, setOptions, isTrue, set
     const handleDeleteImage = () => {
         setImage(null); 
         fileInputRef.current.value = null; 
+        setUserUpload(true)
     };
 
   return (

@@ -14,7 +14,7 @@ const TypeFilter = ({selectedType, setSelectType}) => {
                         All
                     </option>
                 {type.map((type, index) => (
-                    <option key={index} value={type == "Multiple Choice Question" ? "MCQ" : type == "True/False" ? "TF" : "SA"} className='flex'>
+                    <option key={index} value={type == "Multiple Choice Question" ? "MCQ" : type == "True/False" ? "TF" : "Short Answer"} className='flex'>
                         {type}
                     </option>
                 ))}

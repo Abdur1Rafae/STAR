@@ -5,8 +5,11 @@ const morgan = require('morgan')
 const serviceRoutes = require('./routes/serviceRoutes')
 const sessionRoutes = require('./routes/sessionRoutes')
 const auth = require('./middleware/authMiddleware')
+const cors = require('cors')
+
 
 const app = express()
+app.use(cors("*"))
 const PORT = 3000
 
 app.use(express.json())

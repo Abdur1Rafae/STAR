@@ -68,3 +68,21 @@ export function YYYYMMDD(dateString) {
 
     return extractedDate;
 }
+
+export function convertToLocalISOString(isoString) {
+    const date = new Date(isoString);
+
+    const pad = (num) => num.toString().padStart(2, '0');
+    const padMilliseconds = (num) => num.toString().padStart(3, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+    const milliseconds = padMilliseconds(date.getMilliseconds());
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+  

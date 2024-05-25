@@ -57,12 +57,13 @@ function LiveMonitoring() {
       if (matchesSection) {
         totalCount++;
         if (stat.status === "Submitted") {
-            submitStudent++;
-        } else if (stat.status === "Active") {
-            activeStudent++;
-            if (stat.flagged) {
-                flaggedStudent++;
-            }
+          submitStudent++;
+        } 
+        if (stat.status === "Active") {
+          activeStudent++;
+        }
+        if (stat.flagged) {
+          flaggedStudent++;
         }
       }
     });

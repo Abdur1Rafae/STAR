@@ -23,9 +23,7 @@ const QuizScreen = () => {
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
-
-  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
+  const { questions, currentQuestionIndex, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback, monitoring} = quizConfig
 
@@ -256,14 +254,8 @@ const QuizScreen = () => {
   const currentQuestion = getQuestion()
 
   const handleNextQuestion = () => {
-    if(currentQuestionIndex == questions.length - 1) {
-      nextQuestion()
-      SetReachedLastQuestion(true)
-    }
-    else {
-      setAnswerSubmit(false)
-      nextQuestion()
-    }
+    setAnswerSubmit(false)
+    nextQuestion()
   };
 
   const handlePrevious = () => {
@@ -364,7 +356,14 @@ const QuizScreen = () => {
             <div className="flex items-center space-y-0 space-x-4">
               {
                 reachedLastQuestion ? 
-                <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                  <>
+                    {
+                      navigation && 
+                      <SubmitButton label="Previous" onClick={handlePrevious} active={true}/>
+                    }
+                    <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                  </>
+                  
                 :
                 (
                   !navigation ? 

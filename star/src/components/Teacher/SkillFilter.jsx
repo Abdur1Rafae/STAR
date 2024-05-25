@@ -11,7 +11,7 @@ const SkillFilter = ({selectedSkill, setSelectSkill, assigning}) => {
                 className='outline-none bg-LightBlue rounded-md h-5 flex'
             >
                 {
-                    assigning ? '' : <option key={"All"} value={null} className='flex'>
+                    assigning ? <></> : <option key={"All"} value={'All'} className='flex'>
                         All
                     </option>
                 }

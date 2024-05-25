@@ -17,6 +17,9 @@ import { useParams } from 'react-router';
 import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
 import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
 import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
+import SubmitButton from '../../components/button/SubmitButton';
 
 
 const AddQuestions = () => {
@@ -26,6 +29,9 @@ const AddQuestions = () => {
     const [topicList, setTopicList] = useState([])
     const setOrder = ToggleStore((store) => store.setOrder)
     const order = ToggleStore((store) => store.Ordering)
+    
+    const [confirmDelete, setConfirmDelete] = useState(false)
+    const [indexToDelete, setIndexToDelete] = useState(0)
 
 
     const { questions, setQuestions, selectedQuestions, saveQuestions, swapQuestion, topicMap, skillMap } = useContext(QuestionContext);
@@ -41,6 +47,10 @@ const AddQuestions = () => {
             console.log(err)
         }
     }
+
+    const modules = {
+        toolbar: false
+    }; 
     
     useEffect(()=> {
         const getAllQuestions = async() => {
@@ -345,7 +355,7 @@ const AddQuestions = () => {
                         {
                         reuseDialog &&
                         <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
-                            <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
+                            <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-11/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
                                 <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between z-50'>
                                     <h3 className='my-auto ml-2'>Select Questions to add</h3>
                                     <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
@@ -379,7 +389,7 @@ const AddQuestions = () => {
                                 return (
                                     <div key={index} onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-1 md:p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
-                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.image} isTrue={question.isTrue} reuse={question.reuse}/>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => {setIndexToDelete(index); setConfirmDelete(true)}} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.image} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>
                                 )
                             })
@@ -418,6 +428,32 @@ const AddQuestions = () => {
                             <DoughnutGraph inputData={topicMap}/>
                         </div>
                     </div>
+                    {
+                        confirmDelete &&
+                        <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black">
+                            <div className='flex flex-col w-full mx-2 md:mx-0 md:w-2/3 bg-LightBlue overflow-y-auto'>
+                                <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
+                                    <p>Delete Question</p>
+                                    <button onClick={()=>setConfirmDelete(false)}><MdClose/></button>
+                                </div>
+                                <div className='p-2'>
+                                    <div className='mb-4 text-md'>
+                                        Are you sure you wish to delete the following Question:
+                                    </div>
+                                    <div>
+                                        <ReactQuill readOnly={true} modules={modules} value={questions[indexToDelete].question} className='w-full text-xs font-body !border-none -p-2'/>
+                                    </div>
+                                    <div className='mt-2 text-xs font-bold'>
+                                        <p>This action cannot be undone!</p>
+                                    </div>
+                                    <div className='w-full flex justify-center mt-4'>
+                                        <SubmitButton label={'Delete'} active={true} onClick={()=>{deleteQuestion(indexToDelete); setConfirmDelete(false)}}/>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>    
         </>

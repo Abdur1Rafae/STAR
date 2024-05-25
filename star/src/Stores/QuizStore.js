@@ -24,6 +24,7 @@ const QuizStore = create((set) => ({
   filteredQuestions: [],
   quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
   currentQuestionStartTime: Date.now(),
+  reachedLastQuestion: false,
 
   responses: [],
 
@@ -149,8 +150,12 @@ const QuizStore = create((set) => ({
       }
     
       const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
+      let reachedLast = false;
+      if(nextIndex == state.questions.length - 1) {
+        reachedLast = true
+      }
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: nextIndex, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: nextIndex, reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });
@@ -186,7 +191,7 @@ const QuizStore = create((set) => ({
     
       const prevIndex = (state.currentQuestionIndex - 1) % state.questions.length;
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: prevIndex, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: prevIndex, reachedLastQuestion: false, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });
@@ -250,7 +255,6 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
-      console.log(nextState.responses)
       const res = async() => {
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})
@@ -284,8 +288,12 @@ const QuizStore = create((set) => ({
         ];
       }
 
+      let reachedLast = false;
+      if(number == state.questions.length - 1) {
+        reachedLast = true
+      }
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: number, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: number,reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 
 const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All', onClick }) => {
   const location = useLocation();
-  const pathStartsWith = location.pathname.startsWith('live-monitoring');
+  const pathStartsWith = location.pathname.startsWith('student/live-monitoring');
   const [filteredData, setFilteredData] = useState(data);
   const modules = {
     toolbar: false,
@@ -50,7 +50,7 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
                 pathStartsWith && <th className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">Rank</th>
               }
               {columns.map((column, index) => (
-                <th key={index} className="px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">
+                <th key={index} className="text-sm px-1 py-3 tracking-wide border-b-[1px] border-[#937D7D]">
                   {column.title}
                 </th>
               ))}
@@ -68,7 +68,7 @@ const LMTable = ({ data, columns, selectedSection = 'All', selectedStatus = 'All
                   pathStartsWith && <td className="px-1 py-2  border-black border-y-[1px]">{rowIndex + 1}</td>
                 }
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex} className="px-1 py-2  border-black border-y-[1px]">
+                  <td key={colIndex} className="px-1 py-2  border-black border-y-[1px] text-xs">
                     {column.key === "startTime" || column.key === "submitTime"
                       ? row[column.key] !== null
                         ? DDMMM_HHMM(row[column.key])

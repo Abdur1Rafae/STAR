@@ -16,7 +16,7 @@ const DifficultyFilter = ({selectedLevel, setSelectLevel, assigning}) => {
                         All
                     </option>
                         :
-                        ''
+                        <></>
                 }                
 
                 {difficulty.map((level, index) => (

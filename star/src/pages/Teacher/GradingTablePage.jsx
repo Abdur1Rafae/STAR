@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import MenuBar from '../../components/MenuBar'
+import { MdClose } from 'react-icons/md'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { BiChevronLeft } from 'react-icons/bi'
@@ -9,6 +9,7 @@ import Loader from '../../components/Loader'
 import { GrOverview } from "react-icons/gr";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import ViewBox from '../../components/Teacher/ViewBox'
+import SubmitButton from '../../components/button/SubmitButton'
 
 const GradingTablePage = () => {
   const [loading, setLoading] = useState(true)
@@ -18,6 +19,8 @@ const GradingTablePage = () => {
   const [tab, setTab] = useState('Questions')
   const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
   const [shouldPublish, setShouldPublish] = useState(false)
+  const [cantPublish, setCantPublish] = useState(false)
+  const [confirmPublish, setConfirmPublish] = useState(false)
 
   useEffect(()=>{
     const GetData = async() => {
@@ -105,7 +108,7 @@ const GradingTablePage = () => {
       }
     }
     else {
-      console.log("cant publish")
+      setCantPublish(true)
     }
   }
   
@@ -114,7 +117,7 @@ const GradingTablePage = () => {
     <>
          <SideBar active={"Grading"}/>
          <div className='w-full h-full'>
-          <SubheaderBut name={"Grading"} button={"Publish"} onClick={handlePublish}/>
+          <SubheaderBut name={"Grading"} button={"Publish"} onClick={()=>setConfirmPublish(true)}/>
           <div className={`p-2 md:p-4 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
             {
               loading ?
@@ -149,6 +152,39 @@ const GradingTablePage = () => {
               </>
             }
           </div>
+          {
+            cantPublish &&
+            <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black">
+                <div className='flex flex-col w-full mx-2 md:mx-0 md:w-1/3 bg-LightBlue overflow-y-auto'>
+                    <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
+                        <p>Publishing Error!</p>
+                        <button onClick={()=>{setCantPublish(false); setConfirmPublish(false)}}><MdClose/></button>
+                    </div>
+                    <div className='p-2'>
+                        <p>You still have unmarked responses left for this assessment. Kindly grade them before publishing.</p>
+                    </div>
+                </div>
+            </div>
+          }
+          {
+            confirmPublish &&
+            <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black font-body">
+                <div className='flex flex-col w-full mx-2 md:mx-0 md:w-1/2 bg-LightBlue overflow-y-auto'>
+                    <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
+                        <p>Publishing Grades</p>
+                        <button onClick={()=>setConfirmPublish(false)}><MdClose/></button>
+                    </div>
+                    <div className='p-2'>
+                        <p className='text-md'>Are you sure you wish to publish grades for current assessment?</p>
+                        <p className='text-xs text-gray-400 mt-4'>Any penalty applied will be calculated once published.</p>
+                        <p className='text-sm font-bold mt-2'>This action cannot be undone!</p>
+                        <div className='flex justify-center mt-4'>
+                          <SubmitButton label={'Publish'} active={true} onClick={handlePublish}/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          }
         </div>
       </>
 );

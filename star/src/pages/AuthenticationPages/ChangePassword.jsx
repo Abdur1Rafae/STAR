@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import logo from '../../components/logo.png';
 import cpimage from './cp-image.png';
-import { UserLogin } from '../../APIS/AuthAPI';
+import { UserLogin, resetPassword } from '../../APIS/AuthAPI';
 
 const Login = () => {
+  const email = sessionStorage.getItem('userEmail')
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [check, setCheck] = useState(true);
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
     setCheck(false);
     
     if (password === '') {
@@ -22,6 +23,15 @@ const Login = () => {
       setCheck(true);
       setError('Passwords do not match');
       return;
+    }
+    setCheck(true)
+    setError('')
+    try {
+      const res = await resetPassword({email: email, password: password})
+      console.log(res)
+      window.location.assign('/login')
+    } catch(err) {
+      console.log(err)
     }
     
   };

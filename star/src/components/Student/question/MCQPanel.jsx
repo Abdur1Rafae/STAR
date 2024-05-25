@@ -6,6 +6,7 @@ import { GiBullseye } from "react-icons/gi";
 import QuizStore from '../../../Stores/QuizStore';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import { baseUrl } from '../../../APIS/BaseUrl';
 
 const MCQPanel = ({ question }) => {
   const [isFlagged, setIsFlagged] = useState(question.flagged);
@@ -87,7 +88,6 @@ const MCQPanel = ({ question }) => {
       </div>
       <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
-        {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
         <div className='self-start  w-full'>
           <div className=' w-full'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
@@ -97,26 +97,29 @@ const MCQPanel = ({ question }) => {
 
       <div className="border-t border-black border-2 mt-2"></div>
 
-      <div className="w-full md:w-1/2">
-        {question?.options &&
-          question?.options.map((option, index) => (
-            <div
-              key={index}
-              className={`mt-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
-              onClick={() => handleOptionClick(option, index)}
-            >
+      <div className='w-full md:w-1/2 flex items-start'>
+        <div className="w-full">
+          {question?.options &&
+            question?.options.map((option, index) => (
               <div
-                className={`min-h-10 rounded-md flex items-center gap-4  ${
-                  selectedOption.includes(option) ? 'bg-DarkBlue text-white' : ''
-                } border-[1px] border-black`}
+                key={index}
+                className={`mt-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
+                onClick={() => handleOptionClick(option, index)}
               >
-                <div className="ml-4">
-                {selectedOption.includes(option) ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
+                <div
+                  className={`min-h-10 rounded-md flex items-center gap-4  ${
+                    selectedOption.includes(option) ? 'bg-DarkBlue text-white' : ''
+                  } border-[1px] border-black`}
+                >
+                  <div className="ml-4">
+                  {selectedOption.includes(option) ?<GrRadialSelected /> : String.fromCharCode(65 + index)}   </div>
 
-                <div className=''>{option}</div>
+                  <div className=''>{option}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+        </div>
+        {question.image == null || question.image == undefined ? <></> : <button className='h-32 w-40'><QuizImage imageUrl={`${baseUrl}teacherhub/`+question?.image} /></button>}
       </div>
     </div>
   );

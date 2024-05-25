@@ -7,7 +7,7 @@ import { IoIosPeople } from "react-icons/io";
 import MonitorButton from '../button/MonitorButton';
 import GradeButton from '../button/GradeButton';
 import EditButton from '../button/EditButton';
-import Asssessment from '../Assessment.png'
+import Assessment from '../Assessment.png'
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 import { MdDelete } from 'react-icons/md';
 import { DeleteAssessment } from '../../APIS/Teacher/AssessmentAPI';
@@ -53,11 +53,15 @@ const AssessmentCard = ({ assessment, onDelete }) => {
             statusColor = 'border-DeleteRed';
             statusTextColor = 'text-DeleteRed';
             break;
-        case 'Not Started':
+        case 'Draft':
             buttonComponent = <EditButton label="Edit" onClick={handleEditClick}/>;
             statusColor = 'border-DarkBlue';
             statusTextColor = 'text-DarkBlue';
-
+            break;
+        case 'Not Started' :
+            buttonComponent = <EditButton label="Edit" onClick={handleEditClick}/>;
+            statusColor = 'border-green-500';
+            statusTextColor = 'text-green-500';
             break;
         default:
             buttonComponent = null;
@@ -72,7 +76,10 @@ const AssessmentCard = ({ assessment, onDelete }) => {
 
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>
-            <img className="w-full h-32 rounded-lg" crossOrigin="anonymous" src={ assessment.coverImage ? `${baseUrl}teacherhub/`+assessment.coverImage: Asssessment} alt="" />
+            <img className="w-full h-32 rounded-lg" crossOrigin="anonymous" src={ assessment.coverImage ? `${baseUrl}teacherhub/`+assessment.coverImage: Assessment} onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = Assessment;
+  }} alt="" />
             <div className='flex mt-2 items-center'>
                 <h3 className={`text-md font-medium text-DarkBlue ml-2`}>{assessment.title}</h3>
                 <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.category}</div>

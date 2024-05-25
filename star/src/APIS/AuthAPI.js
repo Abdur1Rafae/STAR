@@ -35,4 +35,14 @@ const VerifyOtp = async({email, otp}) => {
     return res
 }
 
-export {UserLogin, UserLogout, UserSignup, ForgotPassword, VerifyOtp}
+const resetPassword = async({email, password}) => {
+    const res = await AxiosBase.put('userguardian/reset-password', {email: email, password: password})
+    return res
+}
+
+const UpdateProfile = async({newPass, currPass, name}) => {
+    const res = await AxiosBase.put('userguardian/update-profile', {name: name, newPassword: newPass, currentPassword: currPass})
+    return res
+}
+
+export {UserLogin, UserLogout, UserSignup, ForgotPassword, VerifyOtp, resetPassword, UpdateProfile}
