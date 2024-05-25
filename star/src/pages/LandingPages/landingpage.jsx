@@ -16,7 +16,7 @@ const LandingPage = () => {
     setIsDropDownOpen(!isDropDownOpen);
   };
 return (
-<div className='w-full scroll-smooth '>
+<div className='w-full scroll-smooth font-Poppins '>
     <div className='flex items-center justify-between bg-DarkBlue'>
     <div className="menuleft logo flex justify-start">
       <img loading="lazy" src={logo} className='w-44 h-14'></img>
@@ -110,11 +110,11 @@ return (
         </div>
     </div>
 
-    <div className='md:sticky max-md:mt-8 top-0  bg-[#F4F9FD] h-96 md:h-screen md:grid grid-cols-2 content-center  items-center'>
-        <div className='h-full w-full  flex flex-col items-center max-md:hidden pt-8 '>
+    <div className='md:sticky top-0  bg-[#F4F9FD] h-96 md:h-screen md:grid grid-cols-2 content-center  items-center'>
+        <div className='h-full w-full  flex flex-col items-center max-md:hidden md:pt-8 '>
         <img loading="lazy" src={cover2} alt="" className=''/>
         </div>
-        <div className='h-full w-full flex flex-col items-center justify-center  '>
+        <div className='h-full w-full flex flex-col items-center justify-center p-8 max-md:bg-gradient-to-tl from-sky-300 to-sky-700 max-md:text-white '>
             <h2 className='font-bold text-2xl md:text-5xl max-md:text-center'>Your Journey Starts Here</h2>
             <p className='text-center font-normal  text-sm md:text-lg mt-12'>Arete (ἀρετή) is an ancient Greek concept that goes beyond just grades; it's about unlocking your full potential across all aspects of learning. It's about discovering your unique strengths, understanding areas for growth, and striving for excellence.</p>
         </div>
@@ -122,8 +122,8 @@ return (
 
     <div className='md:sticky top-0 h-96 md:h-screen bg-black w-full'></div>
 
-    <div className='max-md:pt-8 md:sticky top-0  bg-[#F4F9FD]  md:h-[calc(100vh+120px)]  md:grid grid-cols-2 content-center px-12  items-center gap-2 overflow-x-hidden overflow-y-clip'>
-        <div className='h-full w-full'>
+    <div className='max-md:bg-gradient-to-tl from-sky-300 to-sky-700 max-md:text-white  max-md:pt-8 md:sticky top-0  bg-[#F4F9FD] h-96  md:h-[calc(100vh+120px)]  md:grid grid-cols-2 content-center px-12  items-center gap-2 overflow-x-hidden overflow-y-clip'>
+        <div className='md:h-full w-full'>
             <h2 className='font-bold  text-2xl md:text-5xl max-md:text-center '>Uncover Hidden Potential</h2>
             <p className='font-normal text-sm md:text-lg pt-8 md:mt-12 md:pr-8 max-md:text-center'>Arete's in-depth assessments go beyond traditional grading. We provide clear and actionable insights that reveal each student's unique learning profile. We help you identify areas where students excel and pinpoint areas that require additional support.</p>
         </div>
@@ -133,12 +133,12 @@ return (
         </div> 
        
     </div>
-    <div className='md:sticky top-0  bg-[#F4F9FD] md:h-screen md:grid grid-cols-2 content-center   items-center gap-2'>
+    <div className='md:sticky top-0 max-md:bg-gradient-to-bl from-sky-300 to-sky-700 max-md:text-white max-md:pb-8  bg-[#F4F9FD] md:h-screen md:grid grid-cols-2 content-center   items-center gap-2'>
     <div className='max-md:hidden '>
         <img loading="lazy" src={cover4} alt=""  className=''/>
         </div> 
        
-        <div className='w-full md:h-screen pt-12 max-md:px-12 '>
+        <div className='w-full md:h-screen pt-12 px-12  '>
             <h2 className='font-bold text-2xl md:text-5xl max-md:text-center '>Personalize Learning for Every Student</h2>
             <p className='font-normal text-sm md:text-xl mt-12 md:pr-8 max-md:text-center'>Arete empowers you to move beyond a one-size-fits-all approach. With our data-driven insights, you can:</p>
             <ul className="list-disc p-4 text-sm md:text-xl max-md:text-center">
