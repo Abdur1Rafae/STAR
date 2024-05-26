@@ -153,7 +153,12 @@ function EditAssessmentDetails() {
                     assessmentImage = imageFile !== null ? await uploadingImage() : null;
                 }
                 const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, image:assessmentImage, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-                window.location.assign(`/teacher/questions-set/${assessmentId}`)
+                if(adaptiveTesting) {
+                    window.location.assign(`/teacher/adaptive-quiz/${assessmentId}`)
+                 }
+                 else {
+                    window.location.assign(`/teacher/questions-set/${assessmentId}`);
+                 }
             } catch(err) {
                 console.log(err)
             }
@@ -264,6 +269,7 @@ function EditAssessmentDetails() {
     const handleNavigationDecision = () => {
         if(!allowNavigation) {
             setAllowInstantFeedback(false)
+            setAdaptiveTesting(false)
         }
         setAllowNavigation((prev) => !prev)
     }
@@ -274,6 +280,17 @@ function EditAssessmentDetails() {
         }
 
         setAllowInstantFeedback((prev) => !prev)
+    }
+
+    const handleAdaptiveTesting = () => {
+        if(adaptiveTesting) {
+            setAdaptiveTesting(false)
+        }
+        else {
+            setAdaptiveTesting(true)
+            setShowFinalScore(false)
+            setAllowNavigation(false)
+        }
     }
 
 
@@ -481,7 +498,7 @@ function EditAssessmentDetails() {
                             <BsInfoCircle size={14} className='ml-2'/></h2>
                             <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
                         </div>
-                        <ToggleButton isActive={adaptiveTesting} onClick={()=>setAdaptiveTesting((prev)=>!prev)}/>
+                        <ToggleButton isActive={adaptiveTesting} onClick={handleAdaptiveTesting}/>
                         </div>
                         <div className='flex mt-4'>
                         <div className='flex'>

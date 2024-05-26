@@ -6,6 +6,7 @@ import Teacher from './pages/Teacher.jsx';
 import { SectionProvider } from './Context/SectionsContext.js';
 import { ReportProvider } from './Context/ReportContext.js';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
+import AdaptiveQuiz from './pages/Teacher/AdaptiveQuiz.jsx';
 const StudentDashboard = lazy(()=> import('./pages/Student/StudentDashboard.jsx') )
 const CourseInfo = lazy(() => import('./pages/Student/CourseInfo.jsx'));
 const StudentCourses = lazy(() => import('./pages/Student/StudentCourses.jsx'));
@@ -76,6 +77,7 @@ const router = createBrowserRouter(
         <Route path='reports'element={<QuizReports />}></Route>
         <Route path='grading-table'element={<GradingTablePage />}></Route>
         <Route path='view-flags' element={<ViewFlags/>}></Route>
+        <Route path='adaptive-quiz/:assessmentId' element={<QuestionProvider><AdaptiveQuiz/></QuestionProvider>}></Route>
         {/* <Route path='/object-detection' element={<ObjectDetection/>}></Route> */}
         
       </Route>

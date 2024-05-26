@@ -21,7 +21,6 @@ const SelectQuestions = ({topics}) => {
   useEffect(() => {
     const GetQuestions = async() => {
       try {
-        console.log(selectedType)
         const res = await GetReuseQuestions({skill: selectedSkill, difficulty: selectedLevel, type: selectedType, topic: selectedTopic})
         console.log(res)
         setReuseQuestions([...res])

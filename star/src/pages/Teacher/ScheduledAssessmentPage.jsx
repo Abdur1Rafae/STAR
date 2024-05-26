@@ -81,7 +81,7 @@ function ScheduledAssessment() {
                             <div className='md:flex items-center justify-between'>
                                 <div className='flex items-center font-body'>
                                     <h1 className='sm:text-xl md:text-2xl font-medium border-r-2 border-black pr-2'>All Assessments </h1>
-                                    <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{assessments.length} in total</p>
+                                    <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{filteredAssesments.length} in total</p>
                                 </div>
                                 <div className= 'flex gap-4 mt-4 md:mt-0'>
                                     <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Filter by:</p>

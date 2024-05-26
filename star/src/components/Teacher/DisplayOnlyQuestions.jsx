@@ -37,7 +37,7 @@ const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, di
                 </div>
                 <div className={`w-full flex ${display ? 'flex-col-reverse' : 'flex-col'}`}>
                     <div className='flex gap-2'>
-                        <ReactQuill readOnly={true} modules={modules} value={display || question.length <=25 ? (question) : (question.slice(0, 90)+'...')} className='w-full text-xs font-body !border-none -p-2'/>
+                        <ReactQuill readOnly={true} modules={modules} value={display || question.length <=25 ? (question) : (question.slice(0, 200)+'...')} className='w-full text-xs font-body !border-none -p-2'/>
                     </div>
                 </div>
             </div>

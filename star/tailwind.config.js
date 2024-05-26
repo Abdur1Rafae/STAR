@@ -3,6 +3,11 @@ module.exports = {
   content: [
     "./src/**/*.{mjs,js,jsx,ts,tsx}",
   ],
+  variants: {
+    extend: {
+      display: ['hover'],
+    },
+  },
   theme: {
     extend: {
       fontFamily: {
