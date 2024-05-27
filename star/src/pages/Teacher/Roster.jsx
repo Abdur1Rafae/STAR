@@ -242,7 +242,7 @@ const Roster = () => {
                     }
                 </div>
                   </div>
-                  <div className='flex items-center gap-2 sm:flex-row flex-col'>
+                  <div className='flex items-center gap-2 flex-row'>
                     <button onClick={()=>{setDeleteSection(true)}} className='flex bg-DarkBlue text-white active:shadow-md item-center justify-center gap-1 text-sm px-2 py-1 rounded-md'>
                       <MdOutlineDelete size={21} />
                       <p>Delete</p>

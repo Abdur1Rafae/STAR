@@ -103,6 +103,7 @@ module.exports.getClassOverview = async (req,res) =>
                     assessmentData.responseId = response._id
                     assessmentData.submitted = response.submittedAt
                     assessmentData.totalScore = response.totalScore
+                    console.log(response)
                     skills = skillBreakDown(skills, response.responses)
                 }
                 else

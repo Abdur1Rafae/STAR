@@ -46,7 +46,7 @@ const AdaptiveQuiz = () => {
     const [hovered, setHovered] = useState(null);
 
 
-    const { questions, setQuestions, selectedQuestions, saveQuestions, swapQuestion, topicMap, skillMap } = useContext(QuestionContext);
+    const { questions, setQuestions, selectedQuestions, saveQuestions, topicMap, skillMap } = useContext(QuestionContext);
 
     useEffect(()=>{
         let easy = 0;
@@ -356,7 +356,7 @@ const AdaptiveQuiz = () => {
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
                 <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                     {profileDialog && (
-                        <div className='dropdown-list w-36 md:w-48 flex flex-col items-center'>
+                        <div className='dropdown-list w-36 md:w-48 flex flex-col items-center font-body'>
                             <div className='h-full w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white p-2' onClick={handleSaveDraft}>
                                 <button className='text-left'>
                                     <p className='font-medium'>Save as Draft</p>
@@ -429,7 +429,7 @@ const AdaptiveQuiz = () => {
                                 <div className='overflow-y-auto'>
                                     <p className='ml-4 text-xs mt-2 font-bold'>Points are irrelevant. All easy questions are of 1 point, medium of 2 points and hard of 3 points.</p>
                                     <div className='h-full flex flex-col gap-4'>
-                                        <SelectQuestions topics={topicList}/>
+                                        <SelectQuestions topics={topicList} adaptive={true}/>
                                     </div>   
                                     <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
                                         <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={SaveQuestions}>Select</button>
@@ -442,6 +442,7 @@ const AdaptiveQuiz = () => {
                         {
                             creatingQuestion && (
                                 <QuestionCreator
+                                adaptive={true}
                                     type={creatingQuestion}
                                     closeHandler={handleCloseQuestionCreator}
                                     savingHandler={saveQuestionHandler}

@@ -4,6 +4,8 @@ ENV mongo_password=value
 ENV mongo_username=value
 ENV mongo_cluster=value
 ENV mongo_database=value
+ENV EMAIL_USERNAME=value
+ENV APP_PASSWORD=value
 
 RUN npm install -g nodemon
 

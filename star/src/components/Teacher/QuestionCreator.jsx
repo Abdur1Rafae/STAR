@@ -9,7 +9,7 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 import { UploadImageFile } from '../../APIS/ImageAPI';
 
-const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
+const QuestionCreator = ({adaptive, topicList, type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || 'Problem Solving');
     const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || 'Medium')
     const [newQuestion, setNewQuestion] = useState(question);
@@ -115,8 +115,16 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
                     </datalist>
                 </div>
                 <div className='flex flex-col md:flex-row items-center'>
-                    <p className='text-xs'>Points :&nbsp;</p>
-                    <input value={newPoints} onChange={(e)=> setNewPoints(e.target.value)} type='number' className='bg-LightBlue border-black border-[1px] w-16 h-6 rounded-md p-2'/>
+                    {
+                        adaptive ?
+                        <></>
+                        :
+                        <>
+                            <p className='text-xs'>Points :&nbsp;</p>
+                            <input value={newPoints} onChange={(e)=> setNewPoints(e.target.value)} type='number' className='bg-LightBlue border-black border-[1px] w-16 h-6 rounded-md p-2'/>
+                        </>
+                    }
+                    
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ import { SectionProvider } from './Context/SectionsContext.js';
 import { ReportProvider } from './Context/ReportContext.js';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
 import AdaptiveQuiz from './pages/Teacher/AdaptiveQuiz.jsx';
+import AdaptiveQuizScreen from './pages/Student/AdaptiveQuizScreen.jsx';
 const StudentDashboard = lazy(()=> import('./pages/Student/StudentDashboard.jsx') )
 const CourseInfo = lazy(() => import('./pages/Student/CourseInfo.jsx'));
 const StudentCourses = lazy(() => import('./pages/Student/StudentCourses.jsx'));
@@ -36,6 +37,7 @@ const Login = lazy(() => import('./pages/AuthenticationPages/Login.jsx'));
 const Signup = lazy(() => import('./pages/AuthenticationPages/Signup.jsx'));
 const ForgotPassword = lazy(() => import('./pages/AuthenticationPages/ForgotPassword.jsx'));
 const ChangePassword = lazy(() => import('./pages/AuthenticationPages/ChangePassword.jsx'));
+const CaptureScreen = lazy(()=> import('./pages/Student/CaptureScreen.jsx'))
 const Loader = lazy(() => import('./components/Loader.jsx'));
 
 const router = createBrowserRouter(
@@ -55,10 +57,11 @@ const router = createBrowserRouter(
         <Route path="manage-account" element = {<AccountManagerPage/>} />
         <Route path="quiz-instructions" element = {<QuizInstructions/>} />
         <Route path="quiz" element = {<QuizScreen />} />
+        <Route path="adaptive-quiz" element={<AdaptiveQuizScreen/>}/>
         <Route path="courses/:courseName" element= {<CourseInfo />} />
         <Route path="courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
         <Route path='quiz-submitted' element={<QuizSubmission/>}/>
-        {/* <Route path='capture-face' element={<CaptureScreen/>}></Route> */}
+        <Route path='capture-face' element={<CaptureScreen/>}></Route>
       </Route>
 
       <Route path='teacher/' element={<Teacher/>}>
@@ -88,7 +91,7 @@ const router = createBrowserRouter(
 const App = () => {
   return (
     <Suspense fallback={<div className='w-full h-screen flex items-center justify-center'><Loader/></div>}>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </Suspense>
   );
 };

@@ -48,9 +48,9 @@ const TFSetup = ({image, setImage,setImageFile, options, setOptions, isTrue, set
             <div className='w-1/2'>
                 <div className='flex flex-col gap-2'>
                     {
-                        choices.map((choice) => {
+                        choices.map((choice, index) => {
                             return (
-                            <div className='flex gap-2 items-center'>
+                            <div key={index} className='flex gap-2 items-center'>
                                 <FaCheckCircle className={`${choice == "True" && markedCorrect || choice == "False" && !markedCorrect ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
                                 <div className={`w-16 p-2 border-[1px] border-black rounded-md text-sm ${choice == "True" && markedCorrect || choice == "False" && !markedCorrect ? 'text-green-500' : 'text-gray-600'}`}>{choice}</div>
                             </div>)

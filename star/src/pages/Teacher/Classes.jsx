@@ -70,7 +70,7 @@ const Classes = () => {
     <>
             <SideBar active={"Classes"}/>
             <div className='w-full flex flex-col'>
-                <SubheaderBut name={"Classes"} button={"New"} onClick={showDialogBox}/>
+                <SubheaderBut name={"Classes"} button={"New Class"} onClick={showDialogBox}/>
                 <div className={`p-4 md:pl-8 md:pt-8 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
                   {
                     loading ?

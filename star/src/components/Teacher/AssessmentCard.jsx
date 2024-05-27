@@ -33,9 +33,7 @@ const AssessmentCard = ({ assessment, onDelete }) => {
 
     const handleDeleteAsessment = async() => {
         try {
-            const res = await DeleteAssessment({id: assessment._id})
-            console.log(res)
-            onDelete()
+            await onDelete()
         } catch(err) {
             console.log(err)
         }
@@ -77,12 +75,20 @@ const AssessmentCard = ({ assessment, onDelete }) => {
     return (
         <div className={`rounded-lg w-72 bg-LightBlue border-[1px] border-black font-body pb-2`}>
             <img className="w-full h-32 rounded-lg" crossOrigin="anonymous" src={ assessment.coverImage ? `${baseUrl}teacherhub/`+assessment.coverImage: Assessment} onError={(e) => {
-    e.target.onerror = null;
-    e.target.src = Assessment;
-  }} alt="" />
-            <div className='flex mt-2 items-center'>
+                    e.target.onerror = null;
+                    e.target.src = Assessment;
+                }} alt="" />
+            <div className='flex mt-2 items-center justify-between w-full'>
+                <div className='flex'>
                 <h3 className={`text-md font-medium text-DarkBlue ml-2`}>{assessment.title}</h3>
                 <div className={`w-fit h-fit font-bold rounded-full border ${statusColor} ${statusTextColor} text-[10px] p-1 ml-2`}>{assessment.category}</div>
+                </div>
+                {
+                    assessment.category == 'Not Started' || assessment.category == 'Draft' ?
+                    <button onClick={handleDeleteAsessment} className='mr-4 text-red-600 text-xl'><MdDelete/></button>
+                    :
+                    <></>
+                }
             </div>
             <hr className="px-8 mt-2 border border-#5F6368 m-2"></hr>
             <div className='columns-2 ml-2'>
@@ -112,12 +118,6 @@ const AssessmentCard = ({ assessment, onDelete }) => {
                 </div>
             </div>
             <div className='flex justify-end items-center pr-2'>
-                {
-                    assessment.category == 'Not Started' ?
-                    <button onClick={handleDeleteAsessment} className='mr-4 text-red-600 text-xl'><MdDelete/></button>
-                    :
-                    ''
-                }
                 {buttonComponent}
             </div>
         </div>
