@@ -109,7 +109,7 @@ module.exports.getReportOverview= async (req,res) =>
         const {assessmentId} = req.params
 
         const assessment = await Assessment.findById(assessmentId)
-        .select('summary.participants questionBank.question totalMarks -_id')
+        .select('summary.participants questionBank.question totalMarks configurations.adaptiveTesting -_id')
         .populate
         ({
             path: 'summary.participants.students.response',
@@ -224,7 +224,7 @@ module.exports.getReportOverview= async (req,res) =>
         {
             questionBank, 
             participants, 
-            totalMarks: assessment.totalMarks, 
+            totalMarks: assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks, 
             topicBreakDown: breakDown[0].overall,
             mostIncorrectQuestion: findMostIncorrectOverall(assessment.summary.participants)
         }

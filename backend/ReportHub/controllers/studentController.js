@@ -79,7 +79,7 @@ module.exports.getClassOverview = async (req,res) =>
         .populate(
             {
                 path: 'assessments',
-                select: 'title status totalMarks configurations.openDate configurations.closeDate configurations.duration',
+                select: 'title status totalMarks configurations.openDate configurations.closeDate configurations.duration configurations.adaptiveTesting',
                 model: Assessment
             }
         ) 
@@ -94,7 +94,7 @@ module.exports.getClassOverview = async (req,res) =>
             const assessmentData = {}
 
             assessmentData.title = assessment.title
-            assessmentData.totalMarks = assessment.totalMarks ?? 0
+            assessmentData.totalMarks = assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks,
             assessmentData.closeDate = assessment.configurations.closeDate
 
             const response = await Response.findOne
