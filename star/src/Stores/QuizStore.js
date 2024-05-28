@@ -24,6 +24,7 @@ const QuizStore = create((set) => ({
   filteredQuestions: [],
   quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
   currentQuestionStartTime: Date.now(),
+  reachedLastQuestion: false,
 
   responses: [],
 
@@ -93,10 +94,6 @@ const QuizStore = create((set) => ({
     });
   },
 
-  randomizeOptions: () => {
-
-  },
-
   setQuestions: (newQuestions) => set({
     questions: newQuestions
   }),
@@ -147,10 +144,14 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
-    
+      console.log(state.questions[state.currentQuestionIndex])
       const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
+      let reachedLast = false;
+      if(nextIndex == state.questions.length - 1) {
+        reachedLast = true
+      }
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: nextIndex, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: nextIndex, reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });
@@ -186,7 +187,7 @@ const QuizStore = create((set) => ({
     
       const prevIndex = (state.currentQuestionIndex - 1) % state.questions.length;
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: prevIndex, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: prevIndex, reachedLastQuestion: false, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });
@@ -194,10 +195,8 @@ const QuizStore = create((set) => ({
    
   flagQuestion: (number) => {
     set((state) => {
-      console.log(number)
       const updatedQuestions = state.questions.map((question, index) => {
         if (index == number) {
-          console.log(question)
           return { ...question, flagged: (question.flagged !==undefined ? !question.flagged : true) };
         }
         return question;
@@ -219,7 +218,6 @@ const QuizStore = create((set) => ({
       } else if (state.filter === 'unanswered') {
         filteredQuestions = state.questions.reduce((acc, question, index) => {
           if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null) acc.push(index);
-          console.log('checking', state.responses[index])
           return acc;
         }, []);
       }
@@ -250,11 +248,9 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
-      console.log(nextState.responses)
       const res = async() => {
         try {
           const sub = await SubmitAssessment({responses: nextState.responses})
-          console.log(sub)
           window.location.assign('quiz-submitted')
         } catch(err) {
           console.log(err)
@@ -284,8 +280,12 @@ const QuizStore = create((set) => ({
         ];
       }
 
+      let reachedLast = false;
+      if(number == state.questions.length - 1) {
+        reachedLast = true
+      }
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: number, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: number,reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });

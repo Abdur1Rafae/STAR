@@ -15,12 +15,55 @@ import { SectionContext } from '../../Context/SectionsContext';
 import { UpdateAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 import { UploadImageFile } from '../../APIS/ImageAPI';
+import { baseUrl } from '../../APIS/BaseUrl';
+import { convertToLocalISOString } from '../../Utils/DateFunctions';
 
+
+function removeZFromISOString(isoString) {
+    if (isoString.endsWith('Z')) {
+        return isoString.slice(0, -1);
+    }
+   
+    return isoString;
+}
+
+function convertToLocalDateTime(isoString) {
+    const date = new Date(isoString);
+    const dateString =  date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    // Parse the input date string
+    const [datePart, timePart] = dateString.split(', ');
+    const [month, day, year] = datePart.split('/').map(Number);
+    const [hours, minutes, seconds] = timePart.split(':').map(Number);
+  
+    // Create a local Date object
+    const localDate = new Date(year, month - 1, day, hours, minutes, seconds);
+  
+    // Pad function to ensure double digits
+    const pad = (num, size = 2) => num.toString().padStart(size, '0');
+  
+    // Extract components with padding
+    const formattedYear = localDate.getFullYear();
+    const formattedMonth = pad(localDate.getMonth() + 1); // Months are zero-based, so add 1
+    const formattedDay = pad(localDate.getDate());
+    const formattedHours = pad(localDate.getHours());
+    const formattedMinutes = pad(localDate.getMinutes());
+    const formattedSeconds = pad(localDate.getSeconds());
+    const formattedMilliseconds = pad(localDate.getMilliseconds(), 3); // Ensure milliseconds are 3 digits
+  
+    // Construct the formatted string
+    return `${formattedYear}-${formattedMonth}-${formattedDay}T${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
+  }
 
 function EditAssessmentDetails() {
     const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
-    const [editingOpenDate, setEditingOpenDate] = useState(false)
-    const [editingCloseDate, setEditingCloseDate] = useState(false)
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')
     const [assessmentName, setName] = useState(assessment.title ?? '');
     const [description, setDesc] = useState(assessment.description ?? '')
@@ -30,8 +73,8 @@ function EditAssessmentDetails() {
     const [mins, setMins] = useState(30)
 
 
-    const [datetime, setDatetime] = useState(assessment.configurations.openDate);
-    const [closedatetime, setCloseDatetime] = useState(assessment.configurations.closeDate);
+    const [datetime, setDatetime] = useState(convertToLocalDateTime(assessment.configurations.openDate));
+    const [closedatetime, setCloseDatetime] = useState(convertToLocalDateTime(assessment.configurations.closeDate));
 
     const [publishImmediately, setPublishOption] = useState(assessment.configurations ? assessment.configurations.releaseGrades : false);
     const [viewSubmissions, setViewSubmissions] = useState(assessment.configurations ? assessment.configurations.viewSubmission : false);
@@ -43,7 +86,13 @@ function EditAssessmentDetails() {
     const [adaptiveTesting, setAdaptiveTesting] = useState(assessment.configurations ? assessment.configurations.adaptiveTesting : false);
     const [candidateMonitoring, setCandidateMonitoring] = useState(assessment.configurations ? assessment.configurations.monitoring : false);
     const [error, setError] = useState('')
+    const [selectSectionsDialog, setSelectSectionsDialog] = useState(false)
+
+    const fileInputRef = useRef(null);
+    const [image, setImage] = useState(assessment.coverImage)
     const [imageFile, setImageFile] = useState(null)
+    const [userUpload, setUserUpload] = useState(false)
+
 
     const uploadingImage = async () => {
         try {
@@ -99,9 +148,17 @@ function EditAssessmentDetails() {
 
         const res = async() => {
             try {
-                const assessmentImage = imageFile !== null ? await uploadingImage() : null;
+                let assessmentImage = image;
+                if(assessment.coverImage !== image) {
+                    assessmentImage = imageFile !== null ? await uploadingImage() : null;
+                }
                 const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, image:assessmentImage, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-                window.location.assign(`/teacher/questions-set/${assessmentId}`)
+                if(adaptiveTesting) {
+                    window.location.assign(`/teacher/adaptive-quiz/${assessmentId}`)
+                 }
+                 else {
+                    window.location.assign(`/teacher/questions-set/${assessmentId}`);
+                 }
             } catch(err) {
                 console.log(err)
             }
@@ -117,51 +174,6 @@ function EditAssessmentDetails() {
     const handlePublishOptionChange = () => {
         setPublishOption((prev)=>!prev);
     };
-
-    useEffect(()=> {
-        console.log(closedatetime)
-    }, [closedatetime])
-
-    useEffect(() => {
-        if (!datetime) return;
-    
-        // Extract date and time parts from the datetime string
-        const [datePart, timePart] = datetime.split('T');
-        const [year, month, day] = datePart.split('-');
-        const [hourString, minuteString] = timePart.split(':');
-    
-        // Convert strings to numbers and handle NaN cases
-        const inputHour = parseInt(hourString, 10);
-        const inputMinute = parseInt(minuteString, 10);
-        const addedHours = isNaN(hour) ? 0 : hour;
-        const addedMinutes = isNaN(mins) ? 0 : mins;
-    
-        // Calculate the new time without converting to local time
-        let newHour = inputHour + addedHours;
-        let newMinute = inputMinute + addedMinutes;
-    
-        // Handle minute overflow
-        if (newMinute >= 60) {
-            newHour += Math.floor(newMinute / 60);
-            newMinute = newMinute % 60;
-        }
-    
-        // Handle hour overflow
-        if (newHour >= 24) {
-            newHour = newHour % 24;
-            // This does not account for day change, assuming you want to keep the day unchanged.
-        }
-    
-        // Format new hour and minute as strings
-        const hours = String(newHour).padStart(2, '0');
-        const minutes = String(newMinute).padStart(2, '0');
-    
-        // Combine the parts back into the ISO string format
-        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:00.000Z`;
-    
-        console.log(formattedDate, addedHours, addedMinutes);
-        setCloseDatetime(formattedDate);
-    }, [datetime, hour, mins]);
     
 
 
@@ -179,10 +191,7 @@ function EditAssessmentDetails() {
         setSections(assessment.participants ? assessment.participants : [])
     }, [])
 
-    const [selectSectionsDialog, setSelectSectionsDialog] = useState(false)
-
-    const fileInputRef = useRef(null);
-    const [image, setImage] = useState(null)
+    
     const handleFileInputChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -190,6 +199,7 @@ function EditAssessmentDetails() {
             setImage(imageUrl);
         }
         setImageFile(file)
+        setUserUpload(true)
     };
 
 
@@ -201,6 +211,7 @@ function EditAssessmentDetails() {
         setImage(null); 
         fileInputRef.current.value = null; 
         setImageFile(null)
+        setUserUpload(false)
     };
 
     const handleHourChange = (event) => {
@@ -258,6 +269,7 @@ function EditAssessmentDetails() {
     const handleNavigationDecision = () => {
         if(!allowNavigation) {
             setAllowInstantFeedback(false)
+            setAdaptiveTesting(false)
         }
         setAllowNavigation((prev) => !prev)
     }
@@ -268,6 +280,17 @@ function EditAssessmentDetails() {
         }
 
         setAllowInstantFeedback((prev) => !prev)
+    }
+
+    const handleAdaptiveTesting = () => {
+        if(adaptiveTesting) {
+            setAdaptiveTesting(false)
+        }
+        else {
+            setAdaptiveTesting(true)
+            setShowFinalScore(false)
+            setAllowNavigation(false)
+        }
     }
 
 
@@ -298,7 +321,7 @@ function EditAssessmentDetails() {
                         </button>
                         {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={image} alt="Uploaded Image" className='w-36 h-36'/>
+                            <img crossOrigin='anonymous' src={userUpload ? image :(`${baseUrl}teacherhub/`+image)} alt="Uploaded Image" className='w-36 h-36'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>
@@ -355,27 +378,12 @@ function EditAssessmentDetails() {
                         </div>
                         <div className='flex gap-2 md:gap-4  flex-col lg:flex-row'>
                             <div className='flex flex-col items-center'>
-                            <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
-                                {
-                                    editingOpenDate ? 
-                                    <>
-                                        <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
-                                    </>
-                                    :
-                                    <button onClick={()=>setEditingOpenDate(true)}><p className='text-DarkBlue hover:underline'>{DDMMMMYYYY_HHMM({date: datetime})}</p></button>
-                                }
-                                
+                                <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
+                                <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>   
                             </div>
                             <div className='flex flex-col items-center'>
                                 <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>Close Date & Time</h2>
-                                {
-                                    editingCloseDate ? 
-                                    <>
-                                         <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
-                                    </>
-                                    :
-                                    <button onClick={()=>setEditingCloseDate(true)}><p className='text-DarkBlue hover:underline'>{DDMMMMYYYY_HHMM({date: closedatetime})}</p></button>
-                                }
+                                <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
                             </div>
                         </div>
                     </div>
@@ -490,7 +498,7 @@ function EditAssessmentDetails() {
                             <BsInfoCircle size={14} className='ml-2'/></h2>
                             <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
                         </div>
-                        <ToggleButton isActive={adaptiveTesting} onClick={()=>setAdaptiveTesting((prev)=>!prev)}/>
+                        <ToggleButton isActive={adaptiveTesting} onClick={handleAdaptiveTesting}/>
                         </div>
                         <div className='flex mt-4'>
                         <div className='flex'>

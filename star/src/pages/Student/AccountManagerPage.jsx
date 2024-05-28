@@ -1,5 +1,4 @@
 import React from 'react';
-import { useMatch } from 'react-router-dom';
 import AccountForm from '../../components/Student/AccountForm';
 import Notifications from '../../components/Student/Notifications';
 import { MdAccountBox } from "react-icons/md";
@@ -21,11 +20,11 @@ const AccountManagerPage = () => {
                         </div>
 
                         <h1 className='text-xl font-semibold'>Profile</h1>
-                        <hr class="h-px my-4 border-[1px] border-black"></hr>
+                        <hr className="h-px my-4 border-[1px] border-black"></hr>
 
                         <AccountForm  />
                         <h1 className='text-xl font-semibold'>Notifications</h1>
-                        <hr class="h-px my-4 border-[1px] border-black"></hr>
+                        <hr className="h-px my-4 border-[1px] border-black"></hr>
 
                         <Notifications />
                         <div className='flex justify-between mt-6'>

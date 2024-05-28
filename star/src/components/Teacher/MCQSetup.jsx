@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaCirclePlus } from "react-icons/fa6";
@@ -61,6 +61,7 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
     const handleDeleteImage = () => {
         setImage(null); 
         fileInputRef.current.value = null; 
+        setUserUpload(true)
     };
 
     const handleAddChoice = () => {

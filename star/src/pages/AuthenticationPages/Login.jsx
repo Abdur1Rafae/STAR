@@ -9,6 +9,10 @@ const Login = () => {
   const [error, setError] = useState('')
   const [check, setCheck] = useState(true)
 
+  useEffect(()=> {
+    localStorage.clear()
+  }, [])
+
   const handleSubmit = async() => {
     setError('')
     setCheck(false)

@@ -181,3 +181,13 @@ spec:
               secretKeyRef:
                 name: arete-secret
                 key: mongo_database
+          - name: EMAIL_USERNAME
+            valueFrom:
+              secretKeyRef: 
+                name: arete-secret
+                key: email_username
+          - name: APP_PASSWORD
+            valueFrom:
+              secretKeyRef: 
+                name: arete-secret
+                key: app_password

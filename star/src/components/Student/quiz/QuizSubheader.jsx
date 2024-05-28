@@ -3,16 +3,18 @@ import Timer from '../Timer'
 import { CgNotes } from "react-icons/cg";
 import { useMediaQuery } from 'react-responsive'
 import { ToggleStore } from '../../../Stores/ToggleStore';
+import QuizStore from '../../../Stores/QuizStore';
 
 
 const QuizSubheader = () => {
   const toggleNav = ToggleStore((store) => store.toggleNav)
+  const {title} = QuizStore()
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 770px)' })
 
   let handleShowNav = () => {
     toggleNav()
   }
-    let name = "Monthly Test"
+    let name = title
     return (
       <div className=''>
         <div className="h-12 w-screen lg:max-w-full bg-[#F4F9FD] border-black font-body flex">

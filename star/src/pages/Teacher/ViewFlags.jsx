@@ -83,8 +83,8 @@ const ViewFlags = () => {
               <div className='bg-LightBlue w-full flex flex-col md:flex-row h-full md:h-96 font-body'>
                 <div className='w-full md:w-8/12 h-80 md:h-full flex items-center justify-center'>
                   {
-                    data[selectedFlag].img ?
-                    <img src={data[selectedFlag].img} className='w-full h-full'></img>
+                    flaggings[selectedFlag] && flaggings[selectedFlag].image ?
+                    <img crossOrigin='anonymous' src={`${baseUrl}teacherhub/`+flaggings[selectedFlag].image} className='w-full h-full'></img>
                     :
                     <TiFlowSwitch className='text-7xl'/>
                   }
@@ -93,15 +93,15 @@ const ViewFlags = () => {
                 <div className='flex flex-col h-64 md:h-full flex-grow min-w-80 pl-4 border-t-2 md:border-t-0 md:border-l-2 border-black overflow-y-scroll p-4 gap-1'>
                   <h4 className='self-center border-b-2 border-black mb-2'>Flagging Details</h4>
                   {
-                    data.map((flag, index) => {
+                    flaggings.map((flag, index) => {
                       return (
                         <>
                         <button className={`${selectedFlag == index ? 'bg-DarkBlue text-white' : ''} text-left hover:bg-DarkBlue hover:text-white p-2 transition-colors duration-200 ease-linear`} onClick={()=>setSelectedFlag(index)}>
                           <div className='flex justify-between items-center'>
-                            <h7 className='text-sm'>{flag.timeStamp}</h7>
-                            <div className={`text-xs bg-LightBlue w-fit p-1 rounded-full ${flag.category == 'Tab Switch' ? 'text-purple-500' : flag.category == 'No person on screen' ? 'text-yellow-600' : 'text-red-500'}`}>{flag.category}</div>
+                            <h7 className='text-xs'>{convertTimestampToDate(flag.timestamp)}</h7>
+                            <div className={`text-[9px] font-semibold bg-LightBlue w-fit p-1 rounded-full ${flag.type == 'Tab Switch' ? 'text-purple-500' : flag.type == 'No person on screen' ? 'text-yellow-600' : 'text-red-500'}`}>{flag.type}</div>
                           </div>
-                          <p className='text-xs'>27 seconds</p>
+                          <p className='text-xs'>{flag.duration/1000}</p>
                         </button>
                         <hr className='border-black'></hr>
                         </>

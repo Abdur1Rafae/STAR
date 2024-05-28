@@ -23,7 +23,6 @@ const TrueFalsePanel = ({ question, Flagged}) => {
 
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
-    console.log(answer)
     setResponse(answer && answer.answer ? answer.answer : [])
     setSelectedOption(answer && answer.answer ? answer.answer : [])
     setIsFlagged(question.flagged)

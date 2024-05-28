@@ -6,7 +6,6 @@ import { VerifyOtp } from '../../APIS/AuthAPI';
 
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [check, setCheck] = useState(true);
   const [showOTP, setShowOTP] = useState(false);
@@ -14,8 +13,11 @@ const ForgotPasswordScreen = () => {
   const [timer, setTimer] = useState(60);
 
 
-  const handleResendClick = () => {
+  const handleResendClick = async() => {
+    const res = await ForgotPassword({email: email})
+    console.log(res)
     setDisableResend(true);
+    setOtp(['', '', '', '', '', ''])
     setTimer(60);
   };
 
@@ -38,44 +40,59 @@ const ForgotPasswordScreen = () => {
 
   const handleFindPasswordClick = async() => {
     try {
+      setError('')
       const res = await ForgotPassword({email: email})
       console.log(res)
       setShowOTP(true);
+      setDisableResend(true)
     } catch(err) {
+      if(err.response.status == 404) {
+        setError('User not found')
+      }
       console.log(err)
     } 
   };
 
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
 
   const handleChange = (index, value) => {
-    if (value.length > 1) return;
-
+    if (!/^\d*$/.test(value)) return;
+  
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-
+  
     if (value && index < inputs.current.length - 1) {
       inputs.current[index + 1].focus();
     }
   };
-
+  
   const handleKeyDown = (index, event) => {
     if (event.key === 'Backspace' && !otp[index] && index > 0) {
       inputs.current[index - 1].focus();
     }
   };
+  
 
 
   const handleSubmitOTP = async() => {
     try {
       const joinOTP = otp.join('')
-      if(joinOTP.length === 4) {
+      if(joinOTP.length === 6) {
         const res = await VerifyOtp({email: email, otp: joinOTP})
+        sessionStorage.setItem('userEmail', email)
+        window.location.assign('/change-password')
         console.log(res)
+        setError('')
+      }
+      else {
+        setError('Incomplete OTP')
       }
     } catch(err) {
+      if(err.response.status == 400) {
+        setError('Invalid OTP')
+      }
       console.log(err)
     }
   }
@@ -84,11 +101,12 @@ const ForgotPasswordScreen = () => {
 
     <div className="flex flex-col items-center justify-center">
       <h2 className="text-2xl font-bold py-4">Enter OTP</h2>
+      <p className='mb-2 text-red-500'>{error}</p>
       <div className="flex items-center justify-center gap-3">
         {otp.map((value, index) => (
           <input
             key={index}
-            type="number"
+            type="text"
             value={value}
             className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
             maxLength={1}
