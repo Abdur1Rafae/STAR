@@ -23,26 +23,37 @@ module.exports.getEnrolledClasses = async (req,res) =>
         const student = req.body.decodedToken.id
 
         const classes = await User.findById(student)
-        .select('-name -erp -email -_id -__v -role -password -attemptedAssessments') 
+        .select('-name -erp -email -_id -__v -role -password -attemptedAssessments')
         .populate
         ({
             path: 'enrolledSections',
-            select: 'class assessments createdAt', 
+            select: 'class assessments createdAt',
             populate: 
-            {
-                path: 'class', 
-                select: '-_id className',
-                populate:{ path: 'teacher', select: '-_id name'} 
-            },
+            [
+                {
+                    path: 'class',
+                    select: '-_id className',
+                    populate: 
+                    {
+                        path: 'teacher',
+                        select: '-_id name'
+                    }
+                },
+                {
+                    path: 'assessments',
+                    select: 'status',
+                    model: Assessment
+                }
+            ]
         })
-        console.log(classes)
+
         if(!classes || !classes.enrolledSections){return res.status(201).json({data: []})} 
 
         const formattedData = classes.enrolledSections.map( section => 
         ({
             _id: section._id,
             className: section.class.className,
-            assessment: section.assessments.length || 0,
+            assessment: section.assessments.filter(item => item.status !== 'Draft').length || 0,
             enrolled: section.createdAt,
             teacher: section.class.teacher.name
         }))
@@ -72,6 +83,8 @@ module.exports.getClassOverview = async (req,res) =>
                 model: Assessment
             }
         ) 
+
+        if (section) {section.assessments = section.assessments.filter(assessment => assessment.status !== 'Draft')}
 
         const responses = []
         let skills = {}
