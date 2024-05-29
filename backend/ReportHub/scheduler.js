@@ -294,7 +294,7 @@ async function scheduleReportGeneration()
       {
         console.log(assessment)
         const hasShortAnswers = assessment.questionBank.some(item => item.question.type === 'Short Answer')
-        if (hasShortAnswers) 
+        if (hasShortAnswers && assessment.status != 'Reviewed') 
         {
           assessment.configurations.releaseGrades = false
           await assessment.save()
@@ -325,106 +325,3 @@ cron.schedule('*/25 * * * *', async () =>
         console.error('Error in assessment check:', error);
     }
 })
-
-
-/*
-[
-            {
-                $match: {assessment}
-            },
-            { $unwind: '$responses' },
-            {
-                $lookup: 
-                {
-                    from: 'questions',
-                    localField: 'responses.questionId',
-                    foreignField: '_id',
-                    as: 'question'
-                }
-            },
-            { $unwind: '$question' },
-            {
-                $group: 
-                {
-                    _id: '$question._id',
-                    totalResponses: { $sum: 1 },
-                    totalSkipped: 
-                    {
-                        $sum: 
-                        {
-                            $cond: [{ $or: [{ $eq: ['$responses.answer', null] }, { $eq: [{ $size: '$responses.answer' }, 0] }] },1,0]
-                        }
-                    },
-                    totalCorrect: 
-                    {
-                        $sum: 
-                        {
-                            $cond: [{ $eq: ['$responses.score', '$question.points'] }, 1, 0]
-                        }
-                    },
-                    averageResponseTime: { $avg: '$responses.responseTime' },
-                    highestScore: { $max: '$responses.score' },
-                    averageScore: { $avg: '$responses.score'}
-                }
-            },
-            {
-                $project: 
-                {
-                    _id:0,
-                    question: '$_id',
-                    totalResponses: 1,
-                    totalSkipped: 1,
-                    totalCorrect: 1,
-                    averageResponseTime: 1,
-                    highestScore: 1,
-                    averageScore: 1
-                }
-            }
-        ]
-*/
-
-/*
-        [
-            { $match: { _id: assessment } },
-            { $lookup: { from: 'sections', localField: 'participants', foreignField: '_id', as: 'participants' } },
-            { $unwind: '$participants' },
-            { $lookup: { from: 'students', localField: 'participants.roster', foreignField: '_id', as: 'students' } },
-            { $unwind: '$students' },
-            {
-                $lookup: 
-                {
-                    from: 'responses',
-                    let: { studentId: '$students._id', assessmentId: assessment },
-                    pipeline: 
-                    [
-                        {
-                            $match: 
-                            {
-                                $expr: 
-                                {
-                                    $and: 
-                                    [
-                                        { $eq: ['$student', '$$studentId'] },
-                                        { $eq: ['$assessment', '$$assessmentId'] }
-                                    ]
-                                }
-                            }
-                        },
-                        { $project: { _id: 1 } }
-                    ],
-                    as: 'responses'
-                }
-            },
-            {
-                $project: 
-                {
-                    _id: 0,
-                    studentName: '$students.name',
-                    studentErp: '$students.erp',
-                    sectionName: '$participants.sectionName',
-                    response: { $arrayElemAt: ['$responses._id', 0] }
-                }
-            }
-        ]
-*/
-

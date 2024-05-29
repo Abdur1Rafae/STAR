@@ -8,12 +8,14 @@ module.exports.beginAssessment = async (req,res) =>
     const student = req.body.decodedToken.id
     const {assessmentId, sectionId} = req.params
 
-    const response = await Response.findOneAndUpdate
-    (
-      { student, assessment: assessmentId },
-      { $setOnInsert: { student, assessment: assessmentId, section: sectionId } },
-      { upsert: true, new: true }
-    )
+    const session = await conn.startSession()
+    await session.withTransaction(async () => 
+    {
+      await Response.create([{student, assessment: assessmentId, section: sectionId}], {session})
+      const updatedStudent = await User.findByIdAndUpdate( student,{ $addToSet: { attemptedAssessments : assessmentId } }, {session})
+      if (!updatedStudent) {throw new Error('Student not found')}
+    })
+    session.endSession()
 
     const assessment = await Assessment.findById(assessmentId)
     .select('questionBank.question -_id')
@@ -30,7 +32,7 @@ module.exports.beginAssessment = async (req,res) =>
       ({
           ...item.question.toObject(),
           number: index + 1
-      }))
+    }))
 
     res.status(201).json({responseId: response._id, questions: formattedData})
 
@@ -46,30 +48,23 @@ module.exports.submitAssessment = async (req,res) =>
   {
     const student = req.body.decodedToken.id
     const {responseId} = req.params
-    const {submission} = req.body
+    const {action, adaptiveTesting, finalScore, totalScore, submission} = req.body
 
-    const session = await conn.startSession()
-    await session.withTransaction(async () => 
-    {
+    let response = {responses: submission}
 
-      const response = {responses: submission, status: 'Submitted'}
-      const updatedResponse = await Response.findByIdAndUpdate(responseId, response, {session})
+    if(action === 'submit'){response.status = 'Submitted'}  
 
-      if (!updatedResponse) {throw new Error('Response not found')}
+    if(adaptiveTesting === true){response.totalScore = totalScore}
+    
+    const updatedResponse = await Response.findByIdAndUpdate(responseId, response)
 
-      const assessmentId = updatedResponse.assessment
+    if (!updatedResponse) {throw new Error('Response not found')}
 
-      const updatedStudent = await User.findByIdAndUpdate( 
-        student,
-        { $addToSet: { attemptedAssessments : assessmentId } }
-      , {session})
+    let reply = {message: 'Response recorded successfully'}
 
-      if (!updatedStudent) {throw new Error('Student not found')}
+    if(finalScore === true && action === 'submit'){reply.finalScore = updatedResponse.totalScore}
 
-    })
-    session.endSession()
-
-    res.status(201).json({message: 'Response recorded successfully'})
+    return res.status(201).json(reply)
 
   }
   catch (err) {
@@ -153,7 +148,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
         {
             path: 'assessments', 
-            select: '_id title description configurations coverImage status',
+            select: '_id title description configurations coverImage status totalMarks',
             match: 
             { 
               'configurations.openDate': { $lt: new Date() },
@@ -165,10 +160,6 @@ module.exports.getOngoingAssessments = async (req,res) =>
               {
                 path: 'teacher',
                 select: 'name -_id'
-              },
-              {
-                path: 'questionBank.question',
-                select: 'points -_id'
               }
             ],
             model: Assessment
@@ -193,8 +184,8 @@ module.exports.getOngoingAssessments = async (req,res) =>
                 description : assessment.description,
                 teacher: assessment.teacher.name,
                 className: section.class.className,
-                totalMarks: assessment.questionBank.reduce((total, questionObj) => {return total + (questionObj.question ? questionObj.question.points : 0)}, 0),
-                totalQuestions: assessment.questionBank.length,
+                totalMarks: assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks,
+                totalQuestions: assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.stoppingCriteria : assessment.questionBank.length,
                 coverImage: assessment.coverImage,
                 configurations:  assessment.configurations,
               }

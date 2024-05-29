@@ -100,27 +100,17 @@ module.exports.updateAssessment = async (req,res) =>
         if (err.name === 'ValidationError' || err.message === 'Failed to update participants') {return res.status(400).json({ error: 'ER_VALIDATION', message: err.message })}
         res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to update assessment'})}
 }
-module.exports.launchAssessment = async (req,res) => 
+module.exports.saveAssessment = async (req,res) => 
 { 
     try{
         const { assessmentId } = req.params
+        const {status, stoppingCriteria, totalMarks} = req.body
 
-        const updatedAssessment = await Assessment.findByIdAndUpdate(assessmentId, {status: 'Launched'})
+        const updatedAssessment = await Assessment.findByIdAndUpdate(assessmentId, {status, 'configurations.adaptiveTesting.stoppingCriteria' : stoppingCriteria, 'configurations.adaptiveTesting.totalMarks' : totalMarks})
         if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
-        return res.status(200).json({message: `Assessment launched successfully`})  
+        return res.status(200).json({message: `Assessment updated successfully`})  
     }
-    catch(err){console.log(err);res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to launch assessment'})}
-}
-module.exports.draftAssessment = async (req,res) => 
-{ 
-    try{
-        const { assessmentId } = req.params
-
-        const updatedAssessment = await Assessment.findByIdAndUpdate(assessmentId, {status: 'Draft'})
-        if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
-        return res.status(200).json({message: `Assessment saved as draft successfully`})  
-    }
-    catch(err){res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to draft assessment'})}
+    catch(err){console.log(err);res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to update assessment'})}
 }
 module.exports.deleteAssessment = async (req,res) => 
 {
@@ -165,11 +155,6 @@ module.exports.getScheduledAssessments = async (req,res) =>
             path: 'participants',
             select: 'roster class sectionName',
         })
-        .populate
-        ({
-            path: 'questionBank.question',
-            select: 'points'
-        })
 
         if(!assessments){return res.status(200).json({data: []})}
 
@@ -183,9 +168,9 @@ module.exports.getScheduledAssessments = async (req,res) =>
                 participants: assessment.participants.reduce((names, section) => names.concat({_id: section._id, name: section.sectionName}), []),
                 configurations: assessment.configurations,
                 coverImage: assessment.coverImage,
-                totalQuestions: assessment.questionBank ? assessment.questionBank.length : 0,
+                totalQuestions: assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.stoppingCriteria : assessment.questionBank.length,
                 totalStudents: assessment.participants.reduce((total, section) => total + (section.roster ? section.roster.length : 0), 0),
-                totalMarks: assessment.questionBank.reduce((total, questionObj) => total + (questionObj.question ? questionObj.question.points : 0) , 0),
+                totalMarks: assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks,
                 category: getAssessmentStatus(assessment.configurations, assessment.status),
             }
         })
