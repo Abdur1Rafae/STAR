@@ -298,7 +298,7 @@ const AddQuestions = () => {
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
                 <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                     {profileDialog && (
-                        <div className='dropdown-list w-36 md:w-48 flex flex-col items-center'>
+                        <div className='dropdown-list w-36 md:w-48 flex flex-col items-center font-body'>
                             <div className='h-full w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white p-2' onClick={handleSaveDraft}>
                                 <button className='text-left'>
                                     <p className='font-medium'>Save as Draft</p>

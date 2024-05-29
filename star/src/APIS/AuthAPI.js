@@ -10,7 +10,7 @@ const UserLogin = async({email, password}) => {
 }
 
 const UserLogout = async() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post('session/logout',{},{
         headers: {
             authorization: `Bearer ${token}`

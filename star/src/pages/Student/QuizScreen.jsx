@@ -23,17 +23,14 @@ const QuizScreen = () => {
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const { questions, currentQuestionIndex, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
+  const { questions, currentQuestionIndex, vioArray, setVioArray, clearVioArray, filterQuestions, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback, monitoring} = quizConfig
 
   const webcamRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(null);
   const [isWebcamReady, setIsWebcamReady] = useState(false);
-  const [vioArray, setVioArray] = useState([]);
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
-  const [detectorFailed, setDetectorFailed] = useState(false)
   const [interval, setIntervalId] = useState()
 
   const checkWebcamReady = () => {
@@ -61,7 +58,7 @@ const QuizScreen = () => {
     try {
       const res = await FlagStudents({data: vioArray, id: responseId})
       console.log(res)
-      setVioArray([])
+      clearVioArray()
     } catch(err) {
       console.log(err)
     }
@@ -69,7 +66,6 @@ const QuizScreen = () => {
 
   useEffect(() => {
     if(monitoring) {
-      console.log("in push")
       const intervalId = setInterval(() => {
         if (vioArray.length > 0) {
           UploadFlaggings();
@@ -112,11 +108,9 @@ const QuizScreen = () => {
       if(violationOver && prevVio && prevVio.timestamp) {
         const duration = (Date.now() - prevVio.timestamp) * renderCount;
         const updatedVio = { ...prevVio, duration };
-        setImgSrc(updatedVio.image)
         const url = await upload({image :updatedVio.image})
         updatedVio.image = url
-        console.log(updatedVio.image)
-        setVioArray(prevArray => [...prevArray, updatedVio]);
+        setVioArray(updatedVio);
         setRenderCount(0)
       }
     }
@@ -156,7 +150,6 @@ const QuizScreen = () => {
 
       if (faces.length === 1) {
         setViolationOver(true)
-        setImgSrc('')
       } else if (faces.length === 0) {
         if(violationOver) {
           console.log('No Person detected')
@@ -185,7 +178,6 @@ const QuizScreen = () => {
         }
       }
     } catch (err) {
-      setDetectorFailed(true);
       console.log(err)
     }
   }
@@ -199,7 +191,7 @@ const QuizScreen = () => {
           const switchEndTime = Date.now();
           const switchDuration = switchEndTime - switchStartTime;
           if(switchDuration > 10000) {
-            setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timestamp: switchStartTime }]);
+            setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
           }
         }
         switchStartTime = null;
@@ -207,7 +199,7 @@ const QuizScreen = () => {
 
       const handleWindowBlur = () => {
         document.title = 'Warning!';
-        switchStartTime = new Date();
+        switchStartTime = Date.now();
       };
 
       window.addEventListener('focus', handleWindowFocus);
@@ -218,13 +210,14 @@ const QuizScreen = () => {
         window.removeEventListener('blur', handleWindowBlur);
       };
     }
-  }, []);
+  }, [monitoring]);
   
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
+      console.log("here")
       localStorage.removeItem('responseId')
       localStorage.removeItem('SuccessSubmit')
       window.location.assign('quiz-submitted')
@@ -244,8 +237,8 @@ const QuizScreen = () => {
   
     const handleBeforeUnload = (event) => {
       if (!submittingQuiz) {
-        saveData();
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        saveData();
       }
     };
   
@@ -255,6 +248,7 @@ const QuizScreen = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [responses, submittingQuiz]);
+  
 
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)
@@ -267,11 +261,13 @@ const QuizScreen = () => {
   const currentQuestion = getQuestion()
 
   const handleNextQuestion = () => {
+    filterQuestions()
     setAnswerSubmit(false)
     nextQuestion()
   };
 
   const handlePrevious = () => {
+    filterQuestions()
     prevQuestion()
   };
 
@@ -368,15 +364,28 @@ const QuizScreen = () => {
 
             <div className="flex items-center space-y-0 space-x-4">
               {
-                reachedLastQuestion ? 
+                reachedLastQuestion ?
+                (
+                  navigation ?
                   <>
-                    {
-                      navigation && 
-                      <SubmitButton label="Previous" onClick={handlePrevious} active={true}/>
-                    }
+                    <SubmitButton label="Previous" onClick={handlePrevious} active={true}/>
                     <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
                   </>
-                  
+                  :
+                  instantFeedback ?
+                  (
+                    answerSubmitted ?
+                    <>
+                      <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                    </>
+                    :
+                    <>
+                      <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
+                    </>
+                  )
+                  :
+                  <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                ) 
                 :
                 (
                   !navigation ? 
@@ -418,7 +427,7 @@ const QuizScreen = () => {
         }
         {
           submitConfirmBox ? 
-          <ConfirmationBox message={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
+          <ConfirmationBox heading={"Satisfied with your answers?"} message={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
           : 
           ''
         }

@@ -4,7 +4,7 @@ import { AxiosBase } from '../BaseUrl';
 
 
 const GetAssessments = async() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get('teacherhub/assessment-management/scheduled-assessments', {
         headers: {
             authorization: `Bearer ${token}`
@@ -15,7 +15,7 @@ const GetAssessments = async() => {
 }
 
 const DeleteAssessment = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.delete(`teacherhub/assessment-management/delete-assessment/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
@@ -27,7 +27,7 @@ const DeleteAssessment = async({id}) => {
 
 const CreateAssessment = async({name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
     instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         console.log(new Date(openDate), new Date(closeDate))
     const res = await AxiosBase.post('teacherhub/assessment-management/new-assessment',{
         title: name,
@@ -59,7 +59,7 @@ const CreateAssessment = async({name, description, sections, image, openDate, cl
 }
 
 const AddQuestion = async({assessmentId, question}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     if(question.type == "True/False") {
         question.options = ["True", "False"]
     }
@@ -75,7 +75,7 @@ const AddQuestion = async({assessmentId, question}) => {
 }
 
 const UpdateQuestion = async({id, question}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/question-bank/update-question/${id}/${question._id}`,{
         question: question,
     },{
@@ -88,7 +88,7 @@ const UpdateQuestion = async({id, question}) => {
 }
 
 const DeleteQuestion = async({questionId, assessmentId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.delete(`teacherhub/question-bank/delete-question/${assessmentId}/${questionId}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -99,7 +99,7 @@ const DeleteQuestion = async({questionId, assessmentId}) => {
 }
 
 const UpdateReuseQuestion = async({assessmentId, question}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const { _id, ...newQuestion } = question;
     const res = await AxiosBase.put(`teacherhub/question-bank/update-reused-question/${assessmentId}/${_id}`,{
         question: newQuestion,
@@ -113,7 +113,7 @@ const UpdateReuseQuestion = async({assessmentId, question}) => {
 }
 
 const AddReuseQuestion = async({assessmentId, questions}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post(`teacherhub/question-bank/add-reused-questions/${assessmentId}`,{
         reusedQuestions: questions,
     },{
@@ -126,7 +126,7 @@ const AddReuseQuestion = async({assessmentId, questions}) => {
 }
 
 const DeleteReuseQuestion = async({questionId, assessmentId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.delete(`teacherhub/question-bank/delete-reused-question/${assessmentId}/${questionId}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -137,7 +137,7 @@ const DeleteReuseQuestion = async({questionId, assessmentId}) => {
 }
 
 const UpdateOrder = async({questions, assessmentId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/question-bank/update-order/${assessmentId}`,{
         order: questions
     },{
@@ -150,7 +150,7 @@ const UpdateOrder = async({questions, assessmentId}) => {
 }
 
 const GetStoredQuestions = async({assessmentId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`teacherhub/question-bank/questions/${assessmentId}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -161,7 +161,7 @@ const GetStoredQuestions = async({assessmentId}) => {
 }
 
 const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`teacherhub/question-bank/all-questions`,{
         params:{
             skill: skill == "All" ? null : skill,
@@ -178,7 +178,7 @@ const GetReuseQuestions = async({skill, topic, difficulty, type}) => {
 }
 
 const MonitorAssessment = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/monitor/monitor-assessment/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
@@ -189,7 +189,7 @@ const MonitorAssessment = async({id}) => {
 }
 
 const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/assessment-management/update-assessment/${id}`,{
         title: name,
         description: description,
@@ -221,7 +221,7 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
 }
 
 const GetAllTopics = async() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`teacherhub/question-bank/all-topics`, {
         headers: {
             authorization: `Bearer ${token}`

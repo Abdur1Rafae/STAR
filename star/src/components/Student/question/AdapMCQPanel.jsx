@@ -8,6 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { baseUrl } from '../../../APIS/BaseUrl';
 
 const AdapMCQPanel = ({ question }) => {
+  const [multiSelect, setMultiSelect] = useState(question.correctOptions.length > 1)
   const questionNumber = AdapQuizStore(store => store.questionAttempt);
 
   const getSelectedResponse = AdapQuizStore(store => store.getResponseByQuestionNumber);
@@ -32,18 +33,45 @@ const AdapMCQPanel = ({ question }) => {
   }, [selectedOption, response, questionNumber, updateResponse]);
 
   const handleOptionClick = (option) => {
-    setSelectedOption(prevSelectedOption => {
-      const updatedOptions = prevSelectedOption.includes(option)
-        ? prevSelectedOption.filter(opt => opt !== option)
-        : [...prevSelectedOption, option];
-
-      setResponse(prevResponse => ({
-        questionId: question._id,
-        answer: updatedOptions
-      }));
-
-      return updatedOptions;
-    });
+    const index = selectedOption.indexOf(option);
+    if(multiSelect) {
+      if (index !== -1) {
+        const updatedOptions = [...selectedOption];
+        updatedOptions.splice(index, 1);
+        setSelectedOption(updatedOptions);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: updatedOptions
+        };
+        setResponse(updatedResponse)
+      } else {
+        setSelectedOption([...selectedOption, option]);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: [...selectedOption, option]
+        };
+        setResponse(updatedResponse)
+      }
+    }
+    else {
+      if (index !== -1) {
+        const updatedOptions = [...selectedOption];
+        updatedOptions.splice(index, 1);
+        setSelectedOption(updatedOptions);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: updatedOptions
+        };
+        setResponse(updatedResponse)
+      } else {
+        setSelectedOption([option]);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: [option]
+        };
+        setResponse(updatedResponse)
+      }
+    }
   };
 
   const modules = {

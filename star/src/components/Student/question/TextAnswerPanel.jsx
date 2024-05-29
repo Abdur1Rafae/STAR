@@ -41,7 +41,6 @@ const TextAnswerPanel = ({ question, Flagged }) => {
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
     flagQuestion(questionNumber)
-    filter()
   };
   const modules = {
     toolbar: false

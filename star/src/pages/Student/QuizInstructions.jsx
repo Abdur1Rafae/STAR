@@ -121,18 +121,19 @@ const QuizInstructions = () => {
               <li className="mb-2 text-lg">
                 The assessment will be <strong>submitted if student tries to refresh or close the page</strong>
               </li>
-              <li>
+              
                 {
                   quizDetails.quizConfig.adaptiveTesting &&
+                  <li>
                   <p>This will be an <strong>adaptive assessment</strong>. Each correct answer would lead you to a tougher question to earn more rewards. Your final score will be scaled out of the above mentioned Marks.</p>
+                  </li>
                 }
-              </li>
-              <li>
                 {
                   !quizDetails.quizConfig.navigation &&
+                  <li>
                   <p>Navigation between questions is <strong>disabled</strong>. Please proceed to the next question once you are satisfied with your answer.</p>
+                  </li>
                 }
-              </li>
             </ul>
           </div>
         </div>

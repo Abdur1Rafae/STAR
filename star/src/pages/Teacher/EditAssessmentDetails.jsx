@@ -277,6 +277,7 @@ function EditAssessmentDetails() {
     const handleInstantFeedbackDecision = () =>{
         if(!allowInstantFeedback) {
             setAllowNavigation(false)
+            setAdaptiveTesting(false)
         }
 
         setAllowInstantFeedback((prev) => !prev)
@@ -288,6 +289,7 @@ function EditAssessmentDetails() {
         }
         else {
             setAdaptiveTesting(true)
+            setAllowInstantFeedback(false)
             setShowFinalScore(false)
             setAllowNavigation(false)
         }

@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import { SubmitAssessment } from '../APIS/Student/AssessmentAPI';
+import { FlagStudents } from '../APIS/Student/AssessmentAPI';
 import CryptoJS from 'crypto-js';
 
 const decryptData = (encryptedData, key) => {
@@ -27,8 +28,14 @@ const AdapQuizStore = create((set) => ({
     questionAttempt: 0,
     score: 0,
     maxAttempts: 5,
+    vioArray: [],
+    setVioArray: (newVios) => set((state) => ({...state, vioArray: [...state.vioArray, newVios] })),
+    clearVioArray: () => set({ vioArray: [] }),
 
     responses: [],
+    submittingQuiz: false,
+
+    setSubmittingQuiz : () => set((state) => ({...state, submittingQuiz: true})),
 
     updateQuizDetails: (details) => set((state) => {
         return {
@@ -132,8 +139,6 @@ const AdapQuizStore = create((set) => ({
 
                 const questionCheck = state.questions[state.currentQuestionIndex]
                 let correctAnswer = null
-                console.log(questionCheck)
-                console.log(updatedResponse.answer)
 
                 if(questionCheck.type == 'True/False') {
                     if(questionCheck.isTrue) {
@@ -156,7 +161,6 @@ const AdapQuizStore = create((set) => ({
                 let score = state.score
 
                 if(correctAnswer) {
-                    console.log("Correct Answer")
                     if(questionCheck.difficulty == 'Easy') {
                         score += 1;
                         nextQuestionIndex =  state.questions.findIndex(question => 
@@ -180,7 +184,6 @@ const AdapQuizStore = create((set) => ({
                     }
                 }
                 else {
-                    console.log("Incorrect Answer")
                     if(questionCheck.difficulty == 'Easy') {
                         nextQuestionIndex = state.questions.findIndex(question => 
                             question.difficulty === 'Easy' &&
@@ -188,14 +191,12 @@ const AdapQuizStore = create((set) => ({
                         );
                     }
                     else if(questionCheck.difficulty == 'Medium') {
-                        score += 0.25
                         nextQuestionIndex = state.questions.findIndex(question => 
                             question.difficulty === 'Easy' &&
                             !state.responses.some(response => response.questionId === question._id)
                         );
                     }
                     else {
-                        score += 0.5
                         nextQuestionIndex = state.questions.findIndex(question => 
                             question.difficulty === 'Medium' &&
                             !state.responses.some(response => response.questionId === question._id)
@@ -250,6 +251,10 @@ const AdapQuizStore = create((set) => ({
             }
             const res = async() => {
                 try {
+                    if(state.vioArray.length > 0) {
+                        const responseId = localStorage.getItem('responseId')
+                        const res = await FlagStudents({data: state.vioArray, id: responseId})
+                    }
                     const sub = await SubmitAssessment({responses: nextState.responses})
                     console.log(sub)
                     window.location.assign('quiz-submitted')

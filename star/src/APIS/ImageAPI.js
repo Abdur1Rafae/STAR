@@ -28,7 +28,7 @@ const UploadImage = async({image}) => {
     console.log(file)
     const formData = new FormData();
     formData.append('image', file, 'screenshot.png');
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post('teacherhub/upload-image',
         formData, {
         headers: {
@@ -42,7 +42,7 @@ const UploadImage = async({image}) => {
 const UploadImageFile = async({image}) => {
     const formData = new FormData();
     formData.append('image', image, 'screenshot.png');
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post('teacherhub/upload-image',
         formData, {
         headers: {
@@ -55,7 +55,7 @@ const UploadImageFile = async({image}) => {
 
 
 const UserLogout = async() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post('session/logout',{},{
         headers: {
             authorization: `Bearer ${token}`

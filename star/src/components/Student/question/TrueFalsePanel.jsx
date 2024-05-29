@@ -40,14 +40,12 @@ const TrueFalsePanel = ({ question, Flagged}) => {
   }, [selectedOption]);
 
   const handleAnswerSelect = (answer) => {
-    console.log(answer)
     setSelectedOption([answer]);
   };
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
     flagQuestion(questionNumber)
-    filterQuestions()
   };
 
   return (

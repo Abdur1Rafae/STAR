@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { TbClockOff } from 'react-icons/tb';
 import QuizStore from '../../Stores/QuizStore';
+import AdapQuizStore from '../../Stores/AdaptiveQuizStore';
 
-const Timer = () => {
+const Timer = ({adaptive}) => {
   const [showTime, setShowTime] = useState(true);
-  const { submitResponses } = QuizStore();
+  const { submitResponses, setSubmittingQuiz } = adaptive ? AdapQuizStore() : QuizStore();
   const quizDetails = JSON.parse(localStorage.getItem('quizDetails'));
-  const durationInSeconds = quizDetails.duration * 60;
+  const durationInSeconds = quizDetails.duration * 60 * 1000;
   const closingDateUTC = new Date(quizDetails.closeDate);
   const closingDateLocal = closingDateUTC.toLocaleString('en-US', { timeZone: 'Asia/Karachi' });
   const closingTime = new Date(closingDateLocal).getTime();
@@ -15,7 +16,7 @@ const Timer = () => {
 
   const initialRemainingTime = closingTime < (currentTime + durationInSeconds)
     ? Math.max(0, (closingTime - currentTime) / 1000)
-    : durationInSeconds;
+    : durationInSeconds/1000;
 
   const [remainingTime, setRemainingTime] = useState(initialRemainingTime);
   const lastTimestampRef = useRef(Date.now());
@@ -55,11 +56,16 @@ const Timer = () => {
   }, []);
 
   useEffect(() => {
-    if (remainingTime === 0) {
-      localStorage.removeItem('SuccessSubmit');
-      saveData();
-      window.location.assign('quiz-submitted');
-    }
+    const handleRemainingTime = async () => {
+      if (remainingTime === 0) {
+        setSubmittingQuiz()
+        localStorage.removeItem('SuccessSubmit');
+        await saveData();
+        window.location.assign('quiz-submitted');
+      }
+    };
+  
+    handleRemainingTime();
   }, [remainingTime]);
 
   const formatTime = time => time.toString().padStart(2, '0');

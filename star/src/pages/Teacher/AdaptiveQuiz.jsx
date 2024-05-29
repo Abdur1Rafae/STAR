@@ -20,6 +20,8 @@ import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/Assessment
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 import SubmitButton from '../../components/button/SubmitButton';
+import ErrorBox from '../../components/ErrorBox';
+import ConfirmationBox from '../../components/ConfirmationBox';
 
 
 const AdaptiveQuiz = () => {
@@ -375,8 +377,8 @@ const AdaptiveQuiz = () => {
                 <div className='flex flex-col-reverse md:flex-row justify-between gap-4 p-2 md:p-4'>
                     <div className='w-full flex flex-col items-center gap-4'>
                         <div className=''>
-                            <p className='self-start font-medium font-body'>Number of Questions per Difficulty</p>
-                            <p className='text-sm font-body'>To ensure we have enough questions to deliver an adaptive assessment experience, please add the specified number of questions or more for each difficulty level. This will allow the system to adjust the difficulty of the questions based on the user's performance.</p>
+                            <p className='self-start font-medium font-body text-sm'>Number of Questions per Difficulty</p>
+                            <p className='text-xs font-body'>To ensure we have enough questions to deliver an adaptive assessment experience, please add the specified number of questions or more for each difficulty level. This will allow the system to adjust the difficulty of the questions based on the user's performance.</p>
                             <div className='mt-4 flex justify-around font-body'>
                                 <div className='w-1/5'>
                                     <p className='text-xs font-semibold'>Easy&nbsp;(min. {mineasyCount})</p>
@@ -500,46 +502,12 @@ const AdaptiveQuiz = () => {
                     </div>
                     {
                         confirmDelete &&
-                        <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black">
-                            <div className='flex flex-col w-full mx-2 md:mx-0 md:w-2/3 bg-LightBlue overflow-y-auto'>
-                                <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
-                                    <p>Delete Question</p>
-                                    <button onClick={()=>setConfirmDelete(false)}><MdClose/></button>
-                                </div>
-                                <div className='p-2'>
-                                    <div className='mb-4 text-md'>
-                                        Are you sure you wish to delete the following Question:
-                                    </div>
-                                    <div>
-                                        <ReactQuill readOnly={true} modules={modules} value={questions[indexToDelete].question} className='w-full text-xs font-body !border-none -p-2'/>
-                                    </div>
-                                    <div className='mt-2 text-xs font-bold'>
-                                        <p>This action cannot be undone!</p>
-                                    </div>
-                                    <div className='w-full flex justify-center mt-4'>
-                                        <SubmitButton label={'Delete'} active={true} onClick={()=>{deleteQuestion(indexToDelete); setConfirmDelete(false)}}/>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
+                        <ConfirmationBox heading={'Deleting Question'} message={<ReactQuill readOnly={true} modules={modules} value={questions[indexToDelete].question} className='w-full text-xs font-body !border-none -p-2'/>} onConfirm={()=>{deleteQuestion(indexToDelete); setConfirmDelete(false)}} onCancel={()=>setConfirmDelete(false)}/>
                     }
                 </div>
                 {
                     showError &&
-                    <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black font-body">
-                        <div className='flex flex-col w-full mx-2 md:mx-0 md:w-1/2 bg-LightBlue overflow-y-auto'>
-                            <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
-                                <p>Launch Error</p>
-                                <button onClick={()=>setShowError(false)}><MdClose/></button>
-                            </div>
-                            <div className='p-2'>
-                                <p className='text-md'>Adaptive Assessment could not be launched.</p>
-                                <p className='text-sm mt-2'>{error}</p>
-                                <p className='text-xs text-gray-400 mt-4'>You can still save it as draft.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <ErrorBox heading={"Launch Error"} message={error} sideNote={"You can still save it as draft."} onCancel={()=>setShowError(false)}/>
                 }
             </div>    
         </>

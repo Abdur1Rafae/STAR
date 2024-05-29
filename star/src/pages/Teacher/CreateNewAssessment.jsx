@@ -235,6 +235,7 @@ const CreateNewAssessment = () => {
    const handleInstantFeedbackDecision = () =>{
       if(!allowInstantFeedback) {
          setAllowNavigation(false)
+         setAdaptiveTesting(false)
       }
 
       setAllowInstantFeedback((prev) => !prev)
@@ -247,6 +248,7 @@ const CreateNewAssessment = () => {
       else {
          setAdaptiveTesting(true)
          setShowFinalScore(false)
+         setAllowInstantFeedback(false)
          setAllowNavigation(false)
       }
    }

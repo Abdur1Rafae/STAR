@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import MenuBar from '../../components/MenuBar';
 import { VscLayersActive } from "react-icons/vsc";
 import SubmitButton from '../../components/button/SubmitButton';
 
@@ -7,6 +6,10 @@ const QuizSubmission = () => {
   useEffect(()=>{
     localStorage.removeItem('quizDetails')
     localStorage.removeItem('responseId')
+    localStorage.removeItem('remainingTime');
+    localStorage.removeItem('SuccessSubmit');
+    localStorage.removeItem('questions')
+    localStorage.removeItem('studentResponses')
   }, [])
   return (
     <>

@@ -3,8 +3,8 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { UpdateProfile } from '../../APIS/AuthAPI';
 
 const AccountForm = () => {
-  let user = JSON.parse(localStorage.getItem('userDetails'));
-  let email =localStorage.getItem('userEmail');
+  let user = JSON.parse(sessionStorage.getItem('userDetails'));
+  let email =sessionStorage.getItem('userEmail');
   const [formData, setFormData] = useState({});
 
   const [showPassword, setShowPassword] = useState(false);

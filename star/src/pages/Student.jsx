@@ -4,7 +4,7 @@ import MenuBar from '../components/MenuBar';
 
 const Student = () => {
   return (
-    <div className='flex flex-col mb-20'>
+    <div className='flex flex-col mb-20 font-body'>
         <MenuBar/>
         <Outlet/>
     </div>

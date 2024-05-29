@@ -3,7 +3,7 @@ import { AxiosBase } from '../BaseUrl';
 // const token = process.env.REACT_APP_ACCESS_TOKEN
 
 const GetAllReports = async() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get('/reporthub/teacher/reports', {
         headers: {
             authorization: `Bearer ${token}`
@@ -14,7 +14,7 @@ const GetAllReports = async() => {
 }
 
 const GetReportsOverview = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`/reporthub/teacher/overview/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
@@ -25,7 +25,7 @@ const GetReportsOverview = async({id}) => {
 }
 
 const GetResponses = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`/reporthub/teacher/individual-response/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
@@ -37,7 +37,7 @@ const GetResponses = async({id}) => {
 }
 
 const GetQuestionStats = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`/reporthub/teacher/question-summary/${id}`, {
         headers: {
             authorization: `Bearer ${token}`

@@ -6,8 +6,6 @@ import Teacher from './pages/Teacher.jsx';
 import { SectionProvider } from './Context/SectionsContext.js';
 import { ReportProvider } from './Context/ReportContext.js';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
-import AdaptiveQuiz from './pages/Teacher/AdaptiveQuiz.jsx';
-import AdaptiveQuizScreen from './pages/Student/AdaptiveQuizScreen.jsx';
 const StudentDashboard = lazy(()=> import('./pages/Student/StudentDashboard.jsx') )
 const CourseInfo = lazy(() => import('./pages/Student/CourseInfo.jsx'));
 const StudentCourses = lazy(() => import('./pages/Student/StudentCourses.jsx'));
@@ -38,6 +36,8 @@ const Signup = lazy(() => import('./pages/AuthenticationPages/Signup.jsx'));
 const ForgotPassword = lazy(() => import('./pages/AuthenticationPages/ForgotPassword.jsx'));
 const ChangePassword = lazy(() => import('./pages/AuthenticationPages/ChangePassword.jsx'));
 const CaptureScreen = lazy(()=> import('./pages/Student/CaptureScreen.jsx'))
+const AdaptiveQuiz = lazy(()=>import('./pages/Teacher/AdaptiveQuiz.jsx'))
+const AdaptiveQuizScreen = lazy(() => import('./pages/Student/AdaptiveQuizScreen.jsx'));
 const Loader = lazy(() => import('./components/Loader.jsx'));
 
 const router = createBrowserRouter(

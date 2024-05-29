@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import { SubmitAssessment } from '../APIS/Student/AssessmentAPI';
+import { FlagStudents } from '../APIS/Student/AssessmentAPI';
 import CryptoJS from 'crypto-js';
 
 const decryptData = (encryptedData, key) => {
@@ -25,8 +26,15 @@ const QuizStore = create((set) => ({
   quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
   currentQuestionStartTime: Date.now(),
   reachedLastQuestion: false,
+  vioArray: [],
+  setVioArray: (newVios) => set((state) => ({...state, vioArray: [...state.vioArray, newVios] })),
+  clearVioArray: () => set({ vioArray: [] }),
 
   responses: [],
+  
+  submittingQuiz: false,
+
+  setSubmittingQuiz : () => set((state) => ({...state, submittingQuiz: true})),
 
   setTitle: (title) => set({ title: title }),
   setTeacher: (teacher) => set({ teacher: teacher }),
@@ -144,7 +152,6 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
-      console.log(state.questions[state.currentQuestionIndex])
       const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
       let reachedLast = false;
       if(nextIndex == state.questions.length - 1) {
@@ -217,7 +224,7 @@ const QuizStore = create((set) => ({
         }, []);
       } else if (state.filter === 'unanswered') {
         filteredQuestions = state.questions.reduce((acc, question, index) => {
-          if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null) acc.push(index);
+          if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null || state.responses[index].answer[0] == '') acc.push(index);
           return acc;
         }, []);
       }
@@ -250,6 +257,10 @@ const QuizStore = create((set) => ({
       }
       const res = async() => {
         try {
+          if(state.vioArray.length > 0) {
+            const responseId = localStorage.getItem('responseId')
+            const res = await FlagStudents({data: state.vioArray, id: responseId})
+        }
           const sub = await SubmitAssessment({responses: nextState.responses})
           window.location.assign('quiz-submitted')
         } catch(err) {

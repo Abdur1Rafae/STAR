@@ -9,6 +9,7 @@ import 'react-quill/dist/quill.snow.css'
 import { baseUrl } from '../../../APIS/BaseUrl';
 
 const MCQPanel = ({ question }) => {
+  const [multiSelect, setMultiSelect] = useState(question.correctOptions.length > 1)
   const [isFlagged, setIsFlagged] = useState(question.flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const filterQuestions = QuizStore(store=> store.filterQuestions)
@@ -24,6 +25,7 @@ const MCQPanel = ({ question }) => {
     setResponse(answer)
     setSelectedOption(answer && answer.answer ? answer.answer : [])
     setIsFlagged(question.flagged)
+    setMultiSelect(question.correctOptions.length > 1)
   }, [question])
 
   useEffect(() => {
@@ -39,31 +41,49 @@ const MCQPanel = ({ question }) => {
 
   const handleOptionClick = (option) => {
     const index = selectedOption.indexOf(option);
-
-    if (index !== -1) {
-      const updatedOptions = [...selectedOption];
-      updatedOptions.splice(index, 1);
-      setSelectedOption(updatedOptions);
-      const updatedResponse = {
-        questionId: question._id,
-        answer: updatedOptions
-      };
-      setResponse(updatedResponse)
-    } else {
-      setSelectedOption([...selectedOption, option]);
-      const updatedResponse = {
-        questionId: question._id,
-        answer: [...selectedOption, option]
-      };
-      setResponse(updatedResponse)
+    if(multiSelect) {
+      if (index !== -1) {
+        const updatedOptions = [...selectedOption];
+        updatedOptions.splice(index, 1);
+        setSelectedOption(updatedOptions);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: updatedOptions
+        };
+        setResponse(updatedResponse)
+      } else {
+        setSelectedOption([...selectedOption, option]);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: [...selectedOption, option]
+        };
+        setResponse(updatedResponse)
+      }
+    }
+    else {
+      if (index !== -1) {
+        const updatedOptions = [...selectedOption];
+        updatedOptions.splice(index, 1);
+        setSelectedOption(updatedOptions);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: updatedOptions
+        };
+        setResponse(updatedResponse)
+      } else {
+        setSelectedOption([option]);
+        const updatedResponse = {
+          questionId: question._id,
+          answer: [option]
+        };
+        setResponse(updatedResponse)
+      }
     }
   };
 
   const handleToggleFlag = () => {
     setIsFlagged((prevFlag) => !prevFlag);
     flagQuestion(questionNumber)
-    console.log(questionNumber)
-    filterQuestions()
   };
 
   const modules = {

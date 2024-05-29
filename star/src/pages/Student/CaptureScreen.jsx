@@ -24,11 +24,24 @@ const CaptureScreen = () => {
   const [imgSrc, setImgSrc] = useState(null);
   const [isWebcamReady, setIsWebcamReady] = useState(false);
 
-  useEffect(() => {
-    if (webcamRef.current && webcamRef.current.video) {
+  const checkWebcamReady = () => {
+    if (webcamRef.current && webcamRef.current.video && webcamRef.current.video.readyState === 4) {
       setIsWebcamReady(true);
+      console.log('Webcam is ready');
+      return true;
     }
-  }, [webcamRef]);
+    return false;
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (checkWebcamReady()) {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (isWebcamReady) {

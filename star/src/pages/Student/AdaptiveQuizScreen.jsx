@@ -1,11 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
-import MCQPanel from '../../components/Student/question/MCQPanel';
 import SubmitButton from '../../components/button/SubmitButton';
-import TrueFalse from '../../components/Student/question/TrueFalsePanel';
 import QuizSubheaderNoNav from '../../components/Student/quiz/QuizSubheaderNoNav';
 import AdapQuizStore from '../../Stores/AdaptiveQuizStore';
-import CorrectMCQ from '../../components/Student/question/CorrectMCQ';
-import CorrectTF from '../../components/Student/question/CorrectTF';
 import ConfirmationBox from '../../components/ConfirmationBox';
 import Webcam from 'react-webcam';
 import * as faceDetection from '@tensorflow-models/face-detection';
@@ -15,19 +11,16 @@ import AdapMCQPanel from '../../components/Student/question/AdapMCQPanel';
 import AdapTrueFalsePanel from '../../components/Student/question/AdapTfPanel';
 
 const AdaptiveQuizScreen = () => {
-  const [submittingQuiz, setSubmittingQuiz] = useState(false)
   const [submitConfirmBox, setSubmitConfirmBox] = useState(false)
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const { questions, initializeToEasyQuestion, currentQuestionIndex, questionAttempt, maxAttempts, responses, nextQuestion, reachedLastQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = AdapQuizStore();
+  const { questions, vioArray, setVioArray, clearVioArray, submittingQuiz, setSubmittingQuiz, initializeToEasyQuestion, currentQuestionIndex, questionAttempt, maxAttempts, responses, nextQuestion, reachedLastQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = AdapQuizStore();
 
-  const { instantFeedback, monitoring} = quizConfig
+  const { monitoring } = quizConfig
 
   const webcamRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(null);
   const [isWebcamReady, setIsWebcamReady] = useState(false);
-  const [vioArray, setVioArray] = useState([]);
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
   const [detectorFailed, setDetectorFailed] = useState(false)
@@ -58,7 +51,7 @@ const AdaptiveQuizScreen = () => {
     try {
       const res = await FlagStudents({data: vioArray, id: responseId})
       console.log(res)
-      setVioArray([])
+      clearVioArray()
     } catch(err) {
       console.log(err)
     }
@@ -87,6 +80,7 @@ const AdaptiveQuizScreen = () => {
 
   useEffect(()=> {
     setPrevVio(null)
+    console.log(vioArray)
   }, [vioArray])
 
   const upload = async({image}) => {
@@ -103,10 +97,9 @@ const AdaptiveQuizScreen = () => {
       if(violationOver && prevVio && prevVio.timestamp) {
         const duration = (Date.now() - prevVio.timestamp) * renderCount;
         const updatedVio = { ...prevVio, duration };
-        setImgSrc(updatedVio.image)
         const url = await upload({image :updatedVio.image})
         updatedVio.image = url
-        setVioArray(prevArray => [...prevArray, updatedVio]);
+        setVioArray(updatedVio);
         setRenderCount(0)
       }
     }
@@ -146,7 +139,6 @@ const AdaptiveQuizScreen = () => {
 
       if (faces.length === 1) {
         setViolationOver(true)
-        setImgSrc('')
       } else if (faces.length === 0) {
         if(violationOver) {
           console.log('No Person detected')
@@ -180,35 +172,37 @@ const AdaptiveQuizScreen = () => {
     }
   }
 
-//   useEffect(() => {
-//     if(monitoring) {
-//       let switchStartTime = null;
-//       const handleWindowFocus = () => {
-//         document.title = 'Arete Assessment';
-//         if (switchStartTime) {
-//           const switchEndTime = Date.now();
-//           const switchDuration = switchEndTime - switchStartTime;
-//           if(switchDuration > 10000) {
-//             setVioArray(prevArray => [...prevArray, { type: 'tab switch', duration: switchDuration, timestamp: switchStartTime }]);
-//           }
-//         }
-//         switchStartTime = null;
-//       };
+  useEffect(() => {
+    if(monitoring) {
+      let switchStartTime = null;
+      const handleWindowFocus = () => {
+        document.title = 'Arete Assessment';
+        if (switchStartTime) {
+          const switchEndTime = Date.now();
+          const switchDuration = switchEndTime - switchStartTime;
+          console.log("here")
+          if(switchDuration > 10000) {
+            console.log("pushed")
+            setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
+          }
+        }
+        switchStartTime = null;
+      };
 
-//       const handleWindowBlur = () => {
-//         document.title = 'Warning!';
-//         switchStartTime = new Date();
-//       };
+      const handleWindowBlur = () => {
+        document.title = 'Warning!';
+        switchStartTime = Date.now();
+      };
 
-//       window.addEventListener('focus', handleWindowFocus);
-//       window.addEventListener('blur', handleWindowBlur);
+      window.addEventListener('focus', handleWindowFocus);
+      window.addEventListener('blur', handleWindowBlur);
 
-//       return () => {
-//         window.removeEventListener('focus', handleWindowFocus);
-//         window.removeEventListener('blur', handleWindowBlur);
-//       };
-//     }
-//   }, []);
+      return () => {
+        window.removeEventListener('focus', handleWindowFocus);
+        window.removeEventListener('blur', handleWindowBlur);
+      };
+    }
+  }, [monitoring]);
   
 
   useEffect(()=> {
@@ -224,31 +218,39 @@ const AdaptiveQuizScreen = () => {
     createResponseObjects([])
   }, [])
 
-//   useEffect(() => {
-//     const saveData = async () => {
-//       try {
-//         await submitResponses();
-//       } catch (err) {
-//         console.log(err);
-//       }
-//     };
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await submitResponses();
+      } catch (err) {
+        console.log(err);
+      }
+    };
   
-//     const handleBeforeUnload = (event) => {
-//       if (!submittingQuiz) {
-//         saveData();
-//         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-//       }
-//     };
+    const handleBeforeUnload = (event) => {
+      if (!submittingQuiz) {
+        event.preventDefault();
+        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
   
-//     window.addEventListener('beforeunload', handleBeforeUnload);
+    const handleUnload = async (event) => {
+      if (!submittingQuiz) {
+        event.preventDefault();
+      event.returnValue = "";
+        await saveData();
+      }
+    };
   
-//     return () => {
-//       window.removeEventListener('beforeunload', handleBeforeUnload);
-//     };
-//   }, [responses, submittingQuiz]);
-
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('unload', handleUnload);
   
-  const [answerSubmitted, setAnswerSubmit] = useState(false)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, [responses, submittingQuiz]);
 
   const getQuestion = () => {
     let question = questions[currentQuestionIndex];
@@ -258,17 +260,12 @@ const AdaptiveQuizScreen = () => {
   const currentQuestion = getQuestion()
 
   const handleNextQuestion = () => {
-    setAnswerSubmit(false)
     nextQuestion()
   };
 
-  const handleAnswerDisplay = () => {
-    setAnswerSubmit(true)
-  }
-
   const handleSubmission = async() => {
     try {
-      setSubmittingQuiz(true)
+      setSubmittingQuiz()
       const res = await submitResponses()
       localStorage.removeItem('SuccessSubmit')
       localStorage.removeItem('questions')
@@ -285,41 +282,15 @@ const AdaptiveQuizScreen = () => {
           <div className="flex justify-between mb-8">
           {
             currentQuestion.type === "MCQ" ? 
-              (instantFeedback ?
-                (answerSubmitted ?
-                  <CorrectMCQ
-                    question={currentQuestion}
-                  />
-                  :
-                  <AdapMCQPanel
-                    question={currentQuestion}
-                    Flagged={currentQuestion.flagged}
-                  />
-                )
-                :
                 <AdapMCQPanel
                   question={currentQuestion}
                   Flagged={currentQuestion.flagged}
                 />
-              )
               :
-                (instantFeedback ?
-                    (answerSubmitted ?
-                    <CorrectTF
-                        question={currentQuestion}
-                    />
-                    :
-                    <AdapTrueFalsePanel
-                        question={currentQuestion}
-                        Flagged={currentQuestion.flagged}
-                    />
-                    )
-                    :
-                    <AdapTrueFalsePanel
-                    question={currentQuestion}
-                    Flagged={currentQuestion.flagged}
-                    />
-                )
+              <AdapTrueFalsePanel
+              question={currentQuestion}
+              Flagged={currentQuestion.flagged}
+              />
           }
           </div>
           {
@@ -335,25 +306,15 @@ const AdaptiveQuizScreen = () => {
 
             <div className="flex items-center space-y-0 space-x-4">
               {
-                reachedLastQuestion ? 
-                  <>
-                    <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
-                  </>
+                reachedLastQuestion ?
+                (
+                  <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                ) 
                 :
                 (
-                    instantFeedback ? 
-                    <>
-                    {
-                      answerSubmitted ? 
-                      <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
-                      :
-                      <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
-                    }
-                    </>
-                    :
-                    <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
-                )
-              }
+                  <SubmitButton label="Next" onClick={handleNextQuestion} active={true}/>
+                ) 
+                }
             </div>
           </div>
 

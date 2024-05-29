@@ -18,7 +18,6 @@ const CorrectSA = ({ question }) => {
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
     setSelectedOption(answer ? answer : {})
-    console.log(answer)
   }, [question])
   const modules = {
     toolbar: false

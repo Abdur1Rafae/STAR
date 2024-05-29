@@ -1,7 +1,7 @@
 import { AxiosBase } from '../BaseUrl';
 
 const GetOngoingAssessments = async () => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/ongoing-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -12,7 +12,7 @@ const GetOngoingAssessments = async () => {
 };
 
 const GetUpcomingAssessments = async () => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/upcoming-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -23,7 +23,7 @@ const GetUpcomingAssessments = async () => {
 };
 
 const GetAssessmentQuestions = async({id, sectionId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/begin-assessment/${sectionId}/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -35,8 +35,8 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
 }
 
 const SubmitAssessment = async({responses}) => {
-    const id = localStorage.getItem('responseId')
-    const token = localStorage.getItem('token')
+    const id = sessionStorage.getItem('responseId')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post(`assesshub/assessment/submit-response/${id}`,{
         submission: responses
     },{
@@ -49,7 +49,7 @@ const SubmitAssessment = async({responses}) => {
 }
 
 const GetAssessmentSummary = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`reporthub/student/classes/assessment-report/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -60,7 +60,7 @@ const GetAssessmentSummary = async({id}) => {
 }
 
 const GetSubmission = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`reporthub/student/classes/assessment-submission/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -71,7 +71,7 @@ const GetSubmission = async({id}) => {
 }
 
 const LaunchAssessment = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/assessment-management/launch-assessment/${id}`,{},{
         headers: {
             authorization: `Bearer ${token}`
@@ -82,7 +82,7 @@ const LaunchAssessment = async({id}) => {
 }
 
 const DraftAssessment = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/assessment-management/draft-assessment/${id}`,{},{
         headers: {
             authorization: `Bearer ${token}`
@@ -93,7 +93,7 @@ const DraftAssessment = async({id}) => {
 }
 
 const FlagStudents = async({data, id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`assesshub/monitor/flag-candidate/${id}`,data, {
         headers: {
             authorization: `Bearer ${token}`

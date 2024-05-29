@@ -3,7 +3,7 @@ import { AxiosBase } from '../BaseUrl';
 const token = process.env.REACT_APP_ACCESS_TOKEN
 
 const AddSection = async({name, classID}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post(`teacherhub/class-management/new-section/${classID}`,{
         sectionName: name
     },{
@@ -16,7 +16,7 @@ const AddSection = async({name, classID}) => {
 }
 
 const DeleteSection = async ({ id }) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     try {
         const res = await AxiosBase.delete(`teacherhub/class-management/delete-section/${id}`, {
             headers: {
@@ -31,7 +31,7 @@ const DeleteSection = async ({ id }) => {
 };
 
 const UpdateSection = async({id, name}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/class-management/update-section/${id}`,{
         sectionName: name
     },{
@@ -44,7 +44,7 @@ const UpdateSection = async({id, name}) => {
 }
 
 const GetAllStudents = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`teacherhub/class-management/roster/${id}`, {
         headers: {
             authorization: `Bearer ${token}`
@@ -55,7 +55,7 @@ const GetAllStudents = async({id}) => {
 }
 
 const AddStudent = async({sectionId, student}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post(`teacherhub/class-management/add-students/${sectionId}`, {
         students: [student]
     }, {
@@ -67,7 +67,7 @@ const AddStudent = async({sectionId, student}) => {
 }
 
 const AddStudents = async({sectionId, students}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post(`teacherhub/class-management/add-students/${sectionId}`, {
         students: students
     }, {
@@ -79,7 +79,7 @@ const AddStudents = async({sectionId, students}) => {
 }
 
 const DeleteStudent = async({sectionId, studentId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.delete(`teacherhub/class-management/remove-student/${sectionId}/${studentId}`, {
         headers: {
             authorization: `Bearer ${token}`

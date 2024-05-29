@@ -8,6 +8,7 @@ import Loader from '../../components/Loader';
 import { MdClose } from 'react-icons/md';
 import SubmitButton from '../../components/button/SubmitButton';
 import { DeleteAssessment } from '../../APIS/Teacher/AssessmentAPI';
+import ConfirmationBox from '../../components/ConfirmationBox';
 
 function ScheduledAssessment() {
     const [loading, setLoading] = useState(true)
@@ -125,21 +126,7 @@ function ScheduledAssessment() {
                 </div>
                 {
                     confirmDelete &&
-                    <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black font-body">
-                        <div className='flex flex-col w-full mx-2 md:mx-0 md:w-1/2 bg-LightBlue overflow-y-auto'>
-                            <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
-                                <p>Publishing Grades</p>
-                                <button onClick={()=>setConfirmDelete(false)}><MdClose/></button>
-                            </div>
-                            <div className='p-2'>
-                                <p className='text-md'>Are you sure you wish to delete the assessment?</p>
-                                <p className='text-sm font-bold mt-2'>This action cannot be undone!</p>
-                                <div className='flex justify-center mt-4'>
-                                <SubmitButton label={'Delete'} active={true} onClick={()=>{handleDeleteAsessment({id:IdToDelete}); setConfirmDelete(false)}}/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <ConfirmationBox heading={"Deleting Assessment"} message={"Are you sure you want to delete the assessment?"} onCancel={()=>setConfirmDelete(false)} onConfirm={()=>{handleDeleteAsessment({id:IdToDelete}); setConfirmDelete(false)}}/>
                 }
             </div>
         </>

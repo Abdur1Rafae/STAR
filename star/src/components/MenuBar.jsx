@@ -11,7 +11,7 @@ const MenuBar = () => {
     const [profileDialog, setProfileDialog] = useState(false);
 
     useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem('userDetails'));
+        const storedUser = JSON.parse(sessionStorage.getItem('userDetails'));
         setUser(storedUser);
         
         if (storedUser == null) {
@@ -39,8 +39,8 @@ const MenuBar = () => {
     const handleLogout = async () => {
         try {
             const res = await UserLogout();
-            localStorage.removeItem('token');
-            localStorage.removeItem('userDetails');
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('userDetails');
             window.location.assign('/login');
         } catch (err) {
             console.log(err);
