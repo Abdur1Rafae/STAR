@@ -90,7 +90,7 @@ module.exports.updateProfile = async (req,res) =>
     {
         const user = await User.findById(id)
         if(!user){return res.status(404).json({error: 'ER_NOT_FOUND', message: `User not found`}) }
-        if(currentPassword === user.password)
+        if(await bcrypt.compare(currentPassword, user.password))
         {
             user.password = await bcrypt.hash(newPassword, saltRounds)
             user.save()
