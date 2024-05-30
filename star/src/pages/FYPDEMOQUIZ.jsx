@@ -220,12 +220,6 @@ const QuizScreen = () => {
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
-    const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
-    if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
-      localStorage.removeItem('responseId')
-      localStorage.removeItem('SuccessSubmit')
-      window.location.assign('quiz-submitted')
-    }
     updateQuizDetails(storedQuizDetails)
     let res = JSON.parse(localStorage.getItem('studentResponses'))
     let res2 = localStorage.getItem('num')

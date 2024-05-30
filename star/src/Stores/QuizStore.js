@@ -27,6 +27,7 @@ const QuizStore = create((set) => ({
   quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
   currentQuestionStartTime: Date.now(),
   reachedLastQuestion: false,
+  setReachedLastQuestion : () => set((state)=> ({...state, reachedLastQuestion: true})),
   vioArray: [],
   setVioArray: (newVios) => set((state) => ({...state, vioArray: [...state.vioArray, newVios] })),
   clearVioArray: () => set({ vioArray: [] }),
@@ -46,8 +47,13 @@ const QuizStore = create((set) => ({
   setDescription: (desc) => set({ description: desc }),
 
   updateQuizDetails: (details) => set((state) => {
+    let reachedLast = false;
+    if(state.questions.length == 1) {
+      reachedLast = true
+    }
     return {
     ...state,
+    reachedLastQuestion: reachedLast,
     sectionId: details.sectionId,
     title: details.title,
     teacher: details.teacher,

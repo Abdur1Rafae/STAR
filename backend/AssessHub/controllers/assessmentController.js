@@ -234,7 +234,7 @@ module.exports.demoAssessment = async (req,res) =>
         default:
         sectionId = null;
       }
-
+      
       if(sectionId === null){return res.status(400).json({error: 'ER_INVLD', message: 'Invalid user role'})}
   
       const session = await conn.startSession()
@@ -251,6 +251,7 @@ module.exports.demoAssessment = async (req,res) =>
         return response[0]._id
       })
       session.endSession()
+      
   
       const assessment = await Assessment.findById(assessmentId)
       .select('title configurations totalMarks questionBank.question -_id')

@@ -3,6 +3,13 @@ import logo from '../../components/logo.png';
 import circlebg from './circlebg.png';
 import SubmitButton from '../../components/button/SubmitButton';
 import { DemoAssessmentEnrollment } from '../../APIS/AuthAPI';
+import CryptoJS from 'crypto-js';
+
+
+const encryptData = (data, key) => {
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
+    return encrypted;
+  };
 
 const LandingPage = () => {
     const [selectedRole, setSelectedRole] = useState('student');
@@ -37,8 +44,41 @@ const LandingPage = () => {
 
     const handleRegisteration = async() => {
         try {
-            const res = await DemoAssessmentEnrollment({name: name, email: email, role: selectedRole})
+            const req = await DemoAssessmentEnrollment({name: name, email: email, role: selectedRole})
+            const res = req.data
+            const userDetails = {
+                name: name,
+                email: email,
+                role: selectedRole
+            }
+            sessionStorage.setItem('userDetails', JSON.stringify(userDetails))
+            localStorage.setItem('responseId', res.responseId)
+            const obj = {
+                duration: res.configurations.duration,
+                closeDate: res.configurations.closeDate,
+                title: res.title,
+                marks: res.totalMarks,
+                teacher: 'Jawwad Ahemd Farid',
+                sectionId: 'fyp',
+                id: 'fyp',
+                description: '',
+                className: 'fyp',
+                quizConfig: {
+                    adaptiveTesting: res.configurations.adaptiveTesting,
+                    finalScore: res.configurations.finalScore,
+                    instantFeedback: res.configurations.instantFeedback,
+                    monitoring: res.configurations.monitoring,
+                    navigation: res.configurations.monitoring,
+                    randomizeQuestions: res.configurations.randomizeQuestions,
+                    randomizeAnswers: res.configurations.randomizeAnswers,
+                    releaseGrades: res.configurations.releaseGrades,
+                    viewSubmissions: res.configurations.viewSubmissions
+                }
+            }
+            localStorage.setItem('quizDetails', JSON.stringify(obj))
+            localStorage.setItem('questions', JSON.stringify(encryptData(res.questions, 'Arete1234')));
             console.log(res)
+            window.location.assign('/fyp-demo')
         } catch(err) {
             console.log(err)
         }

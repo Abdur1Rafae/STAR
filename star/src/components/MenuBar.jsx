@@ -64,7 +64,7 @@ const MenuBar = ({noProfile}) => {
                         <button className='ml-2 sm:ml-4 sm:mr-4 text-white flex w-26 lg:w-56' onClick={handleProfileClick}>
                             <div className="UserInfo w-full text-white whitespace-nowrap self-center flex flex-col">
                                 <h1 className='text-xs self-start font-bold'>{user.name}</h1>
-                                <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>{user.role === 'teacher' ? 'Teacher' : 'Student'}</h3>
+                                <h3 className='text-xs text-[#C5D86D] self-start font-semibold'>{user.role === 'teacher' ? 'Teacher' : user.role === 'Student' ? 'Student' : user.role}</h3>
                             </div>
                             <MdKeyboardArrowDown className='text-3xl self-center' />
                         </button>
