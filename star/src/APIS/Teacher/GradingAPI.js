@@ -38,6 +38,19 @@ const GradeResponse = async({submissionId, responseId, score, feedback}) => {
     return res.data
 }
 
+const PenalizeResponse = async({responseId, penalty}) => {
+    const token = sessionStorage.getItem('token')
+    const res = await AxiosBase.put(`/teacherhub/grade/penalize-response/${responseId}`,{
+        penalty: penalty
+    },{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+
+    return res.data
+}
+
 const PublishAssessment = async({id}) => {
     const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`/teacherhub/grade/publish/${id}`,{},{
@@ -71,4 +84,4 @@ const GetFlagDetails = async({id}) => {
     return res.data.data
 }
 
-export {GetFlagDetails, FlaggedStudents, GetAssessmentSummary, GetAssessmentResponses, GradeResponse, PublishAssessment}
+export {PenalizeResponse, GetFlagDetails, FlaggedStudents, GetAssessmentSummary, GetAssessmentResponses, GradeResponse, PublishAssessment}

@@ -16,7 +16,7 @@ const LandingPage = () => {
     setIsDropDownOpen(!isDropDownOpen);
   };
 return (
-<div className='w-full scroll-smooth '>
+<div className='w-full scroll-smooth font-body'>
     <div className='flex items-center justify-between bg-DarkBlue'>
     <div className="menuleft logo flex justify-start">
       <img loading="lazy" src={logo} className='w-44 h-14'></img>
@@ -116,7 +116,7 @@ return (
         </div>
         <div className='h-full w-full flex flex-col items-center justify-center  '>
             <h2 className='font-bold text-2xl md:text-5xl max-md:text-center'>Your Journey Starts Here</h2>
-            <p className='text-center font-normal  text-sm md:text-lg mt-12'>Arete (ἀρετή) is an ancient Greek concept that goes beyond just grades; it's about unlocking your full potential across all aspects of learning. It's about discovering your unique strengths, understanding areas for growth, and striving for excellence.</p>
+            <p className='font-normal  text-sm md:text-lg mt-12 px-4'><strong>Arete (ἀρετή)</strong> is an ancient Greek concept that goes beyond just grades; it's about unlocking your full potential across all aspects of learning. It's about discovering your unique strengths, understanding areas for growth, and striving for excellence.</p>
         </div>
     </div>
 

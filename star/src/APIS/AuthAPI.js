@@ -41,7 +41,12 @@ const resetPassword = async({email, password}) => {
 }
 
 const UpdateProfile = async({newPass, currPass}) => {
-    const res = await AxiosBase.put('userguardian/update-profile', {newPassword: newPass, currentPassword: currPass})
+    const token = sessionStorage.getItem('token')
+    const res = await AxiosBase.put('userguardian/update-profile', {newPassword: newPass, currentPassword: currPass},{
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
     return res
 }
 

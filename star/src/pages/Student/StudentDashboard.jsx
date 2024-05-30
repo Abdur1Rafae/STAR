@@ -11,6 +11,12 @@ const StudentDashboard = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
+        localStorage.removeItem('studentResponses')
+        localStorage.removeItem('num')
+        localStorage.removeItem('questions')
+        localStorage.removeItem('attempt')
+        localStorage.removeItem('score')
+        localStorage.removeItem('maxScore')
         const GetLiveAssessments = (async()=>{
             try{
                 const res = await GetOngoingAssessments()
