@@ -12,7 +12,6 @@ const MCQPanel = ({ question }) => {
   const [multiSelect, setMultiSelect] = useState(question.correctOptions.length > 1)
   const [isFlagged, setIsFlagged] = useState(question.flagged);
   const flagQuestion = QuizStore(store=> store.flagQuestion)
-  const filterQuestions = QuizStore(store=> store.filterQuestions)
   const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
@@ -106,16 +105,14 @@ const MCQPanel = ({ question }) => {
         </div>
         <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
       </div>
-      <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
         <div className='self-start  w-full'>
-          <div className=' w-full'>
+          <div className=' w-full mt-4'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-black border-2 mt-2"></div>
 
       <div className='w-full md:w-1/2 flex items-start'>
         <div className="w-full">

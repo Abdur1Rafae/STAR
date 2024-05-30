@@ -15,8 +15,12 @@ const AdaptiveQuizScreen = () => {
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const { questions, vioArray, setVioArray, clearVioArray, submittingQuiz, setSubmittingQuiz, initializeToEasyQuestion, currentQuestionIndex, questionAttempt, maxAttempts, responses, nextQuestion, reachedLastQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = AdapQuizStore();
-
+  const { questions, vioArray, setVioArray, clearVioArray, setCurrentQuestionIndex, score, setScore, maxScore, setMaxScore, setQuestionAttempt, setReachedLastQuestion, submittingQuiz, setSubmittingQuiz, initializeToEasyQuestion, currentQuestionIndex, questionAttempt, maxAttempts, responses, nextQuestion, reachedLastQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = AdapQuizStore();
+  
+  const getQuestion = () => {
+    let question = questions[currentQuestionIndex];
+    return question
+  }
   const { monitoring } = quizConfig
 
   const webcamRef = useRef(null);
@@ -215,53 +219,51 @@ const AdaptiveQuizScreen = () => {
     }
     updateQuizDetails(storedQuizDetails)
     initializeToEasyQuestion()
-    createResponseObjects([])
+    let res = JSON.parse(localStorage.getItem('studentResponses'))
+    let res2 = localStorage.getItem('attempt')
+    let res3 = localStorage.getItem('score')
+    let res4 = localStorage.getItem('maxScore')
+    createResponseObjects(res == null ? [] : res)
+    if(res2 !== null) {
+      setQuestionAttempt(Number(res2))
+      setCurrentQuestionIndex(Number(res2))
+      setScore(res3)
+      setMaxScore(res4)
+      setReachedLastQuestion()
+    }
+    localStorage.removeItem('studentResponses')
+    localStorage.removeItem('attempt')
+    localStorage.removeItem('score')
+    localStorage.removeItem('maxScore')
   }, [])
 
+  const saveResponsesToLocalStorage = () => {
+    localStorage.setItem('studentResponses', JSON.stringify(responses));
+    localStorage.setItem('attempt', questionAttempt)
+    localStorage.setItem('score', score)
+    localStorage.setItem('maxScore', maxScore)
+  };
+
   useEffect(() => {
-    const saveData = async () => {
-      try {
-        await submitResponses();
-      } catch (err) {
-        console.log(err);
-      }
-    };
-  
     const handleBeforeUnload = (event) => {
       if (!submittingQuiz) {
-        event.preventDefault();
+        saveResponsesToLocalStorage();
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-        return 'You have unsaved changes. Are you sure you want to leave?';
-      }
-    };
-  
-    const handleUnload = async (event) => {
-      if (!submittingQuiz) {
-        event.preventDefault();
-      event.returnValue = "";
-        await saveData();
       }
     };
   
     window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('unload', handleUnload);
   
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('unload', handleUnload);
     };
   }, [responses, submittingQuiz]);
-
-  const getQuestion = () => {
-    let question = questions[currentQuestionIndex];
-    return question
-  }
-
-  const currentQuestion = getQuestion()
 
   const handleNextQuestion = () => {
     nextQuestion()
   };
+
+  const currentQuestion = getQuestion()
 
   const handleSubmission = async() => {
     try {
@@ -300,7 +302,7 @@ const AdaptiveQuizScreen = () => {
           <div className={`fixed sm:w-full h-12 border-black border-t-[1px] bottom-0 left-0 right-0 bg-white p-4 flex justify-between items-center`}>
             <div className="mb-0">
               <p className="text-md md:text-lg font-semibold">
-                Question {questionAttempt + 1} out of {maxAttempts}
+                Question {Number(questionAttempt) + 1} out of {maxAttempts}
               </p>
             </div>
 
@@ -321,7 +323,7 @@ const AdaptiveQuizScreen = () => {
         </div>
         {
           submitConfirmBox ? 
-          <ConfirmationBox message={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
+          <ConfirmationBox heading={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
           : 
           ''
         }

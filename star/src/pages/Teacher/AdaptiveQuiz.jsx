@@ -10,18 +10,16 @@ import QuestionCreator from '../../components/Teacher/QuestionCreator';
 import { QuestionContext } from '../../Context/QuestionsContext';
 import SelectQuestions from '../../components/Teacher/SelectQuestions';
 import SubheaderBut from '../../components/Teacher/SubheaderBut';
-import { IoIosMove } from "react-icons/io";
 import { ToggleStore } from '../../Stores/ToggleStore';
 import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
-import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
+import { GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
 import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
-import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
-import SubmitButton from '../../components/button/SubmitButton';
 import ErrorBox from '../../components/ErrorBox';
 import ConfirmationBox from '../../components/ConfirmationBox';
+import { SaveAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
 const AdaptiveQuiz = () => {
@@ -308,7 +306,7 @@ const AdaptiveQuiz = () => {
 
     const handleSaveDraft = async() => {
         try{
-            const res = await DraftAssessment({id: assessmentName.assessmentId})
+            const res = await SaveAssessment({id: assessmentName.assessmentId, status: 'Draft', stoppingCriteria: questionCount, totalMarks: totalMarks})
 
             window.location.assign('/teacher/home')
         } catch(err) {
@@ -336,7 +334,7 @@ const AdaptiveQuiz = () => {
         setError('')
         setShowError(false)
         try{
-            const res = await LaunchAssessment({id: assessmentName.assessmentId})
+            const res = await SaveAssessment({id: assessmentName.assessmentId, status: 'Launched', stoppingCriteria: questionCount, totalMarks: totalMarks})
 
             window.location.assign('/teacher/home')
         } catch(err) {
@@ -429,7 +427,6 @@ const AdaptiveQuiz = () => {
                                     <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
                                 </div>
                                 <div className='overflow-y-auto'>
-                                    <p className='ml-4 text-xs mt-2 font-bold'>Points are irrelevant. All easy questions are of 1 point, medium of 2 points and hard of 3 points.</p>
                                     <div className='h-full flex flex-col gap-4'>
                                         <SelectQuestions topics={topicList} adaptive={true}/>
                                     </div>   
@@ -444,7 +441,6 @@ const AdaptiveQuiz = () => {
                         {
                             creatingQuestion && (
                                 <QuestionCreator
-                                adaptive={true}
                                     type={creatingQuestion}
                                     closeHandler={handleCloseQuestionCreator}
                                     savingHandler={saveQuestionHandler}

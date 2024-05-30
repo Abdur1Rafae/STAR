@@ -61,16 +61,14 @@ const CorrectTF = ({ question }) => {
             </div>
           </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
       <div className="mb-4">
           <div className="mb-4 flex flex-col items-center">
             {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
-            <div className=' w-full'>
+            <div className=' w-full mt-4'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
             </div>
           </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
 
       <div className="options flex justify-center">

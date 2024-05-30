@@ -39,7 +39,11 @@ const CreateAssessment = async({name, description, sections, image, openDate, cl
             openDate: new Date(openDate),
             duration: duration,
             closeDate: new Date(closeDate),
-            adaptiveTesting: adaptiveTesting,
+            adaptiveTesting: {
+                active: adaptiveTesting,
+                totalMarks: 0,
+                stoppingCriteria: 0
+            },
             monitoring: monitoring,
             instantFeedback: instantFeedback,
             navigation: navigation,
@@ -188,7 +192,7 @@ const MonitorAssessment = async({id}) => {
     return res.data.data
 }
 
-const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
+const UpdateAssessment = async({id, name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore, stoppingCriteria, totalMarks}) => {
     const token = sessionStorage.getItem('token')
     const res = await AxiosBase.put(`teacherhub/assessment-management/update-assessment/${id}`,{
         title: name,
@@ -200,7 +204,11 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
             openDate: new Date(openDate),
             duration: duration,
             closeDate: new Date(closeDate),
-            adaptiveTesting: adaptiveTesting,
+            adaptiveTesting: {
+                active: adaptiveTesting,
+                totalMarks: adaptiveTesting ? totalMarks : null,
+                stoppingCriteria: adaptiveTesting ? stoppingCriteria : null
+            },
             monitoring: monitoring,
             instantFeedback: instantFeedback,
             navigation: navigation,

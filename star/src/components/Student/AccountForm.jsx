@@ -21,7 +21,7 @@ const AccountForm = () => {
   };
   const handleDialogSave = async() => {
     try {
-      const res = await UpdateProfile({name: user.name, newPass: newPassword, currPass: currentPassword})
+      const res = await UpdateProfile({newPass: newPassword, currPass: currentPassword})
       console.log(res)
     } catch(err) {
       console.log(err)

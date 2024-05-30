@@ -18,12 +18,12 @@ import { FlagStudents } from '../../APIS/Student/AssessmentAPI';
 
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
-  const [submittingQuiz, setSubmittingQuiz] = useState(false)
   const [submitConfirmBox, setSubmitConfirmBox] = useState(false)
+  
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const { questions, currentQuestionIndex, vioArray, setVioArray, clearVioArray, filterQuestions, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
+  const { questions, currentQuestionIndex, setCurrentQuestionIndex, vioArray, setVioArray, submittingQuiz, setSubmittingQuiz,  clearVioArray, filterQuestions, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback, monitoring} = quizConfig
 
@@ -32,6 +32,10 @@ const QuizScreen = () => {
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
   const [interval, setIntervalId] = useState()
+
+  useEffect(()=> {
+
+  }, [])
 
   const checkWebcamReady = () => {
     if (webcamRef.current && webcamRef.current.video && webcamRef.current.video.readyState === 4) {
@@ -217,28 +221,33 @@ const QuizScreen = () => {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
-      console.log("here")
       localStorage.removeItem('responseId')
       localStorage.removeItem('SuccessSubmit')
       window.location.assign('quiz-submitted')
     }
     updateQuizDetails(storedQuizDetails)
-    createResponseObjects([])
+    let res = JSON.parse(localStorage.getItem('studentResponses'))
+    let res2 = localStorage.getItem('num')
+    createResponseObjects(res == null ? [] : res)
+    if(res2 !== null) {
+      setCurrentQuestionIndex(Number(res2))
+    }
+    
+    localStorage.removeItem('studentResponses')
+    localStorage.removeItem('num')
+
   }, [])
 
+  const saveResponsesToLocalStorage = () => {
+    localStorage.setItem('studentResponses', JSON.stringify(responses));
+    localStorage.setItem('num', currentQuestionIndex)
+  };
+
   useEffect(() => {
-    const saveData = async () => {
-      try {
-        await submitResponses();
-      } catch (err) {
-        console.log(err);
-      }
-    };
-  
     const handleBeforeUnload = (event) => {
       if (!submittingQuiz) {
+        saveResponsesToLocalStorage();
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-        saveData();
       }
     };
   
@@ -277,10 +286,11 @@ const QuizScreen = () => {
 
   const handleSubmission = async() => {
     try {
-      setSubmittingQuiz(true)
+      setSubmittingQuiz()
       const res = await submitResponses()
-      localStorage.removeItem('SuccessSubmit')
       localStorage.removeItem('questions')
+      localStorage.removeItem('studentResponses')
+      localStorage.removeItem('num')
     } catch(err) {
       console.log(err)
     }

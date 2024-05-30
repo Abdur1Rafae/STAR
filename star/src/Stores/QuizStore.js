@@ -21,6 +21,7 @@ const QuizStore = create((set) => ({
   marks: 0,
   questions: localStorage.getItem('questions') ? decryptData(JSON.parse(localStorage.getItem('questions')), 'Arete1234') : [],
   currentQuestionIndex: 0,
+  setCurrentQuestionIndex : (num) => set((state) => ({...state, currentQuestionIndex: Number(num)})),
   filter: 'all',
   filteredQuestions: [],
   quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
@@ -236,11 +237,6 @@ const QuizStore = create((set) => ({
   submitResponses: () => {
     set((state) => {
       const nextState = {...state}
-      const submissionObj = {
-        assessmentId: state.id,
-        submit: true
-      }
-      localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
       const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
       const responseIndex = state.currentQuestionIndex;
       if (responseIndex !== -1) {
@@ -261,8 +257,47 @@ const QuizStore = create((set) => ({
             const responseId = localStorage.getItem('responseId')
             const res = await FlagStudents({data: state.vioArray, id: responseId})
         }
-          const sub = await SubmitAssessment({responses: nextState.responses})
+          const sub = await SubmitAssessment({responses: nextState.responses, action: 'submit', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
+          console.log(sub)
+          if(state.quizConfig.finalScore && sub.data.finalScore) {
+            sessionStorage.setItem('Score', sub.data.finalScore)
+          }
           window.location.assign('quiz-submitted')
+        } catch(err) {
+          console.log(err)
+        }
+      }
+
+      res()
+      return state;
+    })
+  },
+
+  saveResponses: () => {
+    set((state) => {
+      const nextState = {...state}
+      const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+      const responseIndex = state.currentQuestionIndex;
+      if (responseIndex !== -1) {
+        const existingResponse = state.responses[responseIndex];
+        const updatedResponse = {
+            ...existingResponse,
+            responseTime: existingResponse.responseTime + elapsedTime
+        };
+        nextState.responses = [
+            ...state.responses.slice(0, responseIndex),
+            updatedResponse,
+            ...state.responses.slice(responseIndex + 1)
+        ];
+      }
+      const res = async() => {
+        try {
+          if(state.vioArray.length > 0) {
+            const responseId = localStorage.getItem('responseId')
+            const res = await FlagStudents({data: state.vioArray, id: responseId})
+        }
+          const sub = await SubmitAssessment({responses: nextState.responses, action: 'save', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
+          console.log(sub)
         } catch(err) {
           console.log(err)
         }

@@ -88,7 +88,7 @@ const AdapMCQPanel = ({ question }) => {
             </p>
             <div className='mr-2 flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
               <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
-              <p className="text-gray-500 text-sm self-center"> {question?.difficulty === 'Easy' ? 1 : question?.difficulty === 'Medium' ? 2 : 3} marks</p>
+              <p className="text-gray-500 text-sm self-center"> {question?.points} marks</p>
             </div>
             <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
               {question?.difficulty}
@@ -96,16 +96,13 @@ const AdapMCQPanel = ({ question }) => {
           </div>
         </div>
       </div>
-      <div className="border-t border-black border-2 mt-2 mb-4"></div>
-      <div className="mb-4 flex flex-col items-center">
-        <div className='self-start w-full'>
+      <div className="mb-2 flex flex-col items-center">
+        <div className='self-start w-full mt-4'>
           <div className='w-full'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
           </div>
         </div>
       </div>
-
-      <div className="border-t border-black border-2 mt-2"></div>
 
       <div className='w-full md:w-1/2 flex items-start'>
         <div className="w-full">

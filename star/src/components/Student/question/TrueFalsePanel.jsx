@@ -13,7 +13,6 @@ const TrueFalsePanel = ({ question, Flagged}) => {
   const flagQuestion = QuizStore(store=> store.flagQuestion)
   const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
-  const filterQuestions = QuizStore(store=> store.filterQuestions)
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
   const updateResponse = QuizStore(store=>store.updateResponse)
   const [response, setResponse] = useState(null)
@@ -63,16 +62,14 @@ const TrueFalsePanel = ({ question, Flagged}) => {
           </div>
           <FlagButton flagged={isFlagged} onToggleFlag={handleToggleFlag}/>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
       <div className="mb-4">
           <div className="mb-4 flex flex-col items-center">
             {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
-            <div className='self-start w-full'>
+            <div className='self-start w-full mt-4'>
               <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
             </div>
           </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
 
       <div className="options flex justify-center">

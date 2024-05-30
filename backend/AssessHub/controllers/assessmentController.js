@@ -9,11 +9,12 @@ module.exports.beginAssessment = async (req,res) =>
     const {assessmentId, sectionId} = req.params
 
     const session = await conn.startSession()
-    await session.withTransaction(async () => 
+    const id = await session.withTransaction(async () => 
     {
-      await Response.create([{student, assessment: assessmentId, section: sectionId}], {session})
+      const response = await Response.create([{student, assessment: assessmentId, section: sectionId}], {session})
       const updatedStudent = await User.findByIdAndUpdate( student,{ $addToSet: { attemptedAssessments : assessmentId } }, {session})
       if (!updatedStudent) {throw new Error('Student not found')}
+      return response[0]._id
     })
     session.endSession()
 
@@ -34,7 +35,9 @@ module.exports.beginAssessment = async (req,res) =>
           number: index + 1
     }))
 
-    res.status(201).json({responseId: response._id, questions: formattedData})
+    console.log(id)
+
+    res.status(201).json({responseId: id, questions: formattedData})
 
   }
   catch (err) {
@@ -48,6 +51,7 @@ module.exports.submitAssessment = async (req,res) =>
   {
     const student = req.body.decodedToken.id
     const {responseId} = req.params
+    console.log(responseId)
     const {action, adaptiveTesting, finalScore, totalScore, submission} = req.body
 
     let response = {responses: submission}
@@ -56,14 +60,19 @@ module.exports.submitAssessment = async (req,res) =>
 
     if(adaptiveTesting === true){response.totalScore = totalScore}
     
-    const updatedResponse = await Response.findByIdAndUpdate(responseId, response)
+    const updatedResponse = await Response.findByIdAndUpdate(
+      responseId, 
+      response, 
+      { new: true } 
+    );
+    console.log(updatedResponse)
 
     if (!updatedResponse) {throw new Error('Response not found')}
 
     let reply = {message: 'Response recorded successfully'}
 
     if(finalScore === true && action === 'submit'){reply.finalScore = updatedResponse.totalScore}
-
+    
     return res.status(201).json(reply)
 
   }
@@ -148,7 +157,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
         },
         {
             path: 'assessments', 
-            select: '_id title description configurations coverImage status totalMarks',
+            select: '_id title description configurations coverImage status totalMarks questionBank',
             match: 
             { 
               'configurations.openDate': { $lt: new Date() },
@@ -176,6 +185,7 @@ module.exports.getOngoingAssessments = async (req,res) =>
           {
             if(!assessments.attemptedAssessments || !assessments.attemptedAssessments.includes(assessment._id))
             {
+              console.log(assessment)
               const assessmentData = 
               {
                 sectionId: section._id,

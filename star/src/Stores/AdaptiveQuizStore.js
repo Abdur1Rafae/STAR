@@ -25,8 +25,12 @@ const AdapQuizStore = create((set) => ({
     quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
     currentQuestionStartTime: Date.now(),
     reachedLastQuestion: false,
+    setReachedLastQuestion : () => set((state)=> ({...state, reachedLastQuestion: true})),
     questionAttempt: 0,
     score: 0,
+    setScore : (score) => set((state) => ({...state, score: Number(score)})),
+    maxScore: 0,
+    setMaxScore : (score) => set((state)=>({...state, maxScore: Number(score)})),
     maxAttempts: 5,
     vioArray: [],
     setVioArray: (newVios) => set((state) => ({...state, vioArray: [...state.vioArray, newVios] })),
@@ -34,8 +38,11 @@ const AdapQuizStore = create((set) => ({
 
     responses: [],
     submittingQuiz: false,
+    adaptiveMarks: 0,
 
     setSubmittingQuiz : () => set((state) => ({...state, submittingQuiz: true})),
+
+    setQuestionAttempt : (num) => set((state)=> ({...state, questionAttempt: num})),
 
     updateQuizDetails: (details) => set((state) => {
         return {
@@ -49,7 +56,9 @@ const AdapQuizStore = create((set) => ({
             description: details.description,
             className: details.className,
             marks: details.marks,
-            quizConfig: details.quizConfig
+            quizConfig: details.quizConfig,
+            maxAttempt: details.quizConfig.adaptiveTesting.stoppingCriteria,
+            adaptiveMarks: details.quizConfig.adaptiveTesting.totalMarks
         }
     }),
 
@@ -108,7 +117,13 @@ const AdapQuizStore = create((set) => ({
             }
         })},
     
-    setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
+    setCurrentQuestionIndex: (index) => {
+        set((state) => { 
+            const res = state.responses[index].questionId
+            const currentQuestionIndex = state.questions.findIndex((question) => question._id == res) 
+            return {...state, currentQuestionIndex: currentQuestionIndex}
+        })
+    },
 
     initializeToEasyQuestion : () => {
         set((state) => {
@@ -125,6 +140,7 @@ const AdapQuizStore = create((set) => ({
 
             const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
             const responseIndex = state.questionAttempt;
+            console.log(responseIndex)
             if (responseIndex !== -1) {
                 const existingResponse = state.responses[responseIndex];
                 const updatedResponse = {
@@ -158,10 +174,12 @@ const AdapQuizStore = create((set) => ({
                 }
 
                 let nextQuestionIndex = 0;
+                let totalScore = state.maxScore
                 let score = state.score
 
                 if(correctAnswer) {
                     if(questionCheck.difficulty == 'Easy') {
+                        totalScore += 1
                         score += 1;
                         nextQuestionIndex =  state.questions.findIndex(question => 
                             question.difficulty === 'Medium' &&
@@ -169,6 +187,7 @@ const AdapQuizStore = create((set) => ({
                         );
                     }
                     else if(questionCheck.difficulty == 'Medium') {
+                        totalScore += 2
                         score += 2;
                         nextQuestionIndex =  state.questions.findIndex(question => 
                             question.difficulty === 'Hard' &&
@@ -176,6 +195,7 @@ const AdapQuizStore = create((set) => ({
                         );
                     }
                     else {
+                        totalScore += 3
                         score += 3
                         nextQuestionIndex =  state.questions.findIndex(question => 
                             question.difficulty === 'Hard' &&
@@ -185,26 +205,27 @@ const AdapQuizStore = create((set) => ({
                 }
                 else {
                     if(questionCheck.difficulty == 'Easy') {
+                        totalScore += 1
                         nextQuestionIndex = state.questions.findIndex(question => 
                             question.difficulty === 'Easy' &&
                             !state.responses.some(response => response.questionId === question._id)
                         );
                     }
                     else if(questionCheck.difficulty == 'Medium') {
+                        totalScore += 2
                         nextQuestionIndex = state.questions.findIndex(question => 
                             question.difficulty === 'Easy' &&
                             !state.responses.some(response => response.questionId === question._id)
                         );
                     }
                     else {
+                        totalScore += 3
                         nextQuestionIndex = state.questions.findIndex(question => 
                             question.difficulty === 'Medium' &&
                             !state.responses.some(response => response.questionId === question._id)
                         );
                     }
                 }
-
-                console.log(score)
 
                 nextState.responses[state.questionAttempt + 1].questionId = state.questions[nextQuestionIndex]._id
                 
@@ -213,7 +234,7 @@ const AdapQuizStore = create((set) => ({
                     reachedLast = true
                 }
                 const nextQuestionStartTime = Date.now();
-                nextState = { ...nextState, score: score, questionAttempt: state.questionAttempt + 1, currentQuestionIndex: nextQuestionIndex, reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
+                nextState = { ...nextState, score: score, maxScore: totalScore, questionAttempt: state.questionAttempt + 1, currentQuestionIndex: nextQuestionIndex, reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
                 return nextState;
             }
@@ -230,11 +251,6 @@ const AdapQuizStore = create((set) => ({
     submitResponses: () => {
         set((state) => {
             const nextState = {...state}
-            const submissionObj = {
-                assessmentId: state.id,
-                submit: true
-            }
-            localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
             const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
             const responseIndex = state.questionAttempt;
             if (responseIndex !== -1) {
@@ -255,9 +271,51 @@ const AdapQuizStore = create((set) => ({
                         const responseId = localStorage.getItem('responseId')
                         const res = await FlagStudents({data: state.vioArray, id: responseId})
                     }
-                    const sub = await SubmitAssessment({responses: nextState.responses})
+                    const sub = await SubmitAssessment({responses: nextState.responses, action: 'submit', adaptiveTesting: true, showFinalScore: state.quizConfig.finalScore, totalScore: (state.score/state.maxScore * state.adaptiveMarks).toFixed(2) })
                     console.log(sub)
+                    if(state.quizConfig.finalScore && sub.data.finalScore) {
+                        sessionStorage.setItem('Score', sub.data.finalScore)
+                    }
                     window.location.assign('quiz-submitted')
+                } catch(err) {
+                    console.log(err)
+                }
+            }
+
+            res()
+            return state;
+        })
+    },
+
+    saveResponses: () => {
+        set((state) => {
+            const nextState = {...state}
+            const submissionObj = {
+                assessmentId: state.id,
+                submit: true
+            }
+            const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+            const responseIndex = state.questionAttempt;
+            if (responseIndex !== -1) {
+                const existingResponse = state.responses[responseIndex];
+                const updatedResponse = {
+                    ...existingResponse,
+                    responseTime: existingResponse.responseTime + elapsedTime
+                };
+                nextState.responses = [
+                    ...state.responses.slice(0, responseIndex),
+                    updatedResponse,
+                    ...state.responses.slice(responseIndex + 1)
+                ];
+            }
+            const res = async() => {
+                try {
+                    if(state.vioArray.length > 0) {
+                        const responseId = localStorage.getItem('responseId')
+                        const res = await FlagStudents({data: state.vioArray, id: responseId})
+                    }
+                    const sub = await SubmitAssessment({responses: nextState.responses, action: 'save', adaptiveTesting: true, showFinalScore: state.quizConfig.finalScore, totalScore: state.score })
+                    console.log(sub)
                 } catch(err) {
                     console.log(err)
                 }

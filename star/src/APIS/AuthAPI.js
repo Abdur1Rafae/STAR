@@ -40,8 +40,8 @@ const resetPassword = async({email, password}) => {
     return res
 }
 
-const UpdateProfile = async({newPass, currPass, name}) => {
-    const res = await AxiosBase.put('userguardian/update-profile', {name: name, newPassword: newPass, currentPassword: currPass})
+const UpdateProfile = async({newPass, currPass}) => {
+    const res = await AxiosBase.put('userguardian/update-profile', {newPassword: newPass, currentPassword: currPass})
     return res
 }
 

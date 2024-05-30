@@ -14,11 +14,16 @@ const Timer = ({adaptive}) => {
   const closingTime = new Date(closingDateLocal).getTime();
   const currentTime = Date.now();
 
-  const initialRemainingTime = closingTime < (currentTime + durationInSeconds)
-    ? Math.max(0, (closingTime - currentTime) / 1000)
-    : durationInSeconds/1000;
+  const storedRemainingTime = localStorage.getItem('remainingTime');
+  const initialRemainingTime = storedRemainingTime !== null 
+    ? parseFloat(storedRemainingTime) 
+    : (closingTime < (currentTime + durationInSeconds)
+        ? Math.max(0, (closingTime - currentTime) / 1000)
+        : durationInSeconds / 1000);
+
 
   const [remainingTime, setRemainingTime] = useState(initialRemainingTime);
+  localStorage.removeItem('remainingTime')
   const lastTimestampRef = useRef(Date.now());
 
   const saveData = async () => {
@@ -49,17 +54,23 @@ const Timer = ({adaptive}) => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    const handleBeforeUnload = () => {
+      localStorage.setItem('remainingTime', remainingTime);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       clearInterval(timer);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, []);
+  }, [remainingTime]);
 
   useEffect(() => {
     const handleRemainingTime = async () => {
       if (remainingTime === 0) {
         setSubmittingQuiz()
-        localStorage.removeItem('SuccessSubmit');
         await saveData();
         window.location.assign('quiz-submitted');
       }

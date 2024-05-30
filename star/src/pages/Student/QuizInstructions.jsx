@@ -32,6 +32,7 @@ const QuizInstructions = () => {
     try {
       if(!quizDetails.quizConfig.monitoring) {
         const res = await GetAssessmentQuestions({id: quizDetails.id, sectionId: quizDetails.sectionId})
+        console.log(res)
         localStorage.setItem('responseId', res.responseId)
         if(res.questions && res.questions.length > 0) {
           const questionSet = [...res.questions]
@@ -57,7 +58,7 @@ const QuizInstructions = () => {
             localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
           }
 
-          if(quizDetails.quizConfig.adaptiveTesting) {
+          if(quizDetails.quizConfig.adaptiveTesting.active) {
             window.location.assign('adaptive-quiz')
           }
           else {

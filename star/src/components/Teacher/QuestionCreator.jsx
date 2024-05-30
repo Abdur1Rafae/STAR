@@ -115,16 +115,8 @@ const QuestionCreator = ({adaptive, topicList, type, topic, questionID, savingHa
                     </datalist>
                 </div>
                 <div className='flex flex-col md:flex-row items-center'>
-                    {
-                        adaptive ?
-                        <></>
-                        :
-                        <>
-                            <p className='text-xs'>Points :&nbsp;</p>
-                            <input value={newPoints} onChange={(e)=> setNewPoints(e.target.value)} type='number' className='bg-LightBlue border-black border-[1px] w-16 h-6 rounded-md p-2'/>
-                        </>
-                    }
-                    
+                    <p className='text-xs'>Points :&nbsp;</p>
+                    <input value={newPoints} onChange={(e)=> setNewPoints(e.target.value)} type='number' className='bg-LightBlue border-black border-[1px] w-16 h-6 rounded-md p-2'/>
                 </div>
             </div>
         </div>

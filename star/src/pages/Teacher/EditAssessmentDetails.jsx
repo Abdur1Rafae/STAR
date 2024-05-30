@@ -13,19 +13,9 @@ import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
 import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { UpdateAssessment } from '../../APIS/Teacher/AssessmentAPI';
-import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 import { UploadImageFile } from '../../APIS/ImageAPI';
 import { baseUrl } from '../../APIS/BaseUrl';
-import { convertToLocalISOString } from '../../Utils/DateFunctions';
 
-
-function removeZFromISOString(isoString) {
-    if (isoString.endsWith('Z')) {
-        return isoString.slice(0, -1);
-    }
-   
-    return isoString;
-}
 
 function convertToLocalDateTime(isoString) {
     const date = new Date(isoString);
@@ -38,27 +28,24 @@ function convertToLocalDateTime(isoString) {
       second: '2-digit',
       hour12: false
     });
-    // Parse the input date string
+
     const [datePart, timePart] = dateString.split(', ');
     const [month, day, year] = datePart.split('/').map(Number);
     const [hours, minutes, seconds] = timePart.split(':').map(Number);
   
-    // Create a local Date object
     const localDate = new Date(year, month - 1, day, hours, minutes, seconds);
   
-    // Pad function to ensure double digits
     const pad = (num, size = 2) => num.toString().padStart(size, '0');
   
-    // Extract components with padding
+
     const formattedYear = localDate.getFullYear();
-    const formattedMonth = pad(localDate.getMonth() + 1); // Months are zero-based, so add 1
+    const formattedMonth = pad(localDate.getMonth() + 1); 
     const formattedDay = pad(localDate.getDate());
     const formattedHours = pad(localDate.getHours());
     const formattedMinutes = pad(localDate.getMinutes());
     const formattedSeconds = pad(localDate.getSeconds());
-    const formattedMilliseconds = pad(localDate.getMilliseconds(), 3); // Ensure milliseconds are 3 digits
+    const formattedMilliseconds = pad(localDate.getMilliseconds(), 3); 
   
-    // Construct the formatted string
     return `${formattedYear}-${formattedMonth}-${formattedDay}T${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
   }
 
@@ -269,7 +256,10 @@ function EditAssessmentDetails() {
     const handleNavigationDecision = () => {
         if(!allowNavigation) {
             setAllowInstantFeedback(false)
-            setAdaptiveTesting(false)
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: false
+            }))
         }
         setAllowNavigation((prev) => !prev)
     }
@@ -277,18 +267,27 @@ function EditAssessmentDetails() {
     const handleInstantFeedbackDecision = () =>{
         if(!allowInstantFeedback) {
             setAllowNavigation(false)
-            setAdaptiveTesting(false)
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: false
+            }))
         }
 
         setAllowInstantFeedback((prev) => !prev)
     }
 
     const handleAdaptiveTesting = () => {
-        if(adaptiveTesting) {
-            setAdaptiveTesting(false)
+        if(adaptiveTesting.active) {
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: false
+            }))
         }
         else {
-            setAdaptiveTesting(true)
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: true
+            }))
             setAllowInstantFeedback(false)
             setShowFinalScore(false)
             setAllowNavigation(false)
@@ -500,7 +499,7 @@ function EditAssessmentDetails() {
                             <BsInfoCircle size={14} className='ml-2'/></h2>
                             <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
                         </div>
-                        <ToggleButton isActive={adaptiveTesting} onClick={handleAdaptiveTesting}/>
+                        <ToggleButton isActive={adaptiveTesting.active} onClick={handleAdaptiveTesting}/>
                         </div>
                         <div className='flex mt-4'>
                         <div className='flex'>

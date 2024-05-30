@@ -40,7 +40,7 @@ const AdapTrueFalsePanel = ({ question, Flagged }) => {
             <div className='mr-2 flex justify-between space-x-1 px-2 h-12 border border-black rounded-md items-center font-semibold'>
               <div><GiBullseye className='text-gray-500 text-lg self-center'/></div>
               <p className="text-gray-500 text-sm self-center">
-                {question?.difficulty === 'Easy' ? 1 : question?.difficulty === 'Medium' ? 2 : 3} marks
+                {question?.points} marks
               </p>
             </div>
             <p className="text-gray-500 text-sm lg:text-md font-medium mr-2 p-2 border h-12 border-black rounded-md flex items-center">
@@ -48,7 +48,6 @@ const AdapTrueFalsePanel = ({ question, Flagged }) => {
             </p>
           </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
       <div className="mb-4 flex flex-col items-center">
         {question.image && (
@@ -60,7 +59,6 @@ const AdapTrueFalsePanel = ({ question, Flagged }) => {
           <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none' />
         </div>
       </div>
-      <div className="border-t border-black border-2 mt-2"></div>
       <div className="options flex justify-center">
         <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div

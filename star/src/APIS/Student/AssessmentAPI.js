@@ -34,11 +34,16 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
     return res.data;
 }
 
-const SubmitAssessment = async({responses}) => {
-    const id = sessionStorage.getItem('responseId')
+const SubmitAssessment = async({responses, action, adaptiveTesting, showFinalScore, totalScore}) => {
+    const id = localStorage.getItem('responseId')
     const token = sessionStorage.getItem('token')
+    console.log(showFinalScore)
     const res = await AxiosBase.post(`assesshub/assessment/submit-response/${id}`,{
-        submission: responses
+        submission: responses,
+        action: action,
+        adaptiveTesting: adaptiveTesting,
+        finalScore: showFinalScore,
+        totalScore: totalScore
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -70,26 +75,19 @@ const GetSubmission = async({id}) => {
     return res.data;
 }
 
-const LaunchAssessment = async({id}) => {
+const SaveAssessment = async({id, status, stoppingCriteria, totalMarks}) => {
     const token = sessionStorage.getItem('token')
-    const res = await AxiosBase.put(`teacherhub/assessment-management/launch-assessment/${id}`,{},{
+    const res = await AxiosBase.put(`teacherhub/assessment-management/save-assessment/${id}`, {
+        status: status,
+        stoppingCriteria: stoppingCriteria,
+        totalMarks: totalMarks
+    }, {
         headers: {
             authorization: `Bearer ${token}`
         }
     })
 
-    return res.data;
-}
-
-const DraftAssessment = async({id}) => {
-    const token = sessionStorage.getItem('token')
-    const res = await AxiosBase.put(`teacherhub/assessment-management/draft-assessment/${id}`,{},{
-        headers: {
-            authorization: `Bearer ${token}`
-        }
-    })
-
-    return res.data;
+    return res.data
 }
 
 const FlagStudents = async({data, id}) => {
@@ -103,4 +101,4 @@ const FlagStudents = async({data, id}) => {
     console.log(res.data)
 }
 
-export {FlagStudents, DraftAssessment, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary, LaunchAssessment}
+export {SaveAssessment, FlagStudents, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary}

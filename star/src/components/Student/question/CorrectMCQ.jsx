@@ -58,15 +58,13 @@ const CorrectMCQ = ({ question }) => {
           </div>
         </div>
       </div>
-      <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
         {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
-          <div className='self-start w-full'>
+          <div className='self-start w-full  mt-4'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
           </div>
       </div>
 
-      <div className="border-t border-black border-2 mt-2"></div>
 
       <div className="w-full md:w-1/2">
         {question?.options &&

@@ -118,7 +118,7 @@ const CaptureScreen = () => {
         localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
       }
 
-      if(quizDetails.quizConfig.adaptiveTesting) {
+      if(quizDetails.quizConfig.adaptiveTesting.active) {
         window.location.assign('/student/adaptive-quiz')
       }
       else {
