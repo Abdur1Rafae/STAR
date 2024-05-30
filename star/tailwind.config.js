@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Poppins']
+        body: ['Poppins'],
+        outfit : ['Outfit' , 'sans-serif']
       },
       colors: {
         'DarkBlue': '#2C6491',
