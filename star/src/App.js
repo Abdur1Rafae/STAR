@@ -39,11 +39,16 @@ const ForgotPassword = lazy(() => import('./pages/AuthenticationPages/ForgotPass
 const ChangePassword = lazy(() => import('./pages/AuthenticationPages/ChangePassword.jsx'));
 const CaptureScreen = lazy(()=> import('./pages/Student/CaptureScreen.jsx'))
 const Loader = lazy(() => import('./components/Loader.jsx'));
-
+const Form = lazy(() => import('./pages/LandingPages/FYPDemoForm.jsx'));
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root/>}>
+
+
       <Route path=''element={<LandingPage/>}></Route>
+
+      <Route path='form'element={<Form/>}></Route>
+
 
       <Route path='login'element={<Login/>}></Route>
       <Route path='signup'element={<Signup/>}></Route>
