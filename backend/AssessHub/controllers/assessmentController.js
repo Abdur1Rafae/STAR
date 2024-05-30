@@ -1,5 +1,6 @@
 const conn = require('../dbconfig/dbcon')
-const {Assessment, Question, User, Response} = require('library/index')
+const {Assessment, Question, User, Response, Section} = require('library/index')
+const mongoose = require('mongoose')
 
 module.exports.beginAssessment = async (req,res) => 
 {
@@ -35,8 +36,6 @@ module.exports.beginAssessment = async (req,res) =>
           number: index + 1
     }))
 
-    console.log(id)
-
     res.status(201).json({responseId: id, questions: formattedData})
 
   }
@@ -51,7 +50,6 @@ module.exports.submitAssessment = async (req,res) =>
   {
     const student = req.body.decodedToken.id
     const {responseId} = req.params
-    console.log(responseId)
     const {action, adaptiveTesting, finalScore, totalScore, submission} = req.body
 
     let response = {responses: submission}
@@ -60,19 +58,14 @@ module.exports.submitAssessment = async (req,res) =>
 
     if(adaptiveTesting === true){response.totalScore = totalScore}
     
-    const updatedResponse = await Response.findByIdAndUpdate(
-      responseId, 
-      response, 
-      { new: true } 
-    );
-    console.log(updatedResponse)
+    const updatedResponse = await Response.findByIdAndUpdate(responseId, response, { new: true } )
 
     if (!updatedResponse) {throw new Error('Response not found')}
 
     let reply = {message: 'Response recorded successfully'}
 
     if(finalScore === true && action === 'submit'){reply.finalScore = updatedResponse.totalScore}
-    
+
     return res.status(201).json(reply)
 
   }
@@ -185,7 +178,6 @@ module.exports.getOngoingAssessments = async (req,res) =>
           {
             if(!assessments.attemptedAssessments || !assessments.attemptedAssessments.includes(assessment._id))
             {
-              console.log(assessment)
               const assessmentData = 
               {
                 sectionId: section._id,
@@ -211,3 +203,78 @@ module.exports.getOngoingAssessments = async (req,res) =>
       res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to get ongoing assessments'})
   } 
 }
+
+module.exports.demoAssessment = async (req,res) => 
+  {
+    try
+    {
+      const {assessmentId} = req.params
+      const {name, email, role} = req.body
+
+      let sectionId
+
+      const teacherSection = new mongoose.Types.ObjectId('6658464ba72e7fdc274b8577')
+      const alumniSection = new mongoose.Types.ObjectId('66584572a72e7fdc274b8571')
+      const expertSection = new mongoose.Types.ObjectId('66584569a72e7fdc274b856e')
+      const studentSection = new mongoose.Types.ObjectId('66584643a72e7fdc274b8574')
+
+      switch (role) {
+        case 'teacher':
+          section = teacherSection;
+          break;
+        case 'alumni':
+          section = alumniSection;
+          break;
+        case 'expert':
+          section = expertSection;
+          break;
+        case 'student':
+          section = studentSection;
+          break;
+        default:
+        section = null;
+      }
+
+      if(sectionId === null){return res.status(400).json({error: 'ER_INVLD', message: 'Invalid user role'})}
+  
+      const session = await conn.startSession()
+      const id = await session.withTransaction(async () => 
+      {
+        const newStudent = await User.create([{ name, email, role: 'student', enrolledSection: [sectionId], attemptedAssessments: [assessmentId] }],{ session })
+
+        const section = await Section.findById(sectionId)
+        section.roster.push(newStudent[0]._id)
+        await section.save({session})
+
+        const response = await Response.create([{student: newStudent[0]._id, assessment: assessmentId, sectionId}], {session})
+
+        return response[0]._id
+      })
+      session.endSession()
+  
+      const assessment = await Assessment.findById(assessmentId)
+      .select('questionBank.question -_id')
+      .populate
+      ({
+          path: 'questionBank.question',
+          select: '-teacher -__v',
+          model: Question
+      })
+  
+      if (!assessment) {return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found'})}
+  
+      const formattedData = assessment.questionBank.map( (item, index) => 
+        ({
+            ...item.question.toObject(),
+            number: index + 1
+      }))
+  
+      return res.status(201).json({responseId: id, questions: formattedData})
+    }
+    catch (err) 
+    {
+      if (err.code === 11000) {res.status(400).json({ error: 'ER_DUP' , message: 'User already exists.'})}
+      else{res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to launch questions' })}
+    } 
+  }
+
