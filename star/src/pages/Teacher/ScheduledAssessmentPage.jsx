@@ -1,11 +1,14 @@
 import AssessmentCard from '../../components/Teacher/AssessmentCard';
 import CategoryFilter from '../../components/Teacher/CategoryFilter';
 import React ,{ useState, useEffect }from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { GetAssessments } from '../../APIS/Teacher/AssessmentAPI';
 import Loader from '../../components/Loader';
+import { MdClose } from 'react-icons/md';
+import SubmitButton from '../../components/button/SubmitButton';
+import { DeleteAssessment } from '../../APIS/Teacher/AssessmentAPI';
+import ConfirmationBox from '../../components/ConfirmationBox';
 
 function ScheduledAssessment() {
     const [loading, setLoading] = useState(true)
@@ -15,6 +18,8 @@ function ScheduledAssessment() {
     const [classes, setClasses] = useState([]);
     const statuses = ['All', 'In Progress', 'Requires Review', 'Not Started'];
     const [filteredAssesments, setFilteredAssessments] = useState([])
+    const [confirmDelete, setConfirmDelete] = useState(false)
+    const [IdToDelete, setIdToDelete] = useState('')
 
     useEffect(()=> {
         const data = assessments.filter((assessment) => {
@@ -38,6 +43,23 @@ function ScheduledAssessment() {
     const handleSelectStatus = (category) => {
         setSelectedStatus(category);
     };
+    
+    const handleDeleteAsessment = async({ id }) => {
+        try {
+            const res = await DeleteAssessment({id: id})
+            console.log(res)
+            const index = assessments.findIndex((assessment) => assessment._id === id);
+            if (index !== -1) {
+                const updatedAssessments = [...assessments];
+                updatedAssessments.splice(index, 1);
+                setAssessments(updatedAssessments);
+            } else {
+                console.log('Assessment not found');
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    };
 
     useEffect(()=> {
         const getAssessments = async () => {
@@ -57,10 +79,13 @@ function ScheduledAssessment() {
 
         getAssessments()
     }, [])
+
+    const handleDelete = () => {
+
+    }
+
   return (
-    <div className='flex flex-col h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Home"}/>
             <div className='w-full flex flex-col'>
                 <SubheaderBut name={"Dashboard"} button={"New Assessment"} onClick={()=>{window.location.assign('/teacher/create-new-assessment')}}/>
@@ -73,7 +98,7 @@ function ScheduledAssessment() {
                             <div className='md:flex items-center justify-between'>
                                 <div className='flex items-center font-body'>
                                     <h1 className='sm:text-xl md:text-2xl font-medium border-r-2 border-black pr-2'>All Assessments </h1>
-                                    <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{assessments.length} in total</p>
+                                    <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{filteredAssesments.length} in total</p>
                                 </div>
                                 <div className= 'flex gap-4 mt-4 md:mt-0'>
                                     <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Filter by:</p>
@@ -92,16 +117,19 @@ function ScheduledAssessment() {
                             <div className='flex flex-wrap gap-6'>
                                 {
                                     filteredAssesments.map((assessment, index)=> {
-                                        return <AssessmentCard key={assessment._id} assessment={assessment} />
+                                        return <AssessmentCard key={assessment._id} assessment={assessment} onDelete={()=>{setIdToDelete(assessment._id); setConfirmDelete(true)}} />
                                     })
                                 }
                             </div>
                         </>
                     }
                 </div>
+                {
+                    confirmDelete &&
+                    <ConfirmationBox heading={"Deleting Assessment"} message={"Are you sure you want to delete the assessment?"} onCancel={()=>setConfirmDelete(false)} onConfirm={()=>{handleDeleteAsessment({id:IdToDelete}); setConfirmDelete(false)}}/>
+                }
             </div>
-        </div>
-    </div>
+        </>
   );
 }
 

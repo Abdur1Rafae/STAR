@@ -1,5 +1,4 @@
 import React ,{ useState, useRef, useEffect, useContext }from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import SubmitButton from '../../components/button/SubmitButton';
@@ -14,13 +13,44 @@ import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
 import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { UpdateAssessment } from '../../APIS/Teacher/AssessmentAPI';
-import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
+import { UploadImageFile } from '../../APIS/ImageAPI';
+import { baseUrl } from '../../APIS/BaseUrl';
 
+
+function convertToLocalDateTime(isoString) {
+    const date = new Date(isoString);
+    const dateString =  date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+
+    const [datePart, timePart] = dateString.split(', ');
+    const [month, day, year] = datePart.split('/').map(Number);
+    const [hours, minutes, seconds] = timePart.split(':').map(Number);
+  
+    const localDate = new Date(year, month - 1, day, hours, minutes, seconds);
+  
+    const pad = (num, size = 2) => num.toString().padStart(size, '0');
+  
+
+    const formattedYear = localDate.getFullYear();
+    const formattedMonth = pad(localDate.getMonth() + 1); 
+    const formattedDay = pad(localDate.getDate());
+    const formattedHours = pad(localDate.getHours());
+    const formattedMinutes = pad(localDate.getMinutes());
+    const formattedSeconds = pad(localDate.getSeconds());
+    const formattedMilliseconds = pad(localDate.getMilliseconds(), 3); 
+  
+    return `${formattedYear}-${formattedMonth}-${formattedDay}T${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
+  }
 
 function EditAssessmentDetails() {
     const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
-    const [editingOpenDate, setEditingOpenDate] = useState(false)
-    const [editingCloseDate, setEditingCloseDate] = useState(false)
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')
     const [assessmentName, setName] = useState(assessment.title ?? '');
     const [description, setDesc] = useState(assessment.description ?? '')
@@ -30,8 +60,8 @@ function EditAssessmentDetails() {
     const [mins, setMins] = useState(30)
 
 
-    const [datetime, setDatetime] = useState(assessment.configurations.openDate);
-    const [closedatetime, setCloseDatetime] = useState(assessment.configurations.closeDate);
+    const [datetime, setDatetime] = useState(convertToLocalDateTime(assessment.configurations.openDate));
+    const [closedatetime, setCloseDatetime] = useState(convertToLocalDateTime(assessment.configurations.closeDate));
 
     const [publishImmediately, setPublishOption] = useState(assessment.configurations ? assessment.configurations.releaseGrades : false);
     const [viewSubmissions, setViewSubmissions] = useState(assessment.configurations ? assessment.configurations.viewSubmission : false);
@@ -43,6 +73,23 @@ function EditAssessmentDetails() {
     const [adaptiveTesting, setAdaptiveTesting] = useState(assessment.configurations ? assessment.configurations.adaptiveTesting : false);
     const [candidateMonitoring, setCandidateMonitoring] = useState(assessment.configurations ? assessment.configurations.monitoring : false);
     const [error, setError] = useState('')
+    const [selectSectionsDialog, setSelectSectionsDialog] = useState(false)
+
+    const fileInputRef = useRef(null);
+    const [image, setImage] = useState(assessment.coverImage)
+    const [imageFile, setImageFile] = useState(null)
+    const [userUpload, setUserUpload] = useState(false)
+
+
+    const uploadingImage = async () => {
+        try {
+            const data = await UploadImageFile({ image: imageFile });
+            console.log(data);
+            return data.data.url;
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(()=> {
         if(assessment.configurations.duration > 120) {
@@ -88,8 +135,17 @@ function EditAssessmentDetails() {
 
         const res = async() => {
             try {
-                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-                window.location.assign(`/teacher/questions-set/${assessmentId}`)
+                let assessmentImage = image;
+                if(assessment.coverImage !== image) {
+                    assessmentImage = imageFile !== null ? await uploadingImage() : null;
+                }
+                const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, image:assessmentImage, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
+                if(adaptiveTesting) {
+                    window.location.assign(`/teacher/adaptive-quiz/${assessmentId}`)
+                 }
+                 else {
+                    window.location.assign(`/teacher/questions-set/${assessmentId}`);
+                 }
             } catch(err) {
                 console.log(err)
             }
@@ -105,25 +161,7 @@ function EditAssessmentDetails() {
     const handlePublishOptionChange = () => {
         setPublishOption((prev)=>!prev);
     };
-
-    useEffect(() => {
-        if (!datetime) return;
-
-        const minDate = new Date(datetime);
-
-        minDate.setHours(minDate.getHours() + (isNaN(hour) ? 0: hour));
-        minDate.setMinutes(minDate.getMinutes() + (isNaN(mins) ? 0 : mins));
-
-        const year = minDate.getFullYear();
-        const month = String(minDate.getMonth() + 1).padStart(2, '0');
-        const day = String(minDate.getDate()).padStart(2, '0');
-        const hours = String(minDate.getHours()).padStart(2, '0');
-        const minutes = String(minDate.getMinutes()).padStart(2, '0');
-
-        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-        console.log(formattedDate, hour, mins)
-        setCloseDatetime(formattedDate);
-    }, [datetime, hour, mins]);
+    
 
 
 
@@ -140,16 +178,15 @@ function EditAssessmentDetails() {
         setSections(assessment.participants ? assessment.participants : [])
     }, [])
 
-    const [selectSectionsDialog, setSelectSectionsDialog] = useState(false)
-
-    const fileInputRef = useRef(null);
-    const [image, setImage] = useState(null)
+    
     const handleFileInputChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);
         }
+        setImageFile(file)
+        setUserUpload(true)
     };
 
 
@@ -160,6 +197,8 @@ function EditAssessmentDetails() {
     const handleDeleteImage = () => {
         setImage(null); 
         fileInputRef.current.value = null; 
+        setImageFile(null)
+        setUserUpload(false)
     };
 
     const handleHourChange = (event) => {
@@ -212,12 +251,15 @@ function EditAssessmentDetails() {
 
         const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
         setCloseDatetime(formattedDate);
-        console.log(formattedDate);
     };
 
     const handleNavigationDecision = () => {
         if(!allowNavigation) {
             setAllowInstantFeedback(false)
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: false
+            }))
         }
         setAllowNavigation((prev) => !prev)
     }
@@ -225,16 +267,36 @@ function EditAssessmentDetails() {
     const handleInstantFeedbackDecision = () =>{
         if(!allowInstantFeedback) {
             setAllowNavigation(false)
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: false
+            }))
         }
 
         setAllowInstantFeedback((prev) => !prev)
     }
 
+    const handleAdaptiveTesting = () => {
+        if(adaptiveTesting.active) {
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: false
+            }))
+        }
+        else {
+            setAdaptiveTesting((prev) => ({
+                ...prev,
+                active: true
+            }))
+            setAllowInstantFeedback(false)
+            setShowFinalScore(false)
+            setAllowNavigation(false)
+        }
+    }
+
 
     return (
-    <div className='flex flex-col h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
             <Subheader name={"Edit Assessment"}/>
@@ -260,7 +322,7 @@ function EditAssessmentDetails() {
                         </button>
                         {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={image} alt="Uploaded Image" className='w-36 h-36'/>
+                            <img crossOrigin='anonymous' src={userUpload ? image :(`${baseUrl}teacherhub/`+image)} alt="Uploaded Image" className='w-36 h-36'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>
@@ -277,15 +339,15 @@ function EditAssessmentDetails() {
                 <div className='w-full lg:w-2/3  border border-black bg-LightBlue p-2' >
                     <h2 className='text-sm font-semibold '>Assessment Detail</h2>
 
-                    <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
+                    <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
 
                     <h2 className='text-sm font-semibold'>Participant</h2>
                     <div className='flex items-center gap-2 mt-2'>
                         <div className='bg-white p-2 min-h-10 w-full border border-black rounded flex gap-2 flex-wrap'>
                         {
-                            sections.map((section) => {
+                            sections.map((section, index) => {
                                 return (
-                                    <div className='h-6 w-auto p-1 rounded-lg border-[1px] border-black'>
+                                    <div key={index} className='h-6 w-auto p-1 rounded-lg border-[1px] border-black'>
                                     <p className='text-xs'>{section.name}</p>
                                     </div>
                                 )
@@ -317,27 +379,12 @@ function EditAssessmentDetails() {
                         </div>
                         <div className='flex gap-2 md:gap-4  flex-col lg:flex-row'>
                             <div className='flex flex-col items-center'>
-                            <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
-                                {
-                                    editingOpenDate ? 
-                                    <>
-                                        <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/> 
-                                    </>
-                                    :
-                                    <button onClick={()=>setEditingOpenDate(true)}><p className='text-DarkBlue hover:underline'>{DDMMMMYYYY_HHMM({date: datetime})}</p></button>
-                                }
-                                
+                                <h2 className='mt-2 text-xs md:text-sm font-semibold'>Open Date & Time</h2>
+                                <input type='datetime-local' value={datetime} onChange={handleOpenTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>   
                             </div>
                             <div className='flex flex-col items-center'>
                                 <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>Close Date & Time</h2>
-                                {
-                                    editingCloseDate ? 
-                                    <>
-                                         <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
-                                    </>
-                                    :
-                                    <button onClick={()=>setEditingCloseDate(true)}><p className='text-DarkBlue hover:underline'>{DDMMMMYYYY_HHMM({date: closedatetime})}</p></button>
-                                }
+                                <input type='datetime-local' value={closedatetime} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
                             </div>
                         </div>
                     </div>
@@ -351,7 +398,7 @@ function EditAssessmentDetails() {
                         <p className='text-xs text-gray-400'>Schedule when students can view their score</p>
                         </div>
                     </div>
-                    <div class="flex items-center mt-4">
+                    <div className="flex items-center mt-4">
                         <input
                         id="default-checkbox"
                         type="radio"
@@ -368,7 +415,7 @@ function EditAssessmentDetails() {
                         Immediately after close date
                         </label>
                     </div>
-                    <div class="flex items-center mt-2">
+                    <div className="flex items-center mt-2">
                         <input
                         id="checked-checkbox"
                         type="radio"
@@ -402,7 +449,7 @@ function EditAssessmentDetails() {
             </div>
             <div className='h-full mt-2 border border-black bg-LightBlue p-2 '>
                 <h2 className='text-sm font-semibold '>Configurations</h2>
-                <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
+                <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
                 <div className='flex md:flex-row flex-col gap-4 items-start'>
                     <div className='w-full'>
                         <div className='flex'>
@@ -412,17 +459,17 @@ function EditAssessmentDetails() {
                             <p className='text-xs text-gray-400 '>Customizes how questions are viewed by candidates.</p>
                         </div>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={randomizeQuestions} type="checkbox" onChange={()=>setRandomizeQuestions((prev) => !prev)} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Randomize questions</label>
+                        <div className="flex items-center my-4">
+                        <input id="default-checkbox" checked={randomizeQuestions} type="checkbox" onChange={()=>setRandomizeQuestions((prev) => !prev)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="default-checkbox" className="ms-2 text-xs font-medium text-gray-900">Randomize questions</label>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input checked={optionShuffle} onChange={()=>setOptionShuffle((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
+                        <div className="flex items-center my-4">
+                        <input checked={optionShuffle} onChange={()=>setOptionShuffle((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
+                        <div className="flex items-center my-4">
+                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
                         </div>
                     </div>
                     <div className='mb-2 md:h-36 md:w-0 w-full border border-black '></div>
@@ -434,13 +481,13 @@ function EditAssessmentDetails() {
                             <p className='text-xs text-gray-400 '>Customizes how candidate view score and receive feedback during assessment.</p>
                         </div>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
+                        <div className="flex items-center my-4">
+                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="default-checkbox" className="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
                         </div>
-                        <div class="flex items-center my-4">
-                        <input id="checked-checkbox" checked={showFinalScore} onChange={()=>setShowFinalScore((prev)=>!prev)} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Show Final Score</label>
+                        <div className="flex items-center my-4">
+                        <input id="checked-checkbox" checked={showFinalScore} onChange={()=>setShowFinalScore((prev)=>!prev)} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Show Final Score</label>
                         </div>
                     </div>
                     <div className='mb-2 md:h-36 md:w-0 w-full border border-black'></div>
@@ -452,7 +499,7 @@ function EditAssessmentDetails() {
                             <BsInfoCircle size={14} className='ml-2'/></h2>
                             <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
                         </div>
-                        <ToggleButton isActive={adaptiveTesting} onClick={()=>setAdaptiveTesting((prev)=>!prev)}/>
+                        <ToggleButton isActive={adaptiveTesting.active} onClick={handleAdaptiveTesting}/>
                         </div>
                         <div className='flex mt-4'>
                         <div className='flex'>
@@ -481,26 +528,24 @@ function EditAssessmentDetails() {
                         <h3 className='my-auto ml-2'>Select Sections</h3>
                         <button className='mr-2' onClick={()=>setSelectSectionsDialog(false)}><MdClose className='text-lg'/></button>
                     </div>
-                    <div className='overflow-y-auto no-scrollbar'>
+                    <div className='h-full overflow-hidden'>
                         <p className='ml-4 mt-2 text-xs text-DarkBlue font-bold'>Select from single class only!</p>
-                        <div className='h-full flex flex-col gap-4 p-4'>
-                        {
+                        <div className='h-full flex flex-col gap-4 p-4 pb-20 overflow-auto'>
+                            {
                             classes.map((item, index) => (
                                 <ClassTabDisplay key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{}} />
                             ))
-                        }
+                            }
                         </div>   
                         <div className='absolute border-t-2 border-black left-0 bottom-0 w-full h-12 bg-LightBlue flex justify-center items-center text-white'>
-                        <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={()=>{saveSections(); setSelectSectionsDialog(false)}}>Select</button>
+                            <button className='bg-DarkBlue rounded-md px-2 py-1 min-w-16' onClick={()=>{saveSections(); setSelectSectionsDialog(false)}}>Select</button>
                         </div>            
                     </div>
                 </div>
             </div>
             }
         </div>
-        </div>
-        
-    </div>
+        </>
     );
 }
 

@@ -20,7 +20,7 @@ const QuestionSummary = () => {
 
   const findPercent = (id) =>{
     const foundQuestion = allQuestionPercent.find(item => item.question === id);
-    return foundQuestion != undefined ? Math.round(foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100 : 0;
+    return foundQuestion != undefined ? Math.round((foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)  : 0;
   }
 
   useEffect(()=>{
@@ -29,7 +29,7 @@ const QuestionSummary = () => {
         const report = localStorage.getItem('ReportId')
         const res = await GetQuestionStats({id: report})
         console.log(res)
-        if(res[0].questions.length > 0) {
+        if(res.length > 0 && res[0].questions.length > 0) {
           setTimeout(() => {
             setQuestionData(res)
             setLoading(false)
@@ -80,16 +80,16 @@ const QuestionSummary = () => {
               />
             </div>
           </div>
-          <button onClick={() => {setShowQuestions(!showQuestions); console.log(showQuestions)}} className="order-last mt-4 w-full block md:hidden h-16 mb-2 border-DarkBlue border-2 rounded">
-          <QuestionTabTile index = {questionIndex} singlequestioninfo={activeQuestion} percent={findPercent(activeQuestion._id)}/>
+          <button onClick={() => {setShowQuestions(!showQuestions)}} className="order-last mt-4 w-full block md:hidden h-16 mb-2 border-DarkBlue border-2 rounded">
+          <QuestionTabTile index = {questionIndex} singlequestioninfo={activeQuestion} percent={findPercent(assessmentQuestion[questionIndex]._id)}/>
         </button>
         <div className='md:flex gap-4 items-center md:h-42 mt-4'>
           <div className={`md:w-1/3 lg:h-full ${showQuestions ? 'h-52' : 'h-0'} hidden md:block transition-all duration-200 ease-in-out overflow-y-scroll bg-LightBlue rounded-lg shadow-md`} >
             <div className=''>
               <QuestionNavigation 
-              questions={assessmentQuestion} 
-              activeQuestion={assessmentQuestion[questionIndex]} 
-              onQuestionClick={handleNavSelectQuestion}
+                questions={assessmentQuestion} 
+                activeQuestion={assessmentQuestion[questionIndex]} 
+                onQuestionClick={handleNavSelectQuestion}
               />
             </div>
           </div>

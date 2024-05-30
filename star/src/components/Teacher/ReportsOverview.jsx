@@ -13,7 +13,7 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 
 const ReportsOverview = () => {
-    const {totalMarks, scoreDistribution, avgScore, highestScore, incorrectQuestion, topPerformers, absentees, requireAttention, avgResponseTime,topicDistribution, totalParticipants,  questionCount} = useContext(ReportContent)
+    const {totalMarks, scoreDistribution, avgScore, highestScore, incorrectQuestion, topPerformers, absentees, avgPerformers, requireAttention, avgResponseTime,topicDistribution, totalParticipants,  questionCount} = useContext(ReportContent)
     const [extendPerformers, setExtendPerformers] = useState(true)
     const [extendAbsentees, setExtendAbsentees] = useState(false)
     const [extendRA, setExtendRA] = useState(false)
@@ -43,7 +43,7 @@ const ReportsOverview = () => {
         <div className='md:flex w-full gap-2 lg:gap-4 hidden'>
             <div className='mt-4 w-1/2 flex flex-col gap-4'>
                 <div className='bg-LightBlue w-full flex lg:justify-between shadow-md pr-4 py-2'>
-                    <AssessmentInfo avg={Math.round(totalParticipants/(topPerformers.length + absentees.length + requireAttention.length) * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
+                    <AssessmentInfo avg={Math.round(totalParticipants/(topPerformers.length + absentees.length + requireAttention.length+avgPerformers.length) * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2'>
                     <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>
@@ -123,7 +123,7 @@ const ReportsOverview = () => {
         <div className='flex flex-col w-full gap-4 md:hidden'>
             <div className='mt-4 w-full flex flex-col gap-4'>
                 <div className='bg-LightBlue w-full flex lg:justify-between shadow-md pr-4 py-2'>
-                    <AssessmentInfo avg={(avgScore/totalMarks * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
+                    <AssessmentInfo avg={Math.round(totalParticipants/(topPerformers.length + absentees.length + requireAttention.length+avgPerformers.length) * 100)} questionCount={questionCount} participants={totalParticipants} avgResponseTime={avgResponseTime}/>
                 </div>
                 <div className='bg-LightBlue w-full shadow-md p-2'>
                     <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>

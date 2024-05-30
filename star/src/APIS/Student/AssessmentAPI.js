@@ -1,7 +1,7 @@
 import { AxiosBase } from '../BaseUrl';
 
 const GetOngoingAssessments = async () => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/ongoing-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -12,7 +12,7 @@ const GetOngoingAssessments = async () => {
 };
 
 const GetUpcomingAssessments = async () => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/upcoming-assessments`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -23,7 +23,7 @@ const GetUpcomingAssessments = async () => {
 };
 
 const GetAssessmentQuestions = async({id, sectionId}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`assesshub/assessment/begin-assessment/${sectionId}/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -34,11 +34,16 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
     return res.data;
 }
 
-const SubmitAssessment = async({responses}) => {
+const SubmitAssessment = async({responses, action, adaptiveTesting, showFinalScore, totalScore}) => {
     const id = localStorage.getItem('responseId')
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
+    console.log(showFinalScore)
     const res = await AxiosBase.post(`assesshub/assessment/submit-response/${id}`,{
-        submission: responses
+        submission: responses,
+        action: action,
+        adaptiveTesting: adaptiveTesting,
+        finalScore: showFinalScore,
+        totalScore: totalScore
     },{
         headers: {
             authorization: `Bearer ${token}`
@@ -49,7 +54,7 @@ const SubmitAssessment = async({responses}) => {
 }
 
 const GetAssessmentSummary = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`reporthub/student/classes/assessment-report/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -60,7 +65,7 @@ const GetAssessmentSummary = async({id}) => {
 }
 
 const GetSubmission = async({id}) => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     const res = await AxiosBase.get(`reporthub/student/classes/assessment-submission/${id}`,{
         headers: {
             authorization: `Bearer ${token}`
@@ -70,26 +75,30 @@ const GetSubmission = async({id}) => {
     return res.data;
 }
 
-const LaunchAssessment = async({id}) => {
-    const token = localStorage.getItem('token')
-    const res = await AxiosBase.put(`teacherhub/assessment-management/launch-assessment/${id}`,{},{
+const SaveAssessment = async({id, status, stoppingCriteria, totalMarks}) => {
+    const token = sessionStorage.getItem('token')
+    const res = await AxiosBase.put(`teacherhub/assessment-management/save-assessment/${id}`, {
+        status: status,
+        stoppingCriteria: stoppingCriteria,
+        totalMarks: totalMarks
+    }, {
         headers: {
             authorization: `Bearer ${token}`
         }
     })
 
-    return res.data;
+    return res.data
 }
 
-const DraftAssessment = async({id}) => {
-    const token = localStorage.getItem('token')
-    const res = await AxiosBase.put(`teacherhub/assessment-management/draft-assessment/${id}`,{},{
+const FlagStudents = async({data, id}) => {
+    const token = sessionStorage.getItem('token')
+    const res = await AxiosBase.put(`assesshub/monitor/flag-candidate/${id}`,data, {
         headers: {
             authorization: `Bearer ${token}`
         }
     })
 
-    return res.data;
+    console.log(res.data)
 }
 
-export {DraftAssessment, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary, LaunchAssessment}
+export {SaveAssessment, FlagStudents, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary}

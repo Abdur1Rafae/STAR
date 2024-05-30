@@ -39,7 +39,6 @@ kind: Service
 metadata:
   name: arete-frontend-service
 spec:
-  type: LoadBalancer
   selector:
     app: frontend-app
   ports:

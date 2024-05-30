@@ -2,6 +2,8 @@ import React from 'react'
 import { FaHourglassEnd } from "react-icons/fa";
 import { FaClock } from "react-icons/fa";
 import { FaCircleArrowRight } from "react-icons/fa6";
+import LiveQuizImage from './LiveQuiz.png';
+import { baseUrl } from '../../APIS/BaseUrl';
 
 const LiveQuiz = ({assessment}) => {
     const date = new Date(assessment.configurations.closeDate);
@@ -40,11 +42,11 @@ const LiveQuiz = ({assessment}) => {
             } 
         }
         localStorage.setItem('quizDetails', JSON.stringify(quizDetails));
-        window.location.assign('/quiz-instructions')
+        window.location.assign('quiz-instructions')
     }
   return (
     <button className='font-body flex border-2 border-grey rounded-lg transition-all duration-200 text-left hover:scale-105' onClick={handleClick}>
-        <img src='./liveQuiz.png' className='h-[120px] self-center'></img>
+        <img crossOrigin='anonymous' src={assessment.coverImage ? `${baseUrl}teacherhub/${assessment.coverImage}` : LiveQuizImage} className='h-[120px] self-center'></img>
         <div className='infoContainer ml-2 mr-2 flex flex-col justify-between w-[200px] h-full'>
             <h1 className='font-[700] text-md mt-1'>{assessment.title}</h1>
             <h2 className='text-xs font-[500] mb-2'>{assessment.className}</h2>

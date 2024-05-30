@@ -1,5 +1,12 @@
 import {create} from 'zustand';
 import { SubmitAssessment } from '../APIS/Student/AssessmentAPI';
+import { FlagStudents } from '../APIS/Student/AssessmentAPI';
+import CryptoJS from 'crypto-js';
+
+const decryptData = (encryptedData, key) => {
+  const decrypted = CryptoJS.AES.decrypt(encryptedData, key).toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decrypted);
+};
 
 const QuizStore = create((set) => ({
   id: '',
@@ -12,14 +19,24 @@ const QuizStore = create((set) => ({
   description: '',
   className: '',
   marks: 0,
-  questions: JSON.parse(localStorage.getItem('questions')) || [],
+  questions: localStorage.getItem('questions') ? decryptData(JSON.parse(localStorage.getItem('questions')), 'Arete1234') : [],
   currentQuestionIndex: 0,
+  setCurrentQuestionIndex : (num) => set((state) => ({...state, currentQuestionIndex: Number(num)})),
   filter: 'all',
   filteredQuestions: [],
   quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
   currentQuestionStartTime: Date.now(),
+  reachedLastQuestion: false,
+  setReachedLastQuestion : () => set((state)=> ({...state, reachedLastQuestion: true})),
+  vioArray: [],
+  setVioArray: (newVios) => set((state) => ({...state, vioArray: [...state.vioArray, newVios] })),
+  clearVioArray: () => set({ vioArray: [] }),
 
   responses: [],
+  
+  submittingQuiz: false,
+
+  setSubmittingQuiz : () => set((state) => ({...state, submittingQuiz: true})),
 
   setTitle: (title) => set({ title: title }),
   setTeacher: (teacher) => set({ teacher: teacher }),
@@ -30,8 +47,13 @@ const QuizStore = create((set) => ({
   setDescription: (desc) => set({ description: desc }),
 
   updateQuizDetails: (details) => set((state) => {
+    let reachedLast = false;
+    if(state.questions.length == 1) {
+      reachedLast = true
+    }
     return {
     ...state,
+    reachedLastQuestion: reachedLast,
     sectionId: details.sectionId,
     title: details.title,
     teacher: details.teacher,
@@ -87,10 +109,6 @@ const QuizStore = create((set) => ({
     });
   },
 
-  randomizeOptions: () => {
-
-  },
-
   setQuestions: (newQuestions) => set({
     questions: newQuestions
   }),
@@ -141,10 +159,13 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
-    
       const nextIndex = Math.min(state.currentQuestionIndex + 1, state.questions.length - 1);
+      let reachedLast = false;
+      if(nextIndex == state.questions.length - 1) {
+        reachedLast = true
+      }
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: nextIndex, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: nextIndex, reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });
@@ -180,7 +201,7 @@ const QuizStore = create((set) => ({
     
       const prevIndex = (state.currentQuestionIndex - 1) % state.questions.length;
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: prevIndex, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: prevIndex, reachedLastQuestion: false, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });
@@ -190,7 +211,7 @@ const QuizStore = create((set) => ({
     set((state) => {
       const updatedQuestions = state.questions.map((question, index) => {
         if (index == number) {
-          return { ...question, flagged: !question.flagged };
+          return { ...question, flagged: (question.flagged !==undefined ? !question.flagged : true) };
         }
         return question;
       });
@@ -210,8 +231,7 @@ const QuizStore = create((set) => ({
         }, []);
       } else if (state.filter === 'unanswered') {
         filteredQuestions = state.questions.reduce((acc, question, index) => {
-          if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null) acc.push(index);
-          console.log('checking', state.responses[index])
+          if (state.responses[index].answer.length == 0 || state.responses[index].answer[0] == null || state.responses[index].answer[0] == '') acc.push(index);
           return acc;
         }, []);
       }
@@ -223,11 +243,6 @@ const QuizStore = create((set) => ({
   submitResponses: () => {
     set((state) => {
       const nextState = {...state}
-      const submissionObj = {
-        assessmentId: state.id,
-        submit: true
-      }
-      localStorage.setItem('SuccessSubmit', JSON.stringify(submissionObj))
       const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
       const responseIndex = state.currentQuestionIndex;
       if (responseIndex !== -1) {
@@ -242,10 +257,52 @@ const QuizStore = create((set) => ({
             ...state.responses.slice(responseIndex + 1)
         ];
       }
-      console.log(nextState.responses)
       const res = async() => {
         try {
-          const sub = await SubmitAssessment({responses: nextState.responses})
+          if(state.vioArray.length > 0) {
+            const responseId = localStorage.getItem('responseId')
+            const res = await FlagStudents({data: state.vioArray, id: responseId})
+        }
+          const sub = await SubmitAssessment({responses: nextState.responses, action: 'submit', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
+          console.log(sub)
+          if(state.quizConfig.finalScore && sub.data.finalScore) {
+            sessionStorage.setItem('Score', sub.data.finalScore)
+          }
+          window.location.assign('quiz-submitted')
+        } catch(err) {
+          console.log(err)
+        }
+      }
+
+      res()
+      return state;
+    })
+  },
+
+  saveResponses: () => {
+    set((state) => {
+      const nextState = {...state}
+      const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
+      const responseIndex = state.currentQuestionIndex;
+      if (responseIndex !== -1) {
+        const existingResponse = state.responses[responseIndex];
+        const updatedResponse = {
+            ...existingResponse,
+            responseTime: existingResponse.responseTime + elapsedTime
+        };
+        nextState.responses = [
+            ...state.responses.slice(0, responseIndex),
+            updatedResponse,
+            ...state.responses.slice(responseIndex + 1)
+        ];
+      }
+      const res = async() => {
+        try {
+          if(state.vioArray.length > 0) {
+            const responseId = localStorage.getItem('responseId')
+            const res = await FlagStudents({data: state.vioArray, id: responseId})
+        }
+          const sub = await SubmitAssessment({responses: nextState.responses, action: 'save', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
           console.log(sub)
         } catch(err) {
           console.log(err)
@@ -275,8 +332,12 @@ const QuizStore = create((set) => ({
         ];
       }
 
+      let reachedLast = false;
+      if(number == state.questions.length - 1) {
+        reachedLast = true
+      }
       const nextQuestionStartTime = Date.now();
-      nextState = { ...nextState, currentQuestionIndex: number, currentQuestionStartTime: nextQuestionStartTime };
+      nextState = { ...nextState, currentQuestionIndex: number,reachedLastQuestion: reachedLast, currentQuestionStartTime: nextQuestionStartTime };
 
       return nextState;
     });

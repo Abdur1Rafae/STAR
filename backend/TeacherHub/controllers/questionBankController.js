@@ -263,7 +263,7 @@ module.exports.getAllBanks = async (req,res) =>
                 $match: 
                 { 
                     teacher: new mongoose.Types.ObjectId(teacher),
-                    'configurations.closeDate': { $lt: new Date() } 
+                    'configurations.closeDate': { $lt: new Date() }
                 } 
             },
             {
@@ -328,7 +328,10 @@ module.exports.getAllQuestions = async (req,res) =>
         const teacher = req.body.decodedToken.id
         const { skill, topic, difficulty, type } = req.query
 
-        const filters = {teacher: teacher}
+        const filters = {}
+
+        //const filters = {teacher: teacher}
+        filters.teacher = { $in: [new mongoose.Types.ObjectId('664b8921b681000c41984e1b'), new mongoose.Types.ObjectId(teacher)] }
     
         if (skill) filters.skill = skill
         if (topic) filters.topic = topic
@@ -351,7 +354,7 @@ module.exports.getTopics = async (req,res) =>
     {
         const teacher = req.body.decodedToken.id
 
-        const uniqueTopics = await Question.distinct('topic', { teacher })
+        const uniqueTopics = await Question.distinct('topic', { teacher: { $in: [new mongoose.Types.ObjectId('664b8921b681000c41984e1b'), new mongoose.Types.ObjectId(teacher)] } })
 
         res.status(201).json({data: uniqueTopics})
 

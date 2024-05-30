@@ -1,5 +1,4 @@
 import React ,{ useState , useEffect, useContext }from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import { MdOutlineSettingsBackupRestore ,MdClose } from 'react-icons/md';
 import { DoughnutGraph } from '../../components/Teacher/DoughnutGraph';
@@ -17,17 +16,22 @@ import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, U
 import { useParams } from 'react-router';
 import { UpdateOrder, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
 import { ClickOutsideFunc } from '../../components/ClickOutsideFunc';
-import { DraftAssessment, LaunchAssessment } from '../../APIS/Student/AssessmentAPI';
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
+import SubmitButton from '../../components/button/SubmitButton';
+import { SaveAssessment } from '../../APIS/Student/AssessmentAPI';
 
 
-function AddQuestions() {
-    const [loading, setLoading] = useState(true)
+const AddQuestions = () => {
     const assessmentName = useParams()
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
     const [topicList, setTopicList] = useState([])
     const setOrder = ToggleStore((store) => store.setOrder)
     const order = ToggleStore((store) => store.Ordering)
+    
+    const [confirmDelete, setConfirmDelete] = useState(false)
+    const [indexToDelete, setIndexToDelete] = useState(0)
 
 
     const { questions, setQuestions, selectedQuestions, saveQuestions, swapQuestion, topicMap, skillMap } = useContext(QuestionContext);
@@ -44,10 +48,9 @@ function AddQuestions() {
         }
     }
 
-    const handleSubmitQuestions = () => {
-        console.log(questions)
-        window.location.assign('/teacher/home')
-    }  
+    const modules = {
+        toolbar: false
+    }; 
     
     useEffect(()=> {
         const getAllQuestions = async() => {
@@ -86,7 +89,7 @@ function AddQuestions() {
                 correctOptions: correctOptions,
                 question: questionText,
                 explanation: explanationText,
-                imageUrl: imageUrl,
+                image: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
                 points: point,
@@ -101,7 +104,7 @@ function AddQuestions() {
                 isTrue: isTrue,
                 question: questionText,
                 explanation: explanationText,
-                imageUrl: imageUrl,
+                image: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
                 points: point,
@@ -114,7 +117,7 @@ function AddQuestions() {
                 type: type,
                 question: questionText,
                 explanation: explanationText,
-                imageUrl: imageUrl,
+                image: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
                 points: point,
@@ -124,6 +127,10 @@ function AddQuestions() {
         }
         try {
             const res = await AddQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]})
+            const indexOfTopic = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+            if(indexOfTopic == -1) {
+                setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
+            }
             updatedQuestions[index]._id = res.insertedId
             setQuestions(updatedQuestions);
         } catch(err) {
@@ -162,7 +169,7 @@ function AddQuestions() {
                 correctOptions: correctOptions,
                 question: questionText,
                 explanation: explanationText,
-                imageUrl: imageUrl,
+                image: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
                 points: point,
@@ -178,7 +185,7 @@ function AddQuestions() {
                 isTrue: isTrue,
                 question: questionText,
                 explanation: explanationText,
-                imageUrl: imageUrl,
+                image: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
                 points: point,
@@ -192,7 +199,7 @@ function AddQuestions() {
                 type: type,
                 question: questionText,
                 explanation: explanationText,
-                imageUrl: imageUrl,
+                image: imageUrl,
                 skill: skill,
                 difficulty: difficulty,
                 points: point,
@@ -204,11 +211,19 @@ function AddQuestions() {
         try {
             if(reuse) {
                 const res = await UpdateReuseQuestion({assessmentId: assessmentName.assessmentId, question: updatedQuestions[index]}) 
+                const indexOfTopic = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+                if(indexOfTopic == -1) {
+                    setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
+                }
                 updatedQuestions[index].reuse = false
                 console.log(res)
             }
             else {
-                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]}) 
+                const res = await UpdateQuestion({id: assessmentName.assessmentId, question: updatedQuestions[index]})
+                const indexOfTopic = topicList.findIndex((topic)=> topic === updatedQuestions[index].topic)
+                if(indexOfTopic == -1) {
+                    setTopicList((prevTopicList) => [...prevTopicList, updatedQuestions[index].topic]);
+                } 
                 console.log(res)
             }
             setQuestions(updatedQuestions);
@@ -233,12 +248,10 @@ function AddQuestions() {
             buttons.forEach(button => {
                 button.disabled = true;
             });
-            console.log(questions)
         }
         else {
             setOrder(false)
             const orderArray = questions.map((question)=>question._id)
-            console.log(orderArray)
             try {
                 const res = await UpdateOrder({questions: orderArray, assessmentId: assessmentName.assessmentId})
                 console.log(res)
@@ -253,7 +266,7 @@ function AddQuestions() {
 
     const handleSaveDraft = async() => {
         try{
-            const res = await DraftAssessment({id: assessmentName.assessmentId})
+            const res = await SaveAssessment({id: assessmentName.assessmentId, status: 'Draft', stoppingCriteria: null, totalMarks: null})
 
             window.location.assign('/teacher/home')
         } catch(err) {
@@ -263,7 +276,7 @@ function AddQuestions() {
 
     const handleLaunch = async() => {
         try{
-            const res = await LaunchAssessment({id: assessmentName.assessmentId})
+            const res = await SaveAssessment({id: assessmentName.assessmentId, status: 'Launched', stoppingCriteria: null, totalMarks: null})
 
             window.location.assign('/teacher/home')
         } catch(err) {
@@ -279,21 +292,24 @@ function AddQuestions() {
 
 
   return (
-    <div className=' w-full h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
-            <SideBar active={"Add Questions"}/>
+    <>
+            <SideBar/>
             <div className='w-full '>
                 <SubheaderBut name={"Question Set"} button={"Save & Close"} onClick={()=>{setProfileDialog(true)}}/>
                 <div ref={saveProfile} className={`dialogue top-28 md:top-28 right-4 z-20 absolute rounded-md border-2  bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                     {profileDialog && (
-                        <div className='h-20 dropdown-list w-36 md:w-48 flex flex-col items-center justify-around'>
-                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleSaveDraft}>
-                                <button className=' ml-2'>Save as Draft</button>
+                        <div className='dropdown-list w-36 md:w-48 flex flex-col items-center font-body'>
+                            <div className='h-full w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white p-2' onClick={handleSaveDraft}>
+                                <button className='text-left'>
+                                    <p className='font-medium'>Save as Draft</p>
+                                    <p className='text-[10px]'>If not finalized</p>
+                                </button>
                             </div>
-                            
-                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLaunch}>
-                                <button className='ml-2'>Launch</button>
+                            <div className='h-full w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white p-2' onClick={handleLaunch}>
+                                <button className='text-left'>
+                                    <p className='font-medium'>Launch</p>
+                                    <p className='text-[10px]'>Finalized and Allow students to view it as upcoming</p>
+                                </button>
                             </div>
                         </div>
                     )}
@@ -334,12 +350,12 @@ function AddQuestions() {
                         {
                         reuseDialog &&
                         <div className='fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-20 z-10 overflow-y-hidden'>       
-                            <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-7/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
+                            <div className='relative inset-x-0 mx-auto top-10 w-11/12 md:w-11/12 h-5/6 bg-LightBlue z-10 flex flex-col'>
                                 <div className='sticky top-0 bg-DarkBlue h-12 w-full flex text-white justify-between z-50'>
                                     <h3 className='my-auto ml-2'>Select Questions to add</h3>
                                     <button className='mr-2' onClick={()=>setReuseDialog(false)}><MdClose className='text-lg'/></button>
                                 </div>
-                                <div className='overflow-y-auto no-scrollbar'>
+                                <div className='overflow-y-auto'>
                                     <div className='h-full flex flex-col gap-4'>
                                         <SelectQuestions topics={topicList}/>
                                     </div>   
@@ -366,9 +382,9 @@ function AddQuestions() {
                             questions.length > 0 ?
                             questions.map((question, index)=> {
                                 return (
-                                    <div onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-1 md:p-3'>
+                                    <div key={index} onDrop={(e)=>handleOnDrop(e,index)} onDragOver={(e)=>{e.preventDefault()}} className='border-2 p-1 md:p-3'>
                                         <h4 className='absolute -ml-4 -mt-4 border-black border-[1px] px-1 rounded-full text-xs'>{index+1}</h4>
-                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => deleteQuestion(index)} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.imageUrl} isTrue={question.isTrue} reuse={question.reuse}/>
+                                        <StoredQuestion handleDrag={handleOnDrag} deleteHandler={() => {setIndexToDelete(index); setConfirmDelete(true)}} savingHandler={updateQuestion} topicList={topicList} topic={question.topic} id={index} type={question.type} skill={question.skill} difficulty={question.difficulty} points={question.points} question={question.question} explanation={question.explanation} correctOptions={question.correctOptions} options={question.options} image={question.image} isTrue={question.isTrue} reuse={question.reuse}/>
                                     </div>
                                 )
                             })
@@ -407,10 +423,35 @@ function AddQuestions() {
                             <DoughnutGraph inputData={topicMap}/>
                         </div>
                     </div>
+                    {
+                        confirmDelete &&
+                        <div className="fixed mx-auto my-auto bg-opacity-50 inset-0 flex items-center justify-center w-full h-full bg-black">
+                            <div className='flex flex-col w-full mx-2 md:mx-0 md:w-2/3 bg-LightBlue overflow-y-auto'>
+                                <div className='bg-DarkBlue text-white h-8 w-full px-2 flex items-center justify-between'>
+                                    <p>Delete Question</p>
+                                    <button onClick={()=>setConfirmDelete(false)}><MdClose/></button>
+                                </div>
+                                <div className='p-2'>
+                                    <div className='mb-4 text-md'>
+                                        Are you sure you wish to delete the following Question:
+                                    </div>
+                                    <div>
+                                        <ReactQuill readOnly={true} modules={modules} value={questions[indexToDelete].question} className='w-full text-xs font-body !border-none -p-2'/>
+                                    </div>
+                                    <div className='mt-2 text-xs font-bold'>
+                                        <p>This action cannot be undone!</p>
+                                    </div>
+                                    <div className='w-full flex justify-center mt-4'>
+                                        <SubmitButton label={'Delete'} active={true} onClick={()=>{deleteQuestion(indexToDelete); setConfirmDelete(false)}}/>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>    
-        </div>
-    </div>
+        </>
   );
 }
 

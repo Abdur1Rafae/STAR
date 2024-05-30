@@ -8,12 +8,15 @@ const questionBankRoutes = require('./routes/questionBankRoutes')
 const classManagementRoutes = require('./routes/classManagementRoutes')
 const assessmentManagementRoutes = require('./routes/assessmentManagementRoutes')
 const gradingRoutes = require('./routes/gradingRoutes')
+const cors = require('cors');
+
 
 const app = express()
 const PORT = 3002
 
 app.use(express.json())
 app.use(morgan('combined'))
+app.use(cors("*"));
 
 app.use('/upload-image', uploadRoutes)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))

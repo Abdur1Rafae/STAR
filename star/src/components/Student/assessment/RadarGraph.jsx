@@ -29,11 +29,17 @@ export const options = {
     },
     scales: {
         r: {
+            min: 0,
+            max: 100,
+            ticks: {
+                beginAtZero: true,
+                stepSize: 20, // Steps of 10
+            },
             angleLines: {
                 color: '#2C6491'
             },
             grid: {
-                color:'#2C6491' 
+                color: '#2C6491'
             },
             pointLabels: {
                 color: '#2C6491'
@@ -53,6 +59,7 @@ export const generateChartData = (dataObj) => {
         borderColor: 'rgba(44, 100, 145, 1)',
         backgroundColor: 'rgba(197, 216, 109, 0.5)',
         borderWidth: 1,
+        pointRadius: 5,
     }];
 
     return { labels, datasets };

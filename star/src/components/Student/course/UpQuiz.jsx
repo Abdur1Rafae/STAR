@@ -5,23 +5,16 @@ import { FaHourglassEnd } from "react-icons/fa";
 import { DDMMMMYYYY_HHMM } from '../../../Utils/DateFunctions';
 
 const UpQuiz = ({assessment}) => {
-    let name = "Assessment 2"
-    let duration = "20 min"
-    let startTime = "13:00"
-    let closeTime = "15:00"
-    let openDate = "23 Jan 2024"
-    let closeDate = "23 Jan 2024"
   return (
-    <div className={`flex-grow flex flex-col ${assessment ? 'justify-between': ''} bg-LightBlue h-28 min-w-56 rounded-lg drop-shadow-md p-1`}>
-        <h1 className='text-xs font-medium font-body'>Upcoming Assessments</h1>
-        <div className='w-full border-[1px] border-black'></div>
+    <div className={`flex-grow flex flex-col ${assessment.status ? 'justify-between': ''} bg-LightBlue h-28 min-w-56 rounded-lg drop-shadow-md p-1`}>
+        <h1 className='text-xs font-medium font-body border-b-2 border-black pb-1'>Upcoming Assessments</h1>
         {
-            assessment ? 
-            <div className='flex justify-between px-1 py-1'>
+            assessment.status ? 
+            <div className='flex justify-between px-1 py-1 gap-4'>
             <div className='infoContainer flex flex-col justify-between h-full'>
-                <div className=''>
+                <div className='flex items-center gap-4'>
                     <h1 className='font-medium text-DarkBlue font-body text-md md:text-sm self-center'>{assessment.title}</h1>
-                    <div className='flex text-slate-400 text-xs self-center mt-2'>
+                    <div className='flex text-slate-400 text-xs self-center'>
                         <FaClock className='self-center'/>
                         <h3 className='ml-1 self-center md:text-[10px] lg:text-xs'>{assessment.duration}</h3>
                     </div>
@@ -29,11 +22,11 @@ const UpQuiz = ({assessment}) => {
                 <div className='mt-2'>
                     <div className='text-xs md:text-[10px] lg:text-xs flex text-slate-400'>
                         <AiOutlinePlaySquare className='self-center'/>
-                        <h3 className='ml-1'>Begins: {DDMMMMYYYY_HHMM(assessment.startDate)}</h3>
+                        <h3 className='ml-1'>Begins: {DDMMMMYYYY_HHMM({date: assessment.openDate})}</h3>
                     </div>
                     <div className='text-xs md:text-[10px] lg:text-xs flex text-red-400'>
                         <FaHourglassEnd className='self-center'/>
-                        <h3 className='ml-1'>Ends: {DDMMMMYYYY_HHMM(assessment.closeDate)}</h3>
+                        <h3 className='ml-1'>Ends: {DDMMMMYYYY_HHMM({date: assessment.closeDate})}</h3>
                     </div>
                 </div>
             </div>

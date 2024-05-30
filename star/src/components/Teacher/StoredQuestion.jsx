@@ -8,7 +8,7 @@ import { ToggleStore } from '../../Stores/ToggleStore';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 
-const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill, difficulty, points, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue, reuse}) => {
+const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill, difficulty, points, image, explanation, options, correctOptions, savingHandler ,deleteHandler, isTrue, reuse, noPoints}) => {
     const [display, setDisplay] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const Ordering = ToggleStore((store)=> store.Ordering)
@@ -21,10 +21,14 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
-                    <input type="checkbox"/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
-                    <PointBox point={points}/>
+                    {
+                        noPoints ?
+                        <></>
+                        :
+                        <PointBox point={points}/>
+                    }
                     <div className='ml-auto flex'>
                         <button className='self-center'><MdOutlineDeleteOutline onClick={deleteHandler} className='text-lg hover:text-red-400 mr-2'/></button>
                         <button className='self-center' onClick={() => {setIsEditing(true);setDisplay(true)}}><MdEdit className='text-lg text-gray-400 hover:text-black mr-2'/></button>
@@ -52,13 +56,13 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
                     </>
                     :
                     <>
-                        {image !== null && undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
+                        {image !== null && image !== undefined ? <button className='h-32 w-40'><QuizImage imageUrl={image} /></button> : <></>}
                         {
                             type == "MCQ" ? 
                             (
                                 <div className='flex flex-col gap-2 mt-2'>
-                                    {options.map((option)=>{
-                                        return <OptionBox option={option} isActive={correctOptions.includes(option)}/> 
+                                    {options.map((option, index)=>{
+                                        return <OptionBox key={index} option={option} isActive={correctOptions.includes(option)}/> 
                                     })}
                                 </div>
                             )
@@ -66,8 +70,8 @@ const StoredQuestion = ({topicList, type,topic, id, handleDrag, question, skill,
                             type == "True/False" ?
                             (
                                 <div className='flex flex-col gap-2 mt-2'>
-                                    {options.map((option)=>{
-                                        return <OptionBox option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
+                                    {options.map((option, index)=>{
+                                        return <OptionBox key={index} option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
                                     })}
                                 </div>
                             )

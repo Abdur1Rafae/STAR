@@ -7,8 +7,9 @@ import SkillFilter from './SkillFilter';
 import DifficultyFilter from './DifficultyFilter';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import { UploadImageFile } from '../../APIS/ImageAPI';
 
-const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
+const QuestionCreator = ({adaptive, topicList, type, topic, questionID, savingHandler, closeHandler, question, options, skill, difficultyLevel, points, explanation, image, correctOptions, isTrue, reuse}) => {
     const [selectedSkill, setSelectedSkill] = useState(skill || 'Problem Solving');
     const [selectedDifficulty, setSelectedDifficulty] = useState(difficultyLevel || 'Medium')
     const [newQuestion, setNewQuestion] = useState(question);
@@ -16,11 +17,12 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
 
     const [newCorrectOptions, setNewCorrectOptions] = useState(correctOptions ? correctOptions : [])
     const [newExplanation, setNewExplanation] = useState(explanation);
-    const [newPoints, setNewPoints] = useState(points);
-    const [newImage, setNewImage] = useState(image);
+    const [newPoints, setNewPoints] = useState(points ?? 1);
+    const [newImage, setNewImage] = useState(image ? image : '');
     const [topicName, setTopicName] = useState(topic ? topic : '')
     const [isCorrect, setCorrect] = useState(isTrue ?? false)
     const [error, setError] = useState('')
+    const [imageFile, setImageFile] = useState(null)
 
     useEffect(() => {
         setNewOptions(options ? options : []);
@@ -35,6 +37,48 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
             return newArray;
         });
     };
+
+    const uploadingImage = async () => {
+        try {
+            const data = await UploadImageFile({ image: imageFile });
+            console.log(data);
+            return data.data.url;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleSave = async() => {
+        if(topicName == '') {
+            setError('Question needs to be asigned a topic.')
+            return
+        }
+        if(newPoints < 1 || !newPoints){
+            setError('Invalid points')
+            return
+        }
+        if(newQuestion == ''){
+            setError('Empty Question cannot be saved.')
+            return
+        }
+        if(type == "Multiple Choice Question" && newCorrectOptions.length == 0) {
+            setError('Select atleast one correct option.')
+            return
+        }
+        setError('')
+        try {
+            if((image != null || image != undefined) && (image !== newImage)) {
+                //delete prev image
+                // console.log(newImage)
+                // console.log(image)
+            }
+            const assessmentImage = newImage !== null && newImage.length !== 0 ? await uploadingImage() : null;
+            savingHandler(questionID, newOptions, newQuestion, newExplanation, assessmentImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName.trim(), type, newCorrectOptions, isCorrect, reuse)
+            closeHandler()
+        } catch(err) {
+            console.log(err)
+        }
+    }
 
   return (
     <div className='border-black border-[1px] bg-[#EEF3F3] w-full h-auto rounded-lg p-2'>
@@ -59,7 +103,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
                     <p className='text-xs'>Topic :&nbsp;</p>
                     <input 
                         value={topicName} 
-                        onChange={(e) => setTopicName(e.target.value)} 
+                        onChange={(e) => {setTopicName(e.target.value)}} 
                         list="Topics" 
                         type='text' 
                         className='text-xs bg-LightBlue border-black border-[1px] w-44 h-6 rounded-md p-2'
@@ -83,7 +127,7 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
         onChange={(value)=> setNewQuestion(value)} className='h-28'/>
         </div>
         <div className='mt-2'>
-            {type == "MCQ" ? <MCQSetup updateOption={updateOption} correctOptions={newCorrectOptions} setCorrectOption={setNewCorrectOptions} addOption={setNewOptions} options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup options={newOptions} setOptions={setNewOptions} image={newImage} isTrue={isTrue} setIsTrue={setCorrect}/> : <SASetup/>)}
+            {type == "MCQ" ? <MCQSetup updateOption={updateOption} setImageFile={setImageFile} correctOptions={newCorrectOptions} setCorrectOption={setNewCorrectOptions} addOption={setNewOptions} options={newOptions} image={newImage} setImage={setNewImage}/> : (type == "True/False" ? <TFSetup setImage={setNewImage} options={newOptions} setImageFile={setImageFile} setOptions={setNewOptions} image={newImage} isTrue={isTrue} setIsTrue={setCorrect}/> : <SASetup setImage={setNewImage} image={newImage} setImageFile={setImageFile}/>)}
         </div>
 
         <div className='mt-4'>
@@ -91,36 +135,10 @@ const QuestionCreator = ({topicList, type, topic, questionID, savingHandler, clo
             <textarea value={newExplanation} onChange={(e)=> setNewExplanation(e.target.value)} className='w-full h-18 border-black border-[1px] mt-2 p-4 text-sm resize-none' placeholder='Enter your explanation'></textarea>
         </div>
 
-        <div className='w-full flex'><button onClick={()=>{
-            if(topicName == '') {
-                setError('Question needs to be asigned a topic.')
-                return
-            }
-            if(newPoints < 1 || !newPoints){
-                setError('Invalid points')
-                return
-            }
-            else {
-                console.log("here", newPoints)
-            }
-            if(newQuestion == ''){
-                setError('Empty Question cannot be saved.')
-                return
-            }
-            if(type == "Multiple Choice Question" && newCorrectOptions.length == 0) {
-                setError('Select atleast one correct option.')
-                return
-            }
-            setError('')
-            try {
-                savingHandler(questionID, newOptions, newQuestion, newExplanation, newImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName, type, newCorrectOptions, isCorrect, reuse)
-                closeHandler()
-            } catch(err) {
-                console.log(err)
-            }
-            
-        }} 
-        className='bg-DarkBlue w-18 text-white text-sm p-2 rounded-md ml-auto'>Save</button></div>
+        <div className='w-full flex'>
+            <button onClick={handleSave} 
+            className='bg-DarkBlue w-18 text-white text-sm p-2 rounded-md ml-auto'>Save</button>
+        </div>
         <div className='w-full flex justify-end mt-2'>
             <p className='text-red-500 text-xs'>{error}</p>
         </div>

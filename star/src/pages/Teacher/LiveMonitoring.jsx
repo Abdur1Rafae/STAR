@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import LMTable from '../../components/Teacher/LMTable'
@@ -13,6 +12,7 @@ import { MonitorAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 import CategoryFilter from '../../components/Teacher/CategoryFilter';
 import Loader from '../../components/Loader';
+import { LuRefreshCcwDot } from "react-icons/lu";
 
 
 function LiveMonitoring() {
@@ -57,12 +57,13 @@ function LiveMonitoring() {
       if (matchesSection) {
         totalCount++;
         if (stat.status === "Submitted") {
-            submitStudent++;
-        } else if (stat.status === "Active") {
-            activeStudent++;
-            if (stat.flagged) {
-                flaggedStudent++;
-            }
+          submitStudent++;
+        } 
+        if (stat.status === "Active") {
+          activeStudent++;
+        }
+        if (stat.flagged) {
+          flaggedStudent++;
         }
       }
     });
@@ -90,14 +91,27 @@ function LiveMonitoring() {
     { title: "Section", key: "sectionName" },
     { title: "Start Time", key: "startTime" },
     { title: "Submit Time", key: "submitTime" },
-    { title: "Status", key: "status" }
+    { title: "Score", key: "score"},
+    { title: "Status", key: "status" },
   ];
+
+  const handleRefresh = async() => {
+    setLoading(true)
+    try {
+      const res = await MonitorAssessment({id: assessment._id})
+      console.log(res)
+      setTimeout(() => {
+        setStats(res)
+        setLoading(false);
+      }, 1000);
+    } catch(err) {
+      console.log(err)
+    }
+  }
   
   const status = ['Submitted', 'Active', 'Not Started'];
   return (
-    <div className='w-full h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Live Monitoring"}/>
@@ -110,7 +124,10 @@ function LiveMonitoring() {
                       <div className='bg-LightBlue shadow-md flex flex-col justify-around p-4' >
                         <div className='flex flex-col md:flex-row justify-between md:gap-0 gap-4'>
                           <div className='w-full flex flex-col gap-2'>
-                              <h2 className='font-bold text-xl'>{assessment.title}</h2>
+                              <div className='flex gap-4 items-center'>
+                                <h2 className='font-bold text-xl'>{assessment.title}</h2>
+                                <button onClick={handleRefresh} className='text-sm mt-1'><LuRefreshCcwDot/></button>
+                              </div>
                               <p className='font-semibold text-xs md:text-sm text-gray-500'>{OpenDate} - {CloseDate}</p>
                               <div className='flex gap-4'>
                                   <div className="h-10 px-2 py-1 flex items-center text-gray-500 gap-2 bg-white text-xs font-medium border border-black">
@@ -157,8 +174,7 @@ function LiveMonitoring() {
                   }
                   </div>
             </div>   
-        </div>
-    </div>
+        </>
   );
 }
 

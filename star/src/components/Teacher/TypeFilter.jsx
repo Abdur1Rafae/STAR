@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TypeFilter = ({selectedType, setSelectType}) => {
+const TypeFilter = ({selectedType, setSelectType, adaptive}) => {
     const type = ['Multiple Choice Question', 'True/False', 'Short Anwer'];
   return (
     <div className="text-sm flex justify-between items-center h-6">
@@ -10,15 +10,17 @@ const TypeFilter = ({selectedType, setSelectType}) => {
                 onChange={(e) => setSelectType(e.target.value)}
                 className='outline-none bg-LightBlue rounded-md h-5 flex'
             >
-                <option key={"All"} value={"All"} className='flex'>
+                {
+                    adaptive ? 
+                    <></>
+                    :
+                    <option key={"All"} value={"All"} className='flex'>
                         All
                     </option>
-                {type.map((type, index) => (
-                    <option key={index} value={type == "Multiple Choice Question" ? "MCQ" : type == "True/False" ? "TF" : "SA"} className='flex'>
-                        {type}
-                    </option>
-                ))}
-                
+                }
+                <option value={"MCQ"} className='flex'>Multiple Choice Question</option>
+                <option value={"True/False"} className='flex'>True/False</option>
+                {!adaptive && <option value={"Short Answer"} className='flex'>Short Answer</option>}
             </select>
 
         </div>

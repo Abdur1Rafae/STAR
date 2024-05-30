@@ -4,7 +4,6 @@ import SubmitButton from '../../components/button/SubmitButton';
 import QuizNavigation from '../../components/Student/quiz/QuizNavigation';
 import TrueFalse from '../../components/Student/question/TrueFalsePanel';
 import TextAnswerPanel from '../../components/Student/question/TextAnswerPanel';
-import MenuBar from '../../components/MenuBar';
 import QuizSubheader from '../../components/Student/quiz/QuizSubheader';
 import { ToggleStore } from '../../Stores/ToggleStore';
 import QuizStore from '../../Stores/QuizStore';
@@ -14,57 +13,113 @@ import ConfirmationBox from '../../components/ConfirmationBox';
 import CorrectSA from '../../components/Student/question/CorrectSA';
 import Webcam from 'react-webcam';
 import * as faceDetection from '@tensorflow-models/face-detection';
+import { UploadImage } from '../../APIS/ImageAPI';
+import { FlagStudents } from '../../APIS/Student/AssessmentAPI';
 
 const QuizScreen = () => {
   const showNav = ToggleStore((store) => store.showNav);
-  const [submittingQuiz, setSubmittingQuiz] = useState(false)
   const [submitConfirmBox, setSubmitConfirmBox] = useState(false)
+  
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const [reachedLastQuestion, SetReachedLastQuestion] = useState(false)
-  const [tabSwitch, setTabSwitch] = useState([])
+  const { questions, currentQuestionIndex, setCurrentQuestionIndex, vioArray, setVioArray, submittingQuiz, setSubmittingQuiz,  clearVioArray, filterQuestions, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
-  const { questions, currentQuestionIndex, responses, nextQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
-
-  const {navigation, instantFeedback} = quizConfig
+  const {navigation, instantFeedback, monitoring} = quizConfig
 
   const webcamRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(null);
   const [isWebcamReady, setIsWebcamReady] = useState(false);
-  const [vioArray, setVioArray] = useState([]);
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
+  const [interval, setIntervalId] = useState()
 
-  useEffect(()=>{
-    console.log(tabSwitch)
-  }, [tabSwitch])
+  useEffect(()=> {
 
-  useEffect(() => {
-    if (webcamRef.current && webcamRef.current.video) {
+  }, [])
+
+  const checkWebcamReady = () => {
+    if (webcamRef.current && webcamRef.current.video && webcamRef.current.video.readyState === 4) {
       setIsWebcamReady(true);
+      console.log('Webcam is ready');
+      return true;
     }
-  }, [webcamRef]);
+    return false;
+  };
 
   useEffect(() => {
-    if (isWebcamReady) {
+    const intervalId = setInterval(() => {
+      if (checkWebcamReady()) {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [monitoring]);
+
+  const UploadFlaggings = async() => {
+    const responseId = localStorage.getItem('responseId')
+    console.log("Pushing data to servers")
+    try {
+      const res = await FlagStudents({data: vioArray, id: responseId})
+      console.log(res)
+      clearVioArray()
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    if(monitoring) {
+      const intervalId = setInterval(() => {
+        if (vioArray.length > 0) {
+          UploadFlaggings();
+        }else {
+          console.log("No data to push")
+        }
+      }, 45000);
+  
+      return () => clearInterval(intervalId);
+    }
+    else{
+      console.log("No monitoring enabled")
+    }
+  }, [vioArray, monitoring]);
+
+  useEffect(() => {
+    if (isWebcamReady && monitoring) {
+      console.log("detection started")
       startCameraAndDetection();
     }
-  }, [isWebcamReady]);
+    console.log(isWebcamReady, monitoring)
+  }, [isWebcamReady, monitoring]);
 
   useEffect(()=> {
     setPrevVio(null)
     console.log(vioArray)
   }, [vioArray])
 
-  useEffect(()=> {
-    if(violationOver && prevVio && prevVio.startTime) {
-      const duration = (Date.now() - prevVio.startTime) * renderCount;
-      const updatedVio = { ...prevVio, duration };
-      console.log(updatedVio)
-      setVioArray(prevArray => [...prevArray, updatedVio]);
-      setRenderCount(0)
+  const upload = async({image}) => {
+    try {
+      const res = await UploadImage({image: image})
+      return res.data.url
+    } catch(err) {
+      console.log(err)
     }
+  }
+
+  useEffect(()=> {
+    const compute = async() => {
+      if(violationOver && prevVio && prevVio.timestamp) {
+        const duration = (Date.now() - prevVio.timestamp) * renderCount;
+        const updatedVio = { ...prevVio, duration };
+        const url = await upload({image :updatedVio.image})
+        updatedVio.image = url
+        setVioArray(updatedVio);
+        setRenderCount(0)
+      }
+    }
+
+    compute()
   }, [prevVio, violationOver])
 
 
@@ -75,17 +130,18 @@ const QuizScreen = () => {
         console.log('Webcam footage not found. Kindly ensure your webcam is functional and allow access to it.');
         return;
       }
+
       const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
       const detectorConfig = {
         runtime: 'mediapipe',
         solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
       };
-      const detector = await faceDetection.createDetector(model ,detectorConfig);
+      let detector = await faceDetection.createDetector(model ,detectorConfig);
 
-      setInterval(async () => {
+      const intervalId = setInterval(async () => {
         await detectStudent(videoElement, detector);
-        console.log("calling detector", Date.now())
       }, 10000)
+      setIntervalId(intervalId)
     }
   }
 
@@ -97,15 +153,14 @@ const QuizScreen = () => {
       const faces = await detector.estimateFaces(videoElement, estimationConfig);
 
       if (faces.length === 1) {
-        console.log("One Person Detected")
         setViolationOver(true)
       } else if (faces.length === 0) {
-        console.log("No person detected")
         if(violationOver) {
-          const imageSrc = webcamRef.current.getScreenshot();
+          console.log('No Person detected')
+          const imageSrc = webcamRef.current.getScreenshot({width: 1920, height: 1080});
           const startTime = Date.now();
           setPrevVio({
-            startTime: startTime,
+            timestamp: startTime,
             type: 'No person on screen',
             image: imageSrc
           });
@@ -113,12 +168,12 @@ const QuizScreen = () => {
           setViolationOver(false)
         }
       } else {
-        console.log("More than one person detected")
         if(violationOver) {
+          console.log('More than one Person detected')
           const imageSrc = webcamRef.current.getScreenshot();
           const startTime = Date.now();
           setPrevVio({
-            startTime: startTime,
+            timestamp: startTime,
             type: 'More than one person on screen',
             image: imageSrc
           });
@@ -132,60 +187,66 @@ const QuizScreen = () => {
   }
 
   useEffect(() => {
-    let switchStartTime = null;
-    const handleWindowFocus = () => {
-      document.title = 'Arete Assessment';
-      if (switchStartTime) {
-        const switchEndTime = new Date();
-        const switchDuration = switchEndTime - switchStartTime;
-        setTabSwitch(prevTabSwitch => [
-          ...prevTabSwitch,
-          { type: 'tab switch', duration: switchDuration }
-        ]);
-      }
-      switchStartTime = null;
-    };
+    if(monitoring) {
+      let switchStartTime = null;
+      const handleWindowFocus = () => {
+        document.title = 'Arete Assessment';
+        if (switchStartTime) {
+          const switchEndTime = Date.now();
+          const switchDuration = switchEndTime - switchStartTime;
+          if(switchDuration > 10000) {
+            setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
+          }
+        }
+        switchStartTime = null;
+      };
 
-    const handleWindowBlur = () => {
-      document.title = 'Warning!';
-      switchStartTime = new Date();
-    };
+      const handleWindowBlur = () => {
+        document.title = 'Warning!';
+        switchStartTime = Date.now();
+      };
 
-    window.addEventListener('focus', handleWindowFocus);
-    window.addEventListener('blur', handleWindowBlur);
+      window.addEventListener('focus', handleWindowFocus);
+      window.addEventListener('blur', handleWindowBlur);
 
-    return () => {
-      window.removeEventListener('focus', handleWindowFocus);
-      window.removeEventListener('blur', handleWindowBlur);
-    };
-  }, []);
+      return () => {
+        window.removeEventListener('focus', handleWindowFocus);
+        window.removeEventListener('blur', handleWindowBlur);
+      };
+    }
+  }, [monitoring]);
   
 
   useEffect(()=> {
-    localStorage.removeItem('questions')
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
     const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
       localStorage.removeItem('responseId')
       localStorage.removeItem('SuccessSubmit')
-      window.location.assign('/quiz-submitted')
+      window.location.assign('quiz-submitted')
     }
     updateQuizDetails(storedQuizDetails)
-    createResponseObjects([])
+    let res = JSON.parse(localStorage.getItem('studentResponses'))
+    let res2 = localStorage.getItem('num')
+    createResponseObjects(res == null ? [] : res)
+    if(res2 !== null) {
+      setCurrentQuestionIndex(Number(res2))
+    }
+    
+    localStorage.removeItem('studentResponses')
+    localStorage.removeItem('num')
+
   }, [])
 
+  const saveResponsesToLocalStorage = () => {
+    localStorage.setItem('studentResponses', JSON.stringify(responses));
+    localStorage.setItem('num', currentQuestionIndex)
+  };
+
   useEffect(() => {
-    const saveData = async () => {
-      try {
-        await submitResponses();
-      } catch (err) {
-        console.log(err);
-      }
-    };
-  
     const handleBeforeUnload = (event) => {
       if (!submittingQuiz) {
-        saveData();
+        saveResponsesToLocalStorage();
         event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
       }
     };
@@ -196,6 +257,7 @@ const QuizScreen = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [responses, submittingQuiz]);
+  
 
   
   const [answerSubmitted, setAnswerSubmit] = useState(false)
@@ -208,17 +270,13 @@ const QuizScreen = () => {
   const currentQuestion = getQuestion()
 
   const handleNextQuestion = () => {
-    if(currentQuestionIndex == questions.length - 1) {
-      nextQuestion()
-      SetReachedLastQuestion(true)
-    }
-    else {
-      setAnswerSubmit(false)
-      nextQuestion()
-    }
+    filterQuestions()
+    setAnswerSubmit(false)
+    nextQuestion()
   };
 
   const handlePrevious = () => {
+    filterQuestions()
     prevQuestion()
   };
 
@@ -228,18 +286,18 @@ const QuizScreen = () => {
 
   const handleSubmission = async() => {
     try {
-      setSubmittingQuiz(true)
+      setSubmittingQuiz()
       const res = await submitResponses()
-      localStorage.removeItem('SuccessSubmit')
-      window.location.assign('/quiz-submitted')
+      localStorage.removeItem('questions')
+      localStorage.removeItem('studentResponses')
+      localStorage.removeItem('num')
     } catch(err) {
       console.log(err)
     }
   }
 
   return (
-    <div className='flex flex-col w-screen lg:w-full'>
-      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+    <>
       <QuizSubheader/>
       <div className="">
         <div className="quiz-screen p-2 md:p-4 w-full">
@@ -302,10 +360,10 @@ const QuizScreen = () => {
                 )
               )
           }
-
           </div>
-
-          <Webcam className='w-0 h-0' ref={webcamRef}/>
+          {
+            monitoring && <Webcam className='w-0 h-0' ref={webcamRef}/>
+          }
 
           <div className={`fixed sm:w-full h-12 border-black border-t-[1px] bottom-0 left-0 right-0 bg-white p-4 flex justify-between items-center`}>
             <div className="mb-0">
@@ -316,8 +374,28 @@ const QuizScreen = () => {
 
             <div className="flex items-center space-y-0 space-x-4">
               {
-                reachedLastQuestion ? 
-                <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                reachedLastQuestion ?
+                (
+                  navigation ?
+                  <>
+                    <SubmitButton label="Previous" onClick={handlePrevious} active={true}/>
+                    <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                  </>
+                  :
+                  instantFeedback ?
+                  (
+                    answerSubmitted ?
+                    <>
+                      <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                    </>
+                    :
+                    <>
+                      <SubmitButton label="Answer" onClick={handleAnswerDisplay} active={true} />
+                    </>
+                  )
+                  :
+                  <SubmitButton label="Submit" onClick={()=> {setSubmitConfirmBox(true)}} active={true}/>
+                ) 
                 :
                 (
                   !navigation ? 
@@ -359,12 +437,12 @@ const QuizScreen = () => {
         }
         {
           submitConfirmBox ? 
-          <ConfirmationBox message={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
+          <ConfirmationBox heading={"Satisfied with your answers?"} message={"Confirm to submit this assessment."} onConfirm={handleSubmission} onCancel={()=>{setSubmitConfirmBox(false)}}/>
           : 
           ''
         }
       </div>
-    </div>
+    </>
   );
 };
 

@@ -14,7 +14,7 @@ import { CgUnavailable } from "react-icons/cg";
 
 const IndividualReport = () => {
   const [loading, setLoading] = useState(true)
-  const {topPerformers, requireAttention, selectedSection, totalMarks, assessmentQuestion } = useContext(ReportContent)
+  const {topPerformers, requireAttention, selectedSection, totalMarks, assessmentQuestion, avgPerformers } = useContext(ReportContent)
   const [showStudents, setShowStudents] = useState(false); 
   const [activeStudenData, setActiveStudentData] = useState({})
   const [skillMap, setSkillMap] = useState({})
@@ -33,6 +33,14 @@ const IndividualReport = () => {
         response: student.response
       })
     })
+    avgPerformers.map((student)=> {
+      students.push({
+        name: student.name, 
+        percentage: student.score,
+        erp: student.erp,
+        response: student.response
+      })
+    })
     requireAttention.map((student) => {
       students.push({
         name: student.name, 
@@ -43,7 +51,7 @@ const IndividualReport = () => {
     })
     setPeopleInfo(students)
     setStudentFetched(true)
-  }, [selectedSection, topPerformers, requireAttention])
+  }, [selectedSection, topPerformers, requireAttention, avgPerformers])
 
   const [activePerson, setActivePerson] = useState({});
 
@@ -170,7 +178,7 @@ const IndividualReport = () => {
                     <HorizontalBarChart inputData={activeStudenData.topicBreakDown}/>
                   </div>
                 </div>
-                <div className=''>
+                <div className='w-full md:max-w-96'>
                   <QuizSkilEval inputData={skillMap}/>
                 </div>
               </div>

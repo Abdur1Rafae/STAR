@@ -4,6 +4,7 @@ import QuizImage from './QuizImage';
 import SubmitButton from '../../button/SubmitButton';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import {baseUrl} from '../../../APIS/BaseUrl'
 
 const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
   const modules = {
@@ -11,12 +12,10 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
   };
 
   return (
-    <div className="bg-LightBlue flex-grow w-full mx-auto p-4 shadow-md rounded-md">
-      <div className="">
-      </div>
+    <div className="bg-LightBlue flex-grow w-full mx-auto h-full p-4 shadow-md rounded-md flex flex-col justify-between">
       {
-        question?.questionId.image ? 
-        <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={question?.questionId.image} /></div>
+        question?.questionId.image !== undefined ? 
+        <div className='w-32 h-32 mx-auto mt-4 mb-2'><QuizImage imageUrl={`${baseUrl}teacherhub/`+question?.questionId.image} /></div>
         : ''
       }
       <div className="mb-4">
@@ -32,10 +31,10 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
             question?.questionId.options.map((option, index) => (
               <div
                 key={index}
-                className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
+                className={`flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
               >
                 <div
-                  className={`min-h-10 rounded-md mr-2 flex items-center border-2 ${
+                  className={`min-h-10 w-full rounded-md mr-2 flex items-center border-2 ${
                     question?.questionId.correctOptions.includes(option) ? 'bg-green-300' : '' 
                   }`}
                 
@@ -54,7 +53,7 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
                 className={`flex  items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300`}
               >
                 <div
-                  className={`w-80 h-10 rounded-md mr-2 flex items-center border-2 ${
+                  className={`w-80 h-10  rounded-md mr-2 flex items-center border-2 ${
                     question?.questionId.isTrue ? 'bg-green-300' : '' 
                   }`}
                 

@@ -9,7 +9,12 @@ const Login = () => {
   const [error, setError] = useState('')
   const [check, setCheck] = useState(true)
 
+  useEffect(()=> {
+    sessionStorage.clear()
+  }, [])
+
   const handleSubmit = async() => {
+    setError('')
     setCheck(false)
     if(email == '') {
       setCheck(true)
@@ -27,11 +32,11 @@ const Login = () => {
          password: password,
       });
       if (response.status == 200) {
-        setError('')
-        localStorage.setItem('token', response.data.user.accessToken)
-        localStorage.setItem('userDetails', JSON.stringify(response.data.user))
+        sessionStorage.setItem('token', response.data.user.accessToken)
+        sessionStorage.setItem('userDetails', JSON.stringify(response.data.user))
+        sessionStorage.setItem('userEmail' , email )
         if(response.data.user.role == 'student') {
-         window.location.assign('/home')
+         window.location.assign('/student/home')
         }
         else {
          window.location.assign('/teacher/home')
@@ -54,7 +59,7 @@ const Login = () => {
   };
 
   return (
-    <div className='w-full h-screen font-body'>
+    <div className='w-full h-screen font-body bg-LightBlue sm:overflow-y-auto'>
       <div className={`menu-container w-full h-14 bg-DarkBlue flex items-center `}>
         <div className='w-full'>
           <div className="menuleft logo flex justify-start">
@@ -62,17 +67,17 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className='lg:grid grid-cols-2 w-full h-full lg:content-center bg-[#F4F9Fd]'>
-        <div className='mt-4 md:mt-4 lg:mt-16'>
-          <h1 className='font-bold md:text-3xl text-center'>Welcome back to the journey of learning! <br /> Let's make it a great one.</h1>
-          <div className='w-full'>
+      <div className='lg:grid grid-cols-2 w-full h-full lg:content-center bg-LightBlue'>
+        <div className='mt-4 lg:mt-16'>
+          <h1 className='font-bold md:text-2xl text-center ml-2'>Welcome back to the journey of learning! <br /> Let's make it a great one.</h1>
+          <div className='w-full flex justify-center'>
             <img src={studentimage} alt=""  className='md:w-[700px] lg:w-[900px]'></img>
           </div>
         </div>
-        <div className='m-4 lg:m-16 h-fit max-md:py-8 md:p-4 flex flex-col items-center justify-center'>
+        <div className='-mt-16 m-4 lg:m-16 h-fit max-md:py-8 md:p-4 flex flex-col items-center justify-center'>
           <p className='text-xs text-gray-500 flex flex-col items-center mt-8'>Please login into your account</p>
           <p className='text-xs text-red-500 flex flex-col items-center mt-2'>{error}</p>
-          <form onSubmit={handleSubmit} className=' w-full flex flex-col'>
+          <form className=' w-full flex flex-col'>
                <label className='text-md font-semibold'>Email</label>
                <input 
                type="email" 
@@ -95,13 +100,13 @@ const Login = () => {
                 <label className='text-xs'>Remember me</label>
               </div>
               <div>
-                <a href="" className='text-xs text-[#2D79F3]'>Forgot Password?</a>
+                <button type='button' onClick={()=>{window.location.assign('/forgot-password')}}  className='text-xs text-[#2D79F3]'>Forgot Password?</button>
               </div>
             </div>
             <button type="button" onClick={check ? handleSubmit : ()=> {}} className={`w-52 mt-8 mb-4 rounded-lg ${check ? 'bg-DarkBlue': 'bg-slate-500' } text-white text-sm py-4 self-center`}>Login</button>
             <div className='flex items-center justify-center gap-2 self-center'>
               <span className='text-xs'>Don't have an Account? </span>
-              <a className='text-xs text-[#2D79F3]'>Sign Up</a>
+              <button type='button' onClick={()=>{window.location.assign('/signup')}} className='text-xs text-[#2D79F3]'>Sign Up</button>
             </div>
           </form>
         </div>

@@ -1,11 +1,12 @@
 import React from 'react';
+import { baseUrl } from '../../../APIS/BaseUrl';
 
 const QuizImage = ({ imageUrl }) => {
-  console.log(imageUrl)
   return (
     <div className="flex object-contain w-full h-full">
       <img
-        src={imageUrl}
+      crossOrigin="anonymous"
+        src={`${baseUrl}teacherhub/`+imageUrl}
         alt="Quiz Image"
       />
     </div>

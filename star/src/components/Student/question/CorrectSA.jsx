@@ -9,8 +9,6 @@ import 'react-quill/dist/quill.snow.css'
 const CorrectSA = ({ question }) => {
   const [selectedOption, setSelectedOption] = useState({})
   const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
-  const [correctAnswersMarked, setCAM] = useState([]);
-  const [correctAnswersMissed, setCAMissed] = useState([]);
     
   const questionNumber = QuizStore(store => store.currentQuestionIndex)
 
@@ -18,7 +16,6 @@ const CorrectSA = ({ question }) => {
   useEffect(()=> {
     const answer = getSelectedResponse(questionNumber)
     setSelectedOption(answer ? answer : {})
-    console.log(answer)
   }, [question])
   const modules = {
     toolbar: false
@@ -40,15 +37,13 @@ const CorrectSA = ({ question }) => {
           </div>
         </div>
       </div>
-      <div className="border-t border-black border-2 mt-2 mb-4"></div>
       <div className="mb-4 flex flex-col items-center">
-        {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
-          <div className=' w-full self-start'>
+        {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
+          <div className=' w-full self-start mt-4'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
           </div>
       </div>
 
-      <div className="border-t border-black border-2 mt-2"></div>
 
       <div className="options mt-2">
         <textarea

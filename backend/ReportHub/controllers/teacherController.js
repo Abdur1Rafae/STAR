@@ -109,7 +109,7 @@ module.exports.getReportOverview= async (req,res) =>
         const {assessmentId} = req.params
 
         const assessment = await Assessment.findById(assessmentId)
-        .select('summary.participants questionBank.question totalMarks -_id')
+        .select('summary.participants questionBank.question totalMarks configurations.adaptiveTesting -_id')
         .populate
         ({
             path: 'summary.participants.students.response',
@@ -135,7 +135,7 @@ module.exports.getReportOverview= async (req,res) =>
               $project: {
                 _id: 0,
                 section:
-                  "$summary.participants.sectionName",
+                  "$summary.participants.sectionId",
                 questions:
                   "$summary.participants.questions",
               },
@@ -213,23 +213,18 @@ module.exports.getReportOverview= async (req,res) =>
 
         const participants = assessment.summary.participants.map(item => {
             const { questions, _id , ...rest } = item.toObject()
-
-            if(breakDown) {
-              const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id === item.sectionName)
-              if(sectionBreakDown && sectionBreakDown.breakdown) {
-                return { ...rest, topicBreakDown : sectionBreakDown.breakdown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
-              }
-              else{
-                return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
-              }
-            } 
+            const sectionBreakDown = breakDown[0].sectionWise.find((sectionItem) => sectionItem._id.equals(new mongoose.Types.ObjectId(item.sectionId)))
+            if(sectionBreakDown && sectionBreakDown.breakdown) {
+              return { ...rest, topicBreakDown : sectionBreakDown.breakdown, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}
+            }
+            else{return { ...rest, mostIncorrectQuestion: findMostIncorrectQuestion(questions)}}
           })
 
         const report = 
         {
             questionBank, 
             participants, 
-            totalMarks: assessment.totalMarks, 
+            totalMarks: assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks, 
             topicBreakDown: breakDown[0].overall,
             mostIncorrectQuestion: findMostIncorrectOverall(assessment.summary.participants)
         }
@@ -238,8 +233,8 @@ module.exports.getReportOverview= async (req,res) =>
     }
     catch(err)
     {
-        console.log(err)
-        res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to generate report'})
+      console.log(err)
+      res.status(500).json({error: 'ER_INT_SERV', message: 'Failed to generate report'})
     }
 }
 module.exports.getQuestionSummary= async (req,res) => 
@@ -333,6 +328,7 @@ module.exports.getQuestionSummary= async (req,res) =>
               questions = questions.map(question =>
                 {
                   const optionBreakDown = questionsBreakDown.questions.find(item => item.question.equals(new mongoose.Types.ObjectId(question.question)))
+                  console.log(optionBreakDown)
                   if(optionBreakDown && optionBreakDown.breakDown){return {...question.toObject(), optionsBreakDown: optionBreakDown.breakDown}}
                   else{return {...question.toObject()}}
         
@@ -341,7 +337,7 @@ module.exports.getQuestionSummary= async (req,res) =>
             return{
               section: section.sectionName,
               questions: questions,
-            }
+          }
         })
 
         res.status(201).json(report)

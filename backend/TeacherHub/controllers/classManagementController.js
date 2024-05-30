@@ -250,7 +250,9 @@ module.exports.getClasses = async (req,res) =>
         })
         if (!teacherRecord) {return res.status(404).json({ error : 'ER_NOT_FOUND', message: 'Teacher not found' })}
 
-        res.status(200).json({data: teacherRecord.classes})
+        if(!teacherRecord.classes){return res.status(200).json({data: []})}
+
+        return res.status(200).json({data: teacherRecord.classes})
     }
     catch(err){
         return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get classes'})

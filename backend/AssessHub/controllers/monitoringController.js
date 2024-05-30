@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const {Assessment} = require('library/index')
+const {Assessment, Response} = require('library/index')
 
 
 module.exports.getMonitoringDetails = async (req,res) => 
@@ -54,6 +54,10 @@ module.exports.getMonitoringDetails = async (req,res) =>
                 studentId: '$students._id',
                 studentName: '$students.name',
                 sectionName: '$participants.sectionName',
+                score:
+                {
+                  $cond: {if: '$responseExists', then: { $arrayElemAt: ['$response.totalScore', 0] }, else: null}
+                },
                 startTime:
                 {
                   $cond: {if: '$responseExists', then: { $arrayElemAt: ['$response.createdAt', 0] }, else: null}
@@ -68,7 +72,17 @@ module.exports.getMonitoringDetails = async (req,res) =>
                 },
                 flagged: 
                 {
-                  $cond: {if: '$responseExists', then: { $arrayElemAt: ['$response.monitoring.flagged', 0] }, else: false}
+                  $cond: {
+                    if: "$responseExists",
+                    then: {
+                      $cond: {
+                        if: { $gt: [{ $size: {$arrayElemAt: ["$response.flaggings", 0]} }, 0] },
+                        then: true,
+                        else: false
+                      }
+                    },
+                    else: false
+                  }
                 }
             }
         }
@@ -81,6 +95,28 @@ module.exports.getMonitoringDetails = async (req,res) =>
     }
     catch (err) {
         console.log(err)
-        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get questions' })
+        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to get monitoring details' })
     }   
 }
+module.exports.flagCandidate = async (req,res) => 
+  {
+      try
+      {
+        const {responseId} = req.params
+        const violations = req.body
+
+        const updatedResponse = await Response.findByIdAndUpdate(responseId, { $addToSet: { 'flaggings': { $each: violations } }})
+        if (!updatedResponse) {return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Response not found'})}
+
+        const updatedAssessment = await Assessment.findByIdAndUpdate(updatedResponse.assessment, {'configurations.releaseGrades': false})
+        if(!updatedAssessment){return res.status(404).json({error: 'ER_NOT_FOUND', message: 'Assessment not found.'}) }
+  
+        return res.status(200).json({message: `Violations added successfully`})  
+  
+      }
+      catch (err) {
+        console.log(err)
+        if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })}  if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
+        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to flag candidate' })
+      }   
+  }

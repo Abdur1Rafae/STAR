@@ -3,6 +3,8 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+
+
 .progress-ring__circle {
     stroke-dasharray: 400, 400;
     transform: rotate(-90deg);
@@ -30,4 +32,19 @@
 .no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+.slide-in {
+    animation: slideIn 1s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

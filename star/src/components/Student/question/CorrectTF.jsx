@@ -22,7 +22,7 @@ const CorrectTF = ({ question }) => {
   useEffect(()=> {
     let userSelectedCorrectAnswers = [];
     let correctAnswersNotSelected = [];
-    if(selectedOption.isTrue) {
+    if(selectedOption.isTrue !== undefined) {
       if(selectedOption.isTrue) {
         if(selectedOption.answer.includes("True")){
           userSelectedCorrectAnswers.push('True')
@@ -61,23 +61,21 @@ const CorrectTF = ({ question }) => {
             </div>
           </div>
         </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
       <div className="mb-4">
           <div className="mb-4 flex flex-col items-center">
-            {question.imageUrl == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.imageUrl} /></button>}
-            <div className=' w-full'>
+            {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
+            <div className=' w-full mt-4'>
             <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
             </div>
           </div>
-        <div className="border-t border-black border-2 mt-2"></div>
       </div>
 
       <div className="options flex justify-center">
       <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
             className={`w-full min-h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
-              correctAnswersMarked.includes("True") || correctAnswersMissed.includes("True") ? 'bg-emerald-300' : 'bg-rose-300'
+              correctAnswersMarked.includes("True") || correctAnswersMissed.includes("True") ? 'bg-emerald-300' : ''
             }`}
           >
             {(selectedOption.answer && selectedOption.answer.includes("True")) ?<GrRadialSelected className='ml-4'/> : ""}   
@@ -88,7 +86,7 @@ const CorrectTF = ({ question }) => {
         <div className="w-1/2 flex items-center justify-center p-2 mb-2 bg-transparent cursor-pointer hover:bg-gray-100 transition duration-300">
           <div
             className={`w-full min-h-10 rounded-md mr-2 flex items-center border-[1px] border-black ${
-                correctAnswersMarked.includes("False") || correctAnswersMissed.includes("False") ? 'bg-emerald-300' : 'bg-rose-300'
+                correctAnswersMarked.includes("False") || correctAnswersMissed.includes("False") ? 'bg-emerald-300' : ''
             }`}
           >
             {(selectedOption.answer && selectedOption.answer.includes("False")) ?<GrRadialSelected className='ml-4'/> : ""}   

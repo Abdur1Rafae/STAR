@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FcAddImage } from "react-icons/fc";
+import { baseUrl } from '../../APIS/BaseUrl';
 
-const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorrectOption}) => {
+const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorrectOption, setImageFile}) => {
     const [markedCorrect, setMarkCorrect] = useState(correctOptions ? correctOptions : []);
     const fileInputRef = useRef(null);
 
     const [choices, setChoices] = useState(options);
+    const [userUpload, setUserUpload] = useState(false)
+    const [imageUrl, setImageUrl] = useState(image)
 
 
     const handleInputChange = (event, index) => {
@@ -41,10 +44,14 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
 
     const handleFileInputChange = (event) => {
         const file = event.target.files[0];
+        setUserUpload(true)
         if (file) {
             const imageUrl = URL.createObjectURL(file);
+            console.log(imageUrl)
             setImage(imageUrl);
+            setImageUrl(imageUrl)
         }
+        setImageFile(file)
     };
 
     const handleClick = () => {
@@ -54,6 +61,7 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
     const handleDeleteImage = () => {
         setImage(null); 
         fileInputRef.current.value = null; 
+        setUserUpload(true)
     };
 
     const handleAddChoice = () => {
@@ -73,7 +81,7 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
                         choices.length > 0 && choices.map((choice, index) => {
                             return <div key={index} className='flex gap-2 items-center'>
                                 <FaCheckCircle className={`${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
-                                <input type='text' onChange={(event)=>handleInputChange(event, index)} value={choice} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'}`}/>
+                                <input autoFocus type='text' onChange={(event)=>handleInputChange(event, index)} value={choice} className={`w-full p-2 border-[1px] border-black rounded-md text-sm ${markedCorrect.includes(choice) ? 'text-green-500' : 'text-gray-600'}`}/>
                                 <MdOutlineDeleteOutline className='hover:text-red-500 hover:cursor-pointer' onClick={()=>handleDeleteChoice(choice)}/>
                             </div>
                         })
@@ -93,7 +101,7 @@ const MCQSetup = ({image, setImage,  options, addOption, correctOptions, setCorr
                     </button>
                     {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={image} alt="Uploaded Image" className='w-24 h-24'/>
+                            <img crossOrigin='anonymous' src={userUpload ? imageUrl :(`${baseUrl}teacherhub/`+image)} alt="Uploaded Image" className='w-24 h-24'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>

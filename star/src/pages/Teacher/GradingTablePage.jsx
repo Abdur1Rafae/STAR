@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import MenuBar from '../../components/MenuBar'
+import { MdClose } from 'react-icons/md'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { BiChevronLeft } from 'react-icons/bi'
 import LMTable from '../../components/Teacher/LMTable'
-import { GetAssessmentSummary, PublishAssessment } from '../../APIS/Teacher/GradingAPI'
+import { FlaggedStudents, GetAssessmentSummary, PublishAssessment } from '../../APIS/Teacher/GradingAPI'
 import Loader from '../../components/Loader'
 import { GrOverview } from "react-icons/gr";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import ViewBox from '../../components/Teacher/ViewBox'
+import SubmitButton from '../../components/button/SubmitButton'
+import ErrorBox from '../../components/ErrorBox'
+import ConfirmationBox from '../../components/ConfirmationBox'
 
 const GradingTablePage = () => {
   const [loading, setLoading] = useState(true)
   const [gradingData, setGradingData] = useState([])
+  const [flaggingData, setFlaggingData] = useState([])
   
   const [tab, setTab] = useState('Questions')
   const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
   const [shouldPublish, setShouldPublish] = useState(false)
+  const [cantPublish, setCantPublish] = useState(false)
+  const [confirmPublish, setConfirmPublish] = useState(false)
 
   useEffect(()=>{
     const GetData = async() => {
@@ -48,6 +54,29 @@ const GradingTablePage = () => {
 
     GetData()
   }, [])
+
+  useEffect(()=> {
+    const getFlags = async () => {
+      try {
+        const res = await FlaggedStudents({id: assessment._id})
+        console.log(res)
+        if(res.length > 0) {
+          let num = 1
+          const updatedRes = res.map(obj => ({
+            num: num++,
+            ...obj,
+            view: <ViewBox onClick={()=>handleFlagClick({id: obj._id})}/>
+          }));
+          
+          setFlaggingData(updatedRes);
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    }
+
+    getFlags()
+  }, [])
   
   const columns = [
     { title: "No.", key: "num" },
@@ -61,12 +90,13 @@ const GradingTablePage = () => {
     {title: "No.", key: "num"},
     {title: "Name", key: "name"},
     {title: "ERP", key: "erp"},
-    {title: "Violations Count", key: "count"},
+    {title: "Violations Count", key: "violations"},
     { title: "", key: "view"}
   ]
 
-  const handleFlagClick = (id) => {
-
+  const handleFlagClick = ({id}) => {
+    localStorage.setItem('FlagId', id)
+    window.location.assign('/teacher/view-flags')
   }
 
   const handlePublish = async() => {
@@ -76,24 +106,22 @@ const GradingTablePage = () => {
         console.log(res)
         window.location.assign('/teacher/home')
       } catch(err) {
+        setConfirmPublish(false)
         console.log(err)
       }
     }
     else {
-      console.log("cant publish")
+      setConfirmPublish(false)
+      setCantPublish(true)
     }
   }
-
-  const flaggedData = [{num:1, name: "Abdur Rafae", erp:"22828", count:5, view:<ViewBox onClick={()=>handleFlagClick()}/>}]
   
   
   return (
-    <div className=' w-full h-full font-body'>
-      <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-      <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+    <>
          <SideBar active={"Grading"}/>
          <div className='w-full h-full'>
-          <SubheaderBut name={"Grading"} button={"Publish"} onClick={handlePublish}/>
+          <SubheaderBut name={"Grading"} button={"Publish"} onClick={()=>setConfirmPublish(true)}/>
           <div className={`p-2 md:p-4 flex gap-4 overflow-hidden ${loading ? 'h-full flex-row justify-center items-center' : 'flex-col'}`}>
             {
               loading ?
@@ -122,15 +150,27 @@ const GradingTablePage = () => {
                 tab == "Questions" ? 
                 <LMTable data={gradingData} columns = {columns} onClick={true}/>
                 :
-                <LMTable data={flaggedData} columns = {flagColumns} onClick={false}/>
+                <LMTable data={flaggingData} columns = {flagColumns} onClick={false}/>
 
               }
               </>
             }
           </div>
+          {
+            cantPublish &&
+            <div className='z-30'>
+            <ErrorBox heading={"Publishing Error"} message={"You still have unmarked responses left for this assessment. Kindly grade them before publishing."} onCancel={()=>{setCantPublish(false); setConfirmPublish(false)}}/>
+            </div>
+          }
+          {
+            confirmPublish &&
+            <ConfirmationBox heading={"Publishing Grades"} message={<><p className='text-md'>Are you sure you wish to publish grades for current assessment?</p>
+            <p className='text-xs text-gray-400 mt-4'>Any penalty applied will be calculated once published.</p>
+            <p className='text-sm font-bold mt-2'>This action cannot be undone!</p></>} onCancel={()=>setConfirmPublish(false)} onConfirm={handlePublish}/>
+
+          }
         </div>
-      </div>
-   </div>
+      </>
 );
 }
 

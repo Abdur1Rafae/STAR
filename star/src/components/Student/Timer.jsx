@@ -1,32 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AiOutlineClockCircle } from 'react-icons/ai';
-import { TbClockOff } from "react-icons/tb";
+import { TbClockOff } from 'react-icons/tb';
 import QuizStore from '../../Stores/QuizStore';
+import AdapQuizStore from '../../Stores/AdaptiveQuizStore';
 
-const Timer = () => {
+const Timer = ({adaptive}) => {
   const [showTime, setShowTime] = useState(true);
-  const {submitResponses} = QuizStore()
+  const { submitResponses, setSubmittingQuiz } = adaptive ? AdapQuizStore() : QuizStore();
   const quizDetails = JSON.parse(localStorage.getItem('quizDetails'));
-  const durationInSeconds = quizDetails.duration * 60;
+  const durationInSeconds = quizDetails.duration * 60 * 1000;
   const closingDateUTC = new Date(quizDetails.closeDate);
   const closingDateLocal = closingDateUTC.toLocaleString('en-US', { timeZone: 'Asia/Karachi' });
   const closingTime = new Date(closingDateLocal).getTime();
   const currentTime = Date.now();
 
-  // Calculate the initial remaining time based on current time and closing time
-  const initialRemainingTime = closingTime > currentTime
-    ? Math.max(0, (closingTime - currentTime) / 1000)
-    : durationInSeconds;
+  const storedRemainingTime = localStorage.getItem('remainingTime');
+  const initialRemainingTime = storedRemainingTime !== null 
+    ? parseFloat(storedRemainingTime) 
+    : (closingTime < (currentTime + durationInSeconds)
+        ? Math.max(0, (closingTime - currentTime) / 1000)
+        : durationInSeconds / 1000);
+
+  
 
   const [remainingTime, setRemainingTime] = useState(initialRemainingTime);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRemainingTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  localStorage.removeItem('remainingTime')
+  const lastTimestampRef = useRef(Date.now());
 
   const saveData = async () => {
     try {
@@ -37,11 +36,48 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    if (remainingTime === 0 || closingTime === currentTime) {
-      localStorage.removeItem('SuccessSubmit')
-      saveData()
-      window.location.assign('/quiz-submitted');
-    }
+    const tick = () => {
+      setRemainingTime(prevTime => {
+        const now = Date.now();
+        const deltaTime = (now - lastTimestampRef.current) / 1000;
+        lastTimestampRef.current = now;
+        return Math.max(prevTime - deltaTime, 0);
+      });
+    };
+
+    const timer = setInterval(tick, 1000);
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        lastTimestampRef.current = Date.now();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const handleBeforeUnload = () => {
+      localStorage.setItem('remainingTime', remainingTime);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [remainingTime]);
+
+  useEffect(() => {
+    const handleRemainingTime = async () => {
+      if (remainingTime === 0) {
+        setSubmittingQuiz()
+        await saveData();
+        window.location.assign('quiz-submitted');
+      }
+    };
+  
+    handleRemainingTime();
   }, [remainingTime]);
 
   const formatTime = time => time.toString().padStart(2, '0');

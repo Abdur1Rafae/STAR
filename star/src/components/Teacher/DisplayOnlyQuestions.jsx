@@ -20,7 +20,7 @@ const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, di
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
-                    <input type="checkbox" checked={isSelected}/>
+                    <input type="checkbox"  readOnly checked={isSelected}/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={point}/>
@@ -37,7 +37,7 @@ const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, di
                 </div>
                 <div className={`w-full flex ${display ? 'flex-col-reverse' : 'flex-col'}`}>
                     <div className='flex gap-2'>
-                        <ReactQuill readOnly={true} modules={modules} value={display || question.length <=25 ? (question) : (question.slice(0, 90)+'...')} className='w-full text-xs font-body !border-none -p-2'/>
+                        <ReactQuill readOnly={true} modules={modules} value={display || question.length <=25 ? (question) : (question.slice(0, 200)+'...')} className='w-full text-xs font-body !border-none -p-2'/>
                     </div>
                 </div>
             </div>
@@ -47,8 +47,8 @@ const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, di
                     type == "MCQ" ? 
                     (
                         <div className='flex flex-col gap-2 mt-2'>
-                            {options.map((option)=>{
-                                return <OptionBox option={option} isActive={correctOptions.includes(option)}/> 
+                            {options.map((option,index)=>{
+                                return <OptionBox key={index} option={option} isActive={correctOptions.includes(option)}/> 
                             })}
                         </div>
                     )
@@ -56,8 +56,8 @@ const DisplayOnlyQuestions = ({question, correctOptions, isTrue, type, skill, di
                     type == "True/False" ?
                     (
                         <div className='flex flex-col gap-2 mt-2'>
-                            {options.map((option)=>{
-                                return <OptionBox option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
+                            {options.map((option, index)=>{
+                                return <OptionBox key={index} option={option} isActive={(option == "True" && isTrue) || (option == "False" && !isTrue)}/> 
                             })}
                         </div>
                     )

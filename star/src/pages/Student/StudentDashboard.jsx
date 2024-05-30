@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import MenuBar from '../../components/MenuBar';
-import AssignmentTable from '../../components/Student/AssignmentTable';
-import SubHeader from '../../components/Student/SubHeader';
-import LiveQuiz from '../../components/Student/LiveQuiz';
+import React, { useEffect, useState, lazy } from 'react';
 import { GetOngoingAssessments, GetUpcomingAssessments } from '../../APIS/Student/AssessmentAPI';
 import Loader from '../../components/Loader';
+import SubHeader from '../../components/Student/SubHeader';
+const AssignmentTable = lazy(() => import('../../components/Student/AssignmentTable')) 
+const LiveQuiz = lazy(()=> import('../../components/Student/LiveQuiz'))
 
 const StudentDashboard = () => {
     const [LiveAssessments, SetLiveAssessments] = useState([])
@@ -12,6 +11,12 @@ const StudentDashboard = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
+        localStorage.removeItem('studentResponses')
+        localStorage.removeItem('num')
+        localStorage.removeItem('questions')
+        localStorage.removeItem('attempt')
+        localStorage.removeItem('score')
+        localStorage.removeItem('maxScore')
         const GetLiveAssessments = (async()=>{
             try{
                 const res = await GetOngoingAssessments()
@@ -40,8 +45,7 @@ const StudentDashboard = () => {
     }, [])
     
     return (
-        <div className='flex flex-col mb-20'>
-            <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+        <>
             <SubHeader isActive={"Dashboard"}/>
             <div className={`${loading ? 'flex h-96 flex-row justify-center items-center' : ''}`}>
                 {
@@ -54,9 +58,9 @@ const StudentDashboard = () => {
                         {
                             LiveAssessments.length > 0 ?
                             (
-                                LiveAssessments.map((assessment)=>{
+                                LiveAssessments.map((assessment, index)=>{
                                     return(
-                                    <LiveQuiz assessment={assessment}/>
+                                    <LiveQuiz key={index} assessment={assessment}/>
                                 )})
                             )
                             :
@@ -74,7 +78,7 @@ const StudentDashboard = () => {
                     </>
                 }
             </div>
-        </div>
+        </>
     );
 };
 

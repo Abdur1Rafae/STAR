@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import QuizCountImp from '../../components/Student/course/QuizCountImp'
 import ScoreView from '../../components/Student/course/ScoreView'
-import MenuBar from '../../components/MenuBar'
 import SubHeader from '../../components/Student/SubHeader'
 import UpQuiz from '../../components/Student/course/UpQuiz'
 import SkillEvaluation from '../../components/Student/course/SkillEvaluation'
@@ -34,7 +33,7 @@ const CourseInfo = () => {
           const pastAsg = []
           let upcomingAsg = {}
           res.assessmentHistory.map((assessment) => {
-            if(assessment.status == "Upcoming") {
+            if(assessment.status == "Not Started") {
               upcomingAsg = assessment
             }
             else {
@@ -102,10 +101,9 @@ const CourseInfo = () => {
   const quizzes = 1
 
   return (
-    <div className="flex flex-col mb-2 font-body">
-      <MenuBar name={"Maaz Shamim"} role={"Student"}/>
+    <>
       <SubHeader/>
-      <div className={`p-2 ${loading ? 'flex items-center justify-center h-screen' : ''}`}>
+      <div className={`p-2 font-body ${loading ? 'flex items-center justify-center h-screen' : ''}`}>
         {
           loading ?
           <div className='-mt-8'>
@@ -123,7 +121,7 @@ const CourseInfo = () => {
                   <div className='flex flex-col md:flex-row w-full justify-items-stretch gap-4'>
                     <QuizCountImp totalCount={pastAssessments.length} attempts={totalAttempted} improvement={improvement}/>
                     <ScoreView avgScore={avgScore} highestScore={highestScore} totalScore={totalScoreofHighest}/>
-                    <UpQuiz/>
+                    <UpQuiz assessment={upcomingAssessment}/>
                   </div>
                   <div className='w-full flex flex-col md:flex-row gap-4'>
                     <PerformanceGraph inputData={graphData}/>
@@ -141,7 +139,7 @@ const CourseInfo = () => {
           </>
         }
       </div>
-    </div>
+    </>
   )
 }
 

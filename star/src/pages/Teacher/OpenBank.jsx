@@ -57,9 +57,7 @@ const OpenBank = () => {
     }, [questions]); 
 
   return (
-    <div className='flex flex-col font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Library"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Question Bank"}/>
@@ -71,7 +69,7 @@ const OpenBank = () => {
                        <>
                         <div className='bg-LightBlue min-h-12 w-full shadow-md flex md:flex-row flex-col gap-4 md:items-center p-2 mb-4'>
                             <div className='flex items-center gap-2'>
-                                <button  onClick={()=>{window.location.assign("/teacher/library")}}><MdOutlineArrowBackIosNew className='text-2xl'/></button>
+                                <button  onClick={()=>{window.history.back()}}><MdOutlineArrowBackIosNew className='text-2xl'/></button>
                                 <div className='flex'>
                                     <h1 className='text-sm md:text-lg ml-2 font-body font-bold'>{bankName}</h1>
                                 </div>
@@ -131,8 +129,7 @@ const OpenBank = () => {
                     
                 </div>
             </div>
-        </div>
-    </div>
+        </>
   )
 }
 

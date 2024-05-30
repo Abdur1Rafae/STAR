@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { FaCheckCircle } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { FcAddImage } from "react-icons/fc";
+import { baseUrl } from '../../APIS/BaseUrl';
 
-const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
+const TFSetup = ({image, setImage,setImageFile, options, setOptions, isTrue, setIsTrue}) => {
     const [markedCorrect, setMarkCorrect] = useState(isTrue);
     const fileInputRef = useRef(null);
-    const [imageUrl, setImageUrl] = useState(image);
+    const [userUpload, setUserUpload] = useState(false)
 
     
 
@@ -23,10 +24,12 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
 
     const handleFileInputChange = (event) => {
         const file = event.target.files[0];
+        setUserUpload(true)
         if (file) {
             const imageUrl = URL.createObjectURL(file);
-            setImageUrl(imageUrl);
+            setImage(imageUrl);
         }
+        setImageFile(file)
     };
 
     const handleClick = () => {
@@ -34,8 +37,9 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
     };
 
     const handleDeleteImage = () => {
-        setImageUrl(null); 
+        setImage(null); 
         fileInputRef.current.value = null; 
+        setUserUpload(true)
     };
 
   return (
@@ -44,9 +48,9 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
             <div className='w-1/2'>
                 <div className='flex flex-col gap-2'>
                     {
-                        choices.map((choice) => {
+                        choices.map((choice, index) => {
                             return (
-                            <div className='flex gap-2 items-center'>
+                            <div key={index} className='flex gap-2 items-center'>
                                 <FaCheckCircle className={`${choice == "True" && markedCorrect || choice == "False" && !markedCorrect ? 'text-green-500' : 'text-gray-600'} hover:cursor-pointer`} onClick={()=>handleSetCorrect(choice)}/>
                                 <div className={`w-16 p-2 border-[1px] border-black rounded-md text-sm ${choice == "True" && markedCorrect || choice == "False" && !markedCorrect ? 'text-green-500' : 'text-gray-600'}`}>{choice}</div>
                             </div>)
@@ -61,12 +65,12 @@ const TFSetup = ({image, options, setOptions, isTrue, setIsTrue}) => {
                         onChange={handleFileInputChange}
                         style={{ display: 'none' }}
                     />
-                    <button className={`${imageUrl ? 'hidden' : 'w-28 h-28'}`} onClick={handleClick}>
+                    <button className={`${image ? 'hidden' : 'w-28 h-28'}`} onClick={handleClick}>
                         <FcAddImage className='w-full h-full' />
                     </button>
-                    {imageUrl && (
+                    {image && (
                         <div className='flex flex-col gap-4'>
-                            <img src={imageUrl} alt="Uploaded Image" className='w-24 h-24'/>
+                            <img crossOrigin='anonymous' src={userUpload? image : `${baseUrl}teacherhub/`+image} alt="Uploaded Image" className='w-24 h-24'/>
                             <div className='flex justify-between '>
                                 <button onClick={handleDeleteImage}><MdOutlineDeleteOutline className='text-2xl hover:text-red-500 hover:cursor-pointer'/></button>
                                 <button className={`w-8 h-8`} onClick={handleClick}>

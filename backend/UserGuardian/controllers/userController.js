@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Joi = require('joi')
 const {User} = require('library/index')
 const saltRounds = 10
-//const {sendMail} = require('../util/Mail/mail')
+const {sendMail} = require('../mail/mail')
 
 const BASE_USER_SCHEMA = Joi.object
 ({
@@ -41,6 +41,8 @@ module.exports.authenticate = async (req,res) =>
                 role: user.role
             }
 
+            if(user.role === 'student'){userData.erp = user.erp}
+
             return res.status(200).json({message: 'Authentication Successful', userData })
         }
         else{return res.status(401).json({error: 'ER_INVLD_CRED', message: 'Invalid Email or Password'})}
@@ -74,27 +76,27 @@ module.exports.signup = async (req,res) =>
     {
         console.log(err)
         if (err.name === 'ValidationError') {return res.status(400).json({ error: err.name, message: err.message })} 
-        else{return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to refresh token'})}
+        else{return res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to register user'})}
     }
 }
 
 module.exports.updateProfile = async (req,res) => 
 {
     const id = req.body.decodedToken.id
-    const role = req.body.decodedToken.role
 
-    if(role != 'teacher'){return res.status(401).json({error: 'ER_UNAUTH', message: 'Authorization Failed: Cannot perform update.'})}
-
-    const user =  req.body
-
-    user.password = await bcrypt.hash(user.password, saltRounds)
+    const {newPassword, currentPassword} =  req.body
 
     try
     {
-        const updatedUser = await User.findByIdAndUpdate(id, user)
-        if(!updatedUser){return res.status(404).json({error: 'ER_NOT_FOUND', message: `User not found`}) }
-
-        return res.status(200).json({message: 'Profile updated successfully'})  
+        const user = await User.findById(id)
+        if(!user){return res.status(404).json({error: 'ER_NOT_FOUND', message: `User not found`}) }
+        if(await bcrypt.compare(currentPassword, user.password))
+        {
+            user.password = await bcrypt.hash(newPassword, saltRounds)
+            user.save()
+            return res.status(200).json({message: 'Profile updated successfully'})  
+        }
+        else{return res.status(401).json({error: 'ER_UNAUTH', message: 'Invalid Password: Cannot perform update.'})}
     }
     catch(err)
     {
@@ -111,10 +113,13 @@ module.exports.forgotPassword = async (req,res) =>
         if (!existingUser || (existingUser.role === 'student' && existingUser.password == null)) {return res.status(404).json({ error: 'ER_NOT_FOUND' , message: 'User not found' })}
 
         const otp  = generateOTP()
-        //sendMail([email], 'forgotPassword', {otp, username: user.name})
+        sendMail([email], 'forgotPassword', {otp, username: existingUser.name})
         return res.status(200).json({message: 'OTP Sent', otp})
     }
-    catch(err){res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to verify user' })}
+    catch(err)
+    {
+        console.log(err)
+        return res.status(500).json({  error: 'ER_INT_SERV', message: 'Failed to verify user' })}
 }
 module.exports.resetPassword = async (req,res) => 
 {

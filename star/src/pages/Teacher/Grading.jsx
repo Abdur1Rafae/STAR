@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import { BiChevronLeft } from 'react-icons/bi'
@@ -54,7 +53,7 @@ const Grading = () => {
         const GetResponses = async()=>{
             try{
                 const res = await GetAssessmentResponses({id:question._id, assessmentId: assessment._id})
-                
+                console.log(res)
                 setTimeout(() => {
                     setResponses(res)
                     setLoading(false);
@@ -85,9 +84,7 @@ const Grading = () => {
     };
 
   return (
-    <div className='flex flex-col h-full'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+    <>
             <SideBar active={"Reports"}/>
             <div className='w-full flex flex-col'>
                 <Subheader name={"Grading"}/>
@@ -166,8 +163,7 @@ const Grading = () => {
                     }
                 </div>
             </div>
-        </div>
-    </div>
+        </>
   )
 }
 

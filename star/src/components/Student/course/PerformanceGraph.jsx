@@ -12,10 +12,15 @@ export const options = {
     display: false,
     }
   },
-    // title: {
-    //   display: true,
-    //   text: 'Performance',
-    // },
+  scales: {
+    y: {
+      min: 0,
+      max: 100,
+      title: {
+        display: true,
+      }
+    }
+  },
 };
 
 

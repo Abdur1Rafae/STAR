@@ -1,5 +1,4 @@
-import React ,{ useState, useRef, useEffect, useContext }from 'react';
-import MenuBar from '../../components/MenuBar'
+import React ,{ useState, useRef, useEffect, useContext, lazy }from 'react';
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import SubmitButton from '../../components/button/SubmitButton';
@@ -11,18 +10,19 @@ import { MdOutlineDeleteOutline,MdOutlineDisplaySettings,MdPublish,MdClose } fro
 import { PiChalkboardTeacherLight } from "react-icons/pi";
 import { VscPreview,VscFeedback } from "react-icons/vsc";
 import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
-import ClassTabDisplay from '../../components/Teacher/ClassTabDisplay';
 import { SectionContext } from '../../Context/SectionsContext';
 import { CreateAssessment } from '../../APIS/Teacher/AssessmentAPI';
+import { UploadImageFile } from '../../APIS/ImageAPI';
+const ClassTabDisplay = lazy(()=> import('../../components/Teacher/ClassTabDisplay'));
 
 
 
-function CreateNewAssessment() {
+const CreateNewAssessment = () => {
    const [assessmentId, setAssessmentId] = useState('')
    const [assessmentName, setName] = useState('');
    const [description, setDesc] = useState('')
    const [classes, setClasses] = useState([])
-   const {sections, removeSection, saveSections} = useContext(SectionContext)
+   const {sections, saveSections} = useContext(SectionContext)
    const [hour, setHour] = useState(0)
    const [mins, setMins] = useState(30)
    
@@ -38,41 +38,74 @@ function CreateNewAssessment() {
    const [adaptiveTesting, setAdaptiveTesting] = useState(false);
    const [candidateMonitoring, setCandidateMonitoring] = useState(false);
    const [error, setError] = useState('')
+   const [imageFile, setImageFile] = useState(null)
 
-   const handleSubmission = ()=> {
-      if(assessmentName == '') {
-         setError('Set Assessment Name')
-         return
+   const handleSubmission = async () => {
+      if (assessmentName === '') {
+         setError('Set Assessment Name');
+         return;
       }
-      if(datetime == '') {
-         setError('Set Start Date')
-         return
+      if (datetime === '') {
+         setError('Set Start Date');
+         return;
       }
-      if(hour == 0 && mins == 0) {
-         setError('Set Assessment Duration')
-         return
+      if (hour === 0 && mins === 0) {
+         setError('Set Assessment Duration');
+         return;
       }
-      if(closedatetime == '') {
-         setError('Set Close Date')
-         return
+      if (closedatetime === '') {
+         setError('Set Close Date');
+         return;
       }
-      setError('')
-      const sectionIDs = sections.map(section=> section._id)
-      const durationInMins = hour * 60 + mins
-
-      const res = async() => {
-         try {
-            const data = await CreateAssessment({name:assessmentName, description:description, sections:sectionIDs, iimage:image, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting,
-            monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-            setAssessmentId(data.assessmentId)
-            window.location.assign(`/teacher/questions-set/${data.assessmentId}`)
-         } catch(err) {
-            console.log(err)
+      setError('');
+      
+      try {
+         const sectionIDs = sections.map((section) => section._id);
+         const durationInMins = hour * 60 + mins;
+      
+         const uploadingImage = async () => {
+            try {
+            const data = await UploadImageFile({ image: imageFile });
+            console.log(data);
+            return data.data.url;
+            } catch (err) {
+            console.log(err);
+            }
+         };
+      
+         const assessmentImage = imageFile !== null ? await uploadingImage() : null;
+      
+         const data = await CreateAssessment({
+            name: assessmentName,
+            description: description,
+            sections: sectionIDs,
+            image: assessmentImage,
+            openDate: datetime,
+            closeDate: closedatetime,
+            duration: durationInMins,
+            adaptiveTesting: adaptiveTesting,
+            monitoring: candidateMonitoring,
+            instantFeedback: allowInstantFeedback,
+            navigation: allowNavigation,
+            releaseGrades: publishImmediately,
+            viewSubmission: viewSubmissions,
+            randomizeQuestions: randomizeQuestions,
+            randomizeAnswers: optionShuffle,
+            finalScore: showFinalScore,
+         });
+      
+         setAssessmentId(data.assessmentId);
+         if(adaptiveTesting) {
+            window.location.assign(`/teacher/adaptive-quiz/${data.assessmentId}`)
          }
+         else {
+            window.location.assign(`/teacher/questions-set/${data.assessmentId}`);
+         }
+      } catch (err) {
+         console.log(err);
       }
-
-      res()
-   }
+   };
+    
 
   const handleViewSubmissionsToggle = () => {
     setViewSubmissions((prevValue) => !prevValue);
@@ -125,6 +158,7 @@ function CreateNewAssessment() {
          const imageUrl = URL.createObjectURL(file);
          setImage(imageUrl);
       }
+      setImageFile(file)
    };
 
 
@@ -135,6 +169,7 @@ function CreateNewAssessment() {
    const handleDeleteImage = () => {
       setImage(null); 
       fileInputRef.current.value = null; 
+      setImageFile(null)
    };
 
    const handleHourChange = (event) => {
@@ -187,33 +222,44 @@ function CreateNewAssessment() {
 
       const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
       setCloseDatetime(formattedDate);
-      console.log(formattedDate);
    };
 
    const handleNavigationDecision = () => {
       if(!allowNavigation) {
-            setAllowInstantFeedback(false)
+         setAllowInstantFeedback(false)
+         setAdaptiveTesting(false)
       }
       setAllowNavigation((prev) => !prev)
    }
 
    const handleInstantFeedbackDecision = () =>{
       if(!allowInstantFeedback) {
-            setAllowNavigation(false)
+         setAllowNavigation(false)
+         setAdaptiveTesting(false)
       }
 
       setAllowInstantFeedback((prev) => !prev)
    }
 
+   const handleAdaptiveTesting = () => {
+      if(adaptiveTesting) {
+         setAdaptiveTesting(false)
+      }
+      else {
+         setAdaptiveTesting(true)
+         setShowFinalScore(false)
+         setAllowInstantFeedback(false)
+         setAllowNavigation(false)
+      }
+   }
+
   
   return (
-   <div className='flex flex-col h-full font-body'>
-        <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-        <div className='w-full md:h-full flex md:flex-row flex-col-reverse'>
+   <>
             <SideBar active={"Live Monitoring"}/>
             <div className='w-full flex flex-col'>
             <Subheader name={"Create New Assessment"}/>
-            <div className={`p-4 flex gap-4 overflow-hidden flex-col`}>
+            <div className={`p-4 flex gap-4 overflow-hidden flex-col font-body`}>
             <div className='flex md:flex-row flex-col justify-center items-center sm:h-96 md:h-64 border border-black bg-LightBlue'>
                <div className='md:w-2/3 w-full'>
                   <h2 className='ml-4 mt-2 text-sm font-semibold'>Assessment Title</h2>
@@ -414,7 +460,7 @@ function CreateNewAssessment() {
                            <BsInfoCircle size={14} className='ml-2'/></h2>
                            <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
                         </div>
-                        <ToggleButton isActive={adaptiveTesting} onClick={()=>setAdaptiveTesting((prev)=>!prev)}/>
+                        <ToggleButton isActive={adaptiveTesting} onClick={handleAdaptiveTesting}/>
                      </div>
                      <div className='flex mt-4'>
                         <div className='flex'>
@@ -443,8 +489,9 @@ function CreateNewAssessment() {
                      <h3 className='my-auto ml-2'>Select Sections</h3>
                      <button className='mr-2' onClick={()=>setSelectSectionsDialog(false)}><MdClose className='text-lg'/></button>
                   </div>
-                  <div className='overflow-y-auto no-scrollbar'>
-                     <div className='h-full flex flex-col gap-4 p-4'>
+                  <div className='overflow-hidden flex-grow flex flex-col'>
+                     <p className='ml-4 mt-2 text-xs text-DarkBlue font-bold'>Select from single class only!</p>
+                     <div className='h-full p-4 pb-20 flex flex-col overflow-y-auto'>
                         {
                            classes.map((item, index) => (
                               <ClassTabDisplay key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{}} />
@@ -459,10 +506,8 @@ function CreateNewAssessment() {
          </div>
          }
       </div>
-      </div>
-      
-   </div>
-);
+      </>
+   );
 }
 
 export default CreateNewAssessment;

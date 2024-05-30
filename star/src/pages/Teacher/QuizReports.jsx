@@ -62,9 +62,7 @@ const QuizReports = () => {
   
   
   return (
-    <div className=' w-full h-full font-body'>
-      <MenuBar name={"Jawwad Ahmed Farid"} role={"Teacher"}/>
-      <div className='w-auto md:h-full flex md:flex-row flex-col-reverse'>
+    <>
          <SideBar active={"Reports"}/>
          <div className='h-fit w-full	'>
           <Subheader name={"Reports"}/>
@@ -74,8 +72,7 @@ const QuizReports = () => {
           </div>
           <LMTable data={reports} columns = {columns} />
         </div>
-      </div>
-   </div>
+      </>
 );
 }
 

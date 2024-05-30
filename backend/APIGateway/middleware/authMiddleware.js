@@ -5,12 +5,13 @@ const SESSION_HASH_KEY = 'SESSION_ID'
 //paths that do not require authentication
 const unauthenticatedPaths = 
 [
-'/userguardian/signup', 
-'/userguardian/reset-password',
-'/session/login',
-'/session/refresh',
-'/session/forgot-password',
-'/session/verify-otp', 
+'/backend/userguardian/signup', 
+'/backend/userguardian/reset-password',
+'/backend/session/login',
+'/backend/session/refresh',
+'/backend/session/forgot-password',
+'/backend/session/verify-otp',
+'/backend/assesshub/assessment/demo-assessment' 
 ]
 
 const verifyToken = async (token) => 
@@ -32,12 +33,11 @@ const checkSession = async (id, sessionId) =>
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
+    if (req.path.startsWith('/backend/teacherhub/uploads') || req.path.startsWith('/backend/assesshub/assessment/submit-response')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']
-        console.log(authHeader)
         const token = authHeader && authHeader.split(' ')[1]
-        console.log(token)
 
         if(!token){return res.status(401).json({error: true, message: "Unauthenticated: You must log in to access this resource"})}
         try

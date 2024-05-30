@@ -6,11 +6,10 @@ const ClassTabDisplay = ({id, name, onDelete, classSections}) => {
     const [display, setDisplay] = useState(false);
 
     const [sections, setSections] = useState(classSections ? classSections: [])
-    console.log(sections)
 
 
   return (
-    <div className='w-full md:w-7/12 border-[1px] border-black p-2 overflow-hidden flex flex-col'>
+    <div className='w-full md:w-7/12 border-[1px] border-black p-2 flex flex-col'>
         <div className='flex justify-between'>
             <div className='flex'>
                 <h3 className='text-sm md:text-md ml-2 font-body text-DarkBlue'>{name}</h3>

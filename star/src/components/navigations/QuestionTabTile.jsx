@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { ReportContent } from '../../Context/ReportContext';
+import React from 'react';
 
 
 const QuestionTabTile = ({ index, active , onClick, percent}) => {

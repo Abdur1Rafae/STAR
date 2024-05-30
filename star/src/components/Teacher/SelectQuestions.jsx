@@ -1,21 +1,22 @@
 import React, {useState, useEffect, useContext} from 'react'
 import SkillFilter from './SkillFilter'
 import DifficultyFilter from './DifficultyFilter'
-import CategoryFilter from './CategoryFilter'
 import TypeFilter from './TypeFilter'
 import DisplayOnlyQuestions from './DisplayOnlyQuestions'
 import { QuestionContext } from '../../Context/QuestionsContext'
-import { GetReuseQuestions, GetAllTopics } from '../../APIS/Teacher/AssessmentAPI'
+import { GetReuseQuestions } from '../../APIS/Teacher/AssessmentAPI'
 import TopicFilter from './TopicFilter'
+import Loader from '../Loader'
 
-const SelectQuestions = ({topics}) => {
+const SelectQuestions = ({topics, adaptive}) => {
   const { reuseQuestions, setReuseQuestions } = useContext(QuestionContext);
   const { selectedQuestions, setSelectedQuestions } = useContext(QuestionContext);
-  const [selectedSkill, setSelectedSkill] = useState(null)
-  const [selectedLevel, setSelectedLevel] = useState(null);
-  const [selectedType, setSelectedType] = useState(null)
-  const [selectedTopic, setSelectedTopic] = useState(null)
+  const [selectedSkill, setSelectedSkill] = useState('All')
+  const [selectedLevel, setSelectedLevel] = useState('All');
+  const [selectedType, setSelectedType] = useState(adaptive ? 'MCQ':'All')
+  const [selectedTopic, setSelectedTopic] = useState('All')
   const [topicList, setTopicList] = useState(topics)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const GetQuestions = async() => {
@@ -23,6 +24,7 @@ const SelectQuestions = ({topics}) => {
         const res = await GetReuseQuestions({skill: selectedSkill, difficulty: selectedLevel, type: selectedType, topic: selectedTopic})
         console.log(res)
         setReuseQuestions([...res])
+        setLoading(false)
       } catch(err) {
         console.log(err)
       }
@@ -45,7 +47,14 @@ const SelectQuestions = ({topics}) => {
 
   return (
     <div className='p-4 flex flex-col gap-4'>
-        <div className='flex flex-wrap gap-4 mb-4'>
+      {
+        loading ?
+        <div className='w-full h-full flex justify-center items-center'>
+        <Loader/>
+        </div>
+        :
+        <>
+          <div className='flex flex-wrap gap-4 mb-4'>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Skill:&nbsp; </p>
                 <SkillFilter selectedSkill={selectedSkill} setSelectSkill={setSelectedSkill}/>
@@ -60,17 +69,18 @@ const SelectQuestions = ({topics}) => {
             </div>
             <div className='flex flex-col md:flex-row items-center'>
                 <p className='text-xs'>Type:&nbsp;</p>
-                <TypeFilter selectedType={selectedType} setSelectType={setSelectedType}/> 
+                <TypeFilter selectedType={selectedType} setSelectType={setSelectedType} adaptive={adaptive}/> 
             </div>
         </div>
         <div className='mb-20 flex flex-col gap-4'>
         {
           reuseQuestions.length > 0 && reuseQuestions.map((question, index)=> {
-            return <button className='text-left' key={index + question.question} onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSelected={selectedQuestions.some(item => item._id == question._id)} correctOptions={question.correctOptions} isTrue={question.isTrue} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.points} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></button>
+            return <div className='text-left hover:cursor-pointer' key={index + question.question} onClick={()=>{handleAddQuestion(question)}}><DisplayOnlyQuestions isSelected={selectedQuestions.some(item => item._id == question._id)} correctOptions={question.correctOptions} isTrue={question.isTrue} type={question.type} skill={question.skill} difficulty={question.difficulty} point={question.points} question={question.question} explanation={question.explanation} options={question.options} image={question.imageUrl}/></div>
           })
         }
         </div>
-        
+        </>
+      }        
     </div>
   )
 }

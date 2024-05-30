@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import {Chart, ArcElement} from 'chart.js'
+import { MdArrowDownward } from 'react-icons/md';
 Chart.register(ArcElement);
 
 const options = {
@@ -59,22 +60,32 @@ export const data = ({ inputData }) => {
   };
 };
 
-const LegendList = ({labels}) => (
-    <div className='mt-2 self-start flex md:flex-col flex-row flex-wrap gap-4'>
-      {labels.map((label, index) => (
-        <div key={index} className="flex items-center">
-          <div
-            className="w-2 h-2 rounded-full mr-2"
-            style={{ backgroundColor: additionalColors[index % additionalColors.length] }}
-          ></div>
-          <span className='text-xs'>{label}</span>
+const LegendList = ({labels}) => {
+  const [display, setDisplay] = useState(false)
+  return (
+  <div className='mt-2 self-start flex md:flex-col flex-row flex-wrap gap-4 w-full'>
+    <button className='w-full md:hidden flex justify-between border-[1px] border-black p-2 items-center' onClick={()=>{setDisplay((prev)=>(!prev))}}>
+      <p>{display ? 'Hide Topics' : 'Show Topics'}</p>
+      <MdArrowDownward className={`transform transition-transform ${display ? 'rotate-180' : ''}`}/>
+    </button>
+    {Object.entries(labels).map(([key, value], index) => (
+      <div key={index} className={`flex items-center w-full ${display ? '' : 'h-0 hidden md:flex md:h-full'} transition-all duration-200 ease-linear`}>
+        <div
+          className="w-2 h-2 rounded-full mr-2"
+          style={{ backgroundColor: additionalColors[index % additionalColors.length] }}
+        ></div>
+        <div className='flex justify-between w-full gap-4 text-xs font-medium'>
+          <p>{key}: </p>
+          <p>{value}</p>
         </div>
-      ))}
-    </div>
-  );
+      </div>
+    ))}
+  </div>
+  )
+};
+
 
 export function DoughnutGraph({ inputData }) {
-  const labels = Object.entries(inputData).map(([key, value]) => (key + " : " + value));
     return (
         <div className='w-full flex flex-col items-center justify-center'>
             <div className='h-48 flex items-center justify-center mb-4'>
@@ -84,7 +95,7 @@ export function DoughnutGraph({ inputData }) {
                     <h4 className='text-2xl font-semibold'>{Object.keys(inputData).length}</h4>
                 </div>
             </div>
-            <LegendList labels={labels}/>
+            <LegendList labels={inputData}/>
         </div>
     )
 }

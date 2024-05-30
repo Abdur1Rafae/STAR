@@ -14,6 +14,7 @@ const QuizResultScreen = () => {
   const [loading, setLoading] = useState(true)
   const [moveBackward, setMoveBackward] = useState(false)
   const [moveForward, setMoveForward] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(()=>{
     const GetQuestions = async() => {
@@ -22,9 +23,21 @@ const QuizResultScreen = () => {
         console.log(res)
         setTimeout(() => {
           setSubmission(res.submission)
+          let count = 0;
+          res.submission.forEach((response) => {
+            if(response.isCorrect) {
+              count++;
+            }
+          })
+          setCorrectAnswers(count)
           setLoading(false)
         }, 500);
+        setError(null)
       } catch(err) {
+        if(err.response.status == 405) {
+          setError('Not Allowed to view your submission. Contact your instructor for permission.')
+          setLoading(false)
+        }
         console.log(err)
       }
     }
@@ -74,10 +87,11 @@ const QuizResultScreen = () => {
           <Loader/>
         </div>
         :
+        error == null ? 
         <div className="flex md:flex-row flex-col gap-4">
-      <div className="h-auto">
-      <div className="p-4 bg-LightBlue h-full drop-shadow-md">
-      <h2 className="text-lg font-bold font-body pb-4">Result Summary</h2>
+        <div className="h-auto">
+        <div className="p-4 bg-LightBlue h-full drop-shadow-md">
+        <h2 className="text-lg font-bold font-body pb-4">Result Summary</h2>
 
       <div className="flex flex-col justify-center items-center">
         <div className='h-16 w-16 flex flex-col justify-center'>
@@ -107,7 +121,7 @@ const QuizResultScreen = () => {
     </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full min-h-80">
         <SubmitMCQPanel next={handleNext}  previous={handlePrevious} fwd={moveForward} bkd={moveBackward}  question={submission[currentQuestion]}
           currentQuestion={currentQuestion}
           totalQuestions={submission.length}/>
@@ -122,6 +136,10 @@ const QuizResultScreen = () => {
       
     </div>
 
+    :
+    <div>
+      {error}
+    </div>
 
     
   );
