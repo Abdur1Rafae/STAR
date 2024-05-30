@@ -10,7 +10,8 @@ const unauthenticatedPaths =
 '/backend/session/login',
 '/backend/session/refresh',
 '/backend/session/forgot-password',
-'/backend/session/verify-OTP', 
+'/backend/session/verify-OTP',
+'/backend/assesshub/assessment/demo-assessment', 
 ]
 
 const verifyToken = async (token) => 

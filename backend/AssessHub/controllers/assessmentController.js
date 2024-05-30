@@ -220,19 +220,19 @@ module.exports.demoAssessment = async (req,res) =>
 
       switch (role) {
         case 'teacher':
-          section = teacherSection;
+          sectionId = teacherSection;
           break;
         case 'alumni':
-          section = alumniSection;
+          sectionId = alumniSection;
           break;
         case 'expert':
-          section = expertSection;
+          sectionId = expertSection;
           break;
         case 'student':
-          section = studentSection;
+          sectionId = studentSection;
           break;
         default:
-        section = null;
+          sectionId = null;
       }
 
       if(sectionId === null){return res.status(400).json({error: 'ER_INVLD', message: 'Invalid user role'})}
@@ -245,15 +245,15 @@ module.exports.demoAssessment = async (req,res) =>
         const section = await Section.findById(sectionId)
         section.roster.push(newStudent[0]._id)
         await section.save({session})
-
-        const response = await Response.create([{student: newStudent[0]._id, assessment: assessmentId, sectionId}], {session})
-
-        return response[0]._id
+        
+        const response = await Response.create([{student: newStudent[0]._id, assessment: assessmentId, section: sectionId}], {session})
+        
+        return response._id
       })
       session.endSession()
   
       const assessment = await Assessment.findById(assessmentId)
-      .select('questionBank.question -_id')
+      .select('title configurations totalMarks questionBank.question -_id')
       .populate
       ({
           path: 'questionBank.question',

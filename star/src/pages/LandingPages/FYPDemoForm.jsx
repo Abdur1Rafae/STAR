@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../../components/logo.png';
 import circlebg from './circlebg.png';
+import SubmitButton from '../../components/button/SubmitButton';
+import { DemoAssessmentEnrollment } from '../../APIS/AuthAPI';
 
 const LandingPage = () => {
-    const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedRole, setSelectedRole] = useState('student');
     const [headingIndex, setHeadingIndex] = useState(0);
     const [fadeIn, setFadeIn] = useState(true);
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
 
     const headings = [
-        "Switch to a Education Platform You can rely on",
-        "Transform learning with detailed quiz result analytics",
+        "Switch to an Education Platform You can rely on",
+        "Transform learning with detailed assessment result analytics",
         "Keep track of student progress in real-time with live monitoring",
         "Data-driven insights for smarter education decisions."
     ];
@@ -27,17 +30,23 @@ const LandingPage = () => {
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, []);
 
-    const toggleDropDown = () => {
-        setIsDropDownOpen(!isDropDownOpen);
-    };
-
     const handleRoleChange = (event) => {
+        console.log(event.target.value)
         setSelectedRole(event.target.value);
     };
 
+    const handleRegisteration = async() => {
+        try {
+            const res = await DemoAssessmentEnrollment({name: name, email: email, role: selectedRole})
+            console.log(res)
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
     return (
-        <div className='w-full h-screen md:h-fit scroll-smooth font-Poppins bg-DarkBlue'>
-            <div className='p-4'>
+        <div className='w-full h-screen md:h-full scroll-smooth font-Poppins bg-DarkBlue'>
+            <div className=''>
                 <img className='w-32' src={logo} alt="" />
             </div>
             <div className='flex justify-center h-36 text-center text-3xl md:text-5xl font-bold text-white '>
@@ -46,37 +55,45 @@ const LandingPage = () => {
                 </h1>
             </div>
             <img src={circlebg} alt=""  className='z-0 absolute md:right-64 right-8 '/>
-            <div className='flex justify-center w-full  p-4 rounded-xl mt-4'>
-                <form className='z-10 bg-LightBlue md:w-1/2 rounded-lg md:p-4'>
+            <div className='flex justify-center w-full p-4 rounded-xl mt-4'>
+                <div className='z-10 bg-LightBlue w-full md:w-1/2 rounded-lg md:p-4' >
                     
                         <div className='p-4'>
                         <label className='text-md font-semibold'>Name</label>
                         <input 
+                        value={name}
+                        onChange={(e)=>setName(e.target.value)}
                         type="text" 
                         placeholder='Your Name' 
-                        className='rounded-lg text-xs h-fit w-full my-2 py-4 px-2'
+                        className='rounded-lg text-sm h-fit w-full my-2 py-4 px-2'
                         />
                         </div>
                         
                     <div className='p-4'>
                     <label className='text-md font-semibold'>Email</label>
                     <input 
-                    type="email" 
+                    type="email"
+                    value={email} 
+                    onChange={(e)=>setEmail(e.target.value)}
                     placeholder='Your Email' 
-                    className='rounded-lg text-xs h-fit w-full my-2 py-4 px-2'
+                    className='rounded-lg text-sm h-fit w-full my-2 py-4 px-2'
                     />
                     </div>
                     <div className='p-4'>
                         
             <label className='text-md font-semibold' >Role</label>
-            <select value={selectedRole} onChange={handleRoleChange}  className='rounded-lg text-xs h-fit w-full my-2 py-4 px-2'
+            <select value={selectedRole} onChange={handleRoleChange}  className='rounded-lg text-sm h-fit w-full my-2 py-4 px-2'
 >
-                <option value="Teacher">Teacher</option>
-                <option value="Student">Student</option>
-                <option value="Alumni">Alumni</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+                <option value="alumni">Alumnnus</option>
+                <option value={"expert"}>Industry Expert</option>
             </select>
                     </div>
-                </form>
+                    <div className='flex justify-center'>
+                    <SubmitButton type='submit' active={true} label={"Attempt an assessment"} onClick={handleRegisteration}/>
+                    </div>
+                </div>
             </div>
             <img src={circlebg} alt=""  className='z-0 absolute bottom-24 left-20 w-24'/>
 

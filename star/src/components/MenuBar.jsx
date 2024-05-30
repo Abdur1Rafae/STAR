@@ -6,7 +6,7 @@ import logo from './logo.png';
 import { ClickOutsideFunc } from './ClickOutsideFunc';
 import { UserLogout } from '../APIS/AuthAPI';
 
-const MenuBar = () => {
+const MenuBar = ({noProfile}) => {
     const [user, setUser] = useState(null);
     const [profileDialog, setProfileDialog] = useState(false);
 
@@ -74,11 +74,15 @@ const MenuBar = () => {
             <div ref={closeProfile} className={`dialogue z-20 absolute rounded-md border-2 right-0 bg-LightBlue transition-all ease-out duration-500 ${profileDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                 {profileDialog && (
                     <div className='h-20 dropdown-list w-36 lg:w-64 flex flex-col items-center justify-around'>
-                        <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleAccountClick}>
-                            <FaUserCog className='self-center ml-4 text-lg' />
-                            <button className='ml-2'>Profile</button>
-                        </div>
-                        
+                        {
+                            noProfile ?
+                            <></>
+                            :
+                            <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleAccountClick}>
+                                <FaUserCog className='self-center ml-4 text-lg' />
+                                <button className='ml-2'>Profile</button>
+                            </div>   
+                        }
                         <div className='h-8 w-full flex text-md transition-all duration-200 hover:bg-DarkBlue hover:text-white' onClick={handleLogout}>
                             <RiLogoutCircleRLine className='self-center ml-4 text-lg' />
                             <button className='ml-2'>Logout</button>

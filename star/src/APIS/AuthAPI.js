@@ -50,4 +50,9 @@ const UpdateProfile = async({newPass, currPass}) => {
     return res
 }
 
-export {UserLogin, UserLogout, UserSignup, ForgotPassword, VerifyOtp, resetPassword, UpdateProfile}
+const DemoAssessmentEnrollment = async({name, email, role}) => {
+    const res = await AxiosBase.post('assesshub/assessment/demo-assessment', {name: name, email: email, role: role},{})
+    return res
+}
+
+export {UserLogin, UserLogout, UserSignup, ForgotPassword, VerifyOtp, resetPassword, UpdateProfile, DemoAssessmentEnrollment}

@@ -6,6 +6,7 @@ import Teacher from './pages/Teacher.jsx';
 import { SectionProvider } from './Context/SectionsContext.js';
 import { ReportProvider } from './Context/ReportContext.js';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
+const FYPDEMOQUIZ = lazy(()=> import('./pages/FYPDEMOQUIZ.jsx'));
 const StudentDashboard = lazy(()=> import('./pages/Student/StudentDashboard.jsx') )
 const CourseInfo = lazy(() => import('./pages/Student/CourseInfo.jsx'));
 const StudentCourses = lazy(() => import('./pages/Student/StudentCourses.jsx'));
@@ -55,6 +56,7 @@ const router = createBrowserRouter(
 
       <Route path='forgot-password'element={<ForgotPassword/>}></Route>
       <Route path='change-password'element={<ChangePassword/>}></Route>
+      <Route path='fyp-demo' element={<FYPDEMOQUIZ/>}></Route>
 
       <Route path='student/' element={<Student/>}>
         <Route path='home' element = {<StudentDashboard/>} />
