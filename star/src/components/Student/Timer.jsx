@@ -21,6 +21,7 @@ const Timer = ({adaptive}) => {
         ? Math.max(0, (closingTime - currentTime) / 1000)
         : durationInSeconds / 1000);
 
+  
 
   const [remainingTime, setRemainingTime] = useState(initialRemainingTime);
   localStorage.removeItem('remainingTime')

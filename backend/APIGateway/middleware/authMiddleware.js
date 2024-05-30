@@ -33,7 +33,7 @@ const checkSession = async (id, sessionId) =>
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
-    if (req.path.startsWith('/backend/teacherhub/uploads')) {return next()}
+    if (req.path.startsWith('/backend/teacherhub/uploads') || req.path.startsWith('/backend/assesshub/assessment/submit-response')) {return next()}
     else
     {   
         const authHeader = req.headers['authorization']

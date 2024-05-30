@@ -8,6 +8,7 @@ import { GetAssessmentQuestions } from '../../APIS/Student/AssessmentAPI';
 import { SubmitAssessment } from '../../APIS/Student/AssessmentAPI';
 import { VscLayersActive } from 'react-icons/vsc';
 import CryptoJS from 'crypto-js';
+import LoadingButton from '../../components/button/LoadingButton';
 
 
 const encryptData = (data, key) => {
@@ -139,7 +140,7 @@ const QuizInstructions = () => {
           </div>
         </div>
         <div className='mt-8'>
-          <SubmitButton label="Begin Assessment" onClick={handleBeginAssessment} active={true}/>
+          <LoadingButton label="Begin Assessment" onClick={handleBeginAssessment} active={true}/>
         </div>
         {
           QuizSubmitted &&

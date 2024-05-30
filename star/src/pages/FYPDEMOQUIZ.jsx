@@ -220,6 +220,9 @@ const QuizScreen = () => {
 
   useEffect(()=> {
     const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+    if(storedQuizDetails == null) {
+        window.location.assign('/form')
+    }
     updateQuizDetails(storedQuizDetails)
     let res = JSON.parse(localStorage.getItem('studentResponses'))
     let res2 = localStorage.getItem('num')

@@ -48,7 +48,7 @@ module.exports.submitAssessment = async (req,res) =>
 {
   try
   {
-    const student = req.body.decodedToken.id
+    //const student = req.body.decodedToken.id
     const {responseId} = req.params
     const {action, adaptiveTesting, finalScore, totalScore, submission} = req.body
 
@@ -234,7 +234,7 @@ module.exports.demoAssessment = async (req,res) =>
         default:
         sectionId = null;
       }
-      
+
       if(sectionId === null){return res.status(400).json({error: 'ER_INVLD', message: 'Invalid user role'})}
   
       const session = await conn.startSession()
