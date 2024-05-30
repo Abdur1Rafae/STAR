@@ -10,8 +10,8 @@ const unauthenticatedPaths =
 '/backend/session/login',
 '/backend/session/refresh',
 '/backend/session/forgot-password',
-'/backend/session/verify-OTP',
-'/backend/assesshub/assessment/demo-assessment', 
+'/backend/session/verify-otp',
+'/backend/assesshub/demo-assessment' 
 ]
 
 const verifyToken = async (token) => 
@@ -38,6 +38,7 @@ const authentication = async (req, res, next) =>
     {   
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1]
+
         if(!token){return res.status(401).json({error: true, message: "Unauthenticated: You must log in to access this resource"})}
         try
         {

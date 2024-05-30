@@ -232,7 +232,7 @@ module.exports.demoAssessment = async (req,res) =>
           sectionId = studentSection;
           break;
         default:
-          sectionId = null;
+        sectionId = null;
       }
 
       if(sectionId === null){return res.status(400).json({error: 'ER_INVLD', message: 'Invalid user role'})}
@@ -245,10 +245,10 @@ module.exports.demoAssessment = async (req,res) =>
         const section = await Section.findById(sectionId)
         section.roster.push(newStudent[0]._id)
         await section.save({session})
-        
+
         const response = await Response.create([{student: newStudent[0]._id, assessment: assessmentId, section: sectionId}], {session})
-        
-        return response._id
+
+        return response[0]._id
       })
       session.endSession()
   
@@ -268,13 +268,22 @@ module.exports.demoAssessment = async (req,res) =>
             ...item.question.toObject(),
             number: index + 1
       }))
+      const data = 
+      {
+        responseId: id,
+        title: assessment.title,
+        totalMarks: assessment.totalMarks,
+        configurations: assessment.configurations,
+        questions: formattedData
+      }
   
-      return res.status(201).json({responseId: id, questions: formattedData})
+      return res.status(201).json(data)
     }
     catch (err) 
     {
+      console.log(err)
       if (err.code === 11000) {res.status(400).json({ error: 'ER_DUP' , message: 'User already exists.'})}
-      else{res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to launch questions' })}
+      else{res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to launch assessment' })}
     } 
   }
 
