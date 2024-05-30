@@ -87,16 +87,21 @@ module.exports.updateProfile = async (req,res) =>
 
     if(role != 'teacher'){return res.status(401).json({error: 'ER_UNAUTH', message: 'Authorization Failed: Cannot perform update.'})}
 
-    const user =  req.body
+    const {newPassword, currentPassword} =  req.body
 
     user.password = await bcrypt.hash(user.password, saltRounds)
 
     try
     {
-        const updatedUser = await User.findByIdAndUpdate(id, user)
-        if(!updatedUser){return res.status(404).json({error: 'ER_NOT_FOUND', message: `User not found`}) }
-
-        return res.status(200).json({message: 'Profile updated successfully'})  
+        const user = await User.findById(id)
+        if(!user){return res.status(404).json({error: 'ER_NOT_FOUND', message: `User not found`}) }
+        if(currentPassword === user.password)
+        {
+            user.password = newPassword
+            user.save()
+            return res.status(200).json({message: 'Profile updated successfully'})  
+        }
+        else{return res.status(401).json({error: 'ER_UNAUTH', message: 'Invalid Password: Cannot perform update.'})}
     }
     catch(err)
     {

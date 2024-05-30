@@ -153,14 +153,28 @@ module.exports.publish = async (req,res) =>
   {
       const {assessmentId} = req.params
 
-      const updatedAssessment = await Assessment.findByIdAndUpdate(
-        assessmentId,
-        { $set: { status: "Reviewed", "configurations.releaseGrades": true } },
-        { new: true }
-      )
+      const session = await conn.startSession()
+      await session.withTransaction(async () => 
+      {
+        await Response.updateMany(
+          { assessment: new mongoose.Types.ObjectId(assessmentId) },
+          [
+            {
+              $set: {totalscore: {$multiply: ["$totalscore", { $subtract: [1, "$penalty"] }]}}
+            }
+          ])
 
-      if (!updatedAssessment) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}    
+        const updatedAssessment = await Assessment.findByIdAndUpdate(
+          assessmentId,
+          { $set: { status: "Reviewed", "configurations.releaseGrades": true } },
+          { new: true },
+          {session})
 
+        if (!updatedAssessment) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Assessment not found' })}   
+      
+      })
+      session.endSession()
+ 
       res.status(201).json({message: 'Assessment published successfully'})
   }
   catch (err) {
