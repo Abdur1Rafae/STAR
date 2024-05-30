@@ -208,9 +208,9 @@ module.exports.demoAssessment = async (req,res) =>
   {
     try
     {
-      const {assessmentId} = req.params
       const {name, email, role} = req.body
 
+      const assessmentId = new mongoose.Types.ObjectId('66589502a72e7fdc274b8583')
       let sectionId
 
       const teacherSection = new mongoose.Types.ObjectId('6658464ba72e7fdc274b8577')

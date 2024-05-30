@@ -147,6 +147,26 @@ module.exports.gradeResponse = async (req,res) =>
       res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to grade response' }) 
   }
 }
+module.exports.penalizeStudent = async (req,res) => 
+  {
+    try
+    {
+      const {responseId} = req.params
+      const {penalty} = req.body
+  
+      if(!penalty){return res.status(400).json({ error: 'ER_MSG_ARG', message: 'Required: penalty' })}
+
+      const updatedResponse = await Response.findByIdAndUpdate(responseId,{ $set: { penalty: penalty} })
+  
+      if (!updatedResponse) {return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Response not found' })} 
+  
+      res.status(201).json({message: 'Response Penalized Successfully'})
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ error: 'ER_INT_SERV', message: 'Failed to grade response' }) 
+    }
+  }
 module.exports.publish = async (req,res) => 
 {
   try
