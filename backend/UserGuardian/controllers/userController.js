@@ -83,13 +83,8 @@ module.exports.signup = async (req,res) =>
 module.exports.updateProfile = async (req,res) => 
 {
     const id = req.body.decodedToken.id
-    const role = req.body.decodedToken.role
-
-    if(role != 'teacher'){return res.status(401).json({error: 'ER_UNAUTH', message: 'Authorization Failed: Cannot perform update.'})}
 
     const {newPassword, currentPassword} =  req.body
-
-    user.password = await bcrypt.hash(user.password, saltRounds)
 
     try
     {
@@ -97,7 +92,7 @@ module.exports.updateProfile = async (req,res) =>
         if(!user){return res.status(404).json({error: 'ER_NOT_FOUND', message: `User not found`}) }
         if(currentPassword === user.password)
         {
-            user.password = newPassword
+            user.password = await bcrypt.hash(newPassword, saltRounds)
             user.save()
             return res.status(200).json({message: 'Profile updated successfully'})  
         }
