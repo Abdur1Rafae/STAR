@@ -3,45 +3,43 @@ import { GiBullseye } from "react-icons/gi";
 import QuizImage from './QuizImage';
 import FlagButton from '../../button/FlagButton';
 import QuizStore from '../../../Stores/QuizStore';
-import ReactQuill from "react-quill"
-import 'react-quill/dist/quill.snow.css'
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const TextAnswerPanel = ({ question, Flagged }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [isFlagged, setIsFlagged] = useState(Flagged);
-  const flagQuestion = QuizStore(store=> store.flagQuestion)
-  const filter = QuizStore(store=> store.filterQuestions)
-  const questionNumber = QuizStore(store => store.currentQuestionIndex)
+  const flagQuestion = QuizStore(store => store.flagQuestion);
+  const questionNumber = QuizStore(store => store.currentQuestionIndex);
 
-  const getSelectedResponse = QuizStore(store=>store.getResponseByQuestionNumber)
-  const updateResponse = QuizStore(store=>store.updateResponse)
-  const [response, setResponse] = useState(null)
-
-  useEffect(()=> {
-    const answer = getSelectedResponse(questionNumber)
-    setResponse(answer && answer.answer[0] ? answer.answer[0] : '')
-    setUserAnswer(answer && answer.answer[0] ? answer.answer[0] : '')
-  }, [question])
+  const getSelectedResponse = QuizStore(store => store.getResponseByQuestionNumber);
+  const updateResponse = QuizStore(store => store.updateResponse);
+  const [response, setResponse] = useState(null);
 
   useEffect(() => {
-    setResponse(answer => {
-      const updatedAnswer = {
-        questionId: question._id,
-        answer: [answer ? answer : userAnswer]
-      };
-      updateResponse(questionNumber, updatedAnswer);
-      return answer;
-    });
-  }, [userAnswer]);
+    const answer = getSelectedResponse(questionNumber);
+    const initialAnswer = answer && answer.answer[0] ? answer.answer[0] : '';
+    setResponse(initialAnswer);
+    setUserAnswer(initialAnswer);
+  }, [question, getSelectedResponse, questionNumber]);
+
+  useEffect(() => {
+    const updatedAnswer = {
+      questionId: question._id,
+      answer: [userAnswer]
+    };
+    updateResponse(questionNumber, updatedAnswer);
+  }, [userAnswer, question._id, questionNumber, updateResponse]);
 
   const handleAnswerChange = (event) => {
     setUserAnswer(event.target.value);
   };
 
   const handleToggleFlag = () => {
-    setIsFlagged((prevFlag) => !prevFlag);
-    flagQuestion(questionNumber)
+    setIsFlagged(prevFlag => !prevFlag);
+    flagQuestion(questionNumber);
   };
+
   const modules = {
     toolbar: false
   };
@@ -64,12 +62,10 @@ const TextAnswerPanel = ({ question, Flagged }) => {
       </div>
       <div className="mb-4 flex flex-col items-center">
         {question.image == null ? '' : <button className='h-32 w-40'><QuizImage imageUrl={question?.image} /></button>}
-        <div className='flex justify-between self-start  w-full  mt-4'>
+        <div className='flex justify-between self-start w-full mt-4'>
           <ReactQuill readOnly={true} modules={modules} value={question?.question} className='w-full text-lg select-none'/>
         </div>
       </div>
-
-
       <div className="options">
         <textarea
           className="w-full h-32 p-2 mb-2 bg-transparent border border-black rounded-md resize-none"
