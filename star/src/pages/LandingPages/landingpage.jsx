@@ -4,7 +4,7 @@ import qss from './Question Summary.png'
 import nas from './New Assessment - integrated.png'
 import mi from './Monitoring-integrated.png'
 import qst from './Question.png'
-import cover1 from './cover1.png'
+import cover1 from './cover1.jpg'
 import cover2 from './cover2.jpeg'
 import cover3 from './cover3.jpg'
 import cover4 from './cover4.png'
@@ -20,10 +20,10 @@ const LandingPage = () => {
     setIsDropDownOpen(!isDropDownOpen);
   };
 return (
-<div className='w-full scroll-smooth  font-outfit bg-LightBlue px-8 md:p-8'>
-    <div className='flex items-center justify-between '>
+<div className='w-full scroll-smooth  font-outfit bg-LightBlue   '>
+    <div className='flex items-center justify-between bg-DarkBlue md:px-4  pt-2'>
     <div className="menuleft logo flex justify-start bg-DarkBlue md:bg-transparent">
-      <img loading="lazy" src={logo} className='w-44 h-12 md:h-12'></img>
+      <img loading="lazy" src={logo} className=' w-40'></img>
     </div>
     <div className='w-full h-full col-span-5 md:hidden bg-DarkBlue  '>
           <button
@@ -94,27 +94,38 @@ return (
             </ul>
           </div>
         </div>
-    <div className='max-md:hidden col-span-4 flex gap-x-8 text-DarkBlue font-semibold text-sm '>
+    <div className='max-md:hidden col-span-4 flex gap-x-8 text-white  font-semibold text-sm '>
         <button>Home</button>
         <button>Features</button>
         <button>About us</button>
         <button>Pricing</button>
     </div>
     <div className='max-md:hidden col-span-4 flex gap-x-8 text-white font-semibold justify-end text-sm'>
-        <button onClick={()=>{window.location.assign('/signup')}} className='text-DarkBlue'>Sign up</button>
-        <button onClick={()=>{window.location.assign('/login')}} className='bg-DarkBlue px-8 py-2 rounded-md text-white'>Login</button>
+        <button onClick={()=>{window.location.assign('/signup')}} className='text-white'>Sign up</button>
+        <button onClick={()=>{window.location.assign('/login')}} className='bg-LightBlue px-8 py-2 rounded-md text-DarkBlue'>Login</button>
     </div>
     </div>
 
-    <div className=' md:h-fit bg-DarkBlue rounded-xl bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] md:content-center max-md:py-8 max-md:px-4 pt-12 rounded-lg mt-12'>
+    <div className=' md:h-fit bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] md:content-center max-md:py-8  pt-12 '>
         <h1 className='font-bold text-2xl md:text-7xl text-white  w-full flex flex-col items-center'>Unleash  your Arete</h1>
         <div className='w-full flex flex-col items-center'> 
         <p className='font-normal text-white text-center text-xs md:text-xl mt-8 w-1/2'>Seamlessly integrate and transform educational content into realistic, data-driven quiz assessments for an enhanced learning experience</p>
         </div>
         <div className='relative  w-full flex flex-col items-center mt-4 rounded-lg '>
         <button onClick={()=>{window.location.assign('/signup')}} className='bg-black px-8 py-2 md:px-12 md:py-4 text-sm text-white rounded-[10px] mt-4'>Get Started</button>
-        <img loading="lazy" src={qss} alt=""  className='rounded-tl-[60px] rounded-tr-[60px] px-12 pt-12 w-full md:w-5/6  transform ease-out duration-300 hover:scale-[1.05]'/>
+        <img loading="lazy" src={cover1} alt=""  className=' md:rounded-tl-[60px] md:rounded-tr-[60px]  pt-12 w-full md:h-1/2 '/>
         </div>
+    </div>
+
+    <div className='w-full md:h-screen overflow-hidden bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] md:bg-[linear-gradient(to_left,rgba(0,255,0,0),rgba(0,0.6,0,0.6))]'>
+      <div className='absolute md:w-1/2 h-full py-8 md:py-44 px-12'>
+      <h2 className='text-DarkBlue text-3xl md:text-5xl font-bold text-center text-opacity-100	'>Your Journey Starts Here </h2>
+            <p className='text-black text-xl text-center mt-12 text-opacity-100	' >Arete (ἀρετή) is an ancient Greek concept that goes beyond just grades; it's about unlocking your full potential across all aspects of learning. It's about discovering your unique strengths, understanding areas for growth, and striving for excellence.</p>
+      </div>
+
+              <div className=''> 
+              <img src={cover2} alt="" className='w-full max-md:opacity-50'/>
+              </div>
     </div>
 
     <div className=' md:flex gap-8 bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))]  md:h-screen md:grid grid-cols-2 content-center  items-center rounded-lg mt-12 p-12'>
@@ -127,16 +138,16 @@ return (
             </div>
     </div>
 
-   <div className='md:flex gap-8 mt-12 overflow-hidden '>
-    <div className='z-10 basis-1/2 border-2 rounded-lg border-DarkBlue  border-dashed  md:h-screen bg-white p-8'>
+   <div className='md:flex gap-8 mt-12 overflow-hidden px-2 '>
+    <div className='z-10 basis-1/2 border-2 rounded-lg border-DarkBlue  border-dashed  md:h-fit bg-white p-8'>
     <h2 className='text-3xl md:text-5xl  text-DarkBlue'>Monitor Progress in Real-Time </h2>
-    <p className='text-DarkBlue text-md  mt-12' >Track performance instantly with live monitoring, enhancing efficiency tenfold. Stay informed with real-time insights, optimizing decision-making processes. Elevate productivity and precision through dynamic monitoring capabilities</p>
-    <img src={mi} alt="" className='rounded-lg mt-12 z-0 object-contain' />
+    <p className='text-DarkBlue text-md  mt-12 h-24' >Track performance instantly with live monitoring, enhancing efficiency tenfold. Stay informed with real-time insights, optimizing decision-making processes. Elevate productivity and precision through dynamic monitoring capabilities</p>
+    <img src={mi} alt="" className='rounded-lg mt-16 md:mt-12 z-0 max-h-96 w-full ' />
     </div>
-    <div className='z-10 basis-1/2 border-2 rounded-lg border-DarkBlue  border-dashed  md:h-screen bg-white p-8 max-md:mt-12'>
+    <div className='z-10 basis-1/2 border-2 rounded-lg border-DarkBlue  border-dashed  md:h-fit bg-white p-8 max-md:mt-12'>
     <h2 className='text-3xl md:text-5xl  text-DarkBlue'>Live Monitoring of Students </h2>
-    <p className='text-DarkBlue text-md  mt-12' >Utilizing advanced computer vision, our platform monitors student activity during tests, ensuring integrity effortlessly. Real-time analysis detects anomalies, maintaining fairness and academic honesty seamlessly.</p>
-    <img src={qst} alt="" className='rounded-lg mt-12 z-0 ' />
+    <p className='text-DarkBlue text-md  mt-12 h-24' >Utilizing advanced computer vision, our platform monitors student activity during tests, ensuring integrity effortlessly. Real-time analysis detects anomalies, maintaining fairness and academic honesty seamlessly.</p>
+    <img src={qst} alt="" className='rounded-lg mt-16 md:mt-12 z-0 max-h-96 w-full ' />
     </div>
     </div> 
     
@@ -202,33 +213,38 @@ return (
     </div> */}
 
 
-<div className='bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] h-screen rounded-lg mt-12 p-12' >
-<div className=' md:flex gap-8  h-4/6  '>
-          <div className='basis-1/2'>
-          <img loading="lazy" src={logo} className='w-44 h-14'></img>
-          </div>
-          <div className='basis-1/4 text-white '>
+<div className='bg-black bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] h-screen rounded-lg mt-12 p-12' >
+<div className=' flex gap-8  md:h-4/6  '>
+         
+          <div className='basis-1/3 md:basis-1/4 text-white '>
             <div className='max-md:mt-8'>Home</div>
             <div className='mt-8'>About us</div>
             <div className='mt-8'>Features</div>
             <div className='mt-8'>Pricing</div>
           </div>
-          <div className='basis-1/4 text-white '>
+          <div className='basis-1/3 md:basis-1/4 text-white '>
             <div className='max-md:mt-8'>Login</div>
             <div className='mt-8'>Signup</div>
           </div>
-          <div className='basis-1/4 text-white '>
+          <div className='basis-1/3 md:basis-1/4 text-white '>
             <div className='max-md:mt-8'>Help Center</div>
             <div className='mt-8'>Linkedin</div>
           </div>
+          <div className='basis-1/2 max-md:hidden'>
+          <img loading="lazy" src={cover5} className='rounded-lg'></img>
+          </div>
     </div>
-    <div className='w-full border text-white max-md:mt-12 '></div>
-    <div className='w-full gap-12 pt-12 flex'>
-    <div className='text-white'>Terms and Conditions</div>
-    <div className='text-white'>Privacy</div>
-    </div>
+    <div className='md:hidden mt-12'>
+          <img loading="lazy" src={cover5} className='rounded-lg'></img>
+          </div>
+    <div className='w-full border text-white  flex'></div>
+    <div className='w-full gap-12 pt-12 '>
+    <h2 className='text-white text-3xl md:text-4xl font-bold text-center'>See Beyond Grades </h2>
+    <h2 className='text-white text-3xl md:text-4xl font-bold text-center'>See Every Student’s Potential</h2>
 
-    <div className='text-white pt-12'>All Right Reserved Arete 2024</div>
+    </div>
+    
+    <div className='text-white pt-12 flex flex-col items-center'>All Right Reserved Arete 2024</div>
 </div>
 
 </div>
