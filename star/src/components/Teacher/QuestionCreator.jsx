@@ -68,11 +68,10 @@ const QuestionCreator = ({adaptive, topicList, type, topic, questionID, savingHa
         setError('')
         try {
             if((image != null || image != undefined) && (image !== newImage)) {
-                //delete prev image
                 // console.log(newImage)
                 // console.log(image)
             }
-            const assessmentImage = newImage !== null && newImage.length !== 0 ? await uploadingImage() : null;
+            const assessmentImage = newImage !== null && newImage !== image ? await uploadingImage() : newImage == null ? null : newImage;
             savingHandler(questionID, newOptions, newQuestion, newExplanation, assessmentImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName.trim(), type, newCorrectOptions, isCorrect, reuse)
             closeHandler()
         } catch(err) {

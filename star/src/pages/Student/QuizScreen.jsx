@@ -194,7 +194,7 @@ const QuizScreen = () => {
         if (switchStartTime) {
           const switchEndTime = Date.now();
           const switchDuration = switchEndTime - switchStartTime;
-          if(switchDuration > 10000) {
+          if(switchDuration > 5000) {
             setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
           }
         }

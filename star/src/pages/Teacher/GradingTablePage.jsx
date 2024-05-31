@@ -65,7 +65,7 @@ const GradingTablePage = () => {
           const updatedRes = res.map(obj => ({
             num: num++,
             ...obj,
-            view: <ViewBox onClick={()=>handleFlagClick({id: obj._id})}/>
+            view: <ViewBox onClick={()=>handleFlagClick({id: obj._id, name: obj.name})}/>
           }));
           
           setFlaggingData(updatedRes);
@@ -94,8 +94,9 @@ const GradingTablePage = () => {
     { title: "", key: "view"}
   ]
 
-  const handleFlagClick = ({id}) => {
-    localStorage.setItem('FlagId', id)
+  const handleFlagClick = ({id, name}) => {
+    sessionStorage.setItem('FlagId', id)
+    sessionStorage.setItem('Name', name)
     window.location.assign('/teacher/view-flags')
   }
 

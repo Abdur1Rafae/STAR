@@ -82,16 +82,17 @@ module.exports.getClassOverview = async (req,res) =>
                 select: 'title status totalMarks configurations.openDate configurations.closeDate configurations.duration configurations.adaptiveTesting',
                 model: Assessment
             }
-        ) 
+        )
 
         if (section) {section.assessments = section.assessments.filter(assessment => assessment.status !== 'Draft')}
 
         const responses = []
         let skills = {}
 
-        for (const assessment of section.assessments) 
+        for (const assess of section.assessments) 
         {
             const assessmentData = {}
+            const assessment = await Assessment.findById(assess)
 
             assessmentData.title = assessment.title
             assessmentData.totalMarks = assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks,

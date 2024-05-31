@@ -16,14 +16,23 @@ const IndividualQuestionPanel = ({responses}) => {
     const [currentQuestion, setCurrentQuestion] = useState(assessmentQuestion[questionIndex]);
 
     useEffect(()=>{
-        const responseIndex = responses.findIndex((response)=> response.questionId == assessmentQuestion[questionIndex]._id)
+        const qIndex = assessmentQuestion.findIndex((question) => question._id === responses[0].questionId)
+        setQuestionIndex(qIndex)
+        let responseIndex = responses.findIndex((response)=> response.questionId == assessmentQuestion[qIndex]._id)
         setCurrentResponse(responses[responseIndex])
     }, [responses])
 
     useEffect(()=>{
         if(responses) {
             const responseIndex = responses.findIndex((response)=> response.questionId == assessmentQuestion[questionIndex]._id)
-            setCurrentResponse(responses[responseIndex])
+            if(responseIndex == -1) {
+                const qIndex = assessmentQuestion.findIndex((question) => question._id === responses[0].questionId)
+                setQuestionIndex(qIndex)
+                setCurrentResponse(responses[0])
+            }
+            else {
+                setCurrentResponse(responses[responseIndex])
+            }
         }
         setCurrentQuestion(assessmentQuestion[questionIndex])
         if(questionIndex == 0) {
@@ -54,7 +63,6 @@ const IndividualQuestionPanel = ({responses}) => {
     const modules = {
         toolbar: false
     };
-    console.log(currentResponse)
 
   return (
     <div className="bg-LightBlue flex-grow w-full h-full flex flex-col justify-between mx-auto p-4 shadow-md rounded-md">

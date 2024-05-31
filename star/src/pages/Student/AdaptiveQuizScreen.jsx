@@ -185,7 +185,7 @@ const AdaptiveQuizScreen = () => {
           const switchEndTime = Date.now();
           const switchDuration = switchEndTime - switchStartTime;
           console.log("here")
-          if(switchDuration > 10000) {
+          if(switchDuration > 5000) {
             console.log("pushed")
             setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
           }

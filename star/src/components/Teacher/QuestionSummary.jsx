@@ -71,7 +71,7 @@ const QuestionSummary = () => {
             :
 
         <>
-        <div className={`md:w-1/3 md:hidden ${showQuestions ? 'h-52' : 'h-0'} order-last transition-all duration-200 ease-in-out overflow-y-scroll bg-LightBlue rounded-lg shadow-md`} >
+          <div className={`md:w-1/3 md:hidden ${showQuestions ? 'h-52' : 'h-0'} order-last transition-all duration-200 ease-in-out overflow-y-scroll bg-LightBlue rounded-lg shadow-md`} >
             <div className=''>
               <QuestionNavigation 
               questions={assessmentQuestion} 
@@ -84,7 +84,7 @@ const QuestionSummary = () => {
           <QuestionTabTile index = {questionIndex} singlequestioninfo={activeQuestion} percent={findPercent(assessmentQuestion[questionIndex]._id)}/>
         </button>
         <div className='md:flex gap-4 items-center md:h-42 mt-4'>
-          <div className={`md:w-1/3 lg:h-full ${showQuestions ? 'h-52' : 'h-0'} hidden md:block transition-all duration-200 ease-in-out overflow-y-scroll bg-LightBlue rounded-lg shadow-md`} >
+          <div className={`md:w-1/3 lg:h-full ${showQuestions ? 'h-52' : 'h-0 md:h-52'} hidden md:block transition-all duration-200 ease-in-out overflow-y-scroll bg-LightBlue rounded-lg shadow-md`} >
             <div className=''>
               <QuestionNavigation 
                 questions={assessmentQuestion} 

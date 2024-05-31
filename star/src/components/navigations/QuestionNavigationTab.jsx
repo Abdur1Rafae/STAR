@@ -12,7 +12,12 @@ const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
 
   const findPercent = (id) =>{
     const foundQuestion = allQuestionPercent.find(item => item.question === id);
-    return Math.round((foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)
+    if(foundQuestion == undefined) {
+      return '-'
+    }
+    else{
+      return Math.round((foundQuestion.totalCorrect / foundQuestion.totalResponses) * 100)
+    }
   }
   return (
     <div className='h-52'>

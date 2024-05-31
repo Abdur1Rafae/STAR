@@ -121,7 +121,7 @@ const QuizInstructions = () => {
             <h2 className="font-bold mb-4">Instructions:</h2>
             <ul className="list-disc pl-6">
               <li className="mb-2 text-lg">
-                The assessment will be <strong>submitted if student tries to refresh or close the page</strong>
+                The assessments' progress will be lost if the tab is closed. <strong>Please remember to save your responses.</strong>
               </li>
               
                 {

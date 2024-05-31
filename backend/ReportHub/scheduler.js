@@ -314,7 +314,7 @@ async function scheduleReportGeneration()
     return assessments.length
 }
 
-cron.schedule('*/25 * * * *', async () => 
+cron.schedule('*/5 * * * *', async () => 
 {
     console.log('Running assessment check...');
     try 

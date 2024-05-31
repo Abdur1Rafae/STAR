@@ -24,7 +24,7 @@ const QuizScreen = () => {
 
   const [renderCount, setRenderCount] = useState(0)
 
-  const { questions, currentQuestionIndex, setCurrentQuestionIndex, vioArray, setVioArray, submittingQuiz, setSubmittingQuiz,  clearVioArray, filterQuestions, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
+  const { questions, currentQuestionIndex, setCurrentQuestionIndex, vioArray, setVioArray, submittingQuiz, setSubmittingQuiz, clearVioArray, filterQuestions, responses, nextQuestion, reachedLastQuestion, prevQuestion, createResponseObjects, quizConfig, updateQuizDetails, submitResponses } = QuizStore();
 
   const {navigation, instantFeedback, monitoring} = quizConfig
 
@@ -33,10 +33,6 @@ const QuizScreen = () => {
   const [prevVio, setPrevVio] = useState(null);
   const [violationOver, setViolationOver] = useState(true)
   const [interval, setIntervalId] = useState()
-
-  useEffect(()=> {
-
-  }, [])
 
   const checkWebcamReady = () => {
     if (webcamRef.current && webcamRef.current.video && webcamRef.current.video.readyState === 4) {

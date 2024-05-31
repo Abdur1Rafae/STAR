@@ -221,7 +221,7 @@ const IncorrectQuestion = ({question}) => {
                         </div>
                     </div>
                 </div>
-                {question.image && <div className='w-1/2 mt-4'><QuizImage imageUrl={question.image}/></div>}
+                {question.image && <div className='w-1/2 md:w-1/4 mt-4 flex'><QuizImage imageUrl={question.image}/></div>}
                 <div className='flex mt-4'>
                     <div className='w-8/12 flex-grow'>
                         {
@@ -270,7 +270,7 @@ const AvgHighestScore = ({totalScore, avgScore, highestScore, data})=>{
                     <div className='w-28 h-28 rounded-lg flex flex-col'>
                         <h3 className='text-xs font-medium self-center'>Average Score</h3>
                         <div className='h-16 flex flex-col'>
-                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{avgScore}</h3>
+                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{Number(avgScore).toFixed(2)}</h3>
                             <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>
                         </div>
                     </div>

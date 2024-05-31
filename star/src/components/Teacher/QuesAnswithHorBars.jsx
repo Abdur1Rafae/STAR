@@ -67,15 +67,16 @@ const QuesAnswithHorBars = ({ index, question }) => {
               </div>
             ))}
             </div>
-              {question.image && (
-                <div className='md:w-1/4 mx-auto my-auto'>
-                  <QuizImage imageUrl={`${baseUrl}teacherhub/`+question.image} />
+            {question.image && (
+                <div className='w-1/2 md:w-1/4 mx-auto my-auto border-[1px] border-black'>
+                  <QuizImage imageUrl={question.image} />
                 </div>
               )}
             </>
             :
             question.type== 'True/False' ?
-            <div className='w-full'>
+            <div className='w-full flex flex-col md:flex-row gap-2'>
+              <div className='w-full'>
               <div
                 className={`max-md:text-xs flex items-center p-2 mb-2 bg-transparent transition duration-300`}
               >
@@ -104,15 +105,16 @@ const QuesAnswithHorBars = ({ index, question }) => {
               </div>
               <div className='w-1/3 ml-2'><HorizontalProgressBar Score={options && options.length > 0 && findIndexByProperty("False")!=-1 ? Math.round(options[findIndexByProperty('False')].count/questionStats.totalResponses * 100) : 0} Color='#EC5491' /></div>
             </div>
+            </div>
               {question.image && (
-                <div className='w-64 h-64 mx-auto my-auto'>
+                <div className='w-1/2 md:w-1/4 mx-auto my-auto border-[1px] border-black'>
                   <QuizImage imageUrl={question.image} />
                 </div>
               )}
             </div>
             :
             (question.image && (
-              <div className='w-64 h-64 mx-auto my-auto'>
+              <div className='w-1/2 md:w-1/4 mx-auto my-auto border-[1px] border-black'>
                 <QuizImage imageUrl={question.image} />
               </div>
             ))

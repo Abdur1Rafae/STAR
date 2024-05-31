@@ -136,6 +136,7 @@ const IndividualReport = () => {
       debouncedFunction();
     }
   };
+  console.log(activeStudenData)
 
 
   return (

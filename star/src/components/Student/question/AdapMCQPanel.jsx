@@ -104,8 +104,8 @@ const AdapMCQPanel = ({ question }) => {
         </div>
       </div>
 
-      <div className='w-full md:w-1/2 flex items-start'>
-        <div className="w-full">
+      <div className='w-full flex flex-col-reverse md:flex-row items-start'>
+        <div className="w-full md:w-1/2">
           {question?.options && question.options.map((option, index) => (
             <div
               key={index}
@@ -121,11 +121,9 @@ const AdapMCQPanel = ({ question }) => {
             </div>
           ))}
         </div>
-        {question?.image && (
-          <button className='h-32 w-40'>
-            <QuizImage imageUrl={`${baseUrl}teacherhub/${question.image}`} />
-          </button>
-        )}
+        <div className='w-full md:w-1/2 h-44 flex  items-center md:items-start justify-center'>
+          {question.image ? <button className='h-44 w-52'><QuizImage imageUrl={question?.image} /></button> : null}
+        </div>
       </div>
     </div>
   );
