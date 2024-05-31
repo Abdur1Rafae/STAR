@@ -57,7 +57,7 @@ const AdapQuizStore = create((set) => ({
             className: details.className,
             marks: details.marks,
             quizConfig: details.quizConfig,
-            maxAttempt: details.quizConfig.adaptiveTesting.stoppingCriteria,
+            maxAttempts: details.quizConfig.adaptiveTesting.stoppingCriteria,
             adaptiveMarks: details.quizConfig.adaptiveTesting.totalMarks
         }
     }),

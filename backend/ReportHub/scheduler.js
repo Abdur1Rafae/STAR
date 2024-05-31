@@ -292,7 +292,6 @@ async function scheduleReportGeneration()
     {
       try
       {
-        console.log(assessment)
         const hasShortAnswers = assessment.questionBank.some(item => item.question.type === 'Short Answer')
         if (hasShortAnswers && assessment.status != 'Reviewed') 
         {

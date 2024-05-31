@@ -140,7 +140,9 @@ function EditAssessmentDetails() {
                     assessmentImage = imageFile !== null ? await uploadingImage() : null;
                 }
                 const data = await UpdateAssessment({id: assessmentId,name:assessmentName, description:description, sections:sectionIDs, image:assessmentImage, openDate:datetime, closeDate:closedatetime, duration:durationInMins, adaptiveTesting:adaptiveTesting, monitoring:candidateMonitoring, instantFeedback:allowInstantFeedback, navigation:allowNavigation, releaseGrades:publishImmediately, viewSubmission:viewSubmissions, randomizeQuestions:randomizeQuestions, randomizeAnswers:optionShuffle, finalScore:showFinalScore})
-                if(adaptiveTesting) {
+                if(adaptiveTesting.active) {
+                    sessionStorage.setItem('totalMarks', adaptiveTesting.totalMarks)
+                    sessionStorage.setItem('stoppingCriteria', adaptiveTesting.stoppingCriteria)
                     window.location.assign(`/teacher/adaptive-quiz/${assessmentId}`)
                  }
                  else {

@@ -22,9 +22,6 @@ const IndividualReport = () => {
 
   const [peopleinfo, setPeopleInfo] = useState([]);
   const [studentFetched, setStudentFetched] = useState(false)
-  useEffect(()=> {
-    console.log(activeStudentData)
-  }, [activeStudentData])
 
   useEffect(()=>{
     const students = []
@@ -172,19 +169,19 @@ const IndividualReport = () => {
               <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
             </div>
             <div className='w-full flex flex-col-reverse lg:flex-col gap-4'>
-              <div className='w-full flex lg:flex-row flex-col gap-4 justify-between'>
-                <div className='w-full flex flex-col gap-4'>
-                  <div className='rounded'>
-                    <PastCurScore CurrentScore={activePerson.response.totalScore} totalScore={totalMarks} PrevTotalScore={activeStudentData.previousTotal} PreviousScore={activeStudentData.previousScore}/>
-                  </div>
-                  <div className='md:h-48 bg-LightBlue shadow-md rounded flex justify-center'>
-                    <HorizontalBarChart inputData={activeStudentData.topicBreakDown}/>
-                  </div>
+            <div className='w-full flex lg:flex-row flex-col gap-4 justify-between'>
+              <div className='w-full flex flex-col gap-4'>
+                <div className='rounded'>
+                  <PastCurScore CurrentScore={activePerson.response.totalScore} totalScore={totalMarks} PrevTotalScore={activeStudentData.previousTotal} PreviousScore={activeStudentData.previousScore}/>
                 </div>
-                <div className='w-full md:max-w-96'>
-                  <QuizSkilEval inputData={skillMap}/>
+                <div className='md:min-h-48 bg-LightBlue shadow-md rounded flex justify-center'>
+                  <HorizontalBarChart inputData={activeStudentData.topicBreakDown}/>
                 </div>
               </div>
+              <div className='w-full md:max-w-96 flex-grow flex'>
+                <QuizSkilEval inputData={skillMap}/>
+              </div>
+            </div>
               <div className=' flex lg:flex-row flex-col-reverse justify-between gap-4'>
                 <div className='w-full'>
                   <IndividualQuestionPanel responses={activeStudentData.responses}/>

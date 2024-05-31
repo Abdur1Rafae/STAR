@@ -230,7 +230,6 @@ const AdaptiveQuizScreen = () => {
       setMaxScore(res4)
       setReachedLastQuestion()
     }
-    console.log(currentQuestionIndex)
     localStorage.removeItem('studentResponses')
     localStorage.removeItem('attempt')
     localStorage.removeItem('score')
@@ -274,6 +273,7 @@ const AdaptiveQuizScreen = () => {
       console.log(err)
     }
   }
+  console.log(maxAttempts)
 
   return (
     <div className='flex flex-col mb-20 font-body'>

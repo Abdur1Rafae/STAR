@@ -10,7 +10,6 @@ import QuestionCreator from '../../components/Teacher/QuestionCreator';
 import { QuestionContext } from '../../Context/QuestionsContext';
 import SelectQuestions from '../../components/Teacher/SelectQuestions';
 import SubheaderBut from '../../components/Teacher/SubheaderBut';
-import { ToggleStore } from '../../Stores/ToggleStore';
 import { AddQuestion, DeleteQuestion, DeleteReuseQuestion, GetStoredQuestions, UpdateReuseQuestion, UpdateQuestion, AddReuseQuestion } from '../../APIS/Teacher/AssessmentAPI';
 import { useParams } from 'react-router';
 import { GetAllTopics } from '../../APIS/Teacher/AssessmentAPI';
@@ -27,23 +26,24 @@ const AdaptiveQuiz = () => {
     const [creatingQuestion, setCreateQuestion] = useState(null);
     const [reuseDialog, setReuseDialog] = useState(false);
     const [topicList, setTopicList] = useState([])
-    const setOrder = ToggleStore((store) => store.setOrder)
-    const order = ToggleStore((store) => store.Ordering)
     
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [indexToDelete, setIndexToDelete] = useState(0)
-    const [questionCount, setQuestionCount] = useState(5)
-    const [totalMarks, setTotalMarks] = useState(1)
+    const storedQuesCount = sessionStorage.getItem('stoppingCriteria')
+    const [questionCount, setQuestionCount] = useState(storedQuesCount !== null && Number(storedQuesCount) >=5 ? storedQuesCount : 5 )
+    const storedTotalMarks = sessionStorage.getItem('totalMarks')
+    const [totalMarks, setTotalMarks] = useState(storedTotalMarks !== null && Number(storedTotalMarks) >=1 ? storedTotalMarks : 1 )
     const [easyCount, setEasyCount] = useState(0)
     const [mediumCount, setMediumCount] = useState(0)
     const [hardCount, setHardCount] = useState(0)
+    sessionStorage.removeItem('totalMarks')
+    sessionStorage.removeItem('stoppingCriteria')
 
     const [mineasyCount, setMinEasyCount] = useState(0)
     const [minmediumCount, setMinMediumCount] = useState(0)
     const [minhardCount, setMinHardCount] = useState(0)
     const [showError, setShowError] = useState(false)
     const [error, setError] = useState('')
-    const [hovered, setHovered] = useState(null);
 
 
     const { questions, setQuestions, selectedQuestions, saveQuestions, topicMap, skillMap } = useContext(QuestionContext);
