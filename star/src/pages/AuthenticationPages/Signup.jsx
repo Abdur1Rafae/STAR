@@ -133,7 +133,7 @@ const Signup = () => {
                 type={showPassword ? "text" : "password"}
                 className='mt-4 w-full border border-gray-200 rounded-lg p-2 pr-10'
               />
-              <div className='absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5'>
+              <div className='absolute top-2 right-0 p-4 flex items-center text-sm leading-5'>
                 <button type="button" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
                 </button>
