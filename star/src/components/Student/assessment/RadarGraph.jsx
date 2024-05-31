@@ -24,7 +24,14 @@ export const options = {
     tension: 0,
     plugins: {
         legend: {
-        display: false,
+            display: false,
+        },
+        tooltip: {
+            callbacks: {
+                label: function (context) {
+                    return context.dataset.originalLabels[context.dataIndex] + ': ' + context.raw + '%';
+                }
+            }
         }
     },
     scales: {
@@ -33,7 +40,7 @@ export const options = {
             max: 100,
             ticks: {
                 beginAtZero: true,
-                stepSize: 20, // Steps of 10
+                stepSize: 20, // Steps of 20
             },
             angleLines: {
                 color: '#2C6491'
@@ -48,11 +55,15 @@ export const options = {
     }
 };
 
+const trimLabel = (label) => {
+    return label.length > 10 ? label.slice(0, 8) + '...' : label;
+};
 
 export const generateChartData = (dataObj) => {
-    const labels = Object.keys(dataObj);
+    const labels = Object.keys(dataObj).map(trimLabel);
+    const originalLabels = Object.keys(dataObj); // Store original labels
     const datasets = [{
-        data: labels.map(label => {
+        data: originalLabels.map(label => {
             const value = dataObj[label];
             return Math.round((value.correct / value.totalCount) * 100);
         }),
@@ -60,11 +71,12 @@ export const generateChartData = (dataObj) => {
         backgroundColor: 'rgba(197, 216, 109, 0.5)',
         borderWidth: 1,
         pointRadius: 5,
+        originalLabels: originalLabels, // Add original labels to dataset
     }];
 
     return { labels, datasets };
 };
 
-export function RadarGraph({inputData}) {
-  return <Radar data={generateChartData(inputData)} options={options}/>;
+export function RadarGraph({ inputData }) {
+    return <Radar data={generateChartData(inputData)} options={options} />;
 }

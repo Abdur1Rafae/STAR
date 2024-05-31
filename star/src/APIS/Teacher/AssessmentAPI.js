@@ -204,11 +204,7 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
             openDate: new Date(openDate),
             duration: duration,
             closeDate: new Date(closeDate),
-            adaptiveTesting: {
-                active: adaptiveTesting,
-                totalMarks: adaptiveTesting ? totalMarks : null,
-                stoppingCriteria: adaptiveTesting ? stoppingCriteria : null
-            },
+            adaptiveTesting: adaptiveTesting,
             monitoring: monitoring,
             instantFeedback: instantFeedback,
             navigation: navigation,

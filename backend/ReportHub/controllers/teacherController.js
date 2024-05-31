@@ -356,7 +356,7 @@ module.exports.getIndividualResponse= async (req,res) =>
         const {responseId} = req.params
 
         let response = await Response.findById(responseId)
-        .select('assessment section responses totalScore previousScore student')
+        .select('assessment section responses totalScore previousScore previousTotal student')
         .populate({
             path: 'responses.questionId',
             select: 'topic points'
@@ -376,6 +376,7 @@ module.exports.getIndividualResponse= async (req,res) =>
         const topicBreakDown = calculateTopicBreakdown(response.responses)
 
         if (!response){return res.status(404).json({ error: "ER_NOT_FOUND", message: 'Response not found' })}
+        console.log(response)
 
         let previousScore = response.previousScore
         let previousTotal = response.previousTotal

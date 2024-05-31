@@ -69,7 +69,7 @@ export function PolarChart({inputData}) {
                 ></div>
                 <h4 className='flex justify-center'>{item._id}</h4>
               </div>
-              <h4 className='w-1/2 flex justify-center items-center'>{Number(item.percentage * 100).toFixed(2)}%</h4>
+              <h4 className='w-1/2 flex justify-center items-center'>{Number(item.percentage * 100).toFixed(1)}%</h4>
             </div>
           ))
         }

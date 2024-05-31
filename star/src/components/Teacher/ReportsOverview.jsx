@@ -270,7 +270,7 @@ const AvgHighestScore = ({totalScore, avgScore, highestScore, data})=>{
                     <div className='w-28 h-28 rounded-lg flex flex-col'>
                         <h3 className='text-xs font-medium self-center'>Average Score</h3>
                         <div className='h-16 flex flex-col'>
-                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{Number(avgScore).toFixed(2)}</h3>
+                            <h3 className='text-2xl text-DarkBlue font-body font-semibold mt-2 self-center'>{Number(avgScore).toFixed(1)}</h3>
                             <h3 className='text-xs text-gray-400 font-body font-medium self-center'>out of {totalScore}</h3>
                         </div>
                     </div>

@@ -97,8 +97,29 @@ const LandingPage = () => {
                     viewSubmissions: res.configurations.viewSubmissions
                 }
             };
+            const questionSet = [...res.questions]
+            if(obj.quizConfig.randomizeQuestions) {
+                for (let i = questionSet.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questionSet[i], questionSet[j]] = [questionSet[j], questionSet[i]];
+                }
+            }
+
+            if(obj.quizConfig.randomizeAnswers) {
+                const shuffledQuestionSet = questionSet.map((question) => {
+                const options = [...question.options]; 
+                for (let i = options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [options[i], options[j]] = [options[j], options[i]];
+                }
+                return { ...question, options };
+                });
+                localStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
+            }
+            else {
+                localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
+            }
             localStorage.setItem('quizDetails', JSON.stringify(obj));
-            localStorage.setItem('questions', JSON.stringify(encryptData(res.questions, 'Arete1234')));
             window.location.assign('/fyp-demo');
         } catch (err) {
             setError('Unexpected Error. Please try again.')

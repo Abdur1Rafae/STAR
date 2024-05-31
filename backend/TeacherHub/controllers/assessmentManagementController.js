@@ -71,7 +71,6 @@ module.exports.updateAssessment = async (req,res) =>
         const session = await conn.startSession()
         await session.withTransaction(async () => 
         {
-
             const oldAssessment = await Assessment.findOneAndUpdate
             (
                 {_id : assessmentId}, 

@@ -16,12 +16,15 @@ const IndividualReport = () => {
   const [loading, setLoading] = useState(true)
   const {topPerformers, requireAttention, selectedSection, totalMarks, assessmentQuestion, avgPerformers } = useContext(ReportContent)
   const [showStudents, setShowStudents] = useState(false); 
-  const [activeStudenData, setActiveStudentData] = useState({})
+  const [activeStudentData, setActiveStudentData] = useState({})
   const [skillMap, setSkillMap] = useState({})
   const [noData, setNoData] = useState(false)
 
   const [peopleinfo, setPeopleInfo] = useState([]);
   const [studentFetched, setStudentFetched] = useState(false)
+  useEffect(()=> {
+    console.log(activeStudentData)
+  }, [activeStudentData])
 
   useEffect(()=>{
     const students = []
@@ -136,7 +139,6 @@ const IndividualReport = () => {
       debouncedFunction();
     }
   };
-  console.log(activeStudenData)
 
 
   return (
@@ -173,10 +175,10 @@ const IndividualReport = () => {
               <div className='w-full flex lg:flex-row flex-col gap-4 justify-between'>
                 <div className='w-full flex flex-col gap-4'>
                   <div className='rounded'>
-                    <PastCurScore CurrentScore={activePerson.response.totalScore} totalScore={totalMarks} PrevTotalScore={activeStudenData.previousTotal} PreviousScore={activeStudenData.previousScore}/>
+                    <PastCurScore CurrentScore={activePerson.response.totalScore} totalScore={totalMarks} PrevTotalScore={activeStudentData.previousTotal} PreviousScore={activeStudentData.previousScore}/>
                   </div>
                   <div className='md:h-48 bg-LightBlue shadow-md rounded flex justify-center'>
-                    <HorizontalBarChart inputData={activeStudenData.topicBreakDown}/>
+                    <HorizontalBarChart inputData={activeStudentData.topicBreakDown}/>
                   </div>
                 </div>
                 <div className='w-full md:max-w-96'>
@@ -185,13 +187,13 @@ const IndividualReport = () => {
               </div>
               <div className=' flex lg:flex-row flex-col-reverse justify-between gap-4'>
                 <div className='w-full'>
-                  <IndividualQuestionPanel responses={activeStudenData.responses}/>
+                  <IndividualQuestionPanel responses={activeStudentData.responses}/>
                 </div>
                 <div className='min-w-44'>
                   <ResultSummary  
                     obtainedMarks={activePerson.response.totalScore} 
                     totalMarks={totalMarks}
-                    responses={activeStudenData.responses}/>                   
+                    responses={activeStudentData.responses}/>                   
                 </div>
               </div>
             </div>

@@ -95,7 +95,7 @@ const IndividualQuestionPanel = ({responses}) => {
                             }`}
                         
                         >
-                            <div class="ml-2 ">
+                            <div className="ml-2 ">
                             {currentResponse.answer?.includes(option) ? <GrRadialSelected/> : String.fromCharCode(65 + index)}  
                             </div>
 
@@ -138,7 +138,7 @@ const IndividualQuestionPanel = ({responses}) => {
       </div>
 
       {currentQuestion.explanation &&
-      <div class="overflow-y-auto h-32 border-black border-[1px] p-2">
+      <div className="overflow-y-auto h-32 border-black border-[1px] p-2">
         <h2 className="text-l font-bold">Explanation</h2>
 
         <p className='text-sm font-light'>

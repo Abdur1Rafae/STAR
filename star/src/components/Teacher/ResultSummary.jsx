@@ -12,7 +12,6 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
   const handleQuestionClick = ({questionNumber}) => {
     setQuestionIndex(questionNumber)
   }
-  console.log(questionMeta)
 
   useEffect(()=>{
     const markStatus = []
