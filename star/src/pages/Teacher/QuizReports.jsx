@@ -39,7 +39,6 @@ const QuizReports = () => {
           view:<ViewBox onClick={()=>onClick(item._id, item.title)}/>
         }))
         setReports(transformedRes)
-        console.log(transformedRes)
       } catch(err) {
         console.log(err)
       }

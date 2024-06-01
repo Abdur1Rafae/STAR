@@ -28,7 +28,6 @@ const DeleteAssessment = async({id}) => {
 const CreateAssessment = async({name, description, sections, image, openDate, closeDate, duration, adaptiveTesting, monitoring,
     instantFeedback, navigation, releaseGrades, viewSubmission, randomizeQuestions, randomizeAnswers, finalScore}) => {
         const token = sessionStorage.getItem('token')
-        console.log(new Date(openDate), new Date(closeDate))
     const res = await AxiosBase.post('teacherhub/assessment-management/new-assessment',{
         title: name,
         description: description,
@@ -204,11 +203,7 @@ const UpdateAssessment = async({id, name, description, sections, image, openDate
             openDate: new Date(openDate),
             duration: duration,
             closeDate: new Date(closeDate),
-            adaptiveTesting: {
-                active: adaptiveTesting,
-                totalMarks: adaptiveTesting ? totalMarks : null,
-                stoppingCriteria: adaptiveTesting ? stoppingCriteria : null
-            },
+            adaptiveTesting: adaptiveTesting,
             monitoring: monitoring,
             instantFeedback: instantFeedback,
             navigation: navigation,

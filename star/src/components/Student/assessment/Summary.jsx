@@ -10,7 +10,6 @@ import { calculateTimeDifference, DDMMMMYYYY_HHMM } from '../../../Utils/DateFun
 
 const Summary = () => { 
   const assessmentInfo = JSON.parse(localStorage.getItem('selectedAssessment'))
-  console.log(assessmentInfo)
   const [duration, setDuration] = useState(0)
   const [responses, setResponses] = useState([])
   const [submissionTime, setSubmissionTime] = useState()
@@ -79,7 +78,7 @@ const Summary = () => {
 
   return (
     <div className='md:flex gap-4 mb-20'>
-        <AssessmentDetiails questionCount={responses.length} duration={duration} submissionTime={submissionTime} skills={Object.keys(skillMap)}/>
+        <AssessmentDetiails questionCount={responses.length} skillMap={skillMap} topicMap={topicMap} duration={duration} submissionTime={submissionTime} skills={Object.keys(skillMap)}/>
         <div className='md:flex gap-4 w-full flex-wrap'>
             <div className='flex md:flex-row flex-col w-full h-auto flex-wrap gap-4 mb-4 md:mb-0'>
                 <div className='bg-LightBlue shadow-md rounded-lg'>

@@ -7,7 +7,6 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
   const {assessmentQuestion, questionIndex, setQuestionIndex} = useContext(ReportContent)
   const [correctAnswers, setCorrectAnswers] = useState(0)
   const [wrongAnswers, setWrongAnswers] = useState(0)
-  const [currentResponse, setCurrentResponse] = useState({})
   const [questionMeta, setQuestionMeta] = useState([])
 
   const handleQuestionClick = ({questionNumber}) => {
@@ -63,9 +62,9 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
         <h3 className="text-md font-medium font-body">Questions</h3>
       </div>
 
-      <div className="flex flex-wrap justify-evenly gap-2 mt-2">
+      <div className="flex flex-wrap justify-center gap-2 mt-2">
         {assessmentQuestion.map((_,questionNumber) => (
-          <button key={questionNumber} onClick={() => handleQuestionClick({ questionNumber })} className={`${questionMeta.find(obj => obj['questionIndex'] === questionNumber) ? 
+          <button key={questionNumber} onClick={questionMeta.find(obj => obj['questionIndex'] == questionNumber) ? () => handleQuestionClick({ questionNumber }) : ()=> {}} className={`${questionMeta.find(obj => obj['questionIndex'] === questionNumber) ? 
           (questionMeta.find(obj => obj['questionIndex'] === questionNumber)['correct'] ? 'text-green-500' : 'text-red-500') 
           : 'text-gray-500'} ${questionIndex == questionNumber ? 'border-2 border-DarkBlue' : 'hover:border-2 hover:border-DarkBlue'} font-medium w-[30px] h-[30px] border rounded text-center sm:text-sm md:text-md bg-[#E7ECEF]`}>
             {questionNumber + 1}

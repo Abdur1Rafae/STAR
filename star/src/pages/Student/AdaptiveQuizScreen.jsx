@@ -84,7 +84,6 @@ const AdaptiveQuizScreen = () => {
 
   useEffect(()=> {
     setPrevVio(null)
-    console.log(vioArray)
   }, [vioArray])
 
   const upload = async({image}) => {
@@ -184,9 +183,7 @@ const AdaptiveQuizScreen = () => {
         if (switchStartTime) {
           const switchEndTime = Date.now();
           const switchDuration = switchEndTime - switchStartTime;
-          console.log("here")
-          if(switchDuration > 10000) {
-            console.log("pushed")
+          if(switchDuration > 5000) {
             setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
           }
         }

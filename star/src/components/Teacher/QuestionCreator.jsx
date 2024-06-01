@@ -61,18 +61,21 @@ const QuestionCreator = ({adaptive, topicList, type, topic, questionID, savingHa
             setError('Empty Question cannot be saved.')
             return
         }
-        if(type == "Multiple Choice Question" && newCorrectOptions.length == 0) {
+        if(type == "MCQ" && newOptions.length == 0) {
+            setError('Specify the options to select from.')
+            return
+        }
+        if(type == "MCQ" && newCorrectOptions.length == 0) {
             setError('Select atleast one correct option.')
             return
         }
         setError('')
         try {
             if((image != null || image != undefined) && (image !== newImage)) {
-                //delete prev image
                 // console.log(newImage)
                 // console.log(image)
             }
-            const assessmentImage = newImage !== null && newImage.length !== 0 ? await uploadingImage() : null;
+            const assessmentImage = newImage.length > 0 && newImage !== null && newImage !== image ? await uploadingImage() : newImage == null || newImage.length == 0 ? null : newImage;
             savingHandler(questionID, newOptions, newQuestion, newExplanation, assessmentImage, selectedSkill, selectedDifficulty, parseInt(newPoints), topicName.trim(), type, newCorrectOptions, isCorrect, reuse)
             closeHandler()
         } catch(err) {

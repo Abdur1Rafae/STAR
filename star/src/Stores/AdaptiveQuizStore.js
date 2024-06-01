@@ -57,7 +57,7 @@ const AdapQuizStore = create((set) => ({
             className: details.className,
             marks: details.marks,
             quizConfig: details.quizConfig,
-            maxAttempt: details.quizConfig.adaptiveTesting.stoppingCriteria,
+            maxAttempts: details.quizConfig.adaptiveTesting.stoppingCriteria,
             adaptiveMarks: details.quizConfig.adaptiveTesting.totalMarks
         }
     }),
@@ -140,7 +140,6 @@ const AdapQuizStore = create((set) => ({
 
             const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
             const responseIndex = state.questionAttempt;
-            console.log(responseIndex)
             if (responseIndex !== -1) {
                 const existingResponse = state.responses[responseIndex];
                 const updatedResponse = {

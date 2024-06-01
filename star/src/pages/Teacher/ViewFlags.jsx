@@ -14,9 +14,10 @@ const ViewFlags = () => {
   const [flaggings, setFlaggings] = useState([])
   const [selectedFlag, setSelectedFlag] = useState(0)
   const [penaliseBox, setPenaliseBox] = useState(false)
+  const name = sessionStorage.getItem('Name')
 
   useEffect(()=>{
-    const id = localStorage.getItem('FlagId')
+    const id = sessionStorage.getItem('FlagId')
     const getDetails = async() => {
       try {
         const res = await GetFlagDetails({id: id})
@@ -53,10 +54,12 @@ const ViewFlags = () => {
 
   const handlePenalty = async() => {
     try {
-      const id = localStorage.getItem('FlagId')
+      const id = sessionStorage.getItem('FlagId')
       const res = await PenalizeResponse({responseId: id, penalty: Number(deduct)/100})
       console.log(res)
       setPenaliseBox(false)
+      sessionStorage.removeItem('FlagId')
+      window.location.assign('/teacher/grading-table')
     } catch(err) {
       console.log(err)
     }
@@ -81,7 +84,7 @@ const ViewFlags = () => {
                   <div className='w-full flex justify-between items-center self-start'>
                     <div className='flex items-center self-start'>
                       <button onClick={()=>{window.history.back()}}><BiChevronLeft className='text-3xl'/></button>
-                      <h4 className='font-semibold'>Abdur Rafae</h4>
+                      <h4 className='font-semibold'>{name}</h4>
                     </div>
                   </div>
                   <div className='flex gap-4 active:shadow-md px-2 py-1'>
@@ -109,10 +112,10 @@ const ViewFlags = () => {
                         <>
                         <button className={`${selectedFlag == index ? 'bg-DarkBlue text-white' : ''} text-left hover:bg-DarkBlue hover:text-white p-2 transition-colors duration-200 ease-linear`} onClick={()=>setSelectedFlag(index)}>
                           <div className='flex justify-between items-center'>
-                            <h7 className='text-xs'>{convertTimestampToDate(flag.timestamp)}</h7>
+                            <p className='text-xs'>{convertTimestampToDate(flag.timestamp)}</p>
                             <div className={`text-[9px] font-semibold bg-LightBlue w-fit p-1 rounded-full ${flag.type == 'Tab Switch' ? 'text-purple-500' : flag.type == 'No person on screen' ? 'text-yellow-600' : 'text-red-500'}`}>{flag.type}</div>
                           </div>
-                          <p className='text-xs'>{flag.duration/1000}</p>
+                          <p className='text-xs'>Duration: {flag.duration/1000}&nbsp;secs</p>
                         </button>
                         <hr className='border-black'></hr>
                         </>

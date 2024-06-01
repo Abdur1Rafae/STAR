@@ -108,7 +108,7 @@ const ForgotPasswordScreen = () => {
             key={index}
             type="text"
             value={value}
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
+            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-300 border hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-DarkBlue focus:ring-1 focus:ring-DarkBlue"
             maxLength={1}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}

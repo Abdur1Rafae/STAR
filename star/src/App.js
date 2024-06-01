@@ -6,6 +6,8 @@ import Teacher from './pages/Teacher.jsx';
 import { SectionProvider } from './Context/SectionsContext.js';
 import { ReportProvider } from './Context/ReportContext.js';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
+import ProtectedRoute from './pages/ProtectedRoute.js';
+const NotFoundPage = lazy(()=> import('./pages/NotFoundPage.jsx'));
 const DemoSubmission = lazy( ()=> import('./pages/DemoSubmission.jsx'));
 const FYPDEMOQUIZ = lazy(()=> import('./pages/FYPDEMOQUIZ.jsx'));
 const StudentDashboard = lazy(()=> import('./pages/Student/StudentDashboard.jsx') )
@@ -57,7 +59,10 @@ const router = createBrowserRouter(
 
       <Route path='forgot-password'element={<ForgotPassword/>}></Route>
       <Route path='change-password'element={<ChangePassword/>}></Route>
-      <Route path='fyp-demo' element={<FYPDEMOQUIZ/>}></Route>
+      <Route 
+        path="fyp-demo" 
+        element={<ProtectedRoute element={FYPDEMOQUIZ} />} 
+      />
       <Route path='quiz-submitted' element={<DemoSubmission/>}></Route>
 
       <Route path='student/' element={<Student/>}>
@@ -65,8 +70,8 @@ const router = createBrowserRouter(
         <Route path="courses" element = {<StudentCourses />} />
         <Route path="manage-account" element = {<AccountManagerPage/>} />
         <Route path="quiz-instructions" element = {<QuizInstructions/>} />
-        <Route path="quiz" element = {<QuizScreen />} />
-        <Route path="adaptive-quiz" element={<AdaptiveQuizScreen/>}/>
+        <Route path="quiz" element = {<ProtectedRoute element={QuizScreen} />} />
+        <Route path="adaptive-quiz" element={<ProtectedRoute element={AdaptiveQuizScreen}/>}/>
         <Route path="courses/:courseName" element= {<CourseInfo />} />
         <Route path="courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
         <Route path='quiz-submitted' element={<QuizSubmission/>}/>
@@ -91,8 +96,8 @@ const router = createBrowserRouter(
         <Route path='view-flags' element={<ViewFlags/>}></Route>
         <Route path='adaptive-quiz/:assessmentId' element={<QuestionProvider><AdaptiveQuiz/></QuestionProvider>}></Route>
         {/* <Route path='/object-detection' element={<ObjectDetection/>}></Route> */}
-        
       </Route>
+      <Route path='*' element={<NotFoundPage/>}></Route>
     </Route>
   )
 );

@@ -90,12 +90,10 @@ const QuizScreen = () => {
       console.log("detection started")
       startCameraAndDetection();
     }
-    console.log(isWebcamReady, monitoring)
   }, [isWebcamReady, monitoring]);
 
   useEffect(()=> {
     setPrevVio(null)
-    console.log(vioArray)
   }, [vioArray])
 
   const upload = async({image}) => {
@@ -194,7 +192,7 @@ const QuizScreen = () => {
         if (switchStartTime) {
           const switchEndTime = Date.now();
           const switchDuration = switchEndTime - switchStartTime;
-          if(switchDuration > 10000) {
+          if(switchDuration > 5000) {
             setVioArray({ type: 'tab switch', duration: switchDuration, timestamp: switchStartTime });
           }
         }

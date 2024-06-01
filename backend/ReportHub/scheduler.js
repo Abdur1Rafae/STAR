@@ -292,7 +292,6 @@ async function scheduleReportGeneration()
     {
       try
       {
-        console.log(assessment)
         const hasShortAnswers = assessment.questionBank.some(item => item.question.type === 'Short Answer')
         if (hasShortAnswers && assessment.status != 'Reviewed') 
         {
@@ -314,7 +313,7 @@ async function scheduleReportGeneration()
     return assessments.length
 }
 
-cron.schedule('*/25 * * * *', async () => 
+cron.schedule('*/5 * * * *', async () => 
 {
     console.log('Running assessment check...');
     try 

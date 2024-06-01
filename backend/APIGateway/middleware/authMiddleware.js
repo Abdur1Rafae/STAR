@@ -10,7 +10,7 @@ const unauthenticatedPaths =
 '/backend/session/login',
 '/backend/session/refresh',
 '/backend/session/forgot-password',
-'/backend/session/verify-otp',
+'/backend/session/verify-OTP',
 '/backend/assesshub/assessment/demo-assessment' 
 ]
 
@@ -33,6 +33,7 @@ const checkSession = async (id, sessionId) =>
 const authentication = async (req, res, next) => 
 {
     if (unauthenticatedPaths.includes(req.path)) {return next()}
+    console.log(req.path)
     if (req.path.startsWith('/backend/teacherhub/uploads') || req.path.startsWith('/backend/assesshub/assessment/submit-response')) {return next()}
     else
     {   

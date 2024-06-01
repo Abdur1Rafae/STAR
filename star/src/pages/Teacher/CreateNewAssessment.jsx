@@ -13,6 +13,7 @@ import { GetAllClasses } from '../../APIS/Teacher/ClassAPI';
 import { SectionContext } from '../../Context/SectionsContext';
 import { CreateAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import { UploadImageFile } from '../../APIS/ImageAPI';
+import LoadingButton from '../../components/button/LoadingButton';
 const ClassTabDisplay = lazy(()=> import('../../components/Teacher/ClassTabDisplay'));
 
 
@@ -29,8 +30,8 @@ const CreateNewAssessment = () => {
    const [datetime, setDatetime] = useState('')
    const [closedatetime, setCloseDatetime] = useState('')
    const [publishImmediately, setPublishOption] = useState(false);
-   const [viewSubmissions, setViewSubmissions] = useState(false);
-   const [randomizeQuestions, setRandomizeQuestions] = useState(false);
+   const [viewSubmissions, setViewSubmissions] = useState(true);
+   const [randomizeQuestions, setRandomizeQuestions] = useState(true);
    const [optionShuffle, setOptionShuffle] = useState(true);
    const [allowNavigation, setAllowNavigation] = useState(true);
    const [allowInstantFeedback, setAllowInstantFeedback] = useState(false);
@@ -298,15 +299,15 @@ const CreateNewAssessment = () => {
                <div className='w-full md:w-2/3  border border-black bg-[#F4F9FD] p-2' >
                   <h2 className='text-sm font-semibold '>Assessment Detail</h2>
 
-                  <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
+                  <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
 
                   <h2 className='text-sm font-semibold'>Participant</h2>
                   <div className='flex items-center gap-2 mt-2'>
                      <div className='bg-white p-2 min-h-10 w-full border border-black rounded flex gap-2 flex-wrap'>
                         {
-                           sections.map((section) => {
+                           sections.map((section, index) => {
                               return (
-                                 <div className='h-6 w-auto p-1 rounded-lg border-[1px] border-black'>
+                                 <div key={index} className='h-6 w-auto p-1 rounded-lg border-[1px] border-black'>
                                     <p className='text-xs'>{section.name}</p>
                                  </div>
                               )
@@ -359,7 +360,7 @@ const CreateNewAssessment = () => {
                         <p className='text-xs text-gray-400'>Schedule when students can view their score</p>
                      </div>
                   </div>
-                  <div class="flex items-center mt-4">
+                  <div className="flex items-center mt-4">
                      <input
                         id="default-checkbox"
                         type="radio"
@@ -376,7 +377,7 @@ const CreateNewAssessment = () => {
                         Immediately after close date
                      </label>
                   </div>
-                  <div class="flex items-center mt-2">
+                  <div className="flex items-center mt-2">
                      <input
                         id="checked-checkbox"
                         type="radio"
@@ -410,7 +411,7 @@ const CreateNewAssessment = () => {
             </div>
             <div className='h-full w-auto border border-black bg-LightBlue p-2 '>
                <h2 className='text-sm font-semibold '>Configurations</h2>
-               <hr class="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
+               <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
                <div className='flex md:flex-row flex-col gap-4 items-start'>
                   <div className='w-full'>
                      <div className='flex'>
@@ -420,17 +421,17 @@ const CreateNewAssessment = () => {
                            <p className='text-xs text-gray-400 '>Customizes how questions are viewed by candidates.</p>
                         </div>
                      </div>
-                     <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={randomizeQuestions} type="checkbox" onChange={()=>setRandomizeQuestions((prev) => !prev)} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Randomize questions</label>
+                     <div className="flex items-center my-4">
+                        <input id="default-checkbox" checked={randomizeQuestions} type="checkbox" onChange={()=>setRandomizeQuestions((prev) => !prev)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="default-checkbox" className="ms-2 text-xs font-medium text-gray-900">Randomize questions</label>
                      </div>
-                     <div class="flex items-center my-4">
-                        <input checked={optionShuffle} onChange={()=>setOptionShuffle((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
+                     <div className="flex items-center my-4">
+                        <input checked={optionShuffle} onChange={()=>setOptionShuffle((prev)=>!prev)} id="checked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Option Shuffle</label>
                      </div>
-                     <div class="flex items-center my-4">
-                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
+                     <div className="flex items-center my-4">
+                        <input checked={allowNavigation} onChange={handleNavigationDecision} id="checked-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Allow navigation</label>
                      </div>
                   </div>
                   <div className='mb-2 md:h-36 md:w-0 w-full border border-black '></div>
@@ -442,13 +443,13 @@ const CreateNewAssessment = () => {
                            <p className='text-xs text-gray-400 '>Customizes how candidate view score and receive feedback during assessment.</p>
                         </div>
                      </div>
-                     <div class="flex items-center my-4">
-                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" class="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
+                     <div className="flex items-center my-4">
+                        <input id="default-checkbox" checked={allowInstantFeedback} onChange={handleInstantFeedbackDecision} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="default-checkbox" className="ms-2 text-xs font-medium text-gray-900">Allow Instant Feedback</label>
                      </div>
-                     <div class="flex items-center my-4">
-                        <input id="checked-checkbox" checked={showFinalScore} onChange={()=>setShowFinalScore((prev)=>!prev)} type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="checked-checkbox" class="ms-2 text-xs font-medium text-gray-900">Show Final Score</label>
+                     <div className="flex items-center my-4">
+                        <input id="checked-checkbox" checked={showFinalScore} onChange={()=>setShowFinalScore((prev)=>!prev)} type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label htmlFor="checked-checkbox" className="ms-2 text-xs font-medium text-gray-900">Show Final Score</label>
                      </div>
                   </div>
                   <div className='mb-2 md:h-36 md:w-0 w-full border border-black'></div>
@@ -477,7 +478,7 @@ const CreateNewAssessment = () => {
                </div>
             </div>
             <div className='flex flex-col items-center justify-center mb-8'>
-               <SubmitButton label = "Save and Add Questions" active={true} onClick={handleSubmission}/>
+               <LoadingButton label = "Save and Add Questions" active={true} onClick={handleSubmission}/>
                <p className='text-red-500'>{error}</p>
             </div>
          </div>
@@ -491,7 +492,7 @@ const CreateNewAssessment = () => {
                   </div>
                   <div className='overflow-hidden flex-grow flex flex-col'>
                      <p className='ml-4 mt-2 text-xs text-DarkBlue font-bold'>Select from single class only!</p>
-                     <div className='h-full p-4 pb-20 flex flex-col overflow-y-auto'>
+                     <div className='h-full p-4 pb-20 flex flex-col gap-2 overflow-y-auto'>
                         {
                            classes.map((item, index) => (
                               <ClassTabDisplay key={`${index} ${item._id}`} id={item._id} name={item.className} classSections={item.sections} onDelete={()=>{}} />

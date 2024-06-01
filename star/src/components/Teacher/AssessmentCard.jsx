@@ -10,7 +10,6 @@ import EditButton from '../button/EditButton';
 import Assessment from '../Assessment.png'
 import { DDMMMMYYYY_HHMM } from '../../Utils/DateFunctions';
 import { MdDelete } from 'react-icons/md';
-import { DeleteAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import { baseUrl } from '../../APIS/BaseUrl';
 
 const AssessmentCard = ({ assessment, onDelete }) => {

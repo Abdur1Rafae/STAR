@@ -43,7 +43,6 @@ const AddStudentDialog = ({ isOpen, onClose, selectedFilein , selectedFilename ,
   
   const normalizedData = normalizeData(selectedFilein);
   const filteredData = filterArray(normalizedData);
-  console.log(filteredData);
   return (
     <div className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${isOpen ? '' : 'hidden'}`}>
       <div className="w-full m-4 bg-white p-4 rounded-md shadow-md">

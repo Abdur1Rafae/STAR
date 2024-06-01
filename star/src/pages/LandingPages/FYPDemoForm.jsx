@@ -16,6 +16,7 @@ const LandingPage = () => {
     const [fadeIn, setFadeIn] = useState(true);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [error, setError] = useState('')
 
     const headings = [
         "Switch to an Education Platform You can rely on",
@@ -45,7 +46,25 @@ const LandingPage = () => {
         setSelectedRole(event.target.value);
     };
 
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    };
+
     const handleRegisteration = async () => {
+        if(name == '') {
+            setError('Enter Your Name')
+            return
+        }
+        if(email == '' || !validateEmail(email)) {
+            setError('Enter valid Email')
+            return
+        }
+        if(selectedRole == '') {
+            setError('Select your role')
+            return
+        }
+        setError('')
         try {
             const req = await DemoAssessmentEnrollment({ name: name, email: email, role: selectedRole });
             const res = req.data;
@@ -78,11 +97,32 @@ const LandingPage = () => {
                     viewSubmissions: res.configurations.viewSubmissions
                 }
             };
+            const questionSet = [...res.questions]
+            if(obj.quizConfig.randomizeQuestions) {
+                for (let i = questionSet.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questionSet[i], questionSet[j]] = [questionSet[j], questionSet[i]];
+                }
+            }
+
+            if(obj.quizConfig.randomizeAnswers) {
+                const shuffledQuestionSet = questionSet.map((question) => {
+                const options = [...question.options]; 
+                for (let i = options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [options[i], options[j]] = [options[j], options[i]];
+                }
+                return { ...question, options };
+                });
+                localStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
+            }
+            else {
+                localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
+            }
             localStorage.setItem('quizDetails', JSON.stringify(obj));
-            localStorage.setItem('questions', JSON.stringify(encryptData(res.questions, 'Arete1234')));
-            console.log(res);
             window.location.assign('/fyp-demo');
         } catch (err) {
+            setError('Unexpected Error. Please try again.')
             console.log(err);
         }
     };
@@ -98,8 +138,8 @@ const LandingPage = () => {
                 </h1>
             </div>
             <img src={circlebg} alt="Background Circle" className="z-0 absolute md:right-44 top-36 right-8" />
-            <div className="flex justify-center w-full p-4 rounded-xl mt-4 slide-in">
-                <div className="z-10 bg-LightBlue w-full md:w-1/2 rounded-lg md:p-4">
+            <div className="z-30 flex justify-center w-full p-4 rounded-xl mt-4 slide-in">
+                <div className="bg-LightBlue w-full md:w-1/2 rounded-lg md:p-4">
                     <div className="p-4">
                         <label className="text-md font-semibold">Name</label>
                         <input
@@ -129,9 +169,12 @@ const LandingPage = () => {
                         >
                             <option value="teacher">Teacher</option>
                             <option value="student">Student</option>
-                            <option value="alumni">Alumnnus</option>
+                            <option value="alumni">Alumni</option>
                             <option value="expert">Industry Expert</option>
                         </select>
+                    </div>
+                    <div className="flex justify-center mb-4 text-red-500 text-sm">
+                        <p>{error}</p>
                     </div>
                     <div className="flex justify-center mb-4">
                         <LoadingButton type="submit" active={true} label={"Attempt an assessment"} onClick={handleRegisteration} />

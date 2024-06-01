@@ -38,26 +38,23 @@ export const options = {
   },
   scales: {
     x: {
-    border:{dash: [2, 2]},
-    grid: {
+      border: { dash: [2, 2] },
+      grid: {
         color: '#aaa', // for the grid lines
         tickColor: '#000', // for the tick mark
-        tickBorderDash: [2, 3], // also for the tick, if long enough
         tickLength: 10, // just to see the dotted line
-        tickWidth: 2,
+        tickWidth: 1,
         offset: true,
-        drawTicks: true, // true is default 
-        drawOnChartArea: true ,// true is default 
+        drawTicks: true,
+        drawOnChartArea: true,
+      },
     },
+    y: {
+      grid: {
+        display: false,
+      },
     },
-    y :{
-        grid:{
-            display:false
-        }
-    },
-
   },
-  
 };
 
 export const generateChartData = (dataObj) => {
@@ -91,10 +88,17 @@ export const generateChartData = (dataObj) => {
     }),
     borderRadius: 15,
   }];
-  
+
   return { labels, datasets };
 };
 
-export default function HorizontalBarChart({inputData}) {
-  return <Bar className='font-body' options={options} data={generateChartData(inputData)} />;
+export default function HorizontalBarChart({ inputData }) {
+  const labels = Object.keys(inputData);
+  const chartHeight = labels.length * 30; // Adjust the multiplier as needed for spacing
+  
+  return (
+    <div style={{ height: `${chartHeight}px`, width: '100%' }}>
+      <Bar className='font-body' options={options} data={generateChartData(inputData)} />
+    </div>
+  );
 }

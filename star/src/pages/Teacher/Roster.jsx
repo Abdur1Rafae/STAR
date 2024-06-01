@@ -111,7 +111,6 @@ const Roster = () => {
       const trimmedLowerCaseObj = trimAndLowercaseKeys(parsedData[0]);
       setData(parsedData);
 
-      console.log(parsedData[0]);
 
       if(parsedData.length <2 ){
         setError('No data found in the file')
@@ -130,7 +129,6 @@ const Roster = () => {
       else{
         setError('')
         setShowError(false)
-        console.log(parsedData)
       }
     };
   }

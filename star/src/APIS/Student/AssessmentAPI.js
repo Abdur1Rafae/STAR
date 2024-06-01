@@ -29,7 +29,6 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
             authorization: `Bearer ${token}`
         }
     })
-    console.log(res)
 
     return res.data;
 }
@@ -37,7 +36,6 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
 const SubmitAssessment = async({responses, action, adaptiveTesting, showFinalScore, totalScore}) => {
     const id = localStorage.getItem('responseId')
     const token = sessionStorage.getItem('token')
-    console.log(showFinalScore)
     const res = await AxiosBase.post(`assesshub/assessment/submit-response/${id}`,{
         submission: responses,
         action: action,
@@ -97,8 +95,7 @@ const FlagStudents = async({data, id}) => {
             authorization: `Bearer ${token}`
         }
     })
-
-    console.log(res.data)
+    return res.data
 }
 
 export {SaveAssessment, FlagStudents, GetSubmission, GetOngoingAssessments, GetUpcomingAssessments, GetAssessmentQuestions, SubmitAssessment, GetAssessmentSummary}

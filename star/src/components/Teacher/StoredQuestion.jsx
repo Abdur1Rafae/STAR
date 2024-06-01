@@ -114,7 +114,7 @@ export const PointBox = ({point}) => {
 
 export const OptionBox = ({option, isActive}) => {
     return (
-        <div  className={`${isActive ? 'bg-green-400 text-white' : 'bg-white'} items-center justify-between w-full px-2 p-1 text-gray-500 border border-gray-200 rounded-lg cursor-pointer hover:text-gray-600 hover:bg-gray-100`}>                           
+        <div  className={`${isActive ? 'bg-green-400 text-white' : 'bg-white'} items-center justify-between w-full md:w-1/2 px-2 p-1 text-gray-500 border border-gray-200 rounded-lg cursor-pointer hover:text-gray-600 hover:bg-gray-100`}>                           
             <p className="w-full text-sm md:text-md">{option}</p>
         </div>
     )
