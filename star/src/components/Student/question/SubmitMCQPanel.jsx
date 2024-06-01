@@ -9,7 +9,6 @@ const SubmitMCQPanel = ({ question  , next, previous, fwd, bkd}) => {
   const modules = {
     toolbar: false
   };
-  console.log(question?.questionId.image)
 
   return (
     <div className="bg-LightBlue flex-grow w-full mx-auto h-full p-4 shadow-md rounded-md flex flex-col justify-between">

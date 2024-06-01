@@ -62,7 +62,6 @@ const QuestionBankSelection = () => {
   });
 
   useEffect(()=>{
-    console.log(selectedCard)
     if(selectedCard.length == 0) {
       removeQBQuestions([]);
     }
@@ -80,7 +79,6 @@ const QuestionBankSelection = () => {
     } else {
       setSelectedCard([...selectedCard, bankName]);
     }
-    console.log(selectedCard)
   };
 
   const updateQuestionsFromSelectedBanks = () => {

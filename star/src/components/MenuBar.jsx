@@ -15,7 +15,6 @@ const MenuBar = ({noProfile}) => {
         setUser(storedUser);
         
         if (storedUser == null) {
-            console.log("User is null, redirecting to login...");
             window.location.assign('/login');
         } 
     }, []);

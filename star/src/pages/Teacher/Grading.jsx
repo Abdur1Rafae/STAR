@@ -35,7 +35,6 @@ const Grading = () => {
 
     const handleResponseSubmission = async() => {
         try {
-            console.log(selectedResponse)
             const SubmitGrade = await GradeResponse({submissionId: selectedResponse.submissionId, responseId: selectedResponse.responseId, score: score, feedback: feedback})
             if(responseIndex == question.totalResponses - 1) {
                 window.location.assign('/teacher/grading-table')
@@ -68,7 +67,6 @@ const Grading = () => {
 
     useEffect(()=> {
         setSelectedResponse(responses[0])
-        console.log(responses[0])
     }, [responses])
 
     useEffect(()=> {
@@ -78,7 +76,6 @@ const Grading = () => {
 
     const handleChange = (event) => {
         const selectedIndex = parseInt(event.target.value, 10) - 1;
-        console.log(selectedIndex)
         setResponseIndex(selectedIndex);
         setSelectedResponse(responses[selectedIndex]);
     };

@@ -140,7 +140,6 @@ const AdapQuizStore = create((set) => ({
 
             const elapsedTime = (Date.now() - state.currentQuestionStartTime) / 1000;
             const responseIndex = state.questionAttempt;
-            console.log(responseIndex)
             if (responseIndex !== -1) {
                 const existingResponse = state.responses[responseIndex];
                 const updatedResponse = {

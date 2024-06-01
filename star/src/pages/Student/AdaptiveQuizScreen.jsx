@@ -84,7 +84,6 @@ const AdaptiveQuizScreen = () => {
 
   useEffect(()=> {
     setPrevVio(null)
-    console.log(vioArray)
   }, [vioArray])
 
   const upload = async({image}) => {

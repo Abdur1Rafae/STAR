@@ -17,7 +17,7 @@ const ViewFlags = () => {
   const name = sessionStorage.getItem('Name')
 
   useEffect(()=>{
-    const id = localStorage.getItem('FlagId')
+    const id = sessionStorage.getItem('FlagId')
     const getDetails = async() => {
       try {
         const res = await GetFlagDetails({id: id})
@@ -115,7 +115,7 @@ const ViewFlags = () => {
                             <p className='text-xs'>{convertTimestampToDate(flag.timestamp)}</p>
                             <div className={`text-[9px] font-semibold bg-LightBlue w-fit p-1 rounded-full ${flag.type == 'Tab Switch' ? 'text-purple-500' : flag.type == 'No person on screen' ? 'text-yellow-600' : 'text-red-500'}`}>{flag.type}</div>
                           </div>
-                          <p className='text-xs'>Duration: {flag.duration/1000}</p>
+                          <p className='text-xs'>Duration: {flag.duration/1000}&nbsp;secs</p>
                         </button>
                         <hr className='border-black'></hr>
                         </>

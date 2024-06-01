@@ -55,8 +55,6 @@ const MCQPanel = ({ question }) => {
     flagQuestion(questionNumber);
   };
 
-  console.log(`${baseUrl}teacherhub/` + question?.image)
-
   const modules = {
     toolbar: false
   };

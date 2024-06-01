@@ -90,12 +90,10 @@ const QuizScreen = () => {
       console.log("detection started")
       startCameraAndDetection();
     }
-    console.log(isWebcamReady, monitoring)
   }, [isWebcamReady, monitoring]);
 
   useEffect(()=> {
     setPrevVio(null)
-    console.log(vioArray)
   }, [vioArray])
 
   const upload = async({image}) => {

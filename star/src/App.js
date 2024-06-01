@@ -7,6 +7,7 @@ import { SectionProvider } from './Context/SectionsContext.js';
 import { ReportProvider } from './Context/ReportContext.js';
 import { QuestionProvider } from '../src/Context/QuestionsContext.js';
 import ProtectedRoute from './pages/ProtectedRoute.js';
+const NotFoundPage = lazy(()=> import('./pages/NotFoundPage.jsx'));
 const DemoSubmission = lazy( ()=> import('./pages/DemoSubmission.jsx'));
 const FYPDEMOQUIZ = lazy(()=> import('./pages/FYPDEMOQUIZ.jsx'));
 const StudentDashboard = lazy(()=> import('./pages/Student/StudentDashboard.jsx') )
@@ -95,8 +96,8 @@ const router = createBrowserRouter(
         <Route path='view-flags' element={<ViewFlags/>}></Route>
         <Route path='adaptive-quiz/:assessmentId' element={<QuestionProvider><AdaptiveQuiz/></QuestionProvider>}></Route>
         {/* <Route path='/object-detection' element={<ObjectDetection/>}></Route> */}
-        
       </Route>
+      <Route path='*' element={<NotFoundPage/>}></Route>
     </Route>
   )
 );

@@ -2,7 +2,6 @@ import React from 'react';
 import SubmitButton from '../button/SubmitButton.jsx';
 
 const HorizontalNavigationTab = ({ questions, selectedQuestion, handleQuestionClick }) => {
-  console.log(questions.length)
 
   return (
     <div className='w-full h-full rounded-md flex flex-col justify-start items-center'>

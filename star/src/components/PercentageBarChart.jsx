@@ -43,7 +43,6 @@ function generateData(inputData) {
   const labels = Object.keys(inputData);
   const data = []
   labels.forEach(label => {
-    console.log(label)
     const percentage = (inputData[label].correct / inputData[label].totalCount) * 100;
     data.push(percentage)
   });
