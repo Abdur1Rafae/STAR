@@ -121,9 +121,11 @@ const AdapMCQPanel = ({ question }) => {
             </div>
           ))}
         </div>
+        {question.image ?
         <div className='w-full md:w-1/2 h-44 flex  items-center md:items-start justify-center'>
-          {question.image ? <button className='h-44 w-52'><QuizImage imageUrl={question?.image} /></button> : null}
+           <button className='h-44 w-52'><QuizImage imageUrl={question?.image} /></button>
         </div>
+         : null}
       </div>
     </div>
   );

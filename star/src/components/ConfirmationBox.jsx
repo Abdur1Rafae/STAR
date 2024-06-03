@@ -1,5 +1,6 @@
 import React from 'react'
 import SubmitButton from './button/SubmitButton'
+import LoadingButton from './button/LoadingButton'
 
 const ConfirmationBox = ({heading, message, onConfirm, onCancel}) => {
   return (
@@ -9,7 +10,7 @@ const ConfirmationBox = ({heading, message, onConfirm, onCancel}) => {
             <div className="text-sm mb-4 mt-4">{message}</div>
             <div className="flex justify-center gap-4">
                 <SubmitButton label={"Cancel"} onClick={onCancel}/>
-                <SubmitButton label={"Confirm"} active={true} onClick={onConfirm} />
+                <LoadingButton label={"Confirm"} active={true} onClick={onConfirm} />
             </div>
         </div>
     </div>

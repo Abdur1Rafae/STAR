@@ -67,6 +67,9 @@ const Signup = () => {
       if(error.response.status == 400) {
         setError('User Already Exists')
       }
+      if(error.response.status == 500) {
+        setError('Profile exists against a different role.')
+      }
       setCheck(true)   
       console.log('Error:', error);
     }

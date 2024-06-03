@@ -93,6 +93,7 @@ module.exports.getClassOverview = async (req,res) =>
         {
             const assessmentData = {}
             const assessment = await Assessment.findById(assess)
+            console.log(assessment)
 
             assessmentData.title = assessment.title
             assessmentData.totalMarks = assessment.configurations.adaptiveTesting.active === true ? assessment.configurations.adaptiveTesting.totalMarks : assessment.totalMarks,
