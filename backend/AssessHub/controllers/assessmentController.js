@@ -54,7 +54,10 @@ module.exports.submitAssessment = async (req,res) =>
 
     let response = {responses: submission}
 
-    if(action === 'submit'){response.status = 'Submitted'}  
+    if(action === 'submit')
+    {
+      response.status = 'Submitted'
+    }  
 
     if(adaptiveTesting === true){response.totalScore = totalScore}
     
