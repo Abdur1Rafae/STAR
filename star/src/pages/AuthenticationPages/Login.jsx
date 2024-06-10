@@ -11,6 +11,7 @@ const Login = () => {
 
   useEffect(()=> {
     sessionStorage.clear()
+    localStorage.clear()
   }, [])
 
   const handleSubmit = async() => {

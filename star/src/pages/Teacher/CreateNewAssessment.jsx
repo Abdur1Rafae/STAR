@@ -3,7 +3,6 @@ import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import SubmitButton from '../../components/button/SubmitButton';
 import ToggleButton from '../../components/button/ToggleButton';
-import { BsInfoCircle } from "react-icons/bs";
 import { GrTestDesktop } from "react-icons/gr";
 import { FcAddImage } from "react-icons/fc";
 import { MdOutlineDeleteOutline,MdOutlineDisplaySettings,MdPublish,MdClose } from "react-icons/md";
@@ -344,7 +343,7 @@ const CreateNewAssessment = () => {
                         </div>
                         <div className='flex flex-col items-center'>
                            <h2 className='mt-2 text-xs md:text-sm font-semibold flex items-center'>
-                              Close Date & Time &nbsp; <BsInfoCircle/>
+                              Close Date & Time &nbsp;
                            </h2>
                            <input type='datetime-local' value={closedatetime|| ''} onChange={handleCloseTimingChange} className='p-1 mt-2 w-44 border border-black rounded text-xs'/>
                         </div>
@@ -400,7 +399,6 @@ const CreateNewAssessment = () => {
                         <div className=''>
                            <h2 className='flex text-sm font-semibold items-center'>
                               View Submissions &nbsp;
-                              <BsInfoCircle/>
                            </h2>
                            <p className='text-xs text-gray-400'>Allow students to view their responses after submission</p>
                         </div>  
@@ -457,8 +455,7 @@ const CreateNewAssessment = () => {
                      <div className='flex'>
                         <GrTestDesktop className='mt-1' size={25}/>
                         <div className='ml-2'>
-                           <h2 className='flex text-sm font-semibold items-center'>Adaptive Testing
-                           <BsInfoCircle size={14} className='ml-2'/></h2>
+                           <h2 className='flex text-sm font-semibold items-center'>Adaptive Testing</h2>
                            <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
                         </div>
                         <ToggleButton isActive={adaptiveTesting} onClick={handleAdaptiveTesting}/>
@@ -467,8 +464,7 @@ const CreateNewAssessment = () => {
                         <div className='flex'>
                            <PiChalkboardTeacherLight className='' size={34}/>
                            <div className='ml-2'>
-                              <h2 className='flex items-center text-sm font-semibold'>Candidate Monitoring
-                              <BsInfoCircle size={14} className='ml-2'/></h2>
+                              <h2 className='flex items-center text-sm font-semibold'>Candidate Monitoring</h2>
                               <p className='text-xs text-gray-400 '>Detect and flag suspicious behavior of students during assessment.</p>
                            </div>
                            <ToggleButton isActive={candidateMonitoring} onClick={()=>setCandidateMonitoring((prev)=>!prev)}/>

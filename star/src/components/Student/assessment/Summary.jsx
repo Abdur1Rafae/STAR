@@ -77,7 +77,7 @@ const Summary = () => {
   }, [responses])
 
   return (
-    <div className='md:flex gap-4 mb-20'>
+    <div className='md:flex gap-4 mb-2'>
         <AssessmentDetiails questionCount={responses.length} skillMap={skillMap} topicMap={topicMap} duration={duration} submissionTime={submissionTime} skills={Object.keys(skillMap)}/>
         <div className='md:flex gap-4 w-full flex-wrap'>
             <div className='flex md:flex-row flex-col w-full h-auto flex-wrap gap-4 mb-4 md:mb-0'>
@@ -87,7 +87,9 @@ const Summary = () => {
                 <PastCurScore CurrentScore={assessmentInfo.currentScore} totalScore={assessmentInfo.totalScore} PrevTotalScore={assessmentInfo.prevTotalScore == '-' ? undefined : assessmentInfo.prevTotalScore} PreviousScore={assessmentInfo.previousScore== '-' ? undefined : assessmentInfo.previousScore}/>
             </div>
             <TopicBreakdown topics={topicMap}/>
-            <QuizSkilEval inputData={skillMap}/>
+            <div className='w-full h-80'>
+              <QuizSkilEval inputData={skillMap}/>
+            </div>
         </div>
     </div>
   )

@@ -40,6 +40,10 @@ const AdaptiveQuizScreen = () => {
     return false;
   };
 
+  useEffect(()=>{
+    console.log(score, maxScore)
+  }, [score, maxScore])
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (checkWebcamReady()) {
@@ -228,7 +232,9 @@ const AdaptiveQuizScreen = () => {
       setCurrentQuestionIndex(Number(res2))
       setScore(res3)
       setMaxScore(res4)
-      setReachedLastQuestion()
+      if(Number(res2) == Number(storedQuizDetails.quizConfig.adaptiveTesting.stoppingCriteria) - 1){ 
+        setReachedLastQuestion()
+      }
     }
     localStorage.removeItem('studentResponses')
     localStorage.removeItem('attempt')
@@ -273,7 +279,6 @@ const AdaptiveQuizScreen = () => {
       console.log(err)
     }
   }
-  console.log(maxAttempts)
 
   return (
     <div className='flex flex-col mb-20 font-body'>
