@@ -8,14 +8,34 @@
   },
   "children": [
     {
-      "type": "internal-link",
+      "type": "group",
       "id": "redis_use_cases",
-      "label": "Redis Use Cases",
-      "summary": "A collection of several common use cases for Redis.",
+      "label": "Redis basic and RAG use cases",
       "args": {
-        "initialIsOpen": true,
-        "path": "/uc/intro.md"
-      }
+        "initialIsOpen": false
+      },
+      "children": [
+        {
+          "type": "internal-link",
+          "id": "redis_use_cases_basic",
+          "label": "Basic Redis use cases",
+          "summary": "A collection of common use cases for Redis.",
+          "args": {
+            "initialIsOpen": true,
+            "path": "/uc/intro.md"
+          }
+        },
+        {
+          "type": "internal-link",
+          "id": "redis_use_cases_rag",
+          "label": "Redis and RAG use cases",
+          "summary": "A get started guide to using Redis as part of a RAG use case.",
+          "args": {
+            "initialIsOpen": true,
+            "path": "/uc/rag.md"
+          }
+        }
+      ]
     },
     {
       "type": "group",
@@ -360,49 +380,6 @@
           "label": "Learn more",
           "args": {
             "path": "/sq/learn-more.md"
-          }
-        }
-      ]
-    },
-    {
-      "type": "group",
-      "id": "tf",
-      "label": "Triggers and functions explained",
-      "args": {
-        "initialIsOpen": false
-      },
-      "children": [
-        {
-          "type": "internal-link",
-          "id": "tf-intro",
-          "label": "Introduction",
-          "summary": "Trigger and execute JavaScript functions in the Redis process.",
-          "args": {
-            "path": "/tf/intro.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "tf-load",
-          "label": "Load a library",
-          "args": {
-            "path": "/tf/load.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "tf-triggers",
-          "label": "Keyspace triggers",
-          "args": {
-            "path": "/tf/triggers.md"
-          }
-        },
-        {
-          "type": "internal-link",
-          "id": "tf-learn-more",
-          "label": "Learn more",
-          "args": {
-            "path": "/tf/learn-more.md"
           }
         }
       ]

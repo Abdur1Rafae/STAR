@@ -52,9 +52,7 @@ const LegendList = ({labels}) => (
     </div>
   );
 
-export function StudentDonutGraph({ inputData }) {
-    const labels = inputData.map(item => (item.name));
-    const total = inputData.map(obj => obj.value).reduce((acc, currentValue) => acc + currentValue, 0);
+export function StudentDonutGraph({ inputData, total }) {
     return (
         <div className='w-full flex justify-center items-center h-full gap-8'>
             <div className='h-48 flex items-center justify-center mb-4'>

@@ -16,7 +16,7 @@ const encryptData = (data, key) => {
 
 
 const CaptureScreen = () => {
-  const [quizDetails, setQuizDetails] = useState(JSON.parse(localStorage.getItem('quizDetails')))
+  const [quizDetails, setQuizDetails] = useState(JSON.parse(sessionStorage.getItem('quizDetails')))
   
   const [QuizSubmitted, setQuizSubmitted] = useState(false)
   const [initialPersonID, setInitialPersonID] = useState(null);
@@ -93,7 +93,7 @@ const CaptureScreen = () => {
 
   const gotoQuiz = async() => {
     const res = await GetAssessmentQuestions({id: quizDetails.id, sectionId: quizDetails.sectionId})
-    localStorage.setItem('responseId', res.responseId)
+    sessionStorage.setItem('responseId', res.responseId)
     if(res.questions && res.questions.length > 0) {
       const questionSet = [...res.questions]
       if(quizDetails.quizConfig.randomizeQuestions) {
@@ -112,10 +112,10 @@ const CaptureScreen = () => {
           }
           return { ...question, options };
         });
-        localStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
+        sessionStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
       }
       else {
-        localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
+        sessionStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
       }
 
       if(quizDetails.quizConfig.adaptiveTesting.active) {

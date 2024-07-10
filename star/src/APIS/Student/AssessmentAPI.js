@@ -33,8 +33,7 @@ const GetAssessmentQuestions = async({id, sectionId}) => {
     return res.data;
 }
 
-const SubmitAssessment = async({responses, action, adaptiveTesting, showFinalScore, totalScore}) => {
-    const id = localStorage.getItem('responseId')
+const SubmitAssessment = async({responses, action, adaptiveTesting, showFinalScore, totalScore, id}) => {
     const token = sessionStorage.getItem('token')
     const res = await AxiosBase.post(`assesshub/assessment/submit-response/${id}`,{
         submission: responses,

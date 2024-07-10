@@ -13,7 +13,7 @@ const StudentDashboard = () => {
     useEffect(()=>{
         localStorage.removeItem('studentResponses')
         localStorage.removeItem('num')
-        localStorage.removeItem('questions')
+        sessionStorage.removeItem('questions')
         localStorage.removeItem('attempt')
         localStorage.removeItem('score')
         localStorage.removeItem('maxScore')

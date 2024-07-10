@@ -4,7 +4,7 @@ import { PiScrollFill } from "react-icons/pi";
 
 const SubHeader = ({isActive}) => {
     return (
-        <div className="h-12 bg-LightBlue border-b-[1px] border-black font-body">
+        <navbar className="h-12 bg-LightBlue border-b-[1px] border-black font-body">
             <div className="h-full flex w-full justify-around md:justify-start md:w-auto text-[#2C6491]">
                 <div className="h-full flex md:ml-4 md:mr-8">
                     <button className={`flex items-center w-full ${isActive === 'Dashboard' ? 'text-DarkBlue border-b-2 border-DarkBlue' : 'text-gray-500 group relative inline-block'} justify-center`} onClick={()=>{window.location.assign("/student/home")}}>
@@ -21,7 +21,7 @@ const SubHeader = ({isActive}) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </navbar>
     )
 }
 

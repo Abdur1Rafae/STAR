@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { MdClose } from 'react-icons/md'
 import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { BiChevronLeft } from 'react-icons/bi'
@@ -9,7 +8,6 @@ import Loader from '../../components/Loader'
 import { GrOverview } from "react-icons/gr";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import ViewBox from '../../components/Teacher/ViewBox'
-import SubmitButton from '../../components/button/SubmitButton'
 import ErrorBox from '../../components/ErrorBox'
 import ConfirmationBox from '../../components/ConfirmationBox'
 
@@ -19,7 +17,7 @@ const GradingTablePage = () => {
   const [flaggingData, setFlaggingData] = useState([])
   
   const [tab, setTab] = useState('Questions')
-  const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
+  const assessment = JSON.parse(sessionStorage.getItem('GradeAssessment'))
   const [shouldPublish, setShouldPublish] = useState(false)
   const [cantPublish, setCantPublish] = useState(false)
   const [confirmPublish, setConfirmPublish] = useState(false)

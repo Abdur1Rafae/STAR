@@ -16,7 +16,7 @@ import IndividualReport from '../../components/Teacher/IndividualReport'
 const Reports = () => {
     const [loading, setLoading] = useState(true)
     const [tab, setTab] = useState('Overview')
-    const reportId = localStorage.getItem('ReportId')
+    const reportId = sessionStorage.getItem('ReportId')
     const reportTitile = useParams()
     const {sections,setApiCallCompleted, setAllSecIncorrectQuestion, setAllSecTopicDistribution,   setSelectedSection, selectedSection, setAssessmentQuestions, setParticipants, setTopicDistribution, setInCorrectQuestion} = useContext(ReportContent)
 
@@ -27,13 +27,9 @@ const Reports = () => {
                 setTimeout(() => {
                     console.log(res)
                     setAssessmentQuestions(res.questionBank)
-                    //localStorage.setItem('ReportQuestionBank', JSON.stringify(res.questionBank))
                     setParticipants(res.participants)
-                    //localStorage.setItem('ReportParticipants', JSON.stringify(res.participants))
                     setAllSecTopicDistribution(res.topicBreakDown)
-                    //localStorage.setItem('TopicDistribution', JSON.stringify(res.topicBreakDown))
                     setAllSecIncorrectQuestion(res.mostIncorrectQuestion)
-                    //localStorage.setItem('MostIncorrectQuestion', JSON.stringify(res.mostIncorrectQuestion))
                     localStorage.setItem('ReportAsgMarks', res.totalMarks ?? 0)
                     setApiCallCompleted(true)
                     setLoading(false)

@@ -7,7 +7,7 @@ import AdapQuizStore from '../../Stores/AdaptiveQuizStore';
 const Timer = ({adaptive}) => {
   const [showTime, setShowTime] = useState(true);
   const { submitResponses, setSubmittingQuiz } = adaptive ? AdapQuizStore() : QuizStore();
-  const quizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+  const quizDetails = JSON.parse(sessionStorage.getItem('quizDetails'));
   const durationInSeconds = quizDetails.duration * 60 * 1000;
   const closingDateUTC = new Date(quizDetails.closeDate);
   const closingDateLocal = closingDateUTC.toLocaleString('en-US', { timeZone: 'Asia/Karachi' });
@@ -24,7 +24,6 @@ const Timer = ({adaptive}) => {
   
 
   const [remainingTime, setRemainingTime] = useState(initialRemainingTime);
-  localStorage.removeItem('remainingTime')
   const lastTimestampRef = useRef(Date.now());
 
   const saveData = async () => {

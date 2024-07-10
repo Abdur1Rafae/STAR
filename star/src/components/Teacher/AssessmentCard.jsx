@@ -16,17 +16,17 @@ const AssessmentCard = ({ assessment, onDelete }) => {
     let buttonComponent, statusColor, statusTextColor;
 
     const handleMonitorClick = () => {
-        localStorage.setItem('MonitorAssessment', JSON.stringify(assessment))
+        sessionStorage.setItem('MonitorAssessment', JSON.stringify(assessment))
         window.location.assign("/teacher/live-monitoring")
     }
 
     const handleGradeClick = () => {
-        localStorage.setItem('GradeAssessment', JSON.stringify(assessment))
+        sessionStorage.setItem('GradeAssessment', JSON.stringify(assessment))
         window.location.assign("/teacher/grading-table")
     }
 
     const handleEditClick = () => {
-        localStorage.setItem('EditAssessment', JSON.stringify(assessment))
+        sessionStorage.setItem('EditAssessment', JSON.stringify(assessment))
         window.location.assign("/teacher/edit-assessment")
     }
 

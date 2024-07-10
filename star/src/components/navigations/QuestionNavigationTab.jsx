@@ -26,6 +26,7 @@ const QuestionNavigation = ({ questions, activeQuestion, onQuestionClick }) => {
       <div className=''>
         {questions.map((question, index) => (
           <QuestionTabTile
+          key={index}
             index= {index}
             singlequestioninfo= {question }
             active={question === activeQuestion} 

@@ -18,7 +18,7 @@ const ReportsOverview = () => {
     const [extendAbsentees, setExtendAbsentees] = useState(false)
     const [extendRA, setExtendRA] = useState(false)
     const data = [{name: 'Top Performers', value: topPerformers.length},{name: 'Absentees', value: absentees.length},{name: 'Requires Attention', value: requireAttention.length}]
-
+    const totalStudents = topPerformers.length + absentees.length + requireAttention.length + avgPerformers.length
     const handleExtendPerformerSection = ()=>{
         setExtendPerformers(true)
         setExtendAbsentees(false)
@@ -54,7 +54,7 @@ const ReportsOverview = () => {
             </div>
             <div className='w-1/2'>
                 <div className='w-full bg-LightBlue shadow-md mt-4 p-4'>
-                    <StudentDonutGraph inputData={data}/>
+                    <StudentDonutGraph inputData={data} total={totalStudents}/>
                     <div className='h-10 flex gap-2'>
                         <button className={`w-full p-1 border-[1px] rounded-full text-xs ${extendPerformers ? 'bg-[#47A3ED] text-white' : 'border-[#47A3ED] text-[#47A3ED]'} transition-all duration-300 ease-in-out`} onClick={()=>{handleExtendPerformerSection()}}>
                             <p>Top Performer</p>
@@ -129,7 +129,7 @@ const ReportsOverview = () => {
                     <AvgHighestScore totalScore={totalMarks} avgScore={avgScore} highestScore={highestScore} data={scoreDistribution}/>
                 </div>
                 <div className='w-full bg-LightBlue shadow-md p-4'>
-                    <StudentDonutGraph inputData={data}/>
+                    <StudentDonutGraph inputData={data} total={totalStudents}/>
                     <div className='h-10 flex gap-2'>
                         <button className={`w-full p-1 border-[1px] rounded-full text-xs ${extendPerformers ? 'bg-[#47A3ED] text-white' : 'border-[#47A3ED] text-[#47A3ED]'} transition-all duration-300 ease-in-out`} onClick={()=>{handleExtendPerformerSection()}}>
                             <p>Top Performer</p>

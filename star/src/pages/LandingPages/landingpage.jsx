@@ -20,7 +20,7 @@ return (
 <div className='w-full scroll-smooth bg-LightBlue font-outfit '>
     <div className='flex items-center justify-between bg-DarkBlue'>
     <div className="menuleft logo flex justify-start bg-DarkBlue md:bg-transparent">
-      <img src={logo} className=' w-40'></img>
+      <img src={logo} className='h-14 w-40'></img>
     </div>
     <div className='w-full h-full col-span-5 md:hidden bg-DarkBlue  '>
           <button
