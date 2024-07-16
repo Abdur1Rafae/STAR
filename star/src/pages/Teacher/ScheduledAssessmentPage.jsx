@@ -5,8 +5,6 @@ import SideBar from '../../components/Teacher/SideBar'
 import SubheaderBut from '../../components/Teacher/SubheaderBut'
 import { GetAssessments } from '../../APIS/Teacher/AssessmentAPI';
 import Loader from '../../components/Loader';
-import { MdClose } from 'react-icons/md';
-import SubmitButton from '../../components/button/SubmitButton';
 import { DeleteAssessment } from '../../APIS/Teacher/AssessmentAPI';
 import ConfirmationBox from '../../components/ConfirmationBox';
 
@@ -47,7 +45,6 @@ function ScheduledAssessment() {
     const handleDeleteAsessment = async({ id }) => {
         try {
             const res = await DeleteAssessment({id: id})
-            console.log(res)
             const index = assessments.findIndex((assessment) => assessment._id === id);
             if (index !== -1) {
                 const updatedAssessments = [...assessments];
@@ -80,10 +77,6 @@ function ScheduledAssessment() {
         getAssessments()
     }, [])
 
-    const handleDelete = () => {
-
-    }
-
   return (
     <>
             <SideBar active={"Home"}/>
@@ -100,13 +93,14 @@ function ScheduledAssessment() {
                                     <h1 className='sm:text-xl md:text-2xl font-medium border-r-2 border-black pr-2'>All Assessments </h1>
                                     <p className='sm:text-md md:text-lg font-normal text-gray-400 ml-2 h-full mt-1' >{filteredAssesments.length} in total</p>
                                 </div>
-                                <div className= 'flex gap-4 mt-4 md:mt-0'>
-                                    <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Filter by:</p>
+                                <div className= 'flex gap-4 mt-4 md:mt-0 flex-wrap'>
+                                    <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Classes:</p>
                                     <CategoryFilter
                                             categories={classes}
                                             selectedCategory={selectedClass}
                                             onSelectCategory={handleSelectClass}
                                         /> 
+                                    <p className='text-sm self-center font-normal font-body text-gray-400 h-full' >Status:</p>
                                     <CategoryFilter
                                         categories={statuses}
                                         selectedCategory={selectedStatus}

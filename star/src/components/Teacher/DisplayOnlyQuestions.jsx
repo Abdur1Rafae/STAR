@@ -9,7 +9,7 @@ import { OptionBox } from './StoredQuestion';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 
-const DisplayOnlyQuestions = ({onChange, question, correctOptions, isTrue, type, skill, difficulty, point, image, explanation, options, isSelected}) => {
+const DisplayOnlyQuestions = ({ question, correctOptions, isTrue, type, skill, difficulty, point, image, explanation, options,}) => {
     const [display, setDisplay] = useState(false);
     const modules = {
         toolbar: false
@@ -20,7 +20,6 @@ const DisplayOnlyQuestions = ({onChange, question, correctOptions, isTrue, type,
         <div className='flex flex-col w-full'>
             <div className='flex flex-col gap-2 w-full'>
                 <div className='flex gap-2 items-center font-body'>
-                    <input type="checkbox"  onChange={onChange} checked={isSelected}/>
                     <SkillBox skill={skill}/>
                     <DifficultyBox difficulty={difficulty}/>
                     <PointBox point={point}/>

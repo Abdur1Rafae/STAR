@@ -56,6 +56,7 @@ const IndividualReport = () => {
   const [activePerson, setActivePerson] = useState({});
 
   useEffect(()=>{
+    console.log("people info in IR changed,", peopleinfo)
     if(peopleinfo.length > 0 && studentFetched) {
       setActivePerson(peopleinfo[0])
       const getResponseforFiststudent = async()=>{
@@ -131,7 +132,7 @@ const IndividualReport = () => {
     setActivePerson(person);
     setShowStudents(false)
 
-    if(activePerson.erp !== person.erp) {
+    if(activePerson.response._id !== person.response._id) {
       const debouncedFunction = debouncedApiCall(person.response._id);
       debouncedFunction();
     }
@@ -140,9 +141,9 @@ const IndividualReport = () => {
 
   return (
         <div className='w-full flex-wrap'>
-          <button onClick={() => setShowStudents(!showStudents)} className="w-full block lg:hidden h-16 mb-2 border-DarkBlue border-2 rounded mt-4 ">
-            <PeopleTabTile singlepersoninfo={activePerson} onClick={()=>{}}/>
-          </button>
+          <div className="w-full block lg:hidden h-16 mb-2 border-DarkBlue border-2 rounded mt-4 ">
+            <PeopleTabTile singlepersoninfo={activePerson} onClick={() => setShowStudents(!showStudents)}/>
+          </div>
           <div className={`lg:hidden w-full overflow-y-scroll ${showStudents ? 'h-52' : 'h-0'} transition-all duration-200 ease-in-out bg-LightBlue shadow-md rounded-md`}>
             <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
           </div>
@@ -165,36 +166,36 @@ const IndividualReport = () => {
             </>
             :
             <div className='flex flex-col lg:flex-row justify-between gap-4 mt-4'>
-            <div className='hidden w-4/12 lg:flex bg-LightBlue shadow-md rounded-md'>
-              <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
-            </div>
-            <div className='w-full flex flex-col-reverse lg:flex-col gap-4'>
-            <div className='w-full flex lg:flex-row flex-col gap-4 justify-between'>
-              <div className='w-full flex flex-col gap-4'>
-                <div className='rounded'>
-                  <PastCurScore CurrentScore={activePerson.response.totalScore} totalScore={totalMarks} PrevTotalScore={activeStudentData.previousTotal} PreviousScore={activeStudentData.previousScore}/>
+              <div className='hidden w-4/12 lg:flex bg-LightBlue shadow-md rounded-md h-full'>
+                <PeopleNavigation peopleinfo={peopleinfo} activePerson={activePerson} onPersonClick={handlePersonClick}/>
+              </div>
+              <div className='w-full flex flex-col-reverse lg:flex-col gap-4'>
+                <div className='w-full flex lg:flex-row flex-col gap-4 justify-between'>
+                  <div className='w-full flex flex-col gap-4'>
+                    <div className='rounded'>
+                      <PastCurScore CurrentScore={activePerson.response.totalScore} totalScore={totalMarks} PrevTotalScore={activeStudentData.previousTotal} PreviousScore={activeStudentData.previousScore}/>
+                    </div>
+                    <div className='md:min-h-48 bg-LightBlue shadow-md rounded flex justify-center'>
+                      <HorizontalBarChart inputData={activeStudentData.topicBreakDown}/>
+                    </div>
+                  </div>
+                  <div className='w-full md:max-w-96 flex-grow flex'>
+                    <QuizSkilEval inputData={skillMap}/>
+                  </div>
                 </div>
-                <div className='md:min-h-48 bg-LightBlue shadow-md rounded flex justify-center'>
-                  <HorizontalBarChart inputData={activeStudentData.topicBreakDown}/>
+                <div className=' flex lg:flex-row flex-col-reverse justify-between gap-4'>
+                  <div className='w-full'>
+                    <IndividualQuestionPanel responses={activeStudentData.responses}/>
+                  </div>
+                  <div className='w-full md:w-80'>
+                    <ResultSummary  
+                      obtainedMarks={activePerson.response.totalScore} 
+                      totalMarks={totalMarks}
+                      responses={activeStudentData.responses}/>                   
+                  </div>
                 </div>
               </div>
-              <div className='w-full md:max-w-96 flex-grow flex'>
-                <QuizSkilEval inputData={skillMap}/>
-              </div>
             </div>
-              <div className=' flex lg:flex-row flex-col-reverse justify-between gap-4'>
-                <div className='w-full'>
-                  <IndividualQuestionPanel responses={activeStudentData.responses}/>
-                </div>
-                <div className='min-w-44'>
-                  <ResultSummary  
-                    obtainedMarks={activePerson.response.totalScore} 
-                    totalMarks={totalMarks}
-                    responses={activeStudentData.responses}/>                   
-                </div>
-              </div>
-            </div>
-          </div>
           }
         </div>
   );

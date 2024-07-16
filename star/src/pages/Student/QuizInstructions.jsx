@@ -18,7 +18,7 @@ const encryptData = (data, key) => {
 
 
 const QuizInstructions = () => {
-  const [quizDetails, setQuizDetails] = useState(JSON.parse(localStorage.getItem('quizDetails'))) 
+  const [quizDetails, setQuizDetails] = useState(JSON.parse(sessionStorage.getItem('quizDetails'))) 
   const [QuizSubmitted, setQuizSubmitted] = useState(false)
   const formattedDate = new Intl.DateTimeFormat('en-GB', {
     hour12: false,
@@ -33,8 +33,7 @@ const QuizInstructions = () => {
     try {
       if(!quizDetails.quizConfig.monitoring) {
         const res = await GetAssessmentQuestions({id: quizDetails.id, sectionId: quizDetails.sectionId})
-        console.log(res)
-        localStorage.setItem('responseId', res.responseId)
+        sessionStorage.setItem('responseId', res.responseId)
         if(res.questions && res.questions.length > 0) {
           const questionSet = [...res.questions]
           if(quizDetails.quizConfig.randomizeQuestions) {
@@ -53,10 +52,10 @@ const QuizInstructions = () => {
               }
               return { ...question, options };
             });
-            localStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
+            sessionStorage.setItem('questions', JSON.stringify(encryptData(shuffledQuestionSet, 'Arete1234')));
           }
           else {
-            localStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
+            sessionStorage.setItem('questions', JSON.stringify(encryptData(questionSet, 'Arete1234')));
           }
 
           if(quizDetails.quizConfig.adaptiveTesting.active) {
@@ -120,12 +119,16 @@ const QuizInstructions = () => {
           <div>
             <h2 className="font-bold mb-4">Instructions:</h2>
             <ul className="list-disc pl-6">
-              <li className="mb-2 text-lg">
-                The assessments' progress will be lost if the tab is closed. <strong>Please remember to save your responses.</strong>
+              <li className="mb-2 text-md">Attempt the assessment in one-sitting.</li>
+              <li className="mb-2 text-md">
+                The assessments' progress will be lost if the tab is closed. <strong>Remember to save your responses.</strong>
+              </li>
+              <li className="mb-2 text-md">
+                Do not use the browser's back and forward buttons during the assessment. Once the quiz begins, you will not be able to revisit the quiz later if you navigate away from the page.
               </li>
               
                 {
-                  quizDetails.quizConfig.adaptiveTesting &&
+                  quizDetails.quizConfig.adaptiveTesting.active &&
                   <li>
                   <p>This will be an <strong>adaptive assessment</strong>. Each correct answer would lead you to a tougher question to earn more rewards. Your final score will be scaled out of the above mentioned Marks.</p>
                   </li>

@@ -28,8 +28,8 @@ const QuizNavigation = ({}) => {
           <option key={"Flag"} value="Flagged">Flagged</option>
       </select>
       <div className="flex gap-2 flex-wrap">
-          {filteredQuestions.map((question) => (
-            <button className={`flex items-center justify-center h-8 w-8 ${currentQuestionIndex == question ? 'bg-DarkBlue' : 'bg-slate-400' } text-white mb-4 p-2`} onClick={()=>changeQuestion(question)}>
+          {filteredQuestions.map((question, index) => (
+            <button key={index} className={`flex items-center justify-center h-8 w-8 ${currentQuestionIndex == question ? 'bg-DarkBlue' : 'bg-slate-400' } text-white mb-4 p-2`} onClick={()=>changeQuestion(question)}>
               <h3 className="self-center">
                 {question + 1}
               </h3>

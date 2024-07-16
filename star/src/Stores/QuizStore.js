@@ -19,12 +19,12 @@ const QuizStore = create((set) => ({
   description: '',
   className: '',
   marks: 0,
-  questions: localStorage.getItem('questions') ? decryptData(JSON.parse(localStorage.getItem('questions')), 'Arete1234') : [],
+  questions: sessionStorage.getItem('questions') ? decryptData(JSON.parse(sessionStorage.getItem('questions')), 'Arete1234') : [],
   currentQuestionIndex: 0,
   setCurrentQuestionIndex : (num) => set((state) => ({...state, currentQuestionIndex: Number(num)})),
   filter: 'all',
   filteredQuestions: [],
-  quizConfig: JSON.parse(localStorage.getItem('quizConfig')) || {},
+  quizConfig: JSON.parse(sessionStorage.getItem('quizConfig')) || {},
   currentQuestionStartTime: Date.now(),
   reachedLastQuestion: false,
   setReachedLastQuestion : () => set((state)=> ({...state, reachedLastQuestion: true})),
@@ -258,12 +258,12 @@ const QuizStore = create((set) => ({
         ];
       }
       const res = async() => {
+        const responseId = sessionStorage.getItem('responseId')
         try {
           if(state.vioArray.length > 0) {
-            const responseId = localStorage.getItem('responseId')
             const res = await FlagStudents({data: state.vioArray, id: responseId})
         }
-          const sub = await SubmitAssessment({responses: nextState.responses, action: 'submit', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
+          const sub = await SubmitAssessment({id:responseId, responses: nextState.responses, action: 'submit', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
           console.log(sub)
           if(state.quizConfig.finalScore && sub.data.finalScore) {
             sessionStorage.setItem('Score', sub.data.finalScore)
@@ -297,12 +297,13 @@ const QuizStore = create((set) => ({
         ];
       }
       const res = async() => {
+        
+        const responseId = sessionStorage.getItem('responseId')
         try {
           if(state.vioArray.length > 0) {
-            const responseId = localStorage.getItem('responseId')
             const res = await FlagStudents({data: state.vioArray, id: responseId})
-        }
-          const sub = await SubmitAssessment({responses: nextState.responses, action: 'save', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
+          }
+          const sub = await SubmitAssessment({id: responseId, responses: nextState.responses, action: 'save', adaptiveTesting: false, showFinalScore: state.quizConfig.finalScore, totalScore: null})
           console.log(sub)
         } catch(err) {
           console.log(err)

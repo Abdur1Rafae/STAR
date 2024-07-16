@@ -49,7 +49,7 @@ function convertToLocalDateTime(isoString) {
   }
 
 function EditAssessmentDetails() {
-    const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('EditAssessment')))
+    const assessment = JSON.parse(sessionStorage.getItem('EditAssessment'))
     const [assessmentId, setAssessmentId] = useState(assessment._id ?? '')
     const [assessmentName, setName] = useState(assessment.title ?? '');
     const [description, setDesc] = useState(assessment.description ?? '')
@@ -336,7 +336,7 @@ function EditAssessmentDetails() {
                 </div>
             </div>
 
-            <div className='flex md:flex-row flex-col mt-2 gap-4'>
+            <div className='flex md:flex-row flex-col gap-4'>
                 <div className='w-full lg:w-2/3  border border-black bg-LightBlue p-2' >
                     <h2 className='text-sm font-semibold '>Assessment Detail</h2>
 
@@ -447,7 +447,7 @@ function EditAssessmentDetails() {
                     </div>
                 </div>
             </div>
-            <div className='h-full mt-2 border border-black bg-LightBlue p-2 '>
+            <div className='h-full border border-black bg-LightBlue p-2 '>
                 <h2 className='text-sm font-semibold '>Configurations</h2>
                 <hr className="h-px mt-2 mb-4 bg-gray-200 border-0 dark:bg-gray-400" />
                 <div className='flex md:flex-row flex-col gap-4 items-start'>
@@ -492,18 +492,18 @@ function EditAssessmentDetails() {
                     </div>
                     <div className='mb-2 md:h-36 md:w-0 w-full border border-black'></div>
                     <div className='w-full'>
-                        <div className='flex'>
-                        <GrTestDesktop className='mt-1' size={25}/>
-                        <div className='ml-2'>
-                            <h2 className='flex text-sm font-semibold items-center'>Adaptive Testing</h2>
-                            <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
-                        </div>
-                        <ToggleButton isActive={adaptiveTesting.active} onClick={handleAdaptiveTesting}/>
+                        <div className='flex gap-2'>
+                            <GrTestDesktop className='mt-1' size={25}/>
+                            <div className=''>
+                                <h2 className='flex text-sm font-semibold items-center'>Adaptive Testing</h2>
+                                <p className='text-xs text-gray-400 '>Customizes question difficulty based on students’ responses.</p>
+                            </div>
+                            <ToggleButton isActive={adaptiveTesting.active} onClick={handleAdaptiveTesting}/>
                         </div>
                         <div className='flex mt-4'>
-                        <div className='flex'>
+                        <div className='flex gap-2'>
                             <PiChalkboardTeacherLight className='' size={34}/>
-                            <div className='ml-2'>
+                            <div className=''>
                                 <h2 className='flex items-center text-sm font-semibold'>Candidate Monitoring</h2>
                                 <p className='text-xs text-gray-400 '>Detect and flag suspicious behavior of students during assessment.</p>
                             </div>

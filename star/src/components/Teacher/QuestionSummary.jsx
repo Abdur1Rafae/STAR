@@ -12,8 +12,8 @@ import { CgUnavailable } from "react-icons/cg";
 
 const QuestionSummary = () => {
   const [loading, setLoading] = useState(true)
-  const { assessmentQuestion, questionIndex, setQuestionIndex , setQuestionData, questionStats, totalMarks, allQuestionPercent} = useContext(ReportContent);
-  const data = [{name: 'Correct', value: questionStats.totalCorrect},{name: 'Incorrect', value: (questionStats.totalResponses - (questionStats.totalCorrect + questionStats.totalSkipped))},{name: 'Skipped', value: questionStats.totalSkipped}];
+  const { assessmentQuestion, questionIndex, setQuestionIndex , setQuestionData, questionStats, allQuestionPercent} = useContext(ReportContent);
+  const data = [{name: 'Correct', value: questionStats.totalCorrect},{name: 'Incorrect', value: isNaN(questionStats.totalResponses - (questionStats.totalCorrect + questionStats.totalSkipped)) ? undefined : questionStats.totalResponses - (questionStats.totalCorrect + questionStats.totalSkipped)},{name: 'Skipped', value: questionStats.totalSkipped}];
   const [activeQuestion, setactiveQuestion] = useState(assessmentQuestion[0]);
   const [showQuestions , setShowQuestions] = useState(false);
   const [noData, setNoData] = useState(false)
@@ -26,7 +26,7 @@ const QuestionSummary = () => {
   useEffect(()=>{
     const GetStats = async() => {
       try {
-        const report = localStorage.getItem('ReportId')
+        const report = sessionStorage.getItem('ReportId')
         const res = await GetQuestionStats({id: report})
         console.log(res)
         if(res.length > 0 && res[0].questions.length > 0) {

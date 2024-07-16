@@ -17,7 +17,7 @@ import { LuRefreshCcwDot } from "react-icons/lu";
 
 function LiveMonitoring() {
   const [loading, setLoading] = useState(true)
-  const [assessment, setAssessment] = useState(JSON.parse(localStorage.getItem('MonitorAssessment')) || {})
+  const [assessment, setAssessment] = useState(JSON.parse(sessionStorage.getItem('MonitorAssessment')) || {})
   const [sections, setSections] = useState(assessment.participants.map((section) => section.name))
   const [stats, setStats] = useState([])
   const [totalCount, setTotalCount] = useState(assessment.totalStudents)

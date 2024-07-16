@@ -51,7 +51,7 @@ const MenuBar = ({noProfile}) => {
     }
 
     return (
-        <div className="">
+        <header className="">
             <div className='menu-container w-full h-14 bg-DarkBlue flex items-center'>
                 <div className='menubar w-full flex justify-between'>
                     <div className="leftContainer flex border-r-2 border-white w-full justify-between">
@@ -91,7 +91,7 @@ const MenuBar = ({noProfile}) => {
                     </div>
                 )}
             </div>
-        </div>
+        </header>
     );
 }
 

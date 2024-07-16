@@ -50,7 +50,7 @@ const AdaptiveQuizScreen = () => {
   }, [monitoring]);
 
   const UploadFlaggings = async() => {
-    const responseId = localStorage.getItem('responseId')
+    const responseId = sessionStorage.getItem('responseId')
     console.log("Pushing data to servers")
     try {
       const res = await FlagStudents({data: vioArray, id: responseId})
@@ -207,10 +207,10 @@ const AdaptiveQuizScreen = () => {
   
 
   useEffect(()=> {
-    const storedQuizDetails = JSON.parse(localStorage.getItem('quizDetails'));
+    const storedQuizDetails = JSON.parse(sessionStorage.getItem('quizDetails'));
     const prevSubmission = JSON.parse(localStorage.getItem('SuccessSubmit'))
     if(prevSubmission && prevSubmission.assessmentId == storedQuizDetails.id && prevSubmission.submit == true) {
-      localStorage.removeItem('responseId')
+      sessionStorage.removeItem('responseId')
       localStorage.removeItem('SuccessSubmit')
       window.location.assign('quiz-submitted')
     }
@@ -233,6 +233,40 @@ const AdaptiveQuizScreen = () => {
     localStorage.removeItem('score')
     localStorage.removeItem('maxScore')
   }, [])
+
+  const enterFullscreen = () => {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // Firefox
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE/Edge
+      elem.msRequestFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        console.log('Exited full-screen mode');
+        // Add logic to handle when the user exits full-screen mode if needed
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   const saveResponsesToLocalStorage = () => {
     localStorage.setItem('studentResponses', JSON.stringify(responses));
@@ -267,7 +301,7 @@ const AdaptiveQuizScreen = () => {
       setSubmittingQuiz()
       const res = await submitResponses()
       localStorage.removeItem('SuccessSubmit')
-      localStorage.removeItem('questions')
+      sessionStorage.removeItem('questions')
     } catch(err) {
       console.log(err)
     }

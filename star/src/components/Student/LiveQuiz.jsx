@@ -41,7 +41,7 @@ const LiveQuiz = ({assessment}) => {
                 finalScore: assessment.configurations.finalScore 
             } 
         }
-        localStorage.setItem('quizDetails', JSON.stringify(quizDetails));
+        sessionStorage.setItem('quizDetails', JSON.stringify(quizDetails));
         window.location.assign('quiz-instructions')
     }
   return (

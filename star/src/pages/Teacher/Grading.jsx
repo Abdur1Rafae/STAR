@@ -14,8 +14,8 @@ const Grading = () => {
     };
     const [loading, setLoading] = useState(true)
     const assessmentTitle = useParams('assessmentName')
-    const assessment = JSON.parse(localStorage.getItem('GradeAssessment'))
-    const question = JSON.parse(localStorage.getItem('Response'))
+    const assessment = JSON.parse(sessionStorage.getItem('GradeAssessment'))
+    const question = JSON.parse(sessionStorage.getItem('Response'))
     const [responses, setResponses] = useState([])
     const [responseIndex, setResponseIndex] = useState(0)
     const [selectedResponse, setSelectedResponse] = useState(responses[responseIndex])

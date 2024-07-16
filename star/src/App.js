@@ -69,9 +69,9 @@ const router = createBrowserRouter(
         <Route path='home' element = {<StudentDashboard/>} />
         <Route path="courses" element = {<StudentCourses />} />
         <Route path="manage-account" element = {<AccountManagerPage/>} />
-        <Route path="quiz-instructions" element = {<QuizInstructions/>} />
-        <Route path="quiz" element = {<ProtectedRoute element={QuizScreen} />} />
-        <Route path="adaptive-quiz" element={<ProtectedRoute element={AdaptiveQuizScreen}/>}/>
+        <Route path="quiz-instructions" element = {<ProtectedRoute element={()=><QuizInstructions/>} check={"quizDetails"}/>} />
+        <Route path="quiz" element = {<ProtectedRoute element={() => <QuizScreen/>} check="questions"/>} />
+        <Route path="adaptive-quiz" element={<ProtectedRoute element={() => <AdaptiveQuizScreen/>} check="questions"/>}/>
         <Route path="courses/:courseName" element= {<CourseInfo />} />
         <Route path="courses/assessment/:assessmentName" element= {<AssessmentInfo />} />
         <Route path='quiz-submitted' element={<QuizSubmission/>}/>
@@ -84,15 +84,23 @@ const router = createBrowserRouter(
         <Route path='classes' element={<Classes/>}></Route>
         <Route path='classes/:sectionID' element={<Roster/>}></Route>
         <Route path='library' element={<QuestionBankPage/>}></Route>
-        <Route path='live-monitoring' element={<LiveMonitoring/>}></Route>
+        <Route path='live-monitoring' element={<ProtectedRoute element={() =><LiveMonitoring/>} check="MonitorAssessment"/>}></Route>
         <Route path='library/:questionBank' element={<OpenBank/>}></Route>
         <Route path='questions-set/:assessmentId' element={<QuestionProvider><AddQuestions /></QuestionProvider>} />
         <Route path='create-new-assessment' element={<SectionProvider><CreateNewAssessment/></SectionProvider>}></Route>
-        <Route path='edit-assessment' element={<SectionProvider><EditAssessmentDetails/></SectionProvider>}></Route>
+        <Route 
+                path="edit-assessment" 
+                element={
+                    <ProtectedRoute 
+                        element={() => <SectionProvider><EditAssessmentDetails /></SectionProvider>} 
+                        check="EditAssessment" 
+                    />
+                } 
+            />
         <Route path='reports/:assessmentName' element = {<ReportProvider><QuestionProvider><Reports/></QuestionProvider></ReportProvider>}></Route>
         <Route path='grading/:assessmentName' element={<Grading/>}/>
         <Route path='reports'element={<QuizReports />}></Route>
-        <Route path='grading-table'element={<GradingTablePage />}></Route>
+        <Route path='grading-table'element={<ProtectedRoute element={() =><GradingTablePage />} check="GradeAssessment"/>}></Route>
         <Route path='view-flags' element={<ViewFlags/>}></Route>
         <Route path='adaptive-quiz/:assessmentId' element={<QuestionProvider><AdaptiveQuiz/></QuestionProvider>}></Route>
         {/* <Route path='/object-detection' element={<ObjectDetection/>}></Route> */}

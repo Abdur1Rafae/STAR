@@ -63,10 +63,9 @@ const ResultSummary = ({ obtainedMarks, totalMarks, responses}) => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-2 mt-2">
-        {assessmentQuestion.map((_,questionNumber) => (
-          <button key={questionNumber} onClick={questionMeta.find(obj => obj['questionIndex'] == questionNumber) ? () => handleQuestionClick({ questionNumber }) : ()=> {}} className={`${questionMeta.find(obj => obj['questionIndex'] === questionNumber) ? 
-          (questionMeta.find(obj => obj['questionIndex'] === questionNumber)['correct'] ? 'text-green-500' : 'text-red-500') 
-          : 'text-gray-500'} ${questionIndex == questionNumber ? 'border-2 border-DarkBlue' : 'hover:border-2 hover:border-DarkBlue'} font-medium w-[30px] h-[30px] border rounded text-center sm:text-sm md:text-md bg-[#E7ECEF]`}>
+        {questionMeta.map((obj,questionNumber) => (
+          <button key={questionNumber} onClick={() => handleQuestionClick({ questionNumber: obj.questionIndex, responseNumber: questionNumber })} className={`${(obj['correct'] ? 'text-green-500' : 'text-red-500')} 
+          ${questionIndex == obj.questionIndex ? 'border-2 border-DarkBlue' : 'hover:border-2 hover:border-DarkBlue'} font-medium w-[30px] h-[30px] border rounded text-center sm:text-sm md:text-md bg-[#E7ECEF]`}>
             {questionNumber + 1}
           </button>
         ))}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import MenuBar from '../../components/MenuBar'
 import SideBar from '../../components/Teacher/SideBar'
 import Subheader from '../../components/Teacher/Subheader'
 import LCSearchBar from '../../components/Teacher/LCSearchBar'
@@ -47,7 +46,7 @@ const QuizReports = () => {
     GetData()
   }, [])
   const onClick = (id, title) => {
-    localStorage.setItem('ReportId', id)
+    sessionStorage.setItem('ReportId', id)
     window.location.assign(`/teacher/reports/${title}`);
   }
   

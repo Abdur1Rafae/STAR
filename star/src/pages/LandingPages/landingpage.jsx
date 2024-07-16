@@ -4,7 +4,7 @@ import nas from './New Assessment - integrated.png'
 import mi from './Monitoring.jpeg'
 import abc from './livemonitor.jpeg'
 import qst from './Question.png'
-import cover1 from './cover1.jpg'
+import cover1 from './cover1.webp'
 import cover2 from './cover2.jpeg'
 import cover5 from './cover5.jpg'
 import { IoMdMenu } from "react-icons/io";
@@ -20,7 +20,7 @@ return (
 <div className='w-full scroll-smooth bg-LightBlue font-outfit '>
     <div className='flex items-center justify-between bg-DarkBlue'>
     <div className="menuleft logo flex justify-start bg-DarkBlue md:bg-transparent">
-      <img src={logo} className=' w-40'></img>
+      <img src={logo} className='h-14 w-40'></img>
     </div>
     <div className='w-full h-full col-span-5 md:hidden bg-DarkBlue  '>
           <button
@@ -114,22 +114,22 @@ return (
         </div>
     </div>
 
-    <div className="relative w-full overflow-hidden">
-  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black md:bg-gradient-to-l md:from-transparent md:to-gray-400 opacity-100">
-    <div className="absolute md:w-1/2 h-full py-8 md:py-44 px-12 z-10">
-      <h2 className="text-DarkBlue text-3xl md:text-5xl font-bold text-center">
-        Your Journey Starts Here
-      </h2>
-      <p className="text-white text--md md:text-xl font-bold text-center mt-6">
-        Arete (ἀρετή) is an ancient Greek concept that goes beyond just grades; it's about unlocking your full potential across all aspects of learning. It's about discovering your unique strengths, understanding areas for growth, and striving for excellence.
-      </p>
+    <div className="flex flex-col md:flex-row justify-around items-center w-full overflow-hidden bg-LightBlue md:h-96 py-12">
+      <div className="md:w-1/2">
+        <div className="py-2 md:py-44 px-12 z-10">
+          <h2 className="text-DarkBlue text-lg md:text-5xl font-bold text-center">
+            Your Journey Starts Here
+          </h2>
+          <p className="text-md md:text-xl font-bold text-center mt-6">
+            Arete (ἀρετή) is an ancient Greek concept that goes beyond just grades; it's about unlocking your full potential across all aspects of learning. It's about discovering your unique strengths, understanding areas for growth, and striving for excellence.
+          </p>
+        </div>
+      </div>
+      <img src={cover2} className='w-auto h-80 object-fit'/>
     </div>
-  </div>
-  <img src={cover2} alt="" className="w-full lg:h-screen md:opacity-100 opacity-20 object-cover object-top" />
-</div>
 
 
-    <div className=' md:flex gap-8 bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))]  md:grid grid-cols-2 content-center  items-center rounded-lg mt-12 p-12'>
+    <div className=' md:flex gap-8 bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))]  md:grid grid-cols-2 content-center  items-center p-12'>
           <div className='basis-1/2'>
             <h2 className='text-white text-3xl md:text-5xl text-center'>Create Assessment 10x Faster </h2>
             <p className='text-white text-md text-center mt-12' >Accelerate assessment creation with our intuitive platform interface, simplifying the process for educators. Seamlessly import content and craft dynamic quizzes swiftly, saving valuable time. Experience efficient assessment development, empowering educators to focus on student learning.</p>
@@ -140,21 +140,21 @@ return (
     </div>
 
    <div className='md:flex gap-8 mt-12 overflow-hidden px-2 '>
-    <div className='z-10 basis-1/2 border-2 rounded-lg border-DarkBlue  border-dashed  md:h-fit bg-white p-8'>
+    <div className='z-10 basis-1/2 border-2 border-DarkBlue  border-dashed  md:h-fit bg-white p-8'>
       <h2 className='text-3xl  text-DarkBlue'>Monitor Progress in Real-Time </h2>
       <p className='text-DarkBlue text-md  mt-6 h-24' >Track performance instantly with live monitoring, enhancing efficiency tenfold. Stay informed with real-time insights, optimizing decision-making processes. Elevate productivity and precision through dynamic monitoring capabilities</p>
-      <img src={abc} alt="" className='rounded-lg mt-12 z-0 max-h-80 mx-auto border-black border-2' />
+      <img src={abc} alt="" className='rounded-lg mt-6 z-0 max-h-80 mx-auto border-black border-2' />
     </div>
-    <div className='z-10 basis-1/2 border-2 rounded-lg border-DarkBlue  border-dashed  md:h-fit bg-white p-8 max-md:mt-12'>
-    <h2 className='text-3xl  text-DarkBlue'>Live Monitoring of Students </h2>
-    <p className='text-DarkBlue text-md  mt-6 h-24' >Utilizing advanced computer vision, our platform monitors student activity during tests, ensuring integrity effortlessly. Real-time analysis detects anomalies, maintaining fairness and academic honesty seamlessly.</p>
-    <img src={qst} alt="" className='rounded-lg mt-16 md:mt-12 z-0 max-h-80 mx-auto border-black border-2' />
+    <div className='z-10 basis-1/2 border-2 border-DarkBlue  border-dashed  md:h-fit bg-white p-8 max-md:mt-12'>
+      <h2 className='text-3xl  text-DarkBlue'>Live Monitoring of Students </h2>
+      <p className='text-DarkBlue text-md  mt-6 h-24' >Utilizing advanced computer vision, our platform monitors student activity during tests, ensuring integrity effortlessly. Real-time analysis detects anomalies, maintaining fairness and academic honesty seamlessly.</p>
+      <img src={qst} alt="" className='rounded-lg mt-16 md:mt-6 z-0 max-h-80 mx-auto border-black border-2' />
     </div>
-    </div> 
+  </div> 
     
 
 
-    <div className=' md:flex gap-8 bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))]  md:grid grid-cols-2 content-center  items-center rounded-lg mt-12 p-12'>
+    <div className=' md:flex gap-8 bg-DarkBlue bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))]  md:grid grid-cols-2 content-center  items-center mt-12 p-12'>
     <div className='basis-1/2 max-h-96 overflow-hidden'>
               <img src={mi} alt="" className='rounded-lg border-black border-2' />
             </div>
@@ -166,7 +166,7 @@ return (
     </div>
 
 
-  <div className='bg-black bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] rounded-lg mt-12 px-12 py-6' >
+  <div className='bg-black bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.6))] px-12 py-6' >
     <div className=' flex flex-col md:flex-row items-center gap-8  md:h-4/6  '>
             
       <div className='w-full gap-6 pt-12 '>

@@ -59,7 +59,6 @@ const LegendList = ({labels , values}) => (
 export function QuestionDonutGraph({ inputData, totalResponses }) {
     const labels = inputData.map(item => (item.name));
     const values = inputData.map(item => (item.value));
-    const sum = inputData.reduce((total, item) => total + item.value, 0);
 
     return (
         <div className='w-full flex justify-around items-center h-full'>
