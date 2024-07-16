@@ -21,6 +21,11 @@
             "date": 1720617831076,
             "name": "/data/logs/redisinsight-errors-2024-07-10.log.2024",
             "hash": "600ef3597bd05dcbee4315592df41b2b56aa34f5b163178b5d3a4260a3d9d835"
+        },
+        {
+            "date": 1721133837523,
+            "name": "/data/logs/redisinsight-errors-2024-07-16.log.0",
+            "hash": "20485825869f30416b06793d208da30b4ce2d4cc01e30f6718345d44e727b718"
         }
     ]
 }

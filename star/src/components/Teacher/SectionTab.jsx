@@ -38,7 +38,8 @@ const SectionTab = ({sectionID, classID, section, onDelete, index, emptyDelete})
     }
 
     let saveSectionName = ClickOutsideFunc(()=>{
-        if(newSection != "" && newSection != undefined && section!="") {
+        if(newSection != "" && newSection != undefined && section!="" && section!=undefined) {
+            console.log(newSection, section)
             setIsEditing(false);
         }
     })
@@ -69,6 +70,7 @@ const SectionTab = ({sectionID, classID, section, onDelete, index, emptyDelete})
                                 className='text-sm md:text-md ml-2 bg-LightBlue border-none outline-none'
                                 onKeyDown={handleKeyPress}
                             />
+                            <p className='text-gray-500 text-xs'>Hit Enter to save</p>
                         </>
 
                     ) 

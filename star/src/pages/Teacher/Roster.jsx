@@ -173,7 +173,7 @@ const Roster = () => {
   };
   const handleAddStudents = async(newStudents) => {
     try {
-      const filteredStudents = newStudents.filter(newStudent => !students.some(existingStudent => existingStudent.id === newStudent.id));
+      const filteredStudents = newStudents.filter(newStudent => !students.some(existingStudent => existingStudent.erp === newStudent.erp));
       if(filteredStudents.length > 0) {
         const addStudent = await AddStudents({sectionId: sectionId.sectionID, students: filteredStudents})
         filteredStudents.forEach((student, index)=>student._id = addStudent.studentIds[index])
